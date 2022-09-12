@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["src/*"],
+      "~components/*": ["src/components/*"],
+      "~models/*": ["src/models/*"],
+      "~pages/*": ["src/pages/*"],
+      "~constants/*": ["src/constants/*"],
+      "~localization/*": ["src/localization/*"],
+      "~stores/*": ["src/stores/*"],
+      "~helpers/*": ["src/helpers/*"],
+      "~images/*": ["src/assets/images/*"],
+      "~builder/*": ["src/pages/TemplateBuilder/*"],
+      "~builderBlocks/*": ["src/pages/TemplateBuilder/components/blocks/*"]
+    }
+  }
+}
