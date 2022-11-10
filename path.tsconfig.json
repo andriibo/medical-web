@@ -9,9 +9,7 @@
       "~localization/*": ["src/localization/*"],
       "~stores/*": ["src/stores/*"],
       "~helpers/*": ["src/helpers/*"],
-      "~images/*": ["src/assets/images/*"],
-      "~builder/*": ["src/pages/TemplateBuilder/*"],
-      "~builderBlocks/*": ["src/pages/TemplateBuilder/components/blocks/*"]
+      "~images/*": ["src/assets/images/*"]
     }
   }
 }
