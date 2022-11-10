@@ -1,4 +1,5 @@
 import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
   AlertTitle,
@@ -6,6 +7,7 @@ import {
   FormControl,
   FormHelperText,
   IconButton,
+  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -26,7 +28,6 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
-import { PostAuthSignUpPatientRequest } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
@@ -207,6 +208,7 @@ export const SignUpPatient = () => {
                   {...fieldValidation(field.name)}
                   InputProps={{
                     inputProps: { min: 50, max: 250, step: 1 },
+                    endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                   }}
                   fullWidth
                   label="Height"
@@ -231,6 +233,7 @@ export const SignUpPatient = () => {
                   {...fieldValidation(field.name)}
                   InputProps={{
                     inputProps: { min: 10, max: 200, step: 1 },
+                    endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                   }}
                   fullWidth
                   label="Weight"
@@ -281,7 +284,7 @@ export const SignUpPatient = () => {
               {...field}
               InputProps={{
                 endAdornment: (
-                  <IconButton onClick={handleShowPassword} size="small">
+                  <IconButton onClick={handleShowPassword} sx={{ mr: '-12px' }}>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 ),
@@ -296,9 +299,9 @@ export const SignUpPatient = () => {
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
           By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
         </Typography>
-        <Button fullWidth size="large" type="submit" variant="contained">
+        <LoadingButton fullWidth loading={authSignUpPatientIsLoading} size="large" type="submit" variant="contained">
           Sign Up
-        </Button>
+        </LoadingButton>
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>

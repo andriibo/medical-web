@@ -25,3 +25,8 @@ export type PostAuthSignUpPatientRequest = {
   weight: number
   password: string
 }
+
+export type PostAuthConfirmSignUp = {
+  email: string
+  code: string
+}

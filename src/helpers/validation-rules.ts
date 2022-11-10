@@ -1,7 +1,7 @@
 import { RegisterOptions } from 'react-hook-form/dist/types/validator'
 import validator from 'validator'
 
-type ValidationKeyType = 'text' | 'phone' | 'email' | 'password' | 'height' | 'weight' | 'dob' | 'gender'
+type ValidationKeyType = 'text' | 'phone' | 'email' | 'password' | 'height' | 'weight' | 'dob' | 'gender' | 'code'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -66,5 +66,12 @@ export const validationRules: ValidationRulesType = {
   },
   dob: {
     required: true,
+  },
+  code: {
+    required: true,
+    minLength: {
+      value: 6,
+      message: 'Min length is 6',
+    },
   },
 }

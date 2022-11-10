@@ -2,7 +2,12 @@ import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
-import { CommonResponse, PostAuthSignUpDoctorRequest, PostAuthSignUpPatientRequest } from '../types/auth.types'
+import {
+  CommonResponse,
+  PostAuthConfirmSignUp,
+  PostAuthSignUpDoctorRequest,
+  PostAuthSignUpPatientRequest,
+} from '../types/auth.types'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -17,7 +22,12 @@ export const authApi = createApi({
       query: (queryArg) => ({ url: 'sign-up/patient', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
+    postAuthConfirmSignUp: build.mutation<CommonResponse, PostAuthConfirmSignUp>({
+      query: (queryArg) => ({ url: 'confirm-sign-up', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
   }),
 })
 
-export const { usePostAuthSignUpDoctorMutation, usePostAuthSignUpPatientMutation } = authApi
+export const { usePostAuthSignUpDoctorMutation, usePostAuthSignUpPatientMutation, usePostAuthConfirmSignUpMutation } =
+  authApi

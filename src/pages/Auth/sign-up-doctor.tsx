@@ -1,4 +1,5 @@
 import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useState } from 'react'
@@ -110,21 +111,6 @@ export const SignUpDoctor = () => {
         <Controller
           control={control}
           defaultValue=""
-          name="email"
-          render={({ field }) => (
-            <TextField
-              {...field}
-              error={Boolean(errors[field.name])}
-              fullWidth
-              helperText={getErrorMessage(errors, field.name)}
-              label="Email"
-            />
-          )}
-          rules={validationRules.email}
-        />
-        <Controller
-          control={control}
-          defaultValue=""
           name="phone"
           render={({ field }) => (
             <InputMask
@@ -158,6 +144,21 @@ export const SignUpDoctor = () => {
         <Controller
           control={control}
           defaultValue=""
+          name="email"
+          render={({ field }) => (
+            <TextField
+              {...field}
+              error={Boolean(errors[field.name])}
+              fullWidth
+              helperText={getErrorMessage(errors, field.name)}
+              label="Email"
+            />
+          )}
+          rules={validationRules.email}
+        />
+        <Controller
+          control={control}
+          defaultValue=""
           name="password"
           render={({ field }) => (
             <TextField
@@ -181,9 +182,9 @@ export const SignUpDoctor = () => {
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
           By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
         </Typography>
-        <Button fullWidth size="large" type="submit" variant="contained">
+        <LoadingButton fullWidth loading={authSignUpDoctorIsLoading} size="large" type="submit" variant="contained">
           Sign Up
-        </Button>
+        </LoadingButton>
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>

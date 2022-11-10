@@ -23,3 +23,7 @@ body {
     list-style-position: inside;
   }
 }
+
+.MuiInputBase-input:-webkit-autofill {
+  box-shadow: 0 0 0 30px #fff inset;
+}
