@@ -1,0 +1,38 @@
+{
+  "plugins": ["stylelint-order"],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-standard-scss",
+    "stylelint-config-css-modules",
+    "stylelint-config-property-sort-order-smacss",
+    "stylelint-config-prettier"
+  ],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": ["--my-at-rule", "each", "include", "use"]
+      }
+    ],
+    "number-leading-zero": null,
+    "number-max-precision": [
+      4,
+      {
+        "severity": "warning"
+      }
+    ],
+    "unit-disallowed-list": [],
+    "value-keyword-case": null,
+    "comment-no-empty": null,
+    "scss/comment-no-empty": null,
+    "font-family-no-missing-generic-family-keyword": null,
+    "keyframes-name-pattern": null,
+    "property-no-vendor-prefix": [
+      true,
+      {
+        "ignoreProperties": ["text-size-adjust"]
+      }
+    ],
+    "selector-class-pattern": null
+  }
+}

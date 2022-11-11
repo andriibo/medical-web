@@ -1,0 +1,33 @@
+@import 'variables';
+
+body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font: 1rem/1.3 Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.form-alert {
+  margin: 0 0 2rem;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-position: inside;
+  }
+}
+
+.MuiInputBase-input:-webkit-autofill {
+  box-shadow: 0 0 0 30px #fff inset;
+}
+
+.auth-layout {
+  background: #e5e5e5;
+}

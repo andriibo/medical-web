@@ -1,0 +1,9 @@
+{
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "bracketSameLine": false,
+  "printWidth": 120,
+  "cssEnable": ["css", "less", "sass"]
+}

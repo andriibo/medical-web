@@ -1,0 +1,95 @@
+.authContainer {
+  max-width: 550px;
+  margin: 50px auto;
+  padding: 1.5rem;
+  border: 1px solid rgb(0 0 0 / 23%);
+  border-radius: 0.625rem;
+  background: #fff;
+
+  :global(.MuiFormControl-root) {
+    margin-bottom: 1.5rem;
+
+    &:has(+ .authHelperBox) {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.authHeader {
+  position: relative;
+  margin: 0 0 2rem;
+  padding: 0 2rem;
+  text-align: center;
+
+  :global(.MuiButtonBase-root) {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    translate: 0 -50%;
+  }
+}
+
+.authHelperBox {
+  margin-bottom: 1.5rem;
+}
+
+.authFooter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0 0;
+  font-size: 0.875rem;
+}
+
+.authFooterText {
+  opacity: 0.6;
+}
+
+.accountSwitcher {
+  display: flex;
+  justify-content: space-between;
+}
+
+.accountSwitcherVisual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 1rem;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid rgb(0 0 0 / 23%);
+  border-radius: 0.25rem;
+  aspect-ratio: 1 / 1;
+
+  img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+  }
+}
+
+.accountSwitcherLink {
+  width: 100px;
+  margin: 0 1.5rem;
+  transition: all 0.3s ease;
+  color: rgb(0 0 0 / 60%);
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  &:hover {
+    color: var(--primary);
+
+    .accountSwitcherVisual {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary);
+    }
+  }
+}
