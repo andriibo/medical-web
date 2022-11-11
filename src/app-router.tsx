@@ -14,9 +14,9 @@ export const AppRouter = () => (
   <Routes>
     <Route element={<AuthLayout />} path="/">
       <Route element={<SignIn />} path="/sign-in" />
+      <Route element={<AccountTypeSelection />} path="/account-type" />
       <Route element={<SignUpPatient />} path="/sign-up-patient" />
       <Route element={<SignUpDoctor />} path="/sign-up-doctor" />
-      <Route element={<AccountTypeSelection />} path="/account-type" />
       <Route element={<EmailVerification />} path="/email-verification" />
     </Route>
     <Route element={<Layout />} path="/">

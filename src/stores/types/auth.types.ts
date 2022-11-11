@@ -1,8 +1,18 @@
 import { GenderEnum } from '~/enums/gender.enum'
 
-export type CommonResponse = {
-  success: boolean
-  message: string
+export type AuthDataResponse = {
+  token: string
+  tokenExpireTime: string
+  user: {
+    id: string
+    email: string
+    roles: string[]
+  }
+}
+
+export type PostAuthSignInRequest = {
+  email: string
+  password: string
 }
 
 export type PostAuthSignUpDoctorRequest = {
@@ -19,14 +29,30 @@ export type PostAuthSignUpPatientRequest = {
   firstName: string
   lastName: string
   phone: string
-  dob: Date
+  dob: string
   gender: GenderEnum
   height: number
   weight: number
   password: string
 }
 
-export type PostAuthConfirmSignUp = {
+type Modify<T, R> = Omit<T, keyof R> & R
+
+export type PostAuthSignUpPatientForm = Modify<
+  PostAuthSignUpPatientRequest,
+  {
+    gender: string
+    height: string
+    weight: string
+  }
+>
+
+export type PostAuthConfirmSignUpRequest = {
   email: string
   code: string
 }
+
+export type PostAuthSignInRequestKeys = keyof PostAuthSignInRequest
+export type PostAuthSignUpPatientRequestKeys = keyof PostAuthSignUpPatientRequest
+export type PostAuthSignUpDoctorRequestKeys = keyof PostAuthSignUpDoctorRequest
+export type PostAuthConfirmSignUpRequestKeys = keyof PostAuthConfirmSignUpRequest

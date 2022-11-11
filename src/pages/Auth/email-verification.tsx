@@ -1,30 +1,42 @@
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { NavLink, useSearchParams } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthConfirmSignUpMutation } from '~stores/services/auth.api'
+import { PostAuthConfirmSignUpRequest, PostAuthConfirmSignUpRequestKeys } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
+interface LocationState {
+  email?: string
+}
+
 export const EmailVerification = () => {
+  const navigate = useNavigate()
   const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthConfirmSignUpMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const [searchParams] = useSearchParams()
-  const email = searchParams.get('email')?.replace(' ', '+') || ''
+  const location = useLocation()
+  const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
+
+  useEffect(() => {
+    if (!email) {
+      navigate('/sign-in')
+    }
+  }, [email, navigate])
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm<PostAuthConfirmSignUpRequest>()
 
-  const onSubmit: SubmitHandler<FieldValues> = ({ code }) => {
+  const onSubmit: SubmitHandler<PostAuthConfirmSignUpRequest> = ({ code }) => {
     authConfirmSignUp({
       email,
       code,
@@ -32,6 +44,7 @@ export const EmailVerification = () => {
       .unwrap()
       .then(() => {
         setFormErrors(null)
+        navigate('/sign-in', { replace: true })
       })
       .catch((err: IErrorRequest) => {
         const {
@@ -47,7 +60,7 @@ export const EmailVerification = () => {
       })
   }
 
-  const fieldValidation = (name: string) => ({
+  const fieldValidation = (name: PostAuthConfirmSignUpRequestKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -77,7 +90,6 @@ export const EmailVerification = () => {
         </Typography>
         <Controller
           control={control}
-          defaultValue=""
           name="code"
           render={({ field }) => (
             <InputMask
@@ -101,7 +113,15 @@ export const EmailVerification = () => {
         <LoadingButton fullWidth loading={authConfirmSignUpIsLoading} size="large" type="submit" variant="contained">
           verify
         </LoadingButton>
-        <Button fullWidth size="large" sx={{ mt: 2 }} type="button" variant="outlined">
+        <Button
+          component={NavLink}
+          fullWidth
+          size="large"
+          sx={{ mt: 2 }}
+          to="/sign-in"
+          type="button"
+          variant="outlined"
+        >
           Cancel
         </Button>
       </form>

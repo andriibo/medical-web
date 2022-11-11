@@ -7,40 +7,36 @@ import iconDoctor from '~images/icon-doctor.png'
 import iconPatient from '~images/icon-patient.png'
 import styles from '~pages/Auth/auth.module.scss'
 
-export const AccountTypeSelection = () => {
-  console.log('sdfsf')
-
-  return (
-    <>
-      <div className={styles.authHeader}>
-        <Typography variant="h6">Create a new account</Typography>
-      </div>
-      <nav className={styles.accountSwitcher}>
-        <NavLink className={styles.accountSwitcherLink} to="/sign-up-patient">
-          <div className={styles.accountSwitcherVisual}>
-            <img alt="patient" src={iconPatient} />
-          </div>
-          <strong className={styles.accountSwitcherTitle}>Patient</strong>
-        </NavLink>
-        <NavLink className={styles.accountSwitcherLink} to="/sign-up-doctor">
-          <div className={styles.accountSwitcherVisual}>
-            <img alt="MD" src={iconDoctor} />
-          </div>
-          <strong className={styles.accountSwitcherTitle}>MD</strong>
-        </NavLink>
-        <NavLink className={styles.accountSwitcherLink} to="/sign-up-caregiver">
-          <div className={styles.accountSwitcherVisual}>
-            <img alt="caregiver" src={iconCaregiver} />
-          </div>
-          <strong className={styles.accountSwitcherTitle}>Caregiver</strong>
-        </NavLink>
-      </nav>
-      <div className={styles.authFooter}>
-        <span className={styles.authFooterText}>Have an account?</span>
-        <Button component={NavLink} size="small" to="/sign-in">
-          Sign In
-        </Button>
-      </div>
-    </>
-  )
-}
+export const AccountTypeSelection = () => (
+  <>
+    <div className={styles.authHeader}>
+      <Typography variant="h6">Create a new account</Typography>
+    </div>
+    <nav className={styles.accountSwitcher}>
+      <NavLink className={styles.accountSwitcherLink} to="/sign-up-patient">
+        <div className={styles.accountSwitcherVisual}>
+          <img alt="patient" src={iconPatient} />
+        </div>
+        <strong className={styles.accountSwitcherTitle}>Patient</strong>
+      </NavLink>
+      <NavLink className={styles.accountSwitcherLink} to="/sign-up-doctor">
+        <div className={styles.accountSwitcherVisual}>
+          <img alt="MD" src={iconDoctor} />
+        </div>
+        <strong className={styles.accountSwitcherTitle}>MD</strong>
+      </NavLink>
+      <NavLink className={`${styles.accountSwitcherLink} ${styles.disabled}`} to="">
+        <div className={styles.accountSwitcherVisual}>
+          <img alt="caregiver" src={iconCaregiver} />
+        </div>
+        <strong className={styles.accountSwitcherTitle}>Caregiver</strong>
+      </NavLink>
+    </nav>
+    <div className={styles.authFooter}>
+      <span className={styles.authFooterText}>Have an account?</span>
+      <Button component={NavLink} size="small" to="/sign-in">
+        Sign In
+      </Button>
+    </div>
+  </>
+)

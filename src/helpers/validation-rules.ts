@@ -27,8 +27,8 @@ export const validationRules: ValidationRulesType = {
       message: 'Entered value does not match email format',
     },
     maxLength: {
-      value: 50,
-      message: 'Max length is 50',
+      value: 100,
+      message: 'Max length is 100',
     },
   },
   password: {

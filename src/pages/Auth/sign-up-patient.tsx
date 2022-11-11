@@ -18,64 +18,52 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
-import React, { useEffect, useState } from 'react'
-import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import React, { useState } from 'react'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { GenderEnum } from '~/enums/gender.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
+import { PostAuthSignUpPatientForm, PostAuthSignUpPatientRequestKeys } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
 export const SignUpPatient = () => {
+  const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
   const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-  })
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
   }
 
-  const onSubmit: SubmitHandler<FieldValues> = ({
-    firstName,
-    lastName,
-    email,
-    phone,
-    dob,
-    gender,
-    height,
-    weight,
-    password,
-  }) => {
-    const phoneFormatted = phone.split('-').join('')
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<PostAuthSignUpPatientForm>({
+    mode: 'onBlur',
+  })
 
+  const onSubmit: SubmitHandler<PostAuthSignUpPatientForm> = (data) => {
     authSignUpPatient({
-      firstName,
-      lastName,
-      email,
-      phone: phoneFormatted,
-      dob,
-      gender,
-      height,
-      weight,
-      password,
+      ...data,
+      gender: GenderEnum[data.gender as keyof typeof GenderEnum],
+      height: Number(data.height),
+      weight: Number(data.weight),
+      phone: data.phone.split('-').join(''),
     })
       .unwrap()
       .then(() => {
         setFormErrors(null)
+        navigate('/email-verification', { state: { email: data.email } })
       })
+
       .catch((err: IErrorRequest) => {
         const {
           data: { message },
@@ -90,14 +78,10 @@ export const SignUpPatient = () => {
       })
   }
 
-  const fieldValidation = (name: string) => ({
+  const fieldValidation = (name: PostAuthSignUpPatientRequestKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
-
-  useEffect(() => {
-    console.log(errors)
-  }, [errors])
 
   return (
     <>
@@ -148,8 +132,8 @@ export const SignUpPatient = () => {
           name="dob"
           render={({ field }) => {
             const currentDate = new Date()
-            const minAge = 10
-            const maxDate = currentDate.setFullYear(currentDate.getFullYear() - minAge)
+            const yearOffset = 0
+            const maxDate = currentDate.setFullYear(currentDate.getFullYear() - yearOffset)
 
             return (
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -158,7 +142,7 @@ export const SignUpPatient = () => {
                   disableFuture
                   inputFormat="YYYY/MM/DD"
                   maxDate={dayjs(maxDate)}
-                  minDate={dayjs('1920-01-01')}
+                  minDate={dayjs('1930-01-01')}
                   openTo="year"
                   renderInput={(params) => (
                     <TextField
@@ -184,9 +168,9 @@ export const SignUpPatient = () => {
             <FormControl error={Boolean(errors[field.name])} fullWidth>
               <InputLabel id="gender-select">Gender</InputLabel>
               <Select {...field} label="Gender" labelId="gender-select">
-                {Object.values(GenderEnum).map((gender) => (
+                {Object.keys(GenderEnum).map((gender) => (
                   <MenuItem key={gender} value={gender}>
-                    {gender}
+                    {GenderEnum[gender as keyof typeof GenderEnum]}
                   </MenuItem>
                 ))}
               </Select>
@@ -212,9 +196,6 @@ export const SignUpPatient = () => {
                   }}
                   fullWidth
                   label="Height"
-                  onChange={(event): void => {
-                    field.onChange(Number(event.target.value))
-                  }}
                   type="number"
                 />
               )}
@@ -237,9 +218,6 @@ export const SignUpPatient = () => {
                   }}
                   fullWidth
                   label="Weight"
-                  onChange={(event): void => {
-                    field.onChange(Number(event.target.value))
-                  }}
                   type="number"
                 />
               )}

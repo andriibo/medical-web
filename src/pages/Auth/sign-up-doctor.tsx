@@ -3,41 +3,42 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useState } from 'react'
-import { Controller, FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
+import { PostAuthSignUpDoctorRequest, PostAuthSignUpDoctorRequestKeys } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
 export const SignUpDoctor = () => {
+  const navigate = useNavigate()
   const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
   const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm({
-    mode: 'onBlur',
-  })
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
   }
 
-  const onSubmit: SubmitHandler<FieldValues> = ({ firstName, lastName, email, phone, institution, password }) => {
-    const phoneFormatted = phone.split('-').join('')
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<PostAuthSignUpDoctorRequest>({
+    mode: 'onBlur',
+  })
 
-    authSignUpDoctor({ firstName, lastName, email, phone: phoneFormatted, institution, password })
+  const onSubmit: SubmitHandler<PostAuthSignUpDoctorRequest> = (data) => {
+    authSignUpDoctor({ ...data, phone: data.phone.split('-').join('') })
       .unwrap()
-      .then((response) => {
-        console.log(response)
+      .then(() => {
+        setFormErrors(null)
+        navigate('/email-verification', { state: { email: data.email } })
       })
       .catch((err: IErrorRequest) => {
         const {
@@ -52,6 +53,11 @@ export const SignUpDoctor = () => {
         }
       })
   }
+
+  const fieldValidation = (name: PostAuthSignUpDoctorRequestKeys) => ({
+    error: Boolean(errors[name]),
+    helperText: getErrorMessage(errors, name),
+  })
 
   return (
     <>
@@ -79,13 +85,7 @@ export const SignUpDoctor = () => {
               defaultValue=""
               name="firstName"
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  error={Boolean(errors[field.name])}
-                  fullWidth
-                  helperText={getErrorMessage(errors, field.name)}
-                  label="First name"
-                />
+                <TextField {...field} {...fieldValidation(field.name)} fullWidth label="First name" />
               )}
               rules={validationRules.text}
             />
@@ -96,13 +96,7 @@ export const SignUpDoctor = () => {
               defaultValue=""
               name="lastName"
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  error={Boolean(errors[field.name])}
-                  fullWidth
-                  helperText={getErrorMessage(errors, field.name)}
-                  label="Last name"
-                />
+                <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Last name" />
               )}
               rules={validationRules.text}
             />
@@ -122,14 +116,7 @@ export const SignUpDoctor = () => {
             >
               {
                 // @ts-ignore
-                () => (
-                  <TextField
-                    error={Boolean(errors[field.name])}
-                    fullWidth
-                    helperText={getErrorMessage(errors, field.name)}
-                    label="Phone number"
-                  />
-                )
+                () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
               }
             </InputMask>
           )}
@@ -145,15 +132,7 @@ export const SignUpDoctor = () => {
           control={control}
           defaultValue=""
           name="email"
-          render={({ field }) => (
-            <TextField
-              {...field}
-              error={Boolean(errors[field.name])}
-              fullWidth
-              helperText={getErrorMessage(errors, field.name)}
-              label="Email"
-            />
-          )}
+          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
           rules={validationRules.email}
         />
         <Controller
@@ -164,6 +143,7 @@ export const SignUpDoctor = () => {
             <TextField
               type={showPassword ? 'text' : 'password'}
               {...field}
+              {...fieldValidation(field.name)}
               InputProps={{
                 endAdornment: (
                   <IconButton onClick={handleShowPassword} size="small">
@@ -171,9 +151,7 @@ export const SignUpDoctor = () => {
                   </IconButton>
                 ),
               }}
-              error={Boolean(errors[field.name])}
               fullWidth
-              helperText={getErrorMessage(errors, field.name)}
               label="Password"
             />
           )}

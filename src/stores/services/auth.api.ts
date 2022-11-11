@@ -3,8 +3,9 @@ import { createApi } from '@reduxjs/toolkit/dist/query/react'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 import {
-  CommonResponse,
-  PostAuthConfirmSignUp,
+  AuthDataResponse,
+  PostAuthConfirmSignUpRequest,
+  PostAuthSignInRequest,
   PostAuthSignUpDoctorRequest,
   PostAuthSignUpPatientRequest,
 } from '../types/auth.types'
@@ -14,20 +15,28 @@ export const authApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['Auth'],
   endpoints: (build) => ({
-    postAuthSignUpDoctor: build.mutation<CommonResponse, PostAuthSignUpDoctorRequest>({
+    postAuthSignIn: build.mutation<AuthDataResponse, PostAuthSignInRequest>({
+      query: (queryArg) => ({ url: 'sign-in', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthSignUpDoctor: build.mutation<null, PostAuthSignUpDoctorRequest>({
       query: (queryArg) => ({ url: 'sign-up/doctor', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthSignUpPatient: build.mutation<CommonResponse, PostAuthSignUpPatientRequest>({
+    postAuthSignUpPatient: build.mutation<null, PostAuthSignUpPatientRequest>({
       query: (queryArg) => ({ url: 'sign-up/patient', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthConfirmSignUp: build.mutation<CommonResponse, PostAuthConfirmSignUp>({
+    postAuthConfirmSignUp: build.mutation<null, PostAuthConfirmSignUpRequest>({
       query: (queryArg) => ({ url: 'confirm-sign-up', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
   }),
 })
 
-export const { usePostAuthSignUpDoctorMutation, usePostAuthSignUpPatientMutation, usePostAuthConfirmSignUpMutation } =
-  authApi
+export const {
+  usePostAuthSignInMutation,
+  usePostAuthSignUpDoctorMutation,
+  usePostAuthSignUpPatientMutation,
+  usePostAuthConfirmSignUpMutation,
+} = authApi
