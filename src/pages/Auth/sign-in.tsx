@@ -9,10 +9,13 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
+import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
+import { signInSuccess } from '~stores/slices/auth.slice'
 import { PostAuthSignInRequest, PostAuthSignInRequestKeys } from '~stores/types/auth.types'
 
 export const SignIn = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
   const [showPassword, setShowPassword] = useState(false)
@@ -36,8 +39,10 @@ export const SignIn = () => {
       .then((response) => {
         console.log(response)
 
+        dispatch(signInSuccess(response))
+
         setFormErrors(null)
-        navigate('/')
+        navigate('/patient')
       })
       .catch((err: IErrorRequest) => {
         const {
@@ -109,7 +114,7 @@ export const SignIn = () => {
           </Button>
         </div>
         <LoadingButton fullWidth loading={authSignInIsLoading} size="large" type="submit" variant="contained">
-          Sign Up
+          Sign In
         </LoadingButton>
       </form>
       <div className={styles.authFooter}>

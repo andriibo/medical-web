@@ -1,8 +1,9 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 
-import { store } from '~stores/store'
+import { persistor, store } from '~stores/store'
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'
@@ -12,7 +13,9 @@ const root = createRoot(container)
 
 root.render(
   <Provider store={store}>
-    <App />
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
   </Provider>,
 )
 
