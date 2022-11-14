@@ -39,8 +39,6 @@ export const SignIn = () => {
     authSignIn(data)
       .unwrap()
       .then((response) => {
-        console.log(response)
-
         dispatch(signInSuccess(response))
 
         setFormErrors(null)
