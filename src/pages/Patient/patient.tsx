@@ -1,18 +1,10 @@
 import { Typography } from '@mui/material'
-import React, { useEffect } from 'react'
+import React from 'react'
 
-import { useGetDoctorProfileQuery, useGetPatientProfileQuery } from '~stores/services/profile.api'
+import { useGetDoctorProfileQuery } from '~stores/services/profile.api'
 
 export const Patient = () => {
   const { data, isLoading, isError } = useGetDoctorProfileQuery({})
-
-  useEffect(() => {
-    console.log(111)
-  }, [])
-
-  if (!data) {
-    return <div>ssssfsdf</div>
-  }
 
   return (
     <>

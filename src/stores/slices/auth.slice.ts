@@ -43,11 +43,11 @@ const authSlice = createSlice({
   },
 })
 
-const selectToken = (state: RootState) => state.auth.data.token
 const selectIsAuth = (state: RootState) => Boolean(state.auth.data.token)
+const selectUserRole = (state: RootState) => state.auth.data.user.roles[0]
 
-export const useToken = () => useAppSelector(selectToken)
 export const useIsAuth = () => useAppSelector(selectIsAuth)
+export const useUserRole = () => useAppSelector(selectUserRole)
 
 export const {
   reducer: authReducer,

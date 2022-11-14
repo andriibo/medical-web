@@ -1,6 +1,6 @@
-import { Logout, Notifications, Settings } from '@mui/icons-material'
-import { Avatar, Badge, Button, Divider, IconButton, ListItemIcon, MenuItem, Typography } from '@mui/material'
-import { green } from '@mui/material/colors'
+import { AccountCircle, Notifications } from '@mui/icons-material'
+import { Avatar, Badge, IconButton, ListItemIcon, MenuItem } from '@mui/material'
+import { grey } from '@mui/material/colors'
 import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -12,24 +12,29 @@ import styles from './header.module.scss'
 
 const mainNav: IMainNav[] = [
   {
-    label: 'Sign In',
-    to: '/sign-in',
+    label: 'Vitals',
+    to: '/vitals',
+    disabled: true,
   },
   {
-    label: 'Patient',
-    to: '/patient',
+    label: 'Emergency Contacts',
+    to: '/emergency-contacts',
+    disabled: true,
+  },
+  {
+    label: 'MD & Caregivers',
+    to: '/md-caregivers',
+    disabled: true,
+  },
+  {
+    label: 'Requests',
+    to: '/requests',
+    disabled: true,
   },
 ]
 
-const user = {
-  name: 'John Doe',
-  role: 'admin',
-}
-
 export const Header = () => {
   const [dropClose, setDropClose] = useState(false)
-
-  const isInitials = false
 
   const handleDrop = useCallback(
     (val: boolean) => {
@@ -38,12 +43,11 @@ export const Header = () => {
     [dropClose],
   )
 
-  const getInitials = (name: string) => name.split(' ')[0][0] + name.split(' ')[1][0]
-
   return (
     <header className={styles.header}>
-      <NavLink to="/sign-in">Sign In</NavLink>
-      <NavLink to="/patient">Patient</NavLink>
+      <NavLink className={styles.logo} to="/">
+        LIFE ZENZERS
+      </NavLink>
       <nav className={styles.nav}>
         {mainNav.map(({ label, to, disabled }) => (
           <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
@@ -57,43 +61,20 @@ export const Header = () => {
         </Badge>
       </IconButton>
       <DropdownMenu
-        button={
-          <Avatar sx={{ bgcolor: green[500], width: 40, height: 40, ml: 2, cursor: 'pointer' }}>
-            {isInitials ? getInitials(user.name) : null}
-          </Avatar>
-        }
+        button={<Avatar sx={{ bgcolor: grey[500], width: 40, height: 40, ml: 2, cursor: 'pointer' }} />}
         dropClose={dropClose}
         handleDrop={handleDrop}
         menuStyles={{
           '& .MuiPaper-root': {
-            width: 250,
+            width: 220,
           },
         }}
       >
-        <div className={styles.profileDrop}>
-          <Avatar sx={{ bgcolor: green[500], width: 56, height: 56, m: '0 auto 0.75rem' }} />
-          <Typography noWrap variant="subtitle1">
-            {user.name}
-          </Typography>
-          <Typography color="text.secondary" sx={{ textTransform: 'capitalize' }} variant="body2">
-            {user.role}
-          </Typography>
-          <Button color="inherit" disabled variant="outlined">
-            Manage your account
-          </Button>
-        </div>
-        <Divider sx={{ mb: 1 }} />
         <MenuItem component={NavLink} disabled onClick={() => handleDrop(true)} to="settings">
           <ListItemIcon>
-            <Settings fontSize="small" />
+            <AccountCircle fontSize="small" />
           </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem disabled onClick={() => handleDrop(true)}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
-          Logout
+          My account
         </MenuItem>
         <LogoutButton />
       </DropdownMenu>

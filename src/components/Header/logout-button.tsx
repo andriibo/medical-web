@@ -1,4 +1,5 @@
-import { Button } from '@mui/material'
+import { Logout } from '@mui/icons-material'
+import { ListItemIcon, MenuItem } from '@mui/material'
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,8 +13,15 @@ export const LogoutButton = () => {
   const handleLogout = useCallback(async () => {
     await dispatch(clearPersist())
 
-    navigate('/', { replace: true, state: undefined })
+    navigate('/sign-in', { replace: true, state: undefined })
   }, [dispatch, navigate])
 
-  return <Button onClick={handleLogout}>Logout</Button>
+  return (
+    <MenuItem color="inherit" onClick={handleLogout}>
+      <ListItemIcon>
+        <Logout fontSize="small" />
+      </ListItemIcon>
+      Logout
+    </MenuItem>
+  )
 }

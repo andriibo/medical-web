@@ -2,20 +2,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 68px;
   min-height: 60px;
   margin: 0 0 2rem;
+  padding: 0 1rem;
   border-bottom: 1px solid #ddd;
   text-align: center;
-  padding: 0 1rem;
+}
+
+.logo {
+  color: #000;
+  font-size: 1.5rem;
+  text-decoration: none;
+  margin: 0 1rem 0 0;
 }
 
 .nav {
   display: flex;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-end;
   height: 100%;
   font-size: 1rem;
   font-weight: 700;
+  margin: 0 1.5rem 0 0;
 
   a {
     display: flex;
@@ -35,7 +44,7 @@
       height: 3px;
       transition: all 0.3s ease;
       opacity: 0;
-      background: var(--primary);
+      background: #42a5f5;
     }
 
     &:hover {
@@ -43,7 +52,7 @@
     }
 
     &:global(.active) {
-      color: var(--primary);
+      color: #42a5f5;
 
       &::after {
         opacity: 1;

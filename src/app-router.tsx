@@ -20,9 +20,9 @@ export const AppRouter = () => (
       <Route element={<SignUpDoctor />} path="/sign-up-doctor" />
       <Route element={<EmailVerification />} path="/email-verification" />
     </Route>
-    <Route element={<Layout />} path="/">
+    <Route element={<Layout />}>
       <Route element={<AuthWrapper />}>
-        <Route element={<Patient />} path="/patient" />
+        <Route element={<Patient />} path="/" />
       </Route>
     </Route>
   </Routes>
