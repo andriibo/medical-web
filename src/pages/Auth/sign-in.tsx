@@ -35,28 +35,26 @@ export const SignIn = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<PostAuthSignInRequest> = (data) => {
-    authSignIn(data)
-      .unwrap()
-      .then((response) => {
-        dispatch(signInSuccess(response))
+  const onSubmit: SubmitHandler<PostAuthSignInRequest> = async (data) => {
+    try {
+      const response = await authSignIn(data).unwrap()
 
-        setFormErrors(null)
-        navigate('/')
-      })
-      .catch((err: IErrorRequest) => {
-        const {
-          data: { message },
-        } = err
+      dispatch(signInSuccess(response))
+      setFormErrors(null)
+      navigate('/')
+    } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
-        console.error(err)
-        setCurrentEmail(data.email)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
-      })
+      console.error(err)
+      setCurrentEmail(data.email)
+      if (Array.isArray(message)) {
+        setFormErrors(message)
+      } else {
+        setFormErrors([message])
+      }
+    }
   }
 
   const fieldValidation = (name: PostAuthSignInRequestKeys) => ({
