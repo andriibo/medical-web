@@ -1,22 +1,27 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
+import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
+import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
+import { signInSuccess } from '~stores/slices/auth.slice'
 import { PostAuthSignInRequest, PostAuthSignInRequestKeys } from '~stores/types/auth.types'
 
 export const SignIn = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
   const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const [currentEmail, setCurrentEmail] = useState<string | null>(null)
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
@@ -30,27 +35,26 @@ export const SignIn = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<PostAuthSignInRequest> = (data) => {
-    authSignIn(data)
-      .unwrap()
-      .then((response) => {
-        console.log(response)
+  const onSubmit: SubmitHandler<PostAuthSignInRequest> = async (data) => {
+    try {
+      const response = await authSignIn(data).unwrap()
 
-        setFormErrors(null)
-        navigate('/')
-      })
-      .catch((err: IErrorRequest) => {
-        const {
-          data: { message },
-        } = err
+      dispatch(signInSuccess(response))
+      setFormErrors(null)
+      navigate('/')
+    } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
-        console.error(err)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
-      })
+      console.error(err)
+      setCurrentEmail(data.email)
+      if (Array.isArray(message)) {
+        setFormErrors(message)
+      } else {
+        setFormErrors([message])
+      }
+    }
   }
 
   const fieldValidation = (name: PostAuthSignInRequestKeys) => ({
@@ -71,6 +75,13 @@ export const SignIn = () => {
               <li key={error}>{error}</li>
             ))}
           </ul>
+          {formErrors.includes(AuthErrorMessage.notConfirmed) && (
+            <Box sx={{ mt: 1 }}>
+              <NavLink state={{ email: currentEmail }} to="/email-verification">
+                Verify your email
+              </NavLink>
+            </Box>
+          )}
         </Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -109,7 +120,7 @@ export const SignIn = () => {
           </Button>
         </div>
         <LoadingButton fullWidth loading={authSignInIsLoading} size="large" type="submit" variant="contained">
-          Sign Up
+          Sign In
         </LoadingButton>
       </form>
       <div className={styles.authFooter}>
