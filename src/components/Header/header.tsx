@@ -1,9 +1,9 @@
 import { AccountCircle, Notifications } from '@mui/icons-material'
-import { Avatar, Badge, IconButton, ListItemIcon, MenuItem } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { Avatar, Badge, Button, IconButton, ListItemIcon, MenuItem } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
 import { IMainNav } from '~models/main-nav.model'
@@ -36,12 +36,9 @@ const mainNav: IMainNav[] = [
 export const Header = () => {
   const [dropClose, setDropClose] = useState(false)
 
-  const handleDrop = useCallback(
-    (val: boolean) => {
-      setDropClose(val)
-    },
-    [dropClose],
-  )
+  const handleDrop = useCallback((val: boolean) => {
+    setDropClose(val)
+  }, [])
 
   return (
     <header className={styles.header}>
@@ -61,7 +58,7 @@ export const Header = () => {
         </Badge>
       </IconButton>
       <DropdownMenu
-        button={<Avatar sx={{ bgcolor: grey[500], width: 40, height: 40, ml: 2, cursor: 'pointer' }} />}
+        button={<Avatar className={styles.avatar} component={Button} />}
         dropClose={dropClose}
         handleDrop={handleDrop}
         menuStyles={{
@@ -70,7 +67,7 @@ export const Header = () => {
           },
         }}
       >
-        <MenuItem component={NavLink} disabled onClick={() => handleDrop(true)} to="settings">
+        <MenuItem component={NavLink} onClick={() => handleDrop(true)} to={PageUrls.MyAccount}>
           <ListItemIcon>
             <AccountCircle fontSize="small" />
           </ListItemIcon>

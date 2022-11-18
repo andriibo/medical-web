@@ -4,7 +4,7 @@ import React from 'react'
 import { useGetDoctorProfileQuery } from '~stores/services/profile.api'
 
 export const Patient = () => {
-  const { data, isLoading, isError } = useGetDoctorProfileQuery({})
+  const { data, isLoading, isError } = useGetDoctorProfileQuery()
 
   return (
     <>

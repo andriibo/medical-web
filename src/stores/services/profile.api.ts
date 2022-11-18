@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
+import { IDoctorProfile, IPatientProfile, IUpdateDoctorProfile, IUpdatePatientProfile } from '~models/profie.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const profileApi = createApi({
@@ -7,19 +8,32 @@ export const profileApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['Profile'],
   endpoints: (build) => ({
-    getPatientProfile: build.query<any, {}>({
+    getPatientProfile: build.query<IPatientProfile, void>({
       query: () => ({
         url: 'patient/my-profile',
       }),
       providesTags: ['Profile'],
     }),
-    getDoctorProfile: build.query<any, {}>({
+    patchPatientProfile: build.mutation<null, IUpdatePatientProfile>({
+      query: (queryArg) => ({ url: 'patient/my-profile', method: 'PATCH', body: { ...queryArg } }),
+      invalidatesTags: ['Profile'],
+    }),
+    getDoctorProfile: build.query<IDoctorProfile, void>({
       query: () => ({
         url: 'doctor/my-profile',
       }),
       providesTags: ['Profile'],
     }),
+    patchDoctorProfile: build.mutation<null, IUpdateDoctorProfile>({
+      query: (queryArg) => ({ url: 'doctor/my-profile', method: 'PATCH', body: { ...queryArg } }),
+      invalidatesTags: ['Profile'],
+    }),
   }),
 })
 
-export const { useGetPatientProfileQuery, useGetDoctorProfileQuery } = profileApi
+export const {
+  useGetPatientProfileQuery,
+  usePatchPatientProfileMutation,
+  useGetDoctorProfileQuery,
+  usePatchDoctorProfileMutation,
+} = profileApi

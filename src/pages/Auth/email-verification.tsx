@@ -5,11 +5,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
+import { IAuthSignUpConfirm, IAuthSignUpConfirmKeys } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostAuthConfirmSignUpMutation } from '~stores/services/auth.api'
-import { PostAuthConfirmSignUpRequest, PostAuthConfirmSignUpRequestKeys } from '~stores/types/auth.types'
+import { usePostAuthSignUpConfirmMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
 
@@ -19,14 +20,14 @@ interface LocationState {
 
 export const EmailVerification = () => {
   const navigate = useNavigate()
-  const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthConfirmSignUpMutation()
+  const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthSignUpConfirmMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const location = useLocation()
   const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
 
   useEffect(() => {
     if (!email) {
-      navigate('/sign-in')
+      navigate(PageUrls.SignIn)
     }
   }, [email, navigate])
 
@@ -34,33 +35,32 @@ export const EmailVerification = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<PostAuthConfirmSignUpRequest>()
+  } = useForm<IAuthSignUpConfirm>()
 
-  const onSubmit: SubmitHandler<PostAuthConfirmSignUpRequest> = ({ code }) => {
-    authConfirmSignUp({
-      email,
-      code,
-    })
-      .unwrap()
-      .then(() => {
-        setFormErrors(null)
-        navigate('/sign-in', { replace: true })
-      })
-      .catch((err: IErrorRequest) => {
-        const {
-          data: { message },
-        } = err
+  const onSubmit: SubmitHandler<IAuthSignUpConfirm> = async ({ code }) => {
+    try {
+      await authConfirmSignUp({
+        email,
+        code,
+      }).unwrap()
 
-        console.error(err)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
-      })
+      setFormErrors(null)
+      navigate(PageUrls.SignIn, { replace: true })
+    } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
+
+      console.error(err)
+      if (Array.isArray(message)) {
+        setFormErrors(message)
+      } else {
+        setFormErrors([message])
+      }
+    }
   }
 
-  const fieldValidation = (name: PostAuthConfirmSignUpRequestKeys) => ({
+  const fieldValidation = (name: IAuthSignUpConfirmKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -90,6 +90,7 @@ export const EmailVerification = () => {
         </Typography>
         <Controller
           control={control}
+          defaultValue=""
           name="code"
           render={({ field }) => (
             <InputMask
@@ -118,7 +119,7 @@ export const EmailVerification = () => {
           fullWidth
           size="large"
           sx={{ mt: 2 }}
-          to="/sign-in"
+          to={PageUrls.SignIn}
           type="button"
           variant="outlined"
         >
@@ -127,7 +128,7 @@ export const EmailVerification = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Need a new verification code?</span>
-        <Button component={NavLink} disabled size="small" to="/sign-in">
+        <Button component={NavLink} disabled size="small" to={PageUrls.SignIn}>
           Resend
         </Button>
       </div>

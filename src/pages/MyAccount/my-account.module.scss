@@ -1,0 +1,88 @@
+.accountContainer {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.personal {
+  display: flex;
+  align-items: flex-start;
+}
+
+.personalAside {
+  margin: 0 3rem 0 0;
+  text-align: center;
+
+  .userAvatar {
+    width: 200px;
+    height: auto;
+    margin: 0 auto;
+    background-color: #bbb;
+    aspect-ratio: 1 / 1;
+    font-size: 5em;
+  }
+}
+
+.personalHeading {
+  display: flex;
+  align-items: center;
+  margin: 0 0 1rem;
+}
+
+.personalContent {
+  flex: 1;
+}
+
+.userName {
+  display: block;
+  margin: 0 0.5rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.userRole {
+  display: block;
+  color: #777;
+}
+
+.personalInfoList {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -0.75rem -0.75rem 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    width: 50%;
+    margin: 0 0 0.75rem;
+    padding: 0 0.75rem 0 0;
+  }
+
+  &.fullWidth {
+    li {
+      width: 100%;
+    }
+  }
+}
+
+.infoListLabel {
+  display: block;
+  margin: 0 0 0.25rem;
+  color: #777;
+  font-size: 0.875rem;
+}
+
+.infoListText {
+  display: flex;
+  align-items: center;
+}
+
+button.infoListButton {
+  margin: 0 0 0 0.25rem;
+  transition: opacity 0.3s ease;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    background: none;
+  }
+}

@@ -1,8 +1,11 @@
+import { Grow } from '@mui/material'
+import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import { SnackbarCloseButton } from '~components/SnackbarCloseButton/snackbar-close-button'
 import { persistor, store } from '~stores/store'
 
 import App from './App'
@@ -14,7 +17,18 @@ const root = createRoot(container)
 root.render(
   <Provider store={store}>
     <PersistGate persistor={persistor}>
-      <App />
+      <SnackbarProvider
+        TransitionComponent={Grow}
+        action={(snackbarId) => <SnackbarCloseButton snackbarId={snackbarId} />}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        autoHideDuration={4000}
+        maxSnack={1}
+      >
+        <App />
+      </SnackbarProvider>
     </PersistGate>
   </Provider>,
 )
