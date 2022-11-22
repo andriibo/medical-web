@@ -68,11 +68,7 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleCl
         data: { message },
       } = err as IErrorRequest
 
-      if (Array.isArray(message)) {
-        setFormErrors(message)
-      } else {
-        setFormErrors([message])
-      }
+      setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
     }

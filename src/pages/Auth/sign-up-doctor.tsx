@@ -46,12 +46,9 @@ export const SignUpDoctor = () => {
           data: { message },
         } = err
 
+        setFormErrors(Array.isArray(message) ? message : [message])
+
         console.error(err)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
       })
   }
 

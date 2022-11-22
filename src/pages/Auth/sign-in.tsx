@@ -42,19 +42,16 @@ export const SignIn = () => {
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
-      navigate('/')
+      navigate('/', { replace: true })
     } catch (err) {
       const {
         data: { message },
       } = err as IErrorRequest
 
-      console.error(err)
       setCurrentEmail(data.email)
-      if (Array.isArray(message)) {
-        setFormErrors(message)
-      } else {
-        setFormErrors([message])
-      }
+      setFormErrors(Array.isArray(message) ? message : [message])
+
+      console.error(err)
     }
   }
 

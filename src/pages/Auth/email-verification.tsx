@@ -51,12 +51,9 @@ export const EmailVerification = () => {
         data: { message },
       } = err as IErrorRequest
 
+      setFormErrors(Array.isArray(message) ? message : [message])
+
       console.error(err)
-      if (Array.isArray(message)) {
-        setFormErrors(message)
-      } else {
-        setFormErrors([message])
-      }
     }
   }
 

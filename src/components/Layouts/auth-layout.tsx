@@ -2,22 +2,20 @@ import '~/assets/styles/styles.scss'
 
 import { Container } from '@mui/material'
 import React, { useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 import styles from '~pages/Auth/auth.module.scss'
+import { useIsAuth } from '~stores/slices/auth.slice'
 
 export const AuthLayout = () => {
+  const isAuth = useIsAuth()
+  const navigate = useNavigate()
+
   useEffect(() => {
-    const body = document.querySelector('body')
-
-    if (body) {
-      body.classList.add('auth-layout')
-
-      return () => {
-        body.classList.remove('auth-layout')
-      }
+    if (isAuth) {
+      navigate('/', { replace: true })
     }
-  }, [])
+  }, [isAuth])
 
   return (
     <Container>
