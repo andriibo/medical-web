@@ -12,6 +12,7 @@ type ValidationKeyType =
   | 'gender'
   | 'code'
   | 'diagnosisName'
+  | 'medicationName'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -33,10 +34,6 @@ export const validationRules: ValidationRulesType = {
       value: /[0-9]{11}/,
       message: 'Enter a valid phone number',
     },
-    // minLength: {
-    //   value: 11,
-    //   message: 'Enter a valid phone number22',
-    // },
   },
   email: {
     required: true,
@@ -93,6 +90,9 @@ export const validationRules: ValidationRulesType = {
     },
   },
   diagnosisName: {
+    required: true,
+  },
+  medicationName: {
     required: true,
   },
 }

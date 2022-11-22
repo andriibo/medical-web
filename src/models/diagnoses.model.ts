@@ -1,4 +1,4 @@
-export interface IDiagnoses {
+export interface IDiagnosis {
   diagnosisId: string
   diagnosisName: string
   createdAt: string
@@ -10,12 +10,12 @@ export interface IDiagnoses {
   }
 }
 
-export interface ICreateDiagnosesForm {
+export interface ICreateDiagnosisForm {
   diagnosisName: string
 }
 
-export interface ICreateDiagnoses extends ICreateDiagnosesForm {
+export interface ICreateDiagnosis extends ICreateDiagnosisForm {
   patientUserId: string
 }
 
-export type ICreateDiagnosesFormKeys = keyof ICreateDiagnosesForm
+export type ICreateDiagnosesFormKeys = keyof ICreateDiagnosisForm

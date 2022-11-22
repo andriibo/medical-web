@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IDiagnoses } from '~models/diagnoses.model'
+import { IDiagnosis } from '~models/diagnoses.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const diagnosesApi = createApi({
@@ -8,7 +8,7 @@ export const diagnosesApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['Diagnoses'],
   endpoints: (build) => ({
-    getDiagnoses: build.query<IDiagnoses[], void>({
+    getDiagnoses: build.query<IDiagnosis[], void>({
       query: () => ({
         url: 'diagnoses',
       }),

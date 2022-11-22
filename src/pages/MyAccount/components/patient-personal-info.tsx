@@ -3,7 +3,9 @@ import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/mate
 import dayjs from 'dayjs'
 import React, { useMemo } from 'react'
 
+import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfile/edit-patient-profile-popup'
+import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
 import { useGetPatientProfileQuery } from '~stores/services/profile.api'
 
@@ -24,8 +26,12 @@ export const PatientPersonalInfo = () => {
     setIsProfilePopupOpen(false)
   }
 
+  if (isLoading) {
+    return <Spinner />
+  }
+
   if (!patientData) {
-    return null
+    return <EmptyBox />
   }
 
   return (

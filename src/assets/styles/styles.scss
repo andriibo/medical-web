@@ -43,6 +43,13 @@ form {
   }
 }
 
+.MuiListItem-root {
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
 .calendar-field {
   .MuiButtonBase-root {
     margin-right: 0;

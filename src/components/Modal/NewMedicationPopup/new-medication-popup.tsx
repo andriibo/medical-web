@@ -16,33 +16,34 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
+import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-list-box'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { ICreateDiagnosesFormKeys, ICreateDiagnosisForm } from '~models/diagnoses.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { useGetDiagnosesQuery } from '~stores/services/diagnoses.api'
-import { usePostPatientDiagnosisMutation } from '~stores/services/patient-diagnosis.api'
+import { ICreateMedicationForm, ICreateMedicationFormKeys } from '~models/medications.model'
+import { useGetMedicationsQuery } from '~stores/services/medications.api'
+import { usePostPatientMedicationMutation } from '~stores/services/patient-medication.api'
 import { useUserId } from '~stores/slices/auth.slice'
 
-interface NewDiagnosisPopupProps {
+interface NewMedicationPopupProps {
   open: boolean
   handleClose: () => void
 }
 
-export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClose }) => {
+export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleClose }) => {
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const userId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
 
-  const { data: diagnosesData, isLoading: diagnosesDataIsLodading } = useGetDiagnosesQuery()
-  const [createPatientDiagnosis, { isLoading: createPatientDiagnosisIsLoading }] = usePostPatientDiagnosisMutation()
+  const { data: medicationsData, isLoading: medicationsDataIsLoading } = useGetMedicationsQuery()
+  const [createPatientMedication, { isLoading: createPatientMedicationIsLoading }] = usePostPatientMedicationMutation()
 
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<ICreateDiagnosisForm>({
+  } = useForm<ICreateMedicationForm>({
     mode: 'onBlur',
   })
 
@@ -52,16 +53,16 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
     }
   }, [open, reset])
 
-  const onSubmit: SubmitHandler<ICreateDiagnosisForm> = async ({ diagnosisName }) => {
+  const onSubmit: SubmitHandler<ICreateMedicationForm> = async (data) => {
     try {
-      await createPatientDiagnosis({
-        diagnosisName,
+      await createPatientMedication({
+        ...data.medicationName,
         patientUserId: userId,
       }).unwrap()
 
       setFormErrors(null)
       handleClose()
-      enqueueSnackbar('Diagnose was added')
+      enqueueSnackbar('Medication was added')
     } catch (err) {
       const {
         data: { message },
@@ -77,7 +78,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
     }
   }
 
-  const fieldValidation = (name: ICreateDiagnosesFormKeys) => ({
+  const fieldValidation = (name: ICreateMedicationFormKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -85,7 +86,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
   return (
     <>
       <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle>New diagnosis</DialogTitle>
+        <DialogTitle>New medication</DialogTitle>
         <DialogContent>
           {formErrors && (
             <Alert className="form-alert" severity="error">
@@ -97,45 +98,45 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
               </ul>
             </Alert>
           )}
-          {diagnosesDataIsLodading ? (
+          {medicationsDataIsLoading ? (
             <Spinner />
-          ) : !diagnosesData ? (
+          ) : !medicationsData ? (
             <EmptyBox />
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 control={control}
-                defaultValue=""
-                name="diagnosisName"
+                defaultValue={{ genericName: '', brandNames: [] }}
+                name="medicationName"
                 render={({ field }) => (
                   <Autocomplete
-                    ListboxProps={{ style: { maxHeight: 224 } }}
+                    ListboxComponent={VirtualizedListBox}
                     disableClearable
                     disablePortal
                     fullWidth
-                    getOptionLabel={(option) => option.diagnosisName}
+                    getOptionLabel={(option) => `${option.brandNames.join(', ')} (${option.genericName})`}
                     onChange={(event, data): void => {
-                      field.onChange(data.diagnosisName)
+                      field.onChange(data)
                     }}
-                    options={diagnosesData}
+                    options={medicationsData}
                     renderInput={(params) => (
-                      <TextField {...params} {...fieldValidation(field.name)} label="Diagnosis Name" />
+                      <TextField {...params} {...fieldValidation(field.name)} label="Medication Name" />
                     )}
                     renderOption={(props, option) => (
-                      <Box component="li" {...props} key={option.diagnosisName}>
-                        {option.diagnosisName}
+                      <Box component="li" {...props} key={option.genericName + Math.random()}>
+                        {option.brandNames.join(', ')} ({option.genericName})
                       </Box>
                     )}
                   />
                 )}
-                rules={validationRules.diagnosisName}
+                rules={validationRules.medicationName}
               />
               <Box sx={{ textAlign: 'right' }}>
                 <Button onClick={handleClose} size="large">
                   Cancel
                 </Button>
                 <LoadingButton
-                  loading={createPatientDiagnosisIsLoading}
+                  loading={createPatientMedicationIsLoading}
                   size="large"
                   sx={{ ml: 1 }}
                   type="submit"
