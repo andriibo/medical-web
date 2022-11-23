@@ -4,13 +4,15 @@ import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { UserRoles } from '~/enums/user-roles.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
 import { IMainNav } from '~models/main-nav.model'
+import { useUserRole } from '~stores/slices/auth.slice'
 
 import styles from './header.module.scss'
 
-const mainNav: IMainNav[] = [
+const patientNav: IMainNav[] = [
   {
     label: 'Vitals',
     to: '/vitals',
@@ -33,8 +35,22 @@ const mainNav: IMainNav[] = [
   },
 ]
 
+const doctorNav: IMainNav[] = [
+  {
+    label: 'Patients',
+    to: '/patients',
+    disabled: true,
+  },
+  {
+    label: 'Requests',
+    to: '/requests',
+    disabled: true,
+  },
+]
+
 export const Header = () => {
   const [dropClose, setDropClose] = useState(false)
+  const userRole = useUserRole()
 
   const handleDrop = useCallback((val: boolean) => {
     setDropClose(val)
@@ -46,11 +62,17 @@ export const Header = () => {
         LIFE ZENZERS
       </NavLink>
       <nav className={styles.nav}>
-        {mainNav.map(({ label, to, disabled }) => (
-          <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
-            {label}
-          </NavLink>
-        ))}
+        {userRole === UserRoles.doctor
+          ? doctorNav.map(({ label, to, disabled }) => (
+              <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
+                {label}
+              </NavLink>
+            ))
+          : patientNav.map(({ label, to, disabled }) => (
+              <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
+                {label}
+              </NavLink>
+            ))}
       </nav>
       <IconButton aria-label="cart">
         <Badge badgeContent={3} color="primary">

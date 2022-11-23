@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 
 import { AccountTab } from '~/enums/account-tab'
 import { TabPanel } from '~components/TabPanel/tab-panel'
-import { PatientPersonalInfo } from '~pages/MyAccount/components/patient-personal-info'
-import { PatientSettings } from '~pages/MyAccount/components/patient-settings'
-import { PatientTreatment } from '~pages/MyAccount/components/patient-treatment'
+import { PatientPersonalInfo } from '~pages/Patient/Account/components/patient-personal-info'
+import { PatientSettings } from '~pages/Patient/Account/components/patient-settings'
+import { PatientTreatment } from '~pages/Patient/Account/components/patient-treatment'
 
-import styles from './my-account.module.scss'
+import styles from './patient-account.module.scss'
 
-export const MyAccount = () => {
+export const PatientAccount = () => {
   const [activeTab, setActiveTab] = useState<AccountTab>(AccountTab.personalInfo)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: AccountTab) => {
