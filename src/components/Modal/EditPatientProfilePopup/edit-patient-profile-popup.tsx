@@ -6,7 +6,6 @@ import {
   Button,
   Dialog,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   FormHelperText,
@@ -24,9 +23,9 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { useNavigate } from 'react-router-dom'
 
 import { GenderEnum } from '~/enums/gender.enum'
+import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
@@ -44,6 +43,11 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
   const [updatePatientProfile, { isLoading: updatePatientProfileIsLoading }] = usePatchPatientProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
+  const patientDefaultValues = useMemo(
+    () => deleteKeysFormObject({ ...patientData }, ['email', 'avatar']),
+    [patientData],
+  )
+
   const {
     handleSubmit,
     control,
@@ -51,14 +55,14 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
     formState: { errors },
   } = useForm<IUpdatePatientProfile>({
     mode: 'onBlur',
-    defaultValues: patientData,
+    defaultValues: patientDefaultValues,
   })
 
   useEffect(() => {
     if (open) {
-      reset(patientData)
+      reset(patientDefaultValues)
     }
-  }, [open, reset, patientData])
+  }, [open, reset, patientDefaultValues])
 
   const onSubmit: SubmitHandler<IUpdatePatientProfile> = async (data) => {
     try {

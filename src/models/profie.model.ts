@@ -1,6 +1,7 @@
 import { GenderEnum } from '~/enums/gender.enum'
 
 export interface IPatientProfile {
+  avatar: string
   email: string
   firstName: string
   lastName: string
@@ -11,11 +12,12 @@ export interface IPatientProfile {
   weight: number
 }
 
-export interface IUpdatePatientProfile extends Omit<IPatientProfile, 'email'> {}
+export interface IUpdatePatientProfile extends Omit<IPatientProfile, 'email' | 'avatar'> {}
 
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
 export interface IDoctorProfile {
+  avatar: string
   email: string
   firstName: string
   lastName: string
@@ -23,6 +25,6 @@ export interface IDoctorProfile {
   institution: string
 }
 
-export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email'> {}
+export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}
 
-export type IUpdateDoctorProfileKeys = keyof IUpdateDoctorProfile
+export type UpdateDoctorProfileKeys = keyof IUpdateDoctorProfile

@@ -86,3 +86,12 @@ button.infoListButton {
     background: none;
   }
 }
+
+button.deleteAccountBtn {
+  margin-top: 1.5rem;
+  color: #bbb;
+
+  &:hover {
+    color: #333;
+  }
+}

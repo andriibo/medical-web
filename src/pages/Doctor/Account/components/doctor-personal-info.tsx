@@ -1,22 +1,21 @@
 import { Edit } from '@mui/icons-material'
 import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/material'
-import dayjs from 'dayjs'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
-import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfile/edit-patient-profile-popup'
+import { EditDoctorProfilePopup } from '~components/Modal/EditDoctorProfilePopup/edit-doctor-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
-import { useGetPatientProfileQuery } from '~stores/services/profile.api'
+import { useGetDoctorProfileQuery } from '~stores/services/profile.api'
 
-import styles from '../my-account.module.scss'
+import styles from '../doctor-account.module.scss'
 
-export const PatientPersonalInfo = () => {
-  const { data: patientData, isLoading, isError } = useGetPatientProfileQuery()
+export const DoctorPersonalInfo = () => {
+  const [isProfilePopupOpen, setIsProfilePopupOpen] = useState(false)
 
-  const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
+  const { data: doctorData, isLoading } = useGetDoctorProfileQuery()
 
-  const [isProfilePopupOpen, setIsProfilePopupOpen] = React.useState(false)
+  const fullName = useMemo(() => `${doctorData?.firstName} ${doctorData?.lastName}`, [doctorData])
 
   const handleProfilePopupOpen = () => {
     setIsProfilePopupOpen(true)
@@ -30,7 +29,7 @@ export const PatientPersonalInfo = () => {
     return <Spinner />
   }
 
-  if (!patientData) {
+  if (!doctorData) {
     return <EmptyBox />
   }
 
@@ -43,30 +42,18 @@ export const PatientPersonalInfo = () => {
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
             <strong className={styles.userName}>{fullName}</strong>
-            <Chip label="Patient" size="small" />
+            <Chip label="Doctor" size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit
             </Button>
           </div>
           <ul className={styles.personalInfoList}>
             <li>
-              <span className={styles.infoListLabel}>Date of birth</span>
-              {dayjs(patientData.dob).format('MMMM D, YYYY')}
+              <span className={styles.infoListLabel}>Phone</span>+{doctorData.phone}
             </li>
             <li>
-              <span className={styles.infoListLabel}>Gender</span>
-              {patientData.gender}
-            </li>
-            <li>
-              <span className={styles.infoListLabel}>Height</span>
-              {patientData.height} cm
-            </li>
-            <li>
-              <span className={styles.infoListLabel}>Weight</span>
-              {patientData.weight} kg
-            </li>
-            <li>
-              <span className={styles.infoListLabel}>Phone</span>+{patientData.phone}
+              <span className={styles.infoListLabel}>Institution</span>
+              {doctorData.institution ? doctorData.institution : '-'}
             </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />
@@ -76,7 +63,7 @@ export const PatientPersonalInfo = () => {
           <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
             <li>
               <span className={styles.infoListLabel}>Email</span>
-              {patientData.email}
+              {doctorData.email}
               <IconButton className={styles.infoListButton} size="small">
                 <Edit fontSize="inherit" />
               </IconButton>
@@ -91,13 +78,12 @@ export const PatientPersonalInfo = () => {
               </span>
             </li>
           </ul>
+          <Button className={styles.deleteAccountBtn} color="inherit">
+            Delete my account
+          </Button>
         </div>
       </div>
-      <EditPatientProfilePopup
-        handleClose={handleProfilePopupClose}
-        open={isProfilePopupOpen}
-        patientData={patientData}
-      />
+      <EditDoctorProfilePopup doctorData={doctorData} handleClose={handleProfilePopupClose} open={isProfilePopupOpen} />
     </>
   )
 }
