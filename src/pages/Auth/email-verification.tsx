@@ -1,6 +1,7 @@
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useSnackbar } from 'notistack'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
@@ -10,7 +11,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IAuthSignUpConfirm, IAuthSignUpConfirmKeys } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostAuthSignUpConfirmMutation } from '~stores/services/auth.api'
+import { usePostAuthSignUpConfirmMutation, usePostAuthSignUpResendCodeMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
 
@@ -20,10 +21,27 @@ interface LocationState {
 
 export const EmailVerification = () => {
   const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
+  const location = useLocation()
   const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthSignUpConfirmMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const location = useLocation()
   const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
+
+  const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthSignUpResendCodeMutation()
+
+  const handleResendCode = useCallback(async () => {
+    try {
+      const res = await resendCode({ email }).unwrap()
+
+      enqueueSnackbar("Diagnosis wasn't deleted")
+
+      console.log(res)
+    } catch (err) {
+      console.error(err)
+      // setDeletingDiagnosisId(null)
+      enqueueSnackbar("Diagnosis wasn't deleted", { variant: 'warning' })
+    }
+  }, [])
 
   useEffect(() => {
     if (!email) {
@@ -125,9 +143,12 @@ export const EmailVerification = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Need a new verification code?</span>
-        <Button component={NavLink} disabled size="small" to={PageUrls.SignIn}>
+        <Button onClick={handleResendCode} size="small">
           Resend
         </Button>
+        <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small">
+          Resend
+        </LoadingButton>
       </div>
     </>
   )

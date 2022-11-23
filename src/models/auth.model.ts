@@ -39,6 +39,16 @@ export type IAuthSignUpConfirm = {
   code: string
 }
 
+export interface IConfirmEmail {
+  email: string
+}
+
+export interface IConfirmEmailResponse {
+  attributeName: string
+  deliveryMedium: string
+  destination: string
+}
+
 export type IAuthSignInKeys = keyof IAuthSignIn
 export type IAuthSignUpPatientKeys = keyof IAuthSignUpPatient
 export type IAuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
