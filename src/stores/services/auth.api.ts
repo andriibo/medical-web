@@ -1,34 +1,27 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
+import { IAuthData, IAuthSignIn, IAuthSignUpConfirm, IAuthSignUpDoctor, IAuthSignUpPatient } from '~models/auth.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
-
-import {
-  AuthDataResponse,
-  PostAuthConfirmSignUpRequest,
-  PostAuthSignInRequest,
-  PostAuthSignUpDoctorRequest,
-  PostAuthSignUpPatientRequest,
-} from '../types/auth.types'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['Auth'],
   endpoints: (build) => ({
-    postAuthSignIn: build.mutation<AuthDataResponse, PostAuthSignInRequest>({
+    postAuthSignIn: build.mutation<IAuthData, IAuthSignIn>({
       query: (queryArg) => ({ url: 'sign-in', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthSignUpDoctor: build.mutation<null, PostAuthSignUpDoctorRequest>({
-      query: (queryArg) => ({ url: 'sign-up/doctor', method: 'POST', body: { ...queryArg } }),
+    postAuthSignUpDoctor: build.mutation<null, IAuthSignUpDoctor>({
+      query: (queryArg) => ({ url: 'doctor/sign-up', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthSignUpPatient: build.mutation<null, PostAuthSignUpPatientRequest>({
-      query: (queryArg) => ({ url: 'sign-up/patient', method: 'POST', body: { ...queryArg } }),
+    postAuthSignUpPatient: build.mutation<null, IAuthSignUpPatient>({
+      query: (queryArg) => ({ url: 'patient/sign-up', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthConfirmSignUp: build.mutation<null, PostAuthConfirmSignUpRequest>({
-      query: (queryArg) => ({ url: 'confirm-sign-up', method: 'POST', body: { ...queryArg } }),
+    postAuthSignUpConfirm: build.mutation<null, IAuthSignUpConfirm>({
+      query: (queryArg) => ({ url: 'sign-up/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
   }),
@@ -38,5 +31,5 @@ export const {
   usePostAuthSignInMutation,
   usePostAuthSignUpDoctorMutation,
   usePostAuthSignUpPatientMutation,
-  usePostAuthConfirmSignUpMutation,
+  usePostAuthSignUpConfirmMutation,
 } = authApi

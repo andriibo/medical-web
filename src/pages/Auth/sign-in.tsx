@@ -6,14 +6,15 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
+import { IAuthSignIn, IAuthSignInKeys } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
 import { signInSuccess } from '~stores/slices/auth.slice'
-import { PostAuthSignInRequest, PostAuthSignInRequestKeys } from '~stores/types/auth.types'
 
 export const SignIn = () => {
   const dispatch = useAppDispatch()
@@ -31,33 +32,30 @@ export const SignIn = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<PostAuthSignInRequest>({
+  } = useForm<IAuthSignIn>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<PostAuthSignInRequest> = async (data) => {
+  const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
       const response = await authSignIn(data).unwrap()
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
-      navigate('/')
+      navigate('/', { replace: true })
     } catch (err) {
       const {
         data: { message },
       } = err as IErrorRequest
 
-      console.error(err)
       setCurrentEmail(data.email)
-      if (Array.isArray(message)) {
-        setFormErrors(message)
-      } else {
-        setFormErrors([message])
-      }
+      setFormErrors(Array.isArray(message) ? message : [message])
+
+      console.error(err)
     }
   }
 
-  const fieldValidation = (name: PostAuthSignInRequestKeys) => ({
+  const fieldValidation = (name: IAuthSignInKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -77,7 +75,7 @@ export const SignIn = () => {
           </ul>
           {formErrors.includes(AuthErrorMessage.notConfirmed) && (
             <Box sx={{ mt: 1 }}>
-              <NavLink state={{ email: currentEmail }} to="/email-verification">
+              <NavLink state={{ email: currentEmail }} to={PageUrls.EmailVerification}>
                 Verify your email
               </NavLink>
             </Box>
@@ -125,7 +123,7 @@ export const SignIn = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Don’t have an account?</span>
-        <Button component={NavLink} size="small" to="/account-type">
+        <Button component={NavLink} size="small" to={PageUrls.AccountType}>
           Sign Up
         </Button>
       </div>

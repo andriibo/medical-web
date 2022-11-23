@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 
+import { IAuthData } from '~models/auth.model'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
-import { AuthDataResponse } from '~stores/types/auth.types'
 
 export interface AuthState {
-  data: AuthDataResponse
+  data: IAuthData
 }
 
 const initialState: AuthState = {
@@ -25,10 +25,10 @@ const authSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    setToken: (state, { payload }: PayloadAction<AuthDataResponse>) => {
+    setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.token = payload.token
     },
-    signInSuccess: (state, { payload }: PayloadAction<AuthDataResponse>) => {
+    signInSuccess: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data = payload
     },
     clearPersist: (state) => {
@@ -45,9 +45,11 @@ const authSlice = createSlice({
 
 const selectIsAuth = (state: RootState) => Boolean(state.auth.data.token)
 const selectUserRole = (state: RootState) => state.auth.data.user.roles[0]
+const selectUserId = (state: RootState) => state.auth.data.user.id
 
 export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
+export const useUserId = () => useAppSelector(selectUserId)
 
 export const {
   reducer: authReducer,

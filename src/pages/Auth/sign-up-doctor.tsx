@@ -7,11 +7,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
+import { IAuthSignUpDoctor, IAuthSignUpDoctorKeys } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
-import { PostAuthSignUpDoctorRequest, PostAuthSignUpDoctorRequestKeys } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
@@ -29,32 +30,29 @@ export const SignUpDoctor = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<PostAuthSignUpDoctorRequest>({
+  } = useForm<IAuthSignUpDoctor>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<PostAuthSignUpDoctorRequest> = (data) => {
+  const onSubmit: SubmitHandler<IAuthSignUpDoctor> = (data) => {
     authSignUpDoctor({ ...data, phone: data.phone.split('-').join('') })
       .unwrap()
       .then(() => {
         setFormErrors(null)
-        navigate('/email-verification', { state: { email: data.email } })
+        navigate(PageUrls.EmailVerification, { state: { email: data.email } })
       })
       .catch((err: IErrorRequest) => {
         const {
           data: { message },
         } = err
 
+        setFormErrors(Array.isArray(message) ? message : [message])
+
         console.error(err)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
       })
   }
 
-  const fieldValidation = (name: PostAuthSignUpDoctorRequestKeys) => ({
+  const fieldValidation = (name: IAuthSignUpDoctorKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -62,7 +60,7 @@ export const SignUpDoctor = () => {
   return (
     <>
       <div className={styles.authHeader}>
-        <IconButton component={NavLink} to="/account-type">
+        <IconButton component={NavLink} to={PageUrls.AccountType}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h6">Create an MD account</Typography>
@@ -166,7 +164,7 @@ export const SignUpDoctor = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>
-        <Button component={NavLink} size="small" to="/sign-in">
+        <Button component={NavLink} size="small" to={PageUrls.SignIn}>
           Sign In
         </Button>
       </div>

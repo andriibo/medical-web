@@ -3,6 +3,7 @@ import { ListItemIcon, MenuItem } from '@mui/material'
 import React, { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { useAppDispatch } from '~stores/hooks'
 import { clearPersist } from '~stores/slices/auth.slice'
 
@@ -13,7 +14,7 @@ export const LogoutButton = () => {
   const handleLogout = useCallback(async () => {
     await dispatch(clearPersist())
 
-    navigate('/sign-in', { replace: true, state: undefined })
+    navigate(PageUrls.SignIn, { replace: true, state: undefined })
   }, [dispatch, navigate])
 
   return (

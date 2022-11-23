@@ -24,11 +24,12 @@ import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { GenderEnum } from '~/enums/gender.enum'
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
+import { IAuthSignUpPatientForm, IAuthSignUpPatientKeys } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
-import { PostAuthSignUpPatientForm, PostAuthSignUpPatientRequestKeys } from '~stores/types/auth.types'
 
 import styles from './auth.module.scss'
 
@@ -46,22 +47,21 @@ export const SignUpPatient = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<PostAuthSignUpPatientForm>({
+  } = useForm<IAuthSignUpPatientForm>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<PostAuthSignUpPatientForm> = (data) => {
+  const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = (data) => {
     authSignUpPatient({
       ...data,
-      gender: GenderEnum[data.gender as keyof typeof GenderEnum],
+      gender: data.gender as GenderEnum,
       height: Number(data.height),
       weight: Number(data.weight),
-      phone: data.phone.split('-').join(''),
     })
       .unwrap()
       .then(() => {
         setFormErrors(null)
-        navigate('/email-verification', { state: { email: data.email } })
+        navigate(PageUrls.EmailVerification, { state: { email: data.email } })
       })
 
       .catch((err: IErrorRequest) => {
@@ -69,16 +69,13 @@ export const SignUpPatient = () => {
           data: { message },
         } = err
 
+        setFormErrors(Array.isArray(message) ? message : [message])
+
         console.error(err)
-        if (Array.isArray(message)) {
-          setFormErrors(message)
-        } else {
-          setFormErrors([message])
-        }
       })
   }
 
-  const fieldValidation = (name: PostAuthSignUpPatientRequestKeys) => ({
+  const fieldValidation = (name: IAuthSignUpPatientKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -86,7 +83,7 @@ export const SignUpPatient = () => {
   return (
     <>
       <div className={styles.authHeader}>
-        <IconButton component={NavLink} to="/account-type">
+        <IconButton component={NavLink} to={PageUrls.AccountType}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h6">Create a patient account</Typography>
@@ -139,6 +136,7 @@ export const SignUpPatient = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DesktopDatePicker
                   {...field}
+                  className="calendar-field"
                   disableFuture
                   inputFormat="YYYY/MM/DD"
                   maxDate={dayjs(maxDate)}
@@ -168,9 +166,9 @@ export const SignUpPatient = () => {
             <FormControl error={Boolean(errors[field.name])} fullWidth>
               <InputLabel id="gender-select">Gender</InputLabel>
               <Select {...field} label="Gender" labelId="gender-select">
-                {Object.keys(GenderEnum).map((gender) => (
+                {Object.values(GenderEnum).map((gender) => (
                   <MenuItem key={gender} value={gender}>
-                    {GenderEnum[gender as keyof typeof GenderEnum]}
+                    {gender}
                   </MenuItem>
                 ))}
               </Select>
@@ -187,7 +185,6 @@ export const SignUpPatient = () => {
               name="height"
               render={({ field }) => (
                 <TextField
-                  prefix="cm"
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
@@ -209,7 +206,6 @@ export const SignUpPatient = () => {
               name="weight"
               render={({ field }) => (
                 <TextField
-                  prefix="cm"
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
@@ -232,7 +228,9 @@ export const SignUpPatient = () => {
           render={({ field }) => (
             <InputMask
               mask="1-999-999-9999"
-              onChange={(value): void => {
+              onChange={(event): void => {
+                const value = event.target.value.split('-').join('')
+
                 field.onChange(value)
               }}
               value={field.value}
@@ -262,7 +260,7 @@ export const SignUpPatient = () => {
               {...field}
               InputProps={{
                 endAdornment: (
-                  <IconButton onClick={handleShowPassword} sx={{ mr: '-12px' }}>
+                  <IconButton onClick={handleShowPassword}>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 ),
@@ -283,7 +281,7 @@ export const SignUpPatient = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>
-        <Button component={NavLink} size="small" to="/sign-in">
+        <Button component={NavLink} size="small" to={PageUrls.SignIn}>
           Sign In
         </Button>
       </div>
