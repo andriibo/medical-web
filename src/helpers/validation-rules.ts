@@ -84,9 +84,9 @@ export const validationRules: ValidationRulesType = {
   },
   code: {
     required: true,
-    minLength: {
-      value: 6,
-      message: 'Min length is 6',
+    pattern: {
+      value: /[0-9]{6}/,
+      message: 'Enter a valid verification code',
     },
   },
   diagnosisName: {

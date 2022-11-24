@@ -34,6 +34,14 @@ form {
   }
 }
 
+.verification-control {
+  .MuiInputBase-input {
+    height: 1.15em;
+    font-size: 1.25em;
+    letter-spacing: 4px;
+  }
+}
+
 .MuiDialog-paperScrollBody {
   .MuiDialogContent-root,
   &.MuiDialog-paper {

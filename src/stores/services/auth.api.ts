@@ -1,6 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IAuthData, IAuthSignIn, IAuthSignUpConfirm, IAuthSignUpDoctor, IAuthSignUpPatient } from '~models/auth.model'
+import {
+  IAuthData,
+  IAuthSignIn,
+  IAuthSignUpConfirm,
+  IAuthSignUpDoctor,
+  IAuthSignUpPatient,
+  IConfirmEmail,
+  IConfirmEmailResponse,
+} from '~models/auth.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const authApi = createApi({
@@ -24,6 +32,10 @@ export const authApi = createApi({
       query: (queryArg) => ({ url: 'sign-up/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
+    postAuthSignUpResendCode: build.mutation<IConfirmEmailResponse, IConfirmEmail>({
+      query: (queryArg) => ({ url: 'sign-up/resend-code', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
   }),
 })
 
@@ -32,4 +44,5 @@ export const {
   usePostAuthSignUpDoctorMutation,
   usePostAuthSignUpPatientMutation,
   usePostAuthSignUpConfirmMutation,
+  usePostAuthSignUpResendCodeMutation,
 } = authApi

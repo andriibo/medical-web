@@ -51,7 +51,7 @@ export const PatientTreatment = () => {
     } catch (err) {
       console.error(err)
       setDeletingDiagnosisId(null)
-      enqueueSnackbar("Diagnosis wasn't deleted", { variant: 'warning' })
+      enqueueSnackbar('Diagnosis was not deleted', { variant: 'warning' })
     }
   }
 
@@ -70,9 +70,9 @@ export const PatientTreatment = () => {
 
       enqueueSnackbar('Medication deleted')
     } catch (err) {
-      console.error(err)
       setDeletingMedicationId(null)
-      enqueueSnackbar("Medication wasn't deleted", { variant: 'warning' })
+      enqueueSnackbar('Medication was not deleted', { variant: 'warning' })
+      console.error(err)
     }
   }
 
