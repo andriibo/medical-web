@@ -34,22 +34,32 @@ export interface IAuthSignUpDoctor extends IDoctorProfile {
   password: string
 }
 
-export type IAuthSignUpConfirm = {
+export interface IAuthSignUpConfirm {
   email: string
   code: string
 }
 
-export interface IConfirmEmail {
+export interface IAuthForgotPasswordConfirm {
+  email: string
+  code: string
+  newPassword: string
+}
+
+export interface IAuthForgotPasswordConfirmForm extends Omit<IAuthForgotPasswordConfirm, 'email'> {}
+
+export interface IAuthEmail {
   email: string
 }
 
-export interface IConfirmEmailResponse {
+export interface IAuthEmailResponse {
   attributeName: string
   deliveryMedium: string
   destination: string
 }
 
-export type IAuthSignInKeys = keyof IAuthSignIn
-export type IAuthSignUpPatientKeys = keyof IAuthSignUpPatient
-export type IAuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
-export type IAuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
+export type AuthSignInKeys = keyof IAuthSignIn
+export type AuthSignUpPatientKeys = keyof IAuthSignUpPatient
+export type AuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
+export type AuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
+export type AuthEmailKeys = keyof IAuthEmail
+export type AuthForgotPasswordConfirmFormKeys = keyof IAuthForgotPasswordConfirmForm

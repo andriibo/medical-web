@@ -35,7 +35,7 @@ export const AccountTypeSelection = () => (
     </nav>
     <div className={styles.authFooter}>
       <span className={styles.authFooterText}>Have an account?</span>
-      <Button component={NavLink} size="small" to={PageUrls.SignIn}>
+      <Button component={NavLink} size="small" sx={{ ml: 1 }} to={PageUrls.SignIn}>
         Sign In
       </Button>
     </div>

@@ -5,4 +5,6 @@ export enum PageUrls {
   SignUpDoctor = '/sign-up-doctor',
   EmailVerification = '/email-verification',
   MyAccount = '/my-account',
+  ForgotPassword = '/forgot-password',
+  ForgotPasswordConfirm = '/forgot-password/confirm',
 }

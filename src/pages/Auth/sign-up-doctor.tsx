@@ -10,7 +10,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { IAuthSignUpDoctor, IAuthSignUpDoctorKeys } from '~models/auth.model'
+import { AuthSignUpDoctorKeys, IAuthSignUpDoctor } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
 
@@ -52,7 +52,7 @@ export const SignUpDoctor = () => {
       })
   }
 
-  const fieldValidation = (name: IAuthSignUpDoctorKeys) => ({
+  const fieldValidation = (name: AuthSignUpDoctorKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -139,7 +139,6 @@ export const SignUpDoctor = () => {
           name="password"
           render={({ field }) => (
             <TextField
-              type={showPassword ? 'text' : 'password'}
               {...field}
               {...fieldValidation(field.name)}
               InputProps={{
@@ -149,8 +148,10 @@ export const SignUpDoctor = () => {
                   </IconButton>
                 ),
               }}
+              autoComplete="new-password"
               fullWidth
               label="Password"
+              type={showPassword ? 'text' : 'password'}
             />
           )}
           rules={validationRules.password}
@@ -164,7 +165,7 @@ export const SignUpDoctor = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>
-        <Button component={NavLink} size="small" to={PageUrls.SignIn}>
+        <Button component={NavLink} size="small" sx={{ ml: 1 }} to={PageUrls.SignIn}>
           Sign In
         </Button>
       </div>

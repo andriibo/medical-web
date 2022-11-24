@@ -2,12 +2,13 @@ import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
   IAuthData,
+  IAuthEmail,
+  IAuthEmailResponse,
+  IAuthForgotPasswordConfirm,
   IAuthSignIn,
   IAuthSignUpConfirm,
   IAuthSignUpDoctor,
   IAuthSignUpPatient,
-  IConfirmEmail,
-  IConfirmEmailResponse,
 } from '~models/auth.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
@@ -32,8 +33,16 @@ export const authApi = createApi({
       query: (queryArg) => ({ url: 'sign-up/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthSignUpResendCode: build.mutation<IConfirmEmailResponse, IConfirmEmail>({
+    postAuthSignUpResendCode: build.mutation<IAuthEmailResponse, IAuthEmail>({
       query: (queryArg) => ({ url: 'sign-up/resend-code', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthForgotPassword: build.mutation<IAuthEmailResponse, { email: string }>({
+      query: (queryArg) => ({ url: '/forgot-password', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthForgotPasswordConfirm: build.mutation<IAuthEmailResponse, IAuthForgotPasswordConfirm>({
+      query: (queryArg) => ({ url: '/forgot-password/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
   }),
@@ -45,4 +54,6 @@ export const {
   usePostAuthSignUpPatientMutation,
   usePostAuthSignUpConfirmMutation,
   usePostAuthSignUpResendCodeMutation,
+  usePostAuthForgotPasswordMutation,
+  usePostAuthForgotPasswordConfirmMutation,
 } = authApi

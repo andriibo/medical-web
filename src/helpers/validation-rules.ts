@@ -86,7 +86,7 @@ export const validationRules: ValidationRulesType = {
     required: true,
     pattern: {
       value: /[0-9]{6}/,
-      message: 'Enter a valid verification code',
+      message: 'Enter a valid code',
     },
   },
   diagnosisName: {

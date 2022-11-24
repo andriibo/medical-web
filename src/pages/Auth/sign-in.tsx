@@ -9,7 +9,7 @@ import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { IAuthSignIn, IAuthSignInKeys } from '~models/auth.model'
+import { AuthSignInKeys, IAuthSignIn } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
@@ -55,7 +55,7 @@ export const SignIn = () => {
     }
   }
 
-  const fieldValidation = (name: IAuthSignInKeys) => ({
+  const fieldValidation = (name: AuthSignInKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -113,7 +113,7 @@ export const SignIn = () => {
           rules={validationRules.password}
         />
         <div className={styles.authHelperBox}>
-          <Button component={NavLink} size="small" to="">
+          <Button component={NavLink} size="small" to={PageUrls.ForgotPassword}>
             Forgot password?
           </Button>
         </div>
@@ -123,7 +123,7 @@ export const SignIn = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Don’t have an account?</span>
-        <Button component={NavLink} size="small" to={PageUrls.AccountType}>
+        <Button component={NavLink} size="small" sx={{ ml: 1 }} to={PageUrls.AccountType}>
           Sign Up
         </Button>
       </div>
