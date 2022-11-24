@@ -31,15 +31,17 @@ export const EmailVerification = () => {
 
   const handleResendCode = useCallback(async () => {
     try {
-      const res = await resendCode({ email }).unwrap()
+      await resendCode({ email }).unwrap()
 
-      enqueueSnackbar("Diagnosis wasn't deleted")
-
-      console.log(res)
+      enqueueSnackbar('Verification code was sent to your email')
     } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
+
+      setFormErrors(Array.isArray(message) ? message : [message])
+
       console.error(err)
-      // setDeletingDiagnosisId(null)
-      enqueueSnackbar("Diagnosis wasn't deleted", { variant: 'warning' })
     }
   }, [])
 
@@ -110,7 +112,7 @@ export const EmailVerification = () => {
           render={({ field }) => (
             <InputMask
               mask="999999"
-              maskChar=""
+              maskChar="_"
               onChange={(value): void => {
                 field.onChange(value)
               }}
@@ -119,7 +121,13 @@ export const EmailVerification = () => {
               {
                 // @ts-ignore
                 () => (
-                  <TextField {...fieldValidation(field.name)} autoComplete="off" fullWidth label="Verification code" />
+                  <TextField
+                    {...fieldValidation(field.name)}
+                    autoComplete="off"
+                    className="verification-control"
+                    fullWidth
+                    label="Verification code"
+                  />
                 )
               }
             </InputMask>
@@ -143,9 +151,6 @@ export const EmailVerification = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Need a new verification code?</span>
-        <Button onClick={handleResendCode} size="small">
-          Resend
-        </Button>
         <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small">
           Resend
         </LoadingButton>
