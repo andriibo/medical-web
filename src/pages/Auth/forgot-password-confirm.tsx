@@ -2,27 +2,17 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import {
-  AuthForgotPasswordConfirmFormKeys,
-  AuthSignUpConfirmKeys,
-  IAuthForgotPasswordConfirm,
-  IAuthForgotPasswordConfirmForm,
-  IAuthSignUpConfirm,
-} from '~models/auth.model'
+import { AuthForgotPasswordConfirmFormKeys, IAuthForgotPasswordConfirmForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import {
-  usePostAuthForgotPasswordConfirmMutation,
-  usePostAuthSignUpConfirmMutation,
-  usePostAuthSignUpResendCodeMutation,
-} from '~stores/services/auth.api'
+import { usePostAuthForgotPasswordConfirmMutation, usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
 
@@ -35,12 +25,13 @@ export const ForgotPasswordConfirm = () => {
   const { enqueueSnackbar } = useSnackbar()
   const location = useLocation()
   const [showPassword, setShowPassword] = useState(false)
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
   const [forgotPasswordConfirm, { isLoading: forgotPasswordConfirmIsLoading }] =
     usePostAuthForgotPasswordConfirmMutation()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
+  const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthForgotPasswordMutation()
 
-  const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthSignUpResendCodeMutation()
+  const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword)
@@ -62,12 +53,6 @@ export const ForgotPasswordConfirm = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (!email) {
-      // navigate(PageUrls.SignIn)
-    }
-  }, [email, navigate])
-
   const {
     handleSubmit,
     control,
@@ -83,7 +68,7 @@ export const ForgotPasswordConfirm = () => {
       }).unwrap()
 
       setFormErrors(null)
-      navigate(PageUrls.SignIn, { replace: true })
+      navigate(PageUrls.ForgotPasswordSuccess, { replace: true })
     } catch (err) {
       const {
         data: { message },
@@ -101,7 +86,7 @@ export const ForgotPasswordConfirm = () => {
   })
 
   if (!email) {
-    // return null
+    return <Navigate replace to={PageUrls.SignIn} />
   }
 
   return (
@@ -130,7 +115,7 @@ export const ForgotPasswordConfirm = () => {
           render={({ field }) => (
             <InputMask
               mask="999999"
-              maskChar="_"
+              maskChar=""
               onChange={(value): void => {
                 field.onChange(value)
               }}
@@ -143,6 +128,7 @@ export const ForgotPasswordConfirm = () => {
                     {...fieldValidation(field.name)}
                     autoComplete="off"
                     className="verification-control"
+                    data-mask="______"
                     fullWidth
                     label="Confirmation code"
                   />

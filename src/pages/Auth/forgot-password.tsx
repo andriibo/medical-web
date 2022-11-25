@@ -21,7 +21,6 @@ import styles from './auth.module.scss'
 
 export const ForgotPassword = () => {
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [forgotPassword, { isLoading: forgotPasswordIsLoading }] = usePostAuthForgotPasswordMutation()
@@ -34,9 +33,8 @@ export const ForgotPassword = () => {
 
   const onSubmit: SubmitHandler<IAuthEmail> = async ({ email }) => {
     try {
-      const res = await forgotPassword({ email }).unwrap()
+      await forgotPassword({ email }).unwrap()
 
-      console.log(res)
       navigate(PageUrls.ForgotPasswordConfirm, { state: { email } })
     } catch (err) {
       const {

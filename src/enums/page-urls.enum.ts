@@ -7,4 +7,5 @@ export enum PageUrls {
   MyAccount = '/my-account',
   ForgotPassword = '/forgot-password',
   ForgotPasswordConfirm = '/forgot-password/confirm',
+  ForgotPasswordSuccess = '/forgot-password/success',
 }

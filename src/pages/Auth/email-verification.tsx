@@ -112,7 +112,7 @@ export const EmailVerification = () => {
           render={({ field }) => (
             <InputMask
               mask="999999"
-              maskChar="_"
+              maskChar=""
               onChange={(value): void => {
                 field.onChange(value)
               }}
@@ -125,6 +125,7 @@ export const EmailVerification = () => {
                     {...fieldValidation(field.name)}
                     autoComplete="off"
                     className="verification-control"
+                    data-mask="______"
                     fullWidth
                     label="Verification code"
                   />
