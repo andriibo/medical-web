@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import React, { useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
+import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
@@ -12,11 +13,12 @@ import { useGetPatientProfileQuery } from '~stores/services/profile.api'
 import styles from '../patient-account.module.scss'
 
 export const PatientPersonalInfo = () => {
+  const [profilePopupOpen, setProfilePopupOpen] = useState(false)
+  const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
+
   const { data: patientData, isLoading } = useGetPatientProfileQuery()
 
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
-
-  const [profilePopupOpen, setProfilePopupOpen] = useState(false)
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
@@ -24,6 +26,14 @@ export const PatientPersonalInfo = () => {
 
   const handleProfilePopupClose = () => {
     setProfilePopupOpen(false)
+  }
+
+  const handleChangePasswordPopupOpen = () => {
+    setChangePasswordPopupOpen(true)
+  }
+
+  const handleChangePasswordPopupClose = () => {
+    setChangePasswordPopupOpen(false)
   }
 
   if (isLoading) {
@@ -85,7 +95,7 @@ export const PatientPersonalInfo = () => {
               <span className={styles.infoListLabel}>Password</span>
               <span className={styles.infoListText}>
                 Last updated on September 5, 2022
-                <IconButton className={styles.infoListButton} size="small">
+                <IconButton className={styles.infoListButton} onClick={handleChangePasswordPopupOpen} size="small">
                   <Edit fontSize="inherit" />
                 </IconButton>
               </span>
@@ -101,6 +111,7 @@ export const PatientPersonalInfo = () => {
         open={profilePopupOpen}
         patientData={patientData}
       />
+      <ChangePasswordPopup handleClose={handleChangePasswordPopupClose} open={changePasswordPopupOpen} />
     </>
   )
 }

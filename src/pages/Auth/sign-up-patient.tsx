@@ -51,28 +51,26 @@ export const SignUpPatient = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = (data) => {
-    authSignUpPatient({
-      ...data,
-      gender: data.gender as GenderEnum,
-      height: Number(data.height),
-      weight: Number(data.weight),
-    })
-      .unwrap()
-      .then(() => {
-        setFormErrors(null)
-        navigate(PageUrls.EmailVerification, { state: { email: data.email } })
-      })
+  const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = async (data) => {
+    try {
+      await authSignUpPatient({
+        ...data,
+        gender: data.gender as GenderEnum,
+        height: Number(data.height),
+        weight: Number(data.weight),
+      }).unwrap()
 
-      .catch((err: IErrorRequest) => {
-        const {
-          data: { message },
-        } = err
+      setFormErrors(null)
+      navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+    } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
-        setFormErrors(Array.isArray(message) ? message : [message])
+      setFormErrors(Array.isArray(message) ? message : [message])
 
-        console.error(err)
-      })
+      console.error(err)
+    }
   }
 
   const fieldValidation = (name: AuthSignUpPatientKeys) => ({
