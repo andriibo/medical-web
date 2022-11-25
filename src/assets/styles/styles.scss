@@ -35,6 +35,24 @@ form {
 }
 
 .verification-control {
+  &::after {
+    content: attr(data-mask);
+    position: absolute;
+    top: 1.25rem;
+    left: 0.875rem;
+    transition: all 0.3s ease;
+    opacity: 0;
+    font-size: 1.625em;
+    font-weight: 300;
+    letter-spacing: 4px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  &:has(.MuiFormLabel-filled, .Mui-focused)::after {
+    opacity: 0.4;
+  }
+
   .MuiInputBase-input {
     height: 1.15em;
     font-size: 1.25em;

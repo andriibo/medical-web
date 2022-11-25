@@ -27,7 +27,7 @@ import { GenderEnum } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { IAuthSignUpPatientForm, IAuthSignUpPatientKeys } from '~models/auth.model'
+import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
 
@@ -75,7 +75,7 @@ export const SignUpPatient = () => {
       })
   }
 
-  const fieldValidation = (name: IAuthSignUpPatientKeys) => ({
+  const fieldValidation = (name: AuthSignUpPatientKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -256,8 +256,8 @@ export const SignUpPatient = () => {
           name="password"
           render={({ field }) => (
             <TextField
-              type={showPassword ? 'text' : 'password'}
               {...field}
+              {...fieldValidation(field.name)}
               InputProps={{
                 endAdornment: (
                   <IconButton onClick={handleShowPassword}>
@@ -265,9 +265,10 @@ export const SignUpPatient = () => {
                   </IconButton>
                 ),
               }}
-              {...fieldValidation(field.name)}
+              autoComplete="new-password"
               fullWidth
               label="Password"
+              type={showPassword ? 'text' : 'password'}
             />
           )}
           rules={validationRules.password}
@@ -281,7 +282,7 @@ export const SignUpPatient = () => {
       </form>
       <div className={styles.authFooter}>
         <span className={styles.authFooterText}>Have an account?</span>
-        <Button component={NavLink} size="small" to={PageUrls.SignIn}>
+        <Button component={NavLink} size="small" sx={{ ml: 1 }} to={PageUrls.SignIn}>
           Sign In
         </Button>
       </div>

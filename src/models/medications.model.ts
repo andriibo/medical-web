@@ -22,4 +22,4 @@ export interface ICreateMedication extends IMedicationItem {
   patientUserId: string
 }
 
-export type ICreateMedicationFormKeys = keyof ICreateMedicationForm
+export type CreateMedicationFormKeys = keyof ICreateMedicationForm

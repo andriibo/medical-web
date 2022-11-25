@@ -1,17 +1,18 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { AuthSignUpConfirmKeys, IAuthSignUpConfirm } from '~models/auth.model'
+import { AuthForgotPasswordConfirmFormKeys, IAuthForgotPasswordConfirmForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostAuthSignUpConfirmMutation, usePostAuthSignUpResendCodeMutation } from '~stores/services/auth.api'
+import { usePostAuthForgotPasswordConfirmMutation, usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
 
@@ -19,21 +20,28 @@ interface LocationState {
   email?: string
 }
 
-export const EmailVerification = () => {
+export const ForgotPasswordConfirm = () => {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const location = useLocation()
-  const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthSignUpConfirmMutation()
+  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const [forgotPasswordConfirm, { isLoading: forgotPasswordConfirmIsLoading }] =
+    usePostAuthForgotPasswordConfirmMutation()
+  const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthForgotPasswordMutation()
+
   const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
 
-  const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthSignUpResendCodeMutation()
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword)
+  }
 
   const handleResendCode = useCallback(async () => {
     try {
       await resendCode({ email }).unwrap()
 
-      enqueueSnackbar('Verification code was sent to your email')
+      enqueueSnackbar('Confirmation code was sent to your email')
     } catch (err) {
       const {
         data: { message },
@@ -45,27 +53,22 @@ export const EmailVerification = () => {
     }
   }, [])
 
-  useEffect(() => {
-    if (!email) {
-      navigate(PageUrls.SignIn)
-    }
-  }, [email, navigate])
-
   const {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<IAuthSignUpConfirm>()
+  } = useForm<IAuthForgotPasswordConfirmForm>()
 
-  const onSubmit: SubmitHandler<IAuthSignUpConfirm> = async ({ code }) => {
+  const onSubmit: SubmitHandler<IAuthForgotPasswordConfirmForm> = async ({ code, newPassword }) => {
     try {
-      await authConfirmSignUp({
+      await forgotPasswordConfirm({
         email,
         code,
+        newPassword,
       }).unwrap()
 
       setFormErrors(null)
-      navigate(PageUrls.SignIn, { replace: true })
+      navigate(PageUrls.ForgotPasswordSuccess, { replace: true })
     } catch (err) {
       const {
         data: { message },
@@ -77,19 +80,19 @@ export const EmailVerification = () => {
     }
   }
 
-  const fieldValidation = (name: AuthSignUpConfirmKeys) => ({
+  const fieldValidation = (name: AuthForgotPasswordConfirmFormKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
 
   if (!email) {
-    return null
+    return <Navigate replace to={PageUrls.SignIn} />
   }
 
   return (
     <>
       <div className={styles.authHeader}>
-        <Typography variant="h6">Verify your email address</Typography>
+        <Typography variant="h6">Reset password</Typography>
       </div>
       {formErrors && (
         <Alert className="form-alert" severity="error">
@@ -103,7 +106,7 @@ export const EmailVerification = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          Please enter a verification code that we sent to you by email to verify your email address.
+          Enter the confirmation that we sent to your email.
         </Typography>
         <Controller
           control={control}
@@ -127,7 +130,7 @@ export const EmailVerification = () => {
                     className="verification-control"
                     data-mask="______"
                     fullWidth
-                    label="Verification code"
+                    label="Confirmation code"
                   />
                 )
               }
@@ -135,8 +138,48 @@ export const EmailVerification = () => {
           )}
           rules={validationRules.code}
         />
-        <LoadingButton fullWidth loading={authConfirmSignUpIsLoading} size="large" type="submit" variant="contained">
-          verify
+        <Box className={styles.authHelperBox} sx={{ textAlign: 'right' }}>
+          <Typography component="span" variant="body2">
+            Need a new verification code?
+          </Typography>
+          <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small" sx={{ ml: 1 }}>
+            Resend
+          </LoadingButton>
+        </Box>
+        <Controller
+          control={control}
+          defaultValue=""
+          name="newPassword"
+          render={({ field }) => (
+            <TextField
+              {...field}
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={handleShowPassword} size="small">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
+              autoComplete="new-password"
+              error={Boolean(errors[field.name])}
+              fullWidth
+              helperText={
+                getErrorMessage(errors, field.name) || 'At least 8 characters, at least one number and one symbol.'
+              }
+              label="New Password"
+              type={showPassword ? 'text' : 'password'}
+            />
+          )}
+          rules={validationRules.password}
+        />
+        <LoadingButton
+          fullWidth
+          loading={forgotPasswordConfirmIsLoading}
+          size="large"
+          type="submit"
+          variant="contained"
+        >
+          Reset Password
         </LoadingButton>
         <Button
           component={NavLink}
@@ -150,12 +193,6 @@ export const EmailVerification = () => {
           Cancel
         </Button>
       </form>
-      <div className={styles.authFooter}>
-        <span className={styles.authFooterText}>Need a new verification code?</span>
-        <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small" sx={{ ml: 1 }}>
-          Resend
-        </LoadingButton>
-      </div>
     </>
   )
 }

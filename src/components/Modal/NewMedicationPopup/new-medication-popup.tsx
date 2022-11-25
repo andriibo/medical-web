@@ -20,7 +20,7 @@ import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-l
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
-import { ICreateMedicationForm, ICreateMedicationFormKeys } from '~models/medications.model'
+import { CreateMedicationFormKeys, ICreateMedicationForm } from '~models/medications.model'
 import { useGetMedicationsQuery } from '~stores/services/medications.api'
 import { usePostPatientMedicationMutation } from '~stores/services/patient-medication.api'
 import { useUserId } from '~stores/slices/auth.slice'
@@ -74,7 +74,7 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleCl
     }
   }
 
-  const fieldValidation = (name: ICreateMedicationFormKeys) => ({
+  const fieldValidation = (name: CreateMedicationFormKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
