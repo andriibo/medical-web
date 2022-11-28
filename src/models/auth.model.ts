@@ -51,6 +51,11 @@ export interface IAuthEmail {
   email: string
 }
 
+export interface IAuthChangePassword {
+  currentPassword: string
+  newPassword: string
+}
+
 export interface IAuthEmailResponse {
   attributeName: string
   deliveryMedium: string
@@ -67,4 +72,5 @@ export type AuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
 export type AuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
 export type AuthEmailKeys = keyof IAuthEmail
 export type AuthForgotPasswordConfirmFormKeys = keyof IAuthForgotPasswordConfirmForm
+export type AuthChangePasswordKeys = keyof IAuthChangePassword
 export type AuthChangeEmailConfirmKeys = keyof IAuthChangeEmailConfirm

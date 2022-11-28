@@ -34,22 +34,21 @@ export const SignUpDoctor = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IAuthSignUpDoctor> = (data) => {
-    authSignUpDoctor({ ...data, phone: data.phone.split('-').join('') })
-      .unwrap()
-      .then(() => {
-        setFormErrors(null)
-        navigate(PageUrls.EmailVerification, { state: { email: data.email } })
-      })
-      .catch((err: IErrorRequest) => {
-        const {
-          data: { message },
-        } = err
+  const onSubmit: SubmitHandler<IAuthSignUpDoctor> = async (data) => {
+    try {
+      await authSignUpDoctor({ ...data, phone: data.phone.split('-').join('') }).unwrap()
 
-        setFormErrors(Array.isArray(message) ? message : [message])
+      setFormErrors(null)
+      navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+    } catch (err) {
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
-        console.error(err)
-      })
+      setFormErrors(Array.isArray(message) ? message : [message])
+
+      console.error(err)
+    }
   }
 
   const fieldValidation = (name: AuthSignUpDoctorKeys) => ({

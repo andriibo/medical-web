@@ -10,6 +10,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
@@ -126,20 +127,24 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
                 )}
                 rules={validationRules.diagnosisName}
               />
-              <Box sx={{ textAlign: 'right' }}>
-                <Button onClick={handleClose} size="large">
-                  Cancel
-                </Button>
-                <LoadingButton
-                  loading={createPatientDiagnosisIsLoading}
-                  size="large"
-                  sx={{ ml: 1 }}
-                  type="submit"
-                  variant="contained"
-                >
-                  Add
-                </LoadingButton>
-              </Box>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                    Cancel
+                  </Button>
+                </Grid>
+                <Grid xs={6}>
+                  <LoadingButton
+                    fullWidth
+                    loading={createPatientDiagnosisIsLoading}
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Add
+                  </LoadingButton>
+                </Grid>
+              </Grid>
             </form>
           )}
         </DialogContent>

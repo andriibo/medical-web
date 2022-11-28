@@ -246,20 +246,24 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
               )}
               rules={validationRules.phone}
             />
-            <Box sx={{ textAlign: 'right' }}>
-              <Button onClick={handleClose} size="large">
-                Cancel
-              </Button>
-              <LoadingButton
-                loading={updatePatientProfileIsLoading}
-                size="large"
-                sx={{ ml: 1 }}
-                type="submit"
-                variant="contained"
-              >
-                Save
-              </LoadingButton>
-            </Box>
+            <Grid container spacing={2}>
+              <Grid xs={6}>
+                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid xs={6}>
+                <LoadingButton
+                  fullWidth
+                  loading={updatePatientProfileIsLoading}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                >
+                  Save
+                </LoadingButton>
+              </Grid>
+            </Grid>
           </form>
         </DialogContent>
       </Dialog>
