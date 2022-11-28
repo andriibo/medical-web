@@ -24,9 +24,8 @@ const patientNav: IMainNav[] = [
     disabled: true,
   },
   {
-    label: 'MD & Caregivers',
-    to: '/md-caregivers',
-    disabled: true,
+    label: 'Medical Doctors',
+    to: PageUrls.MedicalDoctors,
   },
   {
     label: 'Requests',

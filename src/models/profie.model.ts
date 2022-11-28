@@ -25,6 +25,14 @@ export interface IDoctorProfile {
   institution: string
 }
 
+export interface IPatientDoctors extends IDoctorProfile {
+  accessId: string
+}
+
+export interface IDoctorPatients extends IPatientProfile {
+  accessId: string
+}
+
 export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}
 
 export type UpdateDoctorProfileKeys = keyof IUpdateDoctorProfile
