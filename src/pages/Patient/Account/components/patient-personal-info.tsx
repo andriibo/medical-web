@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
+import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
@@ -16,11 +17,12 @@ import styles from '../patient-account.module.scss'
 
 export const PatientPersonalInfo = () => {
   const dispatch = useAppDispatch()
+  const [profilePopupOpen, setProfilePopupOpen] = useState(false)
+  const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
+
   const { data: patientData, isLoading } = useGetPatientProfileQuery()
 
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
-
-  const [profilePopupOpen, setProfilePopupOpen] = useState(false)
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
@@ -33,6 +35,14 @@ export const PatientPersonalInfo = () => {
   const handleOpenEditEmailPopup = useCallback(() => {
     dispatch(openEditEmailPopup())
   }, [])
+
+  const handleChangePasswordPopupOpen = () => {
+    setChangePasswordPopupOpen(true)
+  }
+
+  const handleChangePasswordPopupClose = () => {
+    setChangePasswordPopupOpen(false)
+  }
 
   if (isLoading) {
     return <Spinner />
@@ -93,7 +103,7 @@ export const PatientPersonalInfo = () => {
               <span className={styles.infoListLabel}>Password</span>
               <span className={styles.infoListText}>
                 Last updated on September 5, 2022
-                <IconButton className={styles.infoListButton} size="small">
+                <IconButton className={styles.infoListButton} onClick={handleChangePasswordPopupOpen} size="small">
                   <Edit fontSize="inherit" />
                 </IconButton>
               </span>
@@ -110,6 +120,7 @@ export const PatientPersonalInfo = () => {
         patientData={patientData}
       />
       <EditEmailPopup />
+      <ChangePasswordPopup handleClose={handleChangePasswordPopupClose} open={changePasswordPopupOpen} />
     </>
   )
 }

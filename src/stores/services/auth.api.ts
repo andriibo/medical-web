@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
+  IAuthChangePassword,
   IAuthData,
   IAuthEmail,
   IAuthEmailResponse,
@@ -53,6 +54,10 @@ export const authApi = createApi({
       query: (queryArg) => ({ url: '/change-email/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
+    postAuthChangePassword: build.mutation<null, IAuthChangePassword>({
+      query: (queryArg) => ({ url: '/change-password', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
   }),
 })
 
@@ -66,4 +71,5 @@ export const {
   usePostAuthForgotPasswordConfirmMutation,
   usePostAuthChangeEmailMutation,
   usePostAuthChangeEmailConfirmMutation,
+  usePostAuthChangePasswordMutation,
 } = authApi

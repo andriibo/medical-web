@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Box, Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
@@ -134,20 +134,24 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
               name="institution"
               render={({ field }) => <TextField {...field} fullWidth label="Institution (optional)" />}
             />
-            <Box sx={{ textAlign: 'right' }}>
-              <Button onClick={handleClose} size="large">
-                Cancel
-              </Button>
-              <LoadingButton
-                loading={updateDoctorProfileIsLoading}
-                size="large"
-                sx={{ ml: 1 }}
-                type="submit"
-                variant="contained"
-              >
-                Save
-              </LoadingButton>
-            </Box>
+            <Grid container spacing={2}>
+              <Grid xs={6}>
+                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid xs={6}>
+                <LoadingButton
+                  fullWidth
+                  loading={updateDoctorProfileIsLoading}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                >
+                  Save
+                </LoadingButton>
+              </Grid>
+            </Grid>
           </form>
         </DialogContent>
       </Dialog>
