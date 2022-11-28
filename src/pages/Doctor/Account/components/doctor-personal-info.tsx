@@ -102,6 +102,7 @@ export const DoctorPersonalInfo = () => {
         </div>
       </div>
       <EditDoctorProfilePopup doctorData={doctorData} handleClose={handleProfilePopupClose} open={profilePopupOpen} />
+      <EditEmailPopup />
       <ChangePasswordPopup handleClose={handleChangePasswordPopupClose} open={changePasswordPopupOpen} />
     </>
   )

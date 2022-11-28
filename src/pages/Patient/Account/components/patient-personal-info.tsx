@@ -4,6 +4,8 @@ import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
+import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
+import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
