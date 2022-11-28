@@ -10,6 +10,7 @@ import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
 import { profileApi } from '~stores/services/profile.api'
 import { authReducer } from '~stores/slices/auth.slice'
+import { editEmailReducer } from '~stores/slices/edit-email.slice'
 
 const persistConfig = {
   key: 'root',
@@ -18,6 +19,7 @@ const persistConfig = {
 
 const reducer = combineReducers({
   auth: persistReducer(persistConfig, authReducer),
+  editEmail: editEmailReducer,
 
   [authApi.reducerPath]: authApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,

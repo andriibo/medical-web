@@ -37,12 +37,20 @@ export const authApi = createApi({
       query: (queryArg) => ({ url: 'sign-up/resend-code', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
-    postAuthForgotPassword: build.mutation<IAuthEmailResponse, { email: string }>({
+    postAuthForgotPassword: build.mutation<IAuthEmailResponse, IAuthEmail>({
       query: (queryArg) => ({ url: '/forgot-password', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
     postAuthForgotPasswordConfirm: build.mutation<IAuthEmailResponse, IAuthForgotPasswordConfirm>({
       query: (queryArg) => ({ url: '/forgot-password/confirm', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthChangeEmail: build.mutation<IAuthEmailResponse, IAuthEmail>({
+      query: (queryArg) => ({ url: '/change-email', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthChangeEmailConfirm: build.mutation<IAuthEmailResponse, { code: string }>({
+      query: (queryArg) => ({ url: '/change-email/confirm', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
   }),
@@ -56,4 +64,6 @@ export const {
   usePostAuthSignUpResendCodeMutation,
   usePostAuthForgotPasswordMutation,
   usePostAuthForgotPasswordConfirmMutation,
+  usePostAuthChangeEmailMutation,
+  usePostAuthChangeEmailConfirmMutation,
 } = authApi
