@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, AlertTitle, Box, Button, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
@@ -11,15 +11,13 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthChangeEmailConfirmKeys, IAuthChangeEmailConfirm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangeEmailConfirmMutation, usePostAuthChangeEmailMutation } from '~stores/services/auth.api'
-import { useNewEmail } from '~stores/slices/edit-email.slice'
+import { clearPersist } from '~stores/slices/auth.slice'
+import { closeEditEmailPopup, setEditEmailStep, useNewEmail } from '~stores/slices/edit-email.slice'
 
-interface VerificationCodeFormProps {
-  handleClose: (event: MouseEvent<HTMLElement>, reason: string) => void
-  handleStep: (step: UpdateEmailStep) => void
-}
-
-export const VerificationCodeForm: FC<VerificationCodeFormProps> = ({ handleClose, handleStep }) => {
+export const VerificationCodeForm = () => {
+  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const newEmail = useNewEmail()
@@ -44,7 +42,11 @@ export const VerificationCodeForm: FC<VerificationCodeFormProps> = ({ handleClos
     try {
       await changeEmailConfirm({ code }).unwrap()
 
-      handleStep(UpdateEmailStep.success)
+      await dispatch(clearPersist())
+
+      enqueueSnackbar('Email updated')
+      dispatch(closeEditEmailPopup())
+      dispatch(setEditEmailStep(UpdateEmailStep.email))
     } catch (err) {
       const {
         data: { message },
@@ -52,6 +54,7 @@ export const VerificationCodeForm: FC<VerificationCodeFormProps> = ({ handleClos
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
+      enqueueSnackbar('Verification code was sent to your email')
       console.error(err)
     }
   }
@@ -75,6 +78,10 @@ export const VerificationCodeForm: FC<VerificationCodeFormProps> = ({ handleClos
       console.error(err)
     }
   }, [newEmail])
+
+  const onClosePopup = useCallback(() => {
+    dispatch(closeEditEmailPopup())
+  }, [])
 
   const fieldValidation = (name: AuthChangeEmailConfirmKeys) => ({
     error: Boolean(errors[name]),
@@ -131,7 +138,7 @@ export const VerificationCodeForm: FC<VerificationCodeFormProps> = ({ handleClos
           />
           <Grid container spacing={2}>
             <Grid xs={6}>
-              <Button fullWidth onClick={(event) => handleClose(event, 'clickButton')} size="large" variant="outlined">
+              <Button fullWidth onClick={onClosePopup} size="large" variant="outlined">
                 Cancel
               </Button>
             </Grid>

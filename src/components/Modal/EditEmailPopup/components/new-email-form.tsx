@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, AlertTitle, Button, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, MouseEvent, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { UpdateEmailStep } from '~/enums/update-email-step.enum'
@@ -12,14 +12,9 @@ import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangeEmailMutation } from '~stores/services/auth.api'
-import { setNewEmail } from '~stores/slices/edit-email.slice'
+import { closeEditEmailPopup, setEditEmailStep, setNewEmail } from '~stores/slices/edit-email.slice'
 
-interface NewEmailFormProps {
-  handleClose: (event: MouseEvent<HTMLElement>, reason: string) => void
-  handleStep: (step: UpdateEmailStep) => void
-}
-
-export const NewEmailForm: FC<NewEmailFormProps> = ({ handleClose, handleStep }) => {
+export const NewEmailForm = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
@@ -38,7 +33,7 @@ export const NewEmailForm: FC<NewEmailFormProps> = ({ handleClose, handleStep })
     try {
       await changeEmail({ email }).unwrap()
 
-      handleStep(UpdateEmailStep.code)
+      dispatch(setEditEmailStep(UpdateEmailStep.code))
       dispatch(setNewEmail(email))
       enqueueSnackbar('Verification code was sent to your email')
     } catch (err) {
@@ -51,6 +46,10 @@ export const NewEmailForm: FC<NewEmailFormProps> = ({ handleClose, handleStep })
       console.error(err)
     }
   }
+
+  const onClosePopup = useCallback(() => {
+    dispatch(closeEditEmailPopup())
+  }, [])
 
   const fieldValidation = (name: AuthEmailKeys) => ({
     error: Boolean(errors[name]),
@@ -86,7 +85,7 @@ export const NewEmailForm: FC<NewEmailFormProps> = ({ handleClose, handleStep })
           />
           <Grid container spacing={2}>
             <Grid xs={6}>
-              <Button fullWidth onClick={(event) => handleClose(event, 'clickButton')} size="large" variant="outlined">
+              <Button fullWidth onClick={onClosePopup} size="large" variant="outlined">
                 Cancel
               </Button>
             </Grid>

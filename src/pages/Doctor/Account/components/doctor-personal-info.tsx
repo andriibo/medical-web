@@ -1,19 +1,21 @@
 import { Edit } from '@mui/icons-material'
 import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/material'
-import React, { MouseEvent, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { EditDoctorProfilePopup } from '~components/Modal/EditDoctorProfilePopup/edit-doctor-profile-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
+import { useAppDispatch } from '~stores/hooks'
 import { useGetDoctorProfileQuery } from '~stores/services/profile.api'
+import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../doctor-account.module.scss'
 
 export const DoctorPersonalInfo = () => {
+  const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
-  const [editEmailPopupOpen, setEditEmailPopupOpen] = useState(false)
 
   const { data: doctorData, isLoading } = useGetDoctorProfileQuery()
 
@@ -27,15 +29,9 @@ export const DoctorPersonalInfo = () => {
     setProfilePopupOpen(false)
   }
 
-  const handleEditEmailPopupOpen = () => {
-    setEditEmailPopupOpen(true)
-  }
-
-  const handleEditEmailPopupClose = (event: MouseEvent<HTMLElement>, reason: string) => {
-    if (reason !== 'backdropClick') {
-      setEditEmailPopupOpen(false)
-    }
-  }
+  const handleOpenEditEmailPopup = useCallback(() => {
+    dispatch(openEditEmailPopup())
+  }, [])
 
   if (isLoading) {
     return <Spinner />
@@ -76,7 +72,7 @@ export const DoctorPersonalInfo = () => {
             <li>
               <span className={styles.infoListLabel}>Email</span>
               {doctorData.email}
-              <IconButton className={styles.infoListButton} onClick={handleEditEmailPopupOpen} size="small">
+              <IconButton className={styles.infoListButton} onClick={handleOpenEditEmailPopup} size="small">
                 <Edit fontSize="inherit" />
               </IconButton>
             </li>
@@ -96,7 +92,7 @@ export const DoctorPersonalInfo = () => {
         </div>
       </div>
       <EditDoctorProfilePopup doctorData={doctorData} handleClose={handleProfilePopupClose} open={profilePopupOpen} />
-      <EditEmailPopup handleClose={handleEditEmailPopupClose} open={editEmailPopupOpen} />
+      <EditEmailPopup />
     </>
   )
 }
