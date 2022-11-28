@@ -12,7 +12,7 @@ export const CardBox: FC<CardBoxProps> = ({ children, header }) => {
 
   return (
     <div className={styles.card}>
-      {header && <div className={styles.header}>{header}</div>}
+      {header && <div className={styles.cardHeader}>{header}</div>}
       {children}
     </div>
   )

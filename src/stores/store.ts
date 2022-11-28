@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 import { authApi } from '~stores/services/auth.api'
 import { diagnosesApi } from '~stores/services/diagnoses.api'
 import { medicationsApi } from '~stores/services/medications.api'
+import { patientDataAccessApi } from '~stores/services/patient-data-access.api'
 import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
 import { profileApi } from '~stores/services/profile.api'
@@ -25,8 +26,9 @@ const reducer = combineReducers({
   [profileApi.reducerPath]: profileApi.reducer,
   [diagnosesApi.reducerPath]: diagnosesApi.reducer,
   [patientDiagnosisApi.reducerPath]: patientDiagnosisApi.reducer,
-  [medicationsApi.reducerPath]: medicationsApi.reducer,
   [patientMedicationApi.reducerPath]: patientMedicationApi.reducer,
+  [patientDataAccessApi.reducerPath]: patientDataAccessApi.reducer,
+  [medicationsApi.reducerPath]: medicationsApi.reducer,
 })
 
 const middlewares = [
@@ -34,8 +36,9 @@ const middlewares = [
   profileApi.middleware,
   diagnosesApi.middleware,
   patientDiagnosisApi.middleware,
-  medicationsApi.middleware,
   patientMedicationApi.middleware,
+  patientDataAccessApi.middleware,
+  medicationsApi.middleware,
 ]
 
 export const store = configureStore({
