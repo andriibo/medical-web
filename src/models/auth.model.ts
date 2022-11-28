@@ -62,6 +62,10 @@ export interface IAuthEmailResponse {
   destination: string
 }
 
+export interface IAuthChangeEmailConfirm {
+  code: string
+}
+
 export type AuthSignInKeys = keyof IAuthSignIn
 export type AuthSignUpPatientKeys = keyof IAuthSignUpPatient
 export type AuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
@@ -69,3 +73,4 @@ export type AuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
 export type AuthEmailKeys = keyof IAuthEmail
 export type AuthForgotPasswordConfirmFormKeys = keyof IAuthForgotPasswordConfirmForm
 export type AuthChangePasswordKeys = keyof IAuthChangePassword
+export type AuthChangeEmailConfirmKeys = keyof IAuthChangeEmailConfirm

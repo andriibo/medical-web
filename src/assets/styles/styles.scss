@@ -97,3 +97,15 @@ form {
   background: #fff;
   box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
 }
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem 0 0;
+  font-size: 0.875rem;
+}
+
+.dialog-footer-text {
+  opacity: 0.6;
+}

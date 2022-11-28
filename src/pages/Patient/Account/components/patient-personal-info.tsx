@@ -1,18 +1,20 @@
 import { Edit } from '@mui/icons-material'
 import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
-import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
+import { useAppDispatch } from '~stores/hooks'
 import { useGetPatientProfileQuery } from '~stores/services/profile.api'
+import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
 
 export const PatientPersonalInfo = () => {
+  const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
@@ -27,6 +29,10 @@ export const PatientPersonalInfo = () => {
   const handleProfilePopupClose = () => {
     setProfilePopupOpen(false)
   }
+
+  const handleOpenEditEmailPopup = useCallback(() => {
+    dispatch(openEditEmailPopup())
+  }, [])
 
   const handleChangePasswordPopupOpen = () => {
     setChangePasswordPopupOpen(true)
@@ -87,7 +93,7 @@ export const PatientPersonalInfo = () => {
             <li>
               <span className={styles.infoListLabel}>Email</span>
               {patientData.email}
-              <IconButton className={styles.infoListButton} size="small">
+              <IconButton className={styles.infoListButton} onClick={handleOpenEditEmailPopup} size="small">
                 <Edit fontSize="inherit" />
               </IconButton>
             </li>
@@ -111,6 +117,7 @@ export const PatientPersonalInfo = () => {
         open={profilePopupOpen}
         patientData={patientData}
       />
+      <EditEmailPopup />
       <ChangePasswordPopup handleClose={handleChangePasswordPopupClose} open={changePasswordPopupOpen} />
     </>
   )
