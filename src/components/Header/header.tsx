@@ -29,8 +29,7 @@ const patientNav: IMainNav[] = [
   },
   {
     label: 'Requests',
-    to: '/requests',
-    disabled: true,
+    to: PageUrls.Requests,
   },
 ]
 
@@ -42,7 +41,7 @@ const doctorNav: IMainNav[] = [
   },
   {
     label: 'Requests',
-    to: '/requests',
+    to: PageUrls.Requests,
     disabled: true,
   },
 ]

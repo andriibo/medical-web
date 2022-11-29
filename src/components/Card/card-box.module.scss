@@ -1,11 +1,13 @@
 .card {
   padding: 1rem;
-  border: 1px solid #000;
+  border: 1px solid var(--gray);
   border-radius: 4px;
 }
 
 .cardHeader {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #000;
+  margin: 0 0 0.5rem;
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--gray);
 }

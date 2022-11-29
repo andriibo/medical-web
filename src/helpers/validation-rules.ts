@@ -3,6 +3,7 @@ import validator from 'validator'
 
 type ValidationKeyType =
   | 'text'
+  | 'institution'
   | 'phone'
   | 'email'
   | 'password'
@@ -22,6 +23,12 @@ export const validationRules: ValidationRulesType = {
     maxLength: {
       value: 30,
       message: 'Max length is 30',
+    },
+  },
+  institution: {
+    maxLength: {
+      value: 100,
+      message: 'Max length is 100',
     },
   },
   phone: {

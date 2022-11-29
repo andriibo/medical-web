@@ -2,7 +2,7 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
@@ -26,10 +26,18 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<IDataAccessEmail>({
     mode: 'onBlur',
   })
+
+  useEffect(() => {
+    if (open) {
+      setFormErrors(null)
+      reset()
+    }
+  }, [open, reset])
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
     try {
