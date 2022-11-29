@@ -8,13 +8,9 @@ interface CardBoxProps {
   disable?: boolean
 }
 
-export const CardBox: FC<CardBoxProps> = ({ children, header, disable }) => {
-  console.log(111)
-
-  return (
-    <div className={`${styles.card} ${disable ? styles.disable : ''}`}>
-      {header && <div className={styles.cardHeader}>{header}</div>}
-      {children}
-    </div>
-  )
-}
+export const CardBox: FC<CardBoxProps> = ({ children, header, disable }) => (
+  <div className={`${styles.card} ${disable ? styles.disable : ''}`}>
+    {header && <div className={styles.cardHeader}>{header}</div>}
+    {children}
+  </div>
+)

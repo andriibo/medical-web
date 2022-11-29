@@ -23,7 +23,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
-import { GenderEnum } from '~/enums/gender.enum'
+import { Gender } from '~/enums/gender'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
@@ -55,7 +55,7 @@ export const SignUpPatient = () => {
     try {
       await authSignUpPatient({
         ...data,
-        gender: data.gender as GenderEnum,
+        gender: data.gender as Gender,
         height: Number(data.height),
         weight: Number(data.weight),
       }).unwrap()
@@ -164,7 +164,7 @@ export const SignUpPatient = () => {
             <FormControl error={Boolean(errors[field.name])} fullWidth>
               <InputLabel id="gender-select">Gender</InputLabel>
               <Select {...field} label="Gender" labelId="gender-select">
-                {Object.values(GenderEnum).map((gender) => (
+                {Object.values(Gender).map((gender) => (
                   <MenuItem key={gender} value={gender}>
                     {gender}
                   </MenuItem>

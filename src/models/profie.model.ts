@@ -1,4 +1,4 @@
-import { GenderEnum } from '~/enums/gender.enum'
+import { Gender } from '~/enums/gender'
 
 export interface IPatientProfile {
   avatar: string
@@ -7,7 +7,7 @@ export interface IPatientProfile {
   lastName: string
   phone: string
   dob: string
-  gender: GenderEnum
+  gender: Gender
   height: number
   weight: number
 }

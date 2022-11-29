@@ -24,7 +24,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
-import { GenderEnum } from '~/enums/gender.enum'
+import { Gender } from '~/enums/gender'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
@@ -172,7 +172,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                 <FormControl error={Boolean(errors[field.name])} fullWidth>
                   <InputLabel id="gender-select">Gender</InputLabel>
                   <Select {...field} label="Gender" labelId="gender-select">
-                    {Object.values(GenderEnum).map((gender) => (
+                    {Object.values(Gender).map((gender) => (
                       <MenuItem key={gender} value={gender}>
                         {gender}
                       </MenuItem>
