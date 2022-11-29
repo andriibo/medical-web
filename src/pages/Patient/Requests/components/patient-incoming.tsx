@@ -4,20 +4,22 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo, useState } from 'react'
 
 import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
-import { Spinner } from '~components/Spinner/spinner'
-import { IDataAccessModel, IDataAccessUser } from '~models/data-access.model'
+import { getRequestedUserName } from '~helpers/get-requested-user-name'
+import { IDataAccessModel } from '~models/data-access.model'
+import { useAppDispatch } from '~stores/hooks'
 import {
   useDeletePatientDataAccessMutation,
-  useGetPatientDataAccessQuery,
   usePatchPatientDataAccessApproveMutation,
   usePatchPatientDataAccessRefuseMutation,
 } from '~stores/services/patient-data-access.api'
+import { setDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 interface PatientIncomingProps {
   patientDataAccess: IDataAccessModel[]
 }
 
 export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess }) => {
+  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [deleteRequest] = useDeletePatientDataAccessMutation()
   const [approveRequest] = usePatchPatientDataAccessApproveMutation()
@@ -33,14 +35,6 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
         .sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
     [patientDataAccess],
   )
-
-  const getUserName = (user: IDataAccessUser) => {
-    if (user.firstName || user.lastName) {
-      return `${user.firstName} ${user.lastName}`
-    }
-
-    return user.email
-  }
 
   const handleDeleteRequest = useCallback(async (accessId: string) => {
     try {
@@ -60,6 +54,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
       setPatchingRequestId(accessId)
 
       await approveRequest({ accessId }).unwrap()
+      dispatch(setDataAccessHasChanges(true))
       enqueueSnackbar('Request was approved')
     } catch (err) {
       console.error(err)
@@ -90,7 +85,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
           <>
             <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
               <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
-                {getUserName(requestedUser)} {isRefuse(status) && '(Rejected)'}
+                {getRequestedUserName(requestedUser)} {isRefuse(status) && '(Rejected)'}
               </ListItemText>
               {isRefuse(status) ? (
                 <Button onClick={() => handleDeleteRequest(accessId)} sx={{ ml: 2 }}>

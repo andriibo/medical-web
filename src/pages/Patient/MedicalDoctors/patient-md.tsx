@@ -1,19 +1,52 @@
 import { Check, Clear, Close, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
 import { Button, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import React, { useState } from 'react'
+import { useSnackbar } from 'notistack'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { CardBox } from '~components/Card/card-box'
 import { PatientInvitePopup } from '~components/Modal/PatientInvitePopup/patient-invite-popup'
 import { Spinner } from '~components/Spinner/spinner'
+import { useAppDispatch } from '~stores/hooks'
+import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 import { useGetPatientDoctorsQuery } from '~stores/services/profile.api'
+import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 export const PatientMd = () => {
+  const dispatch = useAppDispatch()
+  const { enqueueSnackbar } = useSnackbar()
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
+  const dataAccessHasChanges = useDataAccessHasChanges()
 
-  const { data: patientDoctors, isLoading: patientDoctorsIsLoading } = useGetPatientDoctorsQuery()
+  const {
+    data: patientDoctors,
+    isLoading: patientDoctorsIsLoading,
+    refetch: refetchPatientDoctors,
+  } = useGetPatientDoctorsQuery()
 
-  console.log(111)
+  const [deleteDoctor] = useDeletePatientDataAccessMutation()
+  const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
+
+  const handleDeleteRequest = useCallback(async (accessId: string) => {
+    try {
+      setDeletingDoctorId(accessId)
+
+      await deleteDoctor({ accessId }).unwrap()
+      refetchPatientDoctors()
+      enqueueSnackbar('Request was deleted')
+    } catch (err) {
+      console.error(err)
+      setDeletingDoctorId(null)
+      enqueueSnackbar('Request was not deleted', { variant: 'warning' })
+    }
+  }, [])
+
+  useEffect(() => {
+    if (dataAccessHasChanges) {
+      refetchPatientDoctors()
+      dispatch(setDataAccessHasChanges(false))
+    }
+  }, [dataAccessHasChanges])
 
   const handleInvitePopupOpen = () => {
     setInvitePopupOpen(true)
@@ -40,16 +73,17 @@ export const PatientMd = () => {
           <Spinner />
         ) : (
           <Grid container spacing={3} sx={{ mb: 1 }}>
-            {patientDoctors?.map(({ lastName, firstName, phone, email, institution }) => (
+            {patientDoctors?.map(({ lastName, firstName, phone, email, institution, accessId }) => (
               <Grid key={lastName} xs={6}>
                 <CardBox
+                  disable={deletingDoctorId === accessId}
                   header={
                     <>
                       <Typography variant="subtitle1">
                         {firstName} {lastName}
                       </Typography>
                       <div style={{ marginLeft: 'auto' }} />
-                      <IconButton edge="end">
+                      <IconButton edge="end" onClick={() => handleDeleteRequest(accessId)}>
                         <Clear fontSize="inherit" />
                       </IconButton>
                     </>
@@ -76,19 +110,7 @@ export const PatientMd = () => {
                       </ListItemIcon>
                       <ListItemText>{email}</ListItemText>
                     </ListItem>
-                    <ListItem
-                      disableGutters
-                      secondaryAction={
-                        <>
-                          <IconButton>
-                            <Close />
-                          </IconButton>
-                          <IconButton>
-                            <Check />
-                          </IconButton>
-                        </>
-                      }
-                    >
+                    <ListItem disableGutters>
                       <ListItemIcon>
                         <LocationCity />
                       </ListItemIcon>

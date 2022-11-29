@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo, useState } from 'react'
 
 import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
+import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel, IDataAccessUser } from '~models/data-access.model'
 import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 
@@ -25,14 +26,6 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
         .sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
     [patientDataAccess],
   )
-
-  const getUserName = (user: IDataAccessUser) => {
-    if (user.firstName || user.lastName) {
-      return `${user.firstName} ${user.lastName}`
-    }
-
-    return user.email
-  }
 
   const handleDeleteRequest = useCallback(async (accessId: string) => {
     try {
@@ -56,7 +49,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
           <>
             <ListItem className={deletingRequestId === accessId ? 'disabled' : ''} key={accessId}>
               <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
-                {getUserName(requestedUser)} {isRefuse(status) && <>(Rejected)</>}
+                {getRequestedUserName(requestedUser)} {isRefuse(status) && <>(Rejected)</>}
               </ListItemText>
               <Button onClick={() => handleDeleteRequest(accessId)}>{isRefuse(status) ? 'Delete' : 'Withdraw'}</Button>
             </ListItem>
