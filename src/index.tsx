@@ -1,4 +1,5 @@
 import { Grow } from '@mui/material'
+import { ConfirmProvider } from 'material-ui-confirm'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
@@ -27,7 +28,14 @@ root.render(
         autoHideDuration={4000}
         maxSnack={1}
       >
-        <App />
+        <ConfirmProvider
+          defaultOptions={{
+            dialogProps: { maxWidth: 'xs', fullWidth: true },
+            confirmationButtonProps: { variant: 'contained' },
+          }}
+        >
+          <App />
+        </ConfirmProvider>
       </SnackbarProvider>
     </PersistGate>
   </Provider>,

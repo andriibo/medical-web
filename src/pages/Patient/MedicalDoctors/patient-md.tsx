@@ -46,7 +46,9 @@ export const PatientMd = () => {
     } catch (err) {
       console.error(err)
       setDeletingDoctorId(null)
-      enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+      if (err) {
+        enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+      }
     }
   }, [])
 
