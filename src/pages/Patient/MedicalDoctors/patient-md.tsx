@@ -27,17 +27,17 @@ export const PatientMd = () => {
   const [deleteDoctor] = useDeletePatientDataAccessMutation()
   const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
 
-  const handleDeleteRequest = useCallback(async (accessId: string) => {
+  const handleDeleteDoctor = useCallback(async (accessId: string) => {
     try {
       setDeletingDoctorId(accessId)
 
       await deleteDoctor({ accessId }).unwrap()
       refetchPatientDoctors()
-      enqueueSnackbar('Request was deleted')
+      enqueueSnackbar('Doctor removed')
     } catch (err) {
       console.error(err)
       setDeletingDoctorId(null)
-      enqueueSnackbar('Request was not deleted', { variant: 'warning' })
+      enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
     }
   }, [])
 
@@ -83,7 +83,7 @@ export const PatientMd = () => {
                         {firstName} {lastName}
                       </Typography>
                       <div style={{ marginLeft: 'auto' }} />
-                      <IconButton edge="end" onClick={() => handleDeleteRequest(accessId)}>
+                      <IconButton edge="end" onClick={() => handleDeleteDoctor(accessId)}>
                         <Clear fontSize="inherit" />
                       </IconButton>
                     </>

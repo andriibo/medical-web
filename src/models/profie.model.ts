@@ -1,4 +1,4 @@
-import { Gender } from '~/enums/gender'
+import { Gender } from '~/enums/gender.emun'
 
 export interface IPatientProfile {
   avatar: string

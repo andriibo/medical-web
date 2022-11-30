@@ -32,7 +32,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
       setDeletingRequestId(accessId)
 
       await deleteRequest({ accessId }).unwrap()
-      enqueueSnackbar('Request was deleted')
+      enqueueSnackbar('Invitation withdrawn')
     } catch (err) {
       console.error(err)
       setDeletingRequestId(null)
