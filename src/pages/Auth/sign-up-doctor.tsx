@@ -2,6 +2,7 @@ import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
@@ -17,6 +18,7 @@ import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
 import styles from './auth.module.scss'
 
 export const SignUpDoctor = () => {
+  const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
   const [showPassword, setShowPassword] = useState(false)
@@ -40,6 +42,7 @@ export const SignUpDoctor = () => {
 
       setFormErrors(null)
       navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+      enqueueSnackbar('Account created')
     } catch (err) {
       const {
         data: { message },
@@ -106,7 +109,9 @@ export const SignUpDoctor = () => {
           render={({ field }) => (
             <InputMask
               mask="1-999-999-9999"
-              onChange={(value): void => {
+              onChange={(event): void => {
+                const value = event.target.value.split('-').join('')
+
                 field.onChange(value)
               }}
               value={field.value}
@@ -123,7 +128,10 @@ export const SignUpDoctor = () => {
           control={control}
           defaultValue=""
           name="institution"
-          render={({ field }) => <TextField {...field} fullWidth label="Institution (optional)" />}
+          render={({ field }) => (
+            <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Institution (optional)" />
+          )}
+          rules={validationRules.institution}
         />
         <Controller
           control={control}

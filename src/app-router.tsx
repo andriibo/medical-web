@@ -16,6 +16,8 @@ import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
 import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
+import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
+import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { useUserRole } from '~stores/slices/auth.slice'
 
 export const AppRouter = () => {
@@ -38,7 +40,11 @@ export const AppRouter = () => {
         {userRole === UserRoles.doctor ? (
           <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
         ) : (
-          <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
+          <>
+            <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
+            <Route element={<PatientMd />} path={PageUrls.MedicalDoctors} />
+            <Route element={<PatientRequests />} path={PageUrls.Requests} />
+          </>
         )}
       </Route>
     </Routes>

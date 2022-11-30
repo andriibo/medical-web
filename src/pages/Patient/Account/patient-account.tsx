@@ -7,8 +7,6 @@ import { PatientPersonalInfo } from '~pages/Patient/Account/components/patient-p
 import { PatientSettings } from '~pages/Patient/Account/components/patient-settings'
 import { PatientTreatment } from '~pages/Patient/Account/components/patient-treatment'
 
-import styles from './patient-account.module.scss'
-
 export const PatientAccount = () => {
   const [activeTab, setActiveTab] = useState<AccountTab>(AccountTab.personalInfo)
 
@@ -17,7 +15,7 @@ export const PatientAccount = () => {
   }
 
   return (
-    <div className={`white-box ${styles.accountContainer}`}>
+    <div className="white-box content-md">
       <Typography variant="h5">My Account</Typography>
       <Tabs className="tabs" onChange={handleChangeTab} value={activeTab}>
         <Tab label="Personal info" value={AccountTab.personalInfo} />

@@ -1,4 +1,4 @@
-import { GenderEnum } from '~/enums/gender.enum'
+import { Gender } from '~/enums/gender.emun'
 
 export interface IPatientProfile {
   avatar: string
@@ -7,7 +7,7 @@ export interface IPatientProfile {
   lastName: string
   phone: string
   dob: string
-  gender: GenderEnum
+  gender: Gender
   height: number
   weight: number
 }
@@ -23,6 +23,14 @@ export interface IDoctorProfile {
   lastName: string
   phone: string
   institution: string
+}
+
+export interface IPatientDoctors extends IDoctorProfile {
+  accessId: string
+}
+
+export interface IDoctorPatients extends IPatientProfile {
+  accessId: string
 }
 
 export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}

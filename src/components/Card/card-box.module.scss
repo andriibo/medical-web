@@ -1,0 +1,18 @@
+.card {
+  padding: 1rem;
+  border: 1px solid var(--gray);
+  border-radius: 4px;
+
+  &.disable {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0.5rem;
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--gray);
+}

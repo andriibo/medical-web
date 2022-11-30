@@ -17,7 +17,7 @@ import {
 import { useUserId } from '~stores/slices/auth.slice'
 
 export const PatientTreatment = () => {
-  const [isDiagnosisPopupOpen, setIsDiagnosisPopupOpen] = useState(false)
+  const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
   const [deletingDiagnosisId, setDeletingDiagnosisId] = useState<string | null>(null)
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(null)
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
@@ -35,11 +35,11 @@ export const PatientTreatment = () => {
   const [deletePatientMedication] = useDeletePatientMedicationMutation()
 
   const handleNewDiagnosisOpen = () => {
-    setIsDiagnosisPopupOpen(true)
+    setDiagnosisPopupOpen(true)
   }
 
   const handleNewDiagnosisClose = () => {
-    setIsDiagnosisPopupOpen(false)
+    setDiagnosisPopupOpen(false)
   }
 
   const handleDeleteDiagnosis = async (diagnosisId: string) => {
@@ -155,7 +155,7 @@ export const PatientTreatment = () => {
           )}
         </List>
       </TabPanel>
-      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={isDiagnosisPopupOpen} />
+      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen} />
       <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen} />
     </>
   )
