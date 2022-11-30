@@ -8,6 +8,6 @@ export enum PageUrls {
   ForgotPassword = '/forgot-password',
   ForgotPasswordConfirm = '/forgot-password/confirm',
   ForgotPasswordSuccess = '/forgot-password/success',
-  MedicalDoctors = 'medical-doctors',
-  Requests = 'requests',
+  MedicalDoctors = '/medical-doctors',
+  Requests = '/requests',
 }

@@ -76,8 +76,6 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
     }
   }, [])
 
-  const isRefuse = (status: string) => status === DataAccessStatus.refused
-
   return (
     <List>
       {pendingRequests?.length ? (
@@ -85,22 +83,14 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
           <>
             <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
               <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
-                {getRequestedUserName(requestedUser)} {isRefuse(status) && '(Rejected)'}
+                {getRequestedUserName(requestedUser)}
               </ListItemText>
-              {isRefuse(status) ? (
-                <Button onClick={() => handleDeleteRequest(accessId)} sx={{ ml: 2 }}>
-                  Delete
-                </Button>
-              ) : (
-                <>
-                  <Button onClick={() => handleRefuseRequest(accessId)} sx={{ ml: 2 }}>
-                    Reject
-                  </Button>
-                  <Button onClick={() => handleApproveRequest(accessId)} sx={{ ml: 2 }} variant="contained">
-                    Accept
-                  </Button>
-                </>
-              )}
+              <Button onClick={() => handleRefuseRequest(accessId)} sx={{ ml: 2 }}>
+                Reject
+              </Button>
+              <Button onClick={() => handleApproveRequest(accessId)} sx={{ ml: 2 }} variant="contained">
+                Accept
+              </Button>
             </ListItem>
             <Divider />
           </>

@@ -4,7 +4,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
@@ -20,6 +22,7 @@ interface PatientInvitePopupProps {
 export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const navigate = useNavigate()
 
   const [patientInitiate, { isLoading: patientInitiateIsLoading }] = usePostPatientDataAccessInitiateMutation()
 
@@ -44,6 +47,7 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
       await patientInitiate({ email }).unwrap()
 
       handleClose()
+      navigate(PageUrls.Requests)
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
