@@ -1,6 +1,7 @@
-import { Check, Clear, Close, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
+import { Clear, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
 import { Button, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 
@@ -15,6 +16,8 @@ import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices
 export const PatientMd = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const confirm = useConfirm()
+
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const dataAccessHasChanges = useDataAccessHasChanges()
 
@@ -27,8 +30,14 @@ export const PatientMd = () => {
   const [deleteDoctor] = useDeletePatientDataAccessMutation()
   const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
 
-  const handleDeleteDoctor = useCallback(async (accessId: string) => {
+  const handleRemoveDoctor = useCallback(async (accessId: string) => {
     try {
+      await confirm({
+        title: 'Remove doctor?',
+        description: 'The doctor will lost access to your account information.',
+        confirmationText: 'Remove',
+      })
+
       setDeletingDoctorId(accessId)
 
       await deleteDoctor({ accessId }).unwrap()
@@ -37,7 +46,9 @@ export const PatientMd = () => {
     } catch (err) {
       console.error(err)
       setDeletingDoctorId(null)
-      enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+      if (err) {
+        enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+      }
     }
   }, [])
 
@@ -83,7 +94,7 @@ export const PatientMd = () => {
                         {firstName} {lastName}
                       </Typography>
                       <div style={{ marginLeft: 'auto' }} />
-                      <IconButton edge="end" onClick={() => handleDeleteDoctor(accessId)}>
+                      <IconButton edge="end" onClick={() => handleRemoveDoctor(accessId)}>
                         <Clear fontSize="inherit" />
                       </IconButton>
                     </>

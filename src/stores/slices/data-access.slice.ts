@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { UpdateEmailStep } from '~/enums/update-email-step.enum'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
 
