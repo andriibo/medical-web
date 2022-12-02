@@ -36,8 +36,7 @@ const patientNav: IMainNav[] = [
 const doctorNav: IMainNav[] = [
   {
     label: 'Patients',
-    to: '/patients',
-    disabled: true,
+    to: PageUrls.Patients,
   },
   {
     label: 'Requests',

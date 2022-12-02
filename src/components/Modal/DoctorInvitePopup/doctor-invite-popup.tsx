@@ -6,25 +6,24 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
-import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostPatientDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
+import { usePostDoctorDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
 
-interface PatientInvitePopupProps {
+interface DoctorInvitePopupProps {
   open: boolean
   handleClose: () => void
 }
 
-export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleClose }) => {
+export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const navigate = useNavigate()
 
-  const [patientInitiate, { isLoading: patientInitiateIsLoading }] = usePostPatientDataAccessInitiateMutation()
+  const [doctorInitiate, { isLoading: doctorInitiateIsLoading }] = usePostDoctorDataAccessInitiateMutation()
 
   const {
     handleSubmit,
@@ -44,10 +43,10 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
     try {
-      await patientInitiate({ email }).unwrap()
+      await doctorInitiate({ email }).unwrap()
 
       handleClose()
-      navigate(PageUrls.Requests)
+      // navigate(PageUrls.Requests)
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
@@ -67,7 +66,7 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
 
   return (
     <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-      <DialogTitle>Invite a new MD </DialogTitle>
+      <DialogTitle>Invite a new Patient</DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">
@@ -94,13 +93,7 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
               </Button>
             </Grid>
             <Grid xs={6}>
-              <LoadingButton
-                fullWidth
-                loading={patientInitiateIsLoading}
-                size="large"
-                type="submit"
-                variant="contained"
-              >
+              <LoadingButton fullWidth loading={doctorInitiateIsLoading} size="large" type="submit" variant="contained">
                 Invite
               </LoadingButton>
             </Grid>
