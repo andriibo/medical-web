@@ -14,7 +14,6 @@ import { SignIn } from '~pages/Auth/sign-in'
 import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
-import { DoctorPatients } from '~pages/Doctor/Patients/doctor-patients'
 import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
 import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
@@ -39,10 +38,7 @@ export const AppRouter = () => {
       <Route element={<DefaultLayout />}>
         <Route element={<Home />} path="/" />
         {userRole === UserRoles.doctor ? (
-          <>
-            <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
-            <Route element={<DoctorPatients />} path={PageUrls.Patients} />
-          </>
+          <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
         ) : (
           <>
             <Route element={<PatientAccount />} path={PageUrls.MyAccount} />

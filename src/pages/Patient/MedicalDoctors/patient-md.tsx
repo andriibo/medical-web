@@ -6,7 +6,6 @@ import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { CardBox } from '~components/Card/card-box'
-import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { PatientInvitePopup } from '~components/Modal/PatientInvitePopup/patient-invite-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { useAppDispatch } from '~stores/hooks'
@@ -83,7 +82,7 @@ export const PatientMd = () => {
         </Grid>
         {patientDoctorsIsLoading ? (
           <Spinner />
-        ) : patientDoctors?.length ? (
+        ) : (
           <Grid container spacing={3} sx={{ mb: 1 }}>
             {patientDoctors?.map(({ lastName, firstName, phone, email, institution, accessId }) => (
               <Grid key={lastName} xs={6}>
@@ -133,8 +132,6 @@ export const PatientMd = () => {
               </Grid>
             ))}
           </Grid>
-        ) : (
-          <EmptyBox text="No doctors" />
         )}
       </div>
       <PatientInvitePopup handleClose={handleInvitePopupClose} open={invitePopupOpen} />

@@ -39,10 +39,6 @@ export const patientDataAccessApi = createApi({
       }),
       providesTags: ['PatientDataAccess'],
     }),
-    postDoctorDataAccessInitiate: build.mutation<null, IDataAccessEmail>({
-      query: (queryArg) => ({ url: 'doctor/data-access/initiate', method: 'POST', body: { ...queryArg } }),
-      invalidatesTags: ['PatientDataAccess'],
-    }),
   }),
 })
 
@@ -52,5 +48,4 @@ export const {
   usePatchPatientDataAccessApproveMutation,
   useDeletePatientDataAccessMutation,
   useGetPatientDataAccessQuery,
-  usePostDoctorDataAccessInitiateMutation,
 } = patientDataAccessApi
