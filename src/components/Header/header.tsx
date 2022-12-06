@@ -41,7 +41,6 @@ const doctorNav: IMainNav[] = [
   {
     label: 'Requests',
     to: PageUrls.Requests,
-    disabled: true,
   },
 ]
 
