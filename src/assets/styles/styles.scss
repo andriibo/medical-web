@@ -72,6 +72,15 @@ form {
     opacity: 0.4;
     pointer-events: none;
   }
+
+  .list-divided & {
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+  }
+
+  &.empty-list-item {
+    justify-content: center;
+    border: 0;
+  }
 }
 
 .calendar-field {

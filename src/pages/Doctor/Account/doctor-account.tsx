@@ -1,7 +1,7 @@
 import { Tab, Tabs, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-import { AccountTab } from '~/enums/account-tab'
+import { AccountTab } from '~/enums/account-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { DoctorPersonalInfo } from '~pages/Doctor/Account/components/doctor-personal-info'
 import { DoctorSettings } from '~pages/Doctor/Account/components/doctor-settings'

@@ -41,7 +41,7 @@ export const DoctorPersonalInfo = () => {
 
   const handleOpenEditEmailPopup = useCallback(() => {
     dispatch(openEditEmailPopup())
-  }, [])
+  }, [dispatch])
 
   if (isLoading) {
     return <Spinner />

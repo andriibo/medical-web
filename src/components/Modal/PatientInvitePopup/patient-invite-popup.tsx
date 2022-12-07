@@ -50,9 +50,7 @@ export const PatientInvitePopup: FC<PatientInvitePopupProps> = ({ open, handleCl
       navigate(PageUrls.Requests)
       enqueueSnackbar('Request sent')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

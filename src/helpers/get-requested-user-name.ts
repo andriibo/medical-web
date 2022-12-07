@@ -1,5 +1,3 @@
-import { IDataAccessUser } from '~models/data-access.model'
-
 interface IUser {
   email: string
   firstName?: string

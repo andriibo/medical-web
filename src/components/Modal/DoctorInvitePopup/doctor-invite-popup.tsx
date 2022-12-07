@@ -6,12 +6,14 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
+import { RequestsDoctorTab } from '~/enums/requests-tab.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostDoctorDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
+import { usePostDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
 
 interface DoctorInvitePopupProps {
   open: boolean
@@ -23,7 +25,7 @@ export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClos
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const navigate = useNavigate()
 
-  const [doctorInitiate, { isLoading: doctorInitiateIsLoading }] = usePostDoctorDataAccessInitiateMutation()
+  const [doctorInitiate, { isLoading: doctorInitiateIsLoading }] = usePostDataAccessInitiateMutation()
 
   const {
     handleSubmit,
@@ -46,12 +48,10 @@ export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClos
       await doctorInitiate({ email }).unwrap()
 
       handleClose()
-      // navigate(PageUrls.Requests)
+      navigate(PageUrls.Requests, { state: { activeTab: RequestsDoctorTab.outgoing } })
       enqueueSnackbar('Request sent')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

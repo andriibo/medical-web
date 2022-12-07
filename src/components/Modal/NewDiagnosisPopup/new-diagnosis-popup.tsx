@@ -1,6 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import {
-  Alert,
+import { Alert,
   AlertTitle,
   Autocomplete,
   Box,
@@ -8,8 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  TextField,
-} from '@mui/material'
+  TextField, } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -64,9 +62,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
       handleClose()
       enqueueSnackbar('Diagnose was added')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

@@ -34,7 +34,7 @@ export const PatientPersonalInfo = () => {
 
   const handleOpenEditEmailPopup = useCallback(() => {
     dispatch(openEditEmailPopup())
-  }, [])
+  }, [dispatch])
 
   const handleChangePasswordPopupOpen = () => {
     setChangePasswordPopupOpen(true)

@@ -16,7 +16,7 @@ export const EditEmailPopup = () => {
     if (editEmailPopupOpen) {
       dispatch(setEditEmailStep(UpdateEmailStep.email))
     }
-  }, [editEmailPopupOpen])
+  }, [dispatch, editEmailPopupOpen])
 
   return (
     <>

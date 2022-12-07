@@ -51,7 +51,7 @@ export const ForgotPasswordConfirm = () => {
 
       console.error(err)
     }
-  }, [])
+  }, [email, enqueueSnackbar, resendCode])
 
   const {
     handleSubmit,

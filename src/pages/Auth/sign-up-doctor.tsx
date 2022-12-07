@@ -44,9 +44,7 @@ export const SignUpDoctor = () => {
       navigate(PageUrls.EmailVerification, { state: { email: data.email } })
       enqueueSnackbar('Account created')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

@@ -1,13 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import {
-  IDoctorPatients,
+import { IDoctorPatients,
   IDoctorProfile,
   IPatientDoctors,
   IPatientProfile,
   IUpdateDoctorProfile,
-  IUpdatePatientProfile,
-} from '~models/profie.model'
+  IUpdatePatientProfile, } from '~models/profie.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const profileApi = createApi({
@@ -43,8 +41,8 @@ export const profileApi = createApi({
       query: ({ patientUserId }) => ({ url: `doctor/patient-profile/${patientUserId}` }),
       providesTags: ['Profile'],
     }),
-    getDoctorPatients: build.query<IDoctorPatients[], void>({
-      query: () => ({ url: 'doctor/my-patients' }),
+    getProfilePatients: build.query<IDoctorPatients[], void>({
+      query: () => ({ url: 'profile/my-patients' }),
       providesTags: ['Profile'],
     }),
   }),
@@ -57,5 +55,5 @@ export const {
   useGetDoctorProfileQuery,
   usePatchDoctorProfileMutation,
   useGetDoctorPatientProfileQuery,
-  useGetDoctorPatientsQuery,
+  useGetProfilePatientsQuery,
 } = profileApi
