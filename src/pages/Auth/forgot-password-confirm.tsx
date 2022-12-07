@@ -43,9 +43,7 @@ export const ForgotPasswordConfirm = () => {
 
       enqueueSnackbar('Confirmation code was sent to your email')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
@@ -70,9 +68,7 @@ export const ForgotPasswordConfirm = () => {
       setFormErrors(null)
       navigate(PageUrls.ForgotPasswordSuccess, { replace: true })
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

@@ -64,9 +64,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
 
       navigate(PageUrls.SignIn, { replace: true, state: undefined })
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

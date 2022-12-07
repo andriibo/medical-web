@@ -1,0 +1,53 @@
+image: atlassian/default-image:3
+
+definitions:
+  steps:
+    - step: &build
+        name: build
+        image: node:18.12.1
+        size: 2x
+        caches:
+          - node
+        script:
+          - npm install npm --legacy-peer-deps
+          - npm install --legacy-peer-deps
+          - npm run lint
+          - npm run build
+          - echo "export WORK_DIR=$WORK_DIR" >> set_env.sh
+          - echo "export SERVER=$SERVER" >> set_env.sh
+        artifacts:
+          - build/**
+          - set_env.sh
+    - step: &scp-deploy
+        name: push
+        script:
+          - cat set_env.sh
+          - source set_env.sh
+          - pipe: atlassian/scp-deploy:0.3.12
+            variables:
+              USER: $USER
+              SERVER: $SERVER
+              REMOTE_PATH: '/var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG'
+              LOCAL_PATH: '${BITBUCKET_CLONE_DIR}/build'
+    - step: &ssh-run
+        name: apply
+        script:
+          - cat set_env.sh
+          - source set_env.sh
+          - pipe: atlassian/ssh-run:0.4.1
+            variables:
+              SSH_USER: $USER
+              SERVER: $SERVER
+              COMMAND: >
+                cd /var/www/${WORK_DIR}/web &&
+                docker cp /var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG/build/. \"\$(docker-compose ps -q medical-web)\":/usr/share/nginx/html
+pipelines:
+  branches:
+    dev:
+      - step:
+          <<: *build
+          deployment: Develop
+      - step:
+          <<: *scp-deploy
+      - step:
+          <<: *ssh-run

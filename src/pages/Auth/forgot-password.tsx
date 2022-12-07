@@ -31,9 +31,7 @@ export const ForgotPassword = () => {
 
       navigate(PageUrls.ForgotPasswordConfirm, { state: { email } })
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
