@@ -1,0 +1,42 @@
+image: atlassian/default-image:3
+
+definitions:
+  steps:
+    - step: &deploy-to-server
+        name: deploy-to-server
+        size: 2x
+        script:
+          - |
+             git clone git@bitbucket.org:abnk/devops.git
+             cd devops
+             apt-get update
+             apt-get install python3-pip -y
+             pip3 install hvac
+             python3 env_gen.py --project medical_api --token $VAULT_TOKEN
+          - pipe: atlassian/rsync-deploy:0.8.1
+            variables:
+              USER: $USER
+              SERVER: $SERVER_DO
+              REMOTE_PATH: "/var/www/${WORK_DIR}/api/.env"
+              LOCAL_PATH: ".env"
+          - pipe: atlassian/ssh-run:0.4.1
+            variables:
+              SSH_USER: $USER
+              SERVER: $SERVER_DO
+              COMMAND: |
+                export DOCKER_BUILDKIT=1
+                cd /var/www/${WORK_DIR}/api/
+                git pull origin ${BITBUCKET_BRANCH}
+                docker compose build --no-cache --pull
+                docker compose up -d
+                docker container prune -f
+                docker image prune -a -f
+                docker exec -it medical.api.dev npm run migration:up
+                
+pipelines:
+  branches:
+    dev:
+      - step:
+          <<: *deploy-to-server
+          deployment: Develop
+          name: deploy to development
