@@ -5,7 +5,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react'
 
 import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
-import { IDataAccessModel, IDataAccessUser } from '~models/data-access.model'
+import { IDataAccessModel } from '~models/data-access.model'
 import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 
 interface PatientPendingProps {

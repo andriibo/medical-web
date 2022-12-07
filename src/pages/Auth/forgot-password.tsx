@@ -1,20 +1,16 @@
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
-import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { AuthEmailKeys, AuthSignUpConfirmKeys, IAuthEmail, IAuthSignUpConfirm } from '~models/auth.model'
+import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import {
   usePostAuthForgotPasswordMutation,
-  usePostAuthSignUpConfirmMutation,
-  usePostAuthSignUpResendCodeMutation,
 } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
