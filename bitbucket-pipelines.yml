@@ -18,9 +18,22 @@ definitions:
         artifacts:
           - build/**
           - set_env.sh
+    - step: &scp-deploy
+        name: push
+        script:
+          - cat set_env.sh
+          - source set_env.sh
+          - pipe: atlassian/scp-deploy:0.4.1
+            variables:
+              USER: $USER
+              SERVER: $SERVER
+              REMOTE_PATH: '/var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG'
+              LOCAL_PATH: '${BITBUCKET_CLONE_DIR}/build'
 pipelines:
   branches:
     dev:
       - step:
           <<: *build
           deployment: Develop
+      - step:
+          <<: *scp-deploy
