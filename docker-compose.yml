@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  medical-web:
+    container_name: medical.web
+    restart: always
+    build:
+      context: .
+      dockerfile: Build.Dockerfile
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    ports:
+      - ${NGINX_PORT}:80

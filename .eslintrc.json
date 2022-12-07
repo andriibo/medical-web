@@ -63,7 +63,7 @@
         "ignoreUrls": true
       }
     ],
-    "max-lines": ["error", 350],
+    "max-lines": ["warn", 350],
     "prefer-const": [
       "warn",
       {
