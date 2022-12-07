@@ -79,14 +79,9 @@ export const DoctorPatients = () => {
   return (
     <>
       <div className="white-box content-md">
-        <Typography variant="h5">My Account</Typography>
         <Grid container spacing={3} sx={{ mb: 1 }}>
           <Grid xs>
-            <Tabs onChange={handleChangeTab} value={activeTab}>
-              <Tab label="Abnormal" value={AccountTab.personalInfo} />
-              <Tab label="Borderline" value={AccountTab.personalInfo} />
-              <Tab label="Normal" value={AccountTab.settings} />
-            </Tabs>
+            <Typography variant="h5">Patients</Typography>
           </Grid>
           <Grid>
             <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">
