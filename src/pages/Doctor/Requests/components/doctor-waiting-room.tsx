@@ -8,30 +8,30 @@ import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel } from '~models/data-access.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
-  usePatchPatientDataAccessApproveMutation,
-  usePatchPatientDataAccessRefuseMutation,
+  usePatchDataAccessApproveMutation,
+  usePatchDataAccessRefuseMutation,
 } from '~stores/services/patient-data-access.api'
 import { setDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
-interface PatientIncomingProps {
-  patientDataAccess: IDataAccessModel[]
+interface DoctorIncomingProps {
+  dataAccess: IDataAccessModel[]
 }
 
-export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess }) => {
+export const DoctorWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
-  const [approveRequest] = usePatchPatientDataAccessApproveMutation()
-  const [refuseRequest] = usePatchPatientDataAccessRefuseMutation()
+  const [approveRequest] = usePatchDataAccessApproveMutation()
+  const [refuseRequest] = usePatchDataAccessRefuseMutation()
   const [patchingRequestId, setPatchingRequestId] = useState<string | null>(null)
 
-  const incomingRequests = useMemo(
+  const waitingRequests = useMemo(
     () =>
-      patientDataAccess
+      dataAccess
         .filter(
-          (data) => data.status === DataAccessStatus.initiated && data.direction === DataAccessDirection.toPatient,
+          (data) => data.status === DataAccessStatus.initiated && data.direction === DataAccessDirection.fromPatient,
         )
         .sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
-    [patientDataAccess],
+    [dataAccess],
   )
 
   const handleApproveRequest = useCallback(
@@ -69,8 +69,8 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
 
   return (
     <List className="list-divided">
-      {incomingRequests?.length ? (
-        incomingRequests.map(({ accessId, createdAt, requestedUser }) => (
+      {waitingRequests?.length ? (
+        waitingRequests.map(({ accessId, createdAt, requestedUser }) => (
           <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
             <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
               {getRequestedUserName(requestedUser)}

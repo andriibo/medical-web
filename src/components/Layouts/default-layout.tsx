@@ -17,7 +17,7 @@ export const DefaultLayout = () => {
   return (
     <>
       <Header />
-      <Container>
+      <Container sx={{ mb: 3 }}>
         <Outlet />
       </Container>
     </>

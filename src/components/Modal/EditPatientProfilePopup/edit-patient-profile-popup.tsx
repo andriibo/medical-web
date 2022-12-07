@@ -23,7 +23,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
-import { Gender } from '~/enums/gender.emun'
+import { Gender } from '~/enums/gender.enum'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'

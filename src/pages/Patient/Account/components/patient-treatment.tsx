@@ -125,7 +125,7 @@ export const PatientTreatment = () => {
               </ListItem>
             ))
           ) : (
-            <ListItem sx={{ justifyContent: 'center' }}>No diagnoses added</ListItem>
+            <ListItem className="empty-list-item">No diagnoses added</ListItem>
           )}
         </List>
       </TabPanel>
@@ -151,7 +151,7 @@ export const PatientTreatment = () => {
               </ListItem>
             ))
           ) : (
-            <ListItem sx={{ justifyContent: 'center' }}>No medications added</ListItem>
+            <ListItem className="empty-list-item">No medications added</ListItem>
           )}
         </List>
       </TabPanel>

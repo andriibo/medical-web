@@ -1,4 +1,9 @@
 {
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "env": {
     "browser": true,
     "es2021": true
@@ -41,6 +46,7 @@
     "react/require-default-props": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-unused-vars": "error",
     "react/jsx-fragments": "off",
     "react/jsx-no-bind": [
       "error",
@@ -181,23 +187,7 @@
         "objectsInObjects": true
       }
     ],
-    "object-curly-newline": [
-      "warn",
-      {
-        "ObjectPattern": {
-          "multiline": true
-        },
-        //        "ImportDeclaration": {
-        //          "multiline": true,
-        //          "minProperties": 40
-        //        },
-        "ImportDeclaration": "never",
-        "ExportDeclaration": {
-          "multiline": true,
-          "minProperties": 3
-        }
-      }
-    ],
+    "object-curly-newline": "off",
     "dot-notation": [
       "error",
       {
@@ -206,7 +196,8 @@
     ],
     "no-restricted-properties": "warn",
     "no-multi-assign": "error",
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "eqeqeq": [
       "warn",
       "always",

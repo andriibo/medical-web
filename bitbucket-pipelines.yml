@@ -27,7 +27,7 @@ definitions:
             variables:
               USER: $USER
               SERVER: $SERVER
-              REMOTE_PATH: '/var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG'
+              REMOTE_PATH: '/var/www/${WORK_DIR}/web'
               LOCAL_PATH: '${BITBUCKET_CLONE_DIR}/build'
     - step: &ssh-run
         name: apply
@@ -40,7 +40,7 @@ definitions:
               SERVER: $SERVER
               COMMAND: >
                 cd /var/www/${WORK_DIR}/web &&
-                docker cp /var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG/build/. \"\$(docker-compose ps -q medical-web)\":/usr/share/nginx/html
+                docker cp /var/www/${WORK_DIR}/web/build/. \"\$(docker-compose ps -q medical-web)\":/usr/share/nginx/html
 pipelines:
   branches:
     dev:

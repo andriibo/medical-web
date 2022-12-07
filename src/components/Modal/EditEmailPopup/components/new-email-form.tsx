@@ -49,7 +49,7 @@ export const NewEmailForm = () => {
 
   const onClosePopup = useCallback(() => {
     dispatch(closeEditEmailPopup())
-  }, [])
+  }, [dispatch])
 
   const fieldValidation = (name: AuthEmailKeys) => ({
     error: Boolean(errors[name]),

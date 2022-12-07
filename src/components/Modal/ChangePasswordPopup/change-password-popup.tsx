@@ -1,16 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import {
-  Alert,
-  AlertTitle,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -22,7 +12,6 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { IUpdatePatientProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangePasswordMutation } from '~stores/services/auth.api'
 import { clearPersist } from '~stores/slices/auth.slice'

@@ -43,7 +43,7 @@ export const EmailVerification = () => {
 
       console.error(err)
     }
-  }, [])
+  }, [email, enqueueSnackbar, resendCode])
 
   useEffect(() => {
     if (!email) {
