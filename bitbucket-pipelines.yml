@@ -23,7 +23,7 @@ definitions:
         script:
           - cat set_env.sh
           - source set_env.sh
-          - pipe: atlassian/scp-deploy:0.4.1
+          - pipe: atlassian/scp-deploy:0.3.12
             variables:
               USER: $USER
               SERVER: $SERVER
