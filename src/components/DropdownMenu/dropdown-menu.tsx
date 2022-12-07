@@ -2,7 +2,7 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import { SxProps } from '@mui/system'
-import React, { FC, MouseEvent, useEffect, useState } from 'react'
+import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 
 interface DropdownMenuProps {
   button?: React.ReactNode
@@ -26,17 +26,20 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({ button, dropClose, handleD
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
-  const handleClose = (event?: MouseEvent<HTMLElement>) => {
-    if (event) {
-      event.stopPropagation()
-    }
+  const handleClose = useCallback(
+      (event?: MouseEvent<HTMLElement>) => {
+        if (event) {
+          event.stopPropagation()
+        }
 
-    setAnchorEl(null)
+        setAnchorEl(null)
 
-    if (handleDrop) {
-      handleDrop(false)
-    }
-  }
+        if (handleDrop) {
+          handleDrop(false)
+        }
+      },
+      [handleDrop],
+  )
 
   useEffect(() => {
     if (dropClose) {
