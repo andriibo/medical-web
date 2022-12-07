@@ -48,7 +48,9 @@ export const VerificationCodeForm = () => {
       dispatch(closeEditEmailPopup())
       dispatch(setEditEmailStep(UpdateEmailStep.email))
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
@@ -67,7 +69,9 @@ export const VerificationCodeForm = () => {
         enqueueSnackbar('Verification code was not sent', { variant: 'warning' })
       }
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

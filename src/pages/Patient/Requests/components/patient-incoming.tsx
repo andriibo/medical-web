@@ -14,7 +14,6 @@ import {
 import { setDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 interface PatientIncomingProps {
-
   patientDataAccess: IDataAccessModel[]
 }
 

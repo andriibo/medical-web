@@ -1,11 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IDoctorPatients,
+import {
+  IDoctorPatients,
   IDoctorProfile,
   IPatientDoctors,
   IPatientProfile,
   IUpdateDoctorProfile,
-  IUpdatePatientProfile, } from '~models/profie.model'
+  IUpdatePatientProfile,
+} from '~models/profie.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const profileApi = createApi({

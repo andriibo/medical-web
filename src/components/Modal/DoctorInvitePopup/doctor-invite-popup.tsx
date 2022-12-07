@@ -51,7 +51,9 @@ export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClos
       navigate(PageUrls.Requests, { state: { activeTab: RequestsDoctorTab.outgoing } })
       enqueueSnackbar('Request sent')
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

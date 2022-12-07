@@ -31,7 +31,9 @@ export const ForgotPassword = () => {
 
       navigate(PageUrls.ForgotPasswordConfirm, { state: { email } })
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
@@ -80,7 +82,8 @@ export const ForgotPassword = () => {
           sx={{ mt: 2 }}
           to={PageUrls.SignIn}
           type="button"
-          variant="outlined">
+          variant="outlined"
+        >
           Cancel
         </Button>
       </form>

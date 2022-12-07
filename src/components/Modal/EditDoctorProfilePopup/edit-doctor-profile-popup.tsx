@@ -52,7 +52,9 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
       handleClose()
       enqueueSnackbar('Profile was updated')
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

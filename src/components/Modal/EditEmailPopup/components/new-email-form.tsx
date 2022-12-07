@@ -37,7 +37,9 @@ export const NewEmailForm = () => {
       dispatch(setNewEmail(email))
       enqueueSnackbar('Verification code was sent to your email')
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
