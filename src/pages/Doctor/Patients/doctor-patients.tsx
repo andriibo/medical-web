@@ -1,11 +1,10 @@
 import { Close, PersonAdd } from '@mui/icons-material'
-import { Button, IconButton, List, ListItem, ListItemText, Tab, Tabs, Typography } from '@mui/material'
+import { Button, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { AccountTab } from '~/enums/account-tab.enum'
 import { DoctorInvitePopup } from '~components/Modal/DoctorInvitePopup/doctor-invite-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
@@ -19,7 +18,6 @@ export const DoctorPatients = () => {
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
 
-  const [activeTab, setActiveTab] = useState<AccountTab>(AccountTab.personalInfo)
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const dataAccessHasChanges = useDataAccessHasChanges()
 
@@ -31,10 +29,6 @@ export const DoctorPatients = () => {
     isLoading: doctorPatientsIsLoading,
     refetch: refetchDoctorPatients,
   } = useGetProfilePatientsQuery()
-
-  const handleChangeTab = (event: React.SyntheticEvent, value: AccountTab) => {
-    setActiveTab(value)
-  }
 
   const handleRemovePatient = useCallback(
     async (accessId: string) => {
