@@ -11,7 +11,7 @@ definitions:
         script:
           - npm install npm --legacy-peer-deps
           - npm install --legacy-peer-deps
-          - npm run eslint
+          - npm run lint
           - npm run build
           - echo "export WORK_DIR=$WORK_DIR" >> set_env.sh
           - echo "export SERVER=$SERVER" >> set_env.sh
