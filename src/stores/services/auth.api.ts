@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import {
-  IAuthChangePassword,
+import { IAuthChangePassword,
   IAuthData,
   IAuthEmail,
   IAuthEmailResponse,
@@ -9,8 +8,7 @@ import {
   IAuthSignIn,
   IAuthSignUpConfirm,
   IAuthSignUpDoctor,
-  IAuthSignUpPatient,
-} from '~models/auth.model'
+  IAuthSignUpPatient, } from '~models/auth.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const authApi = createApi({
