@@ -10,7 +10,7 @@ definitions:
           - node
         script:
           - npm install npm
-          - npm install
+          - npm install --legacy-peer-deps
           - npm run eslint
           - npm run build
           - echo "export WORK_DIR=$WORK_DIR" >> set_env.sh
