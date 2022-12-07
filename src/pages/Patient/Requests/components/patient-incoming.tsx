@@ -7,14 +7,13 @@ import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel } from '~models/data-access.model'
 import { useAppDispatch } from '~stores/hooks'
-import {
-  useDeletePatientDataAccessMutation,
+import { useDeletePatientDataAccessMutation,
   usePatchPatientDataAccessApproveMutation,
-  usePatchPatientDataAccessRefuseMutation,
-} from '~stores/services/patient-data-access.api'
+  usePatchPatientDataAccessRefuseMutation, } from '~stores/services/patient-data-access.api'
 import { setDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 interface PatientIncomingProps {
+
   patientDataAccess: IDataAccessModel[]
 }
 
@@ -79,7 +78,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
   return (
     <List>
       {pendingRequests?.length ? (
-        pendingRequests.map(({ accessId, createdAt, requestedUser, status }) => (
+        pendingRequests.map(({ accessId, createdAt, requestedUser }) => (
           <>
             <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
               <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
