@@ -7,8 +7,7 @@ import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel } from '~models/data-access.model'
 import { useAppDispatch } from '~stores/hooks'
-import { useDeletePatientDataAccessMutation,
-  usePatchPatientDataAccessApproveMutation,
+import { usePatchPatientDataAccessApproveMutation,
   usePatchPatientDataAccessRefuseMutation, } from '~stores/services/patient-data-access.api'
 import { setDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
@@ -20,7 +19,6 @@ interface PatientIncomingProps {
 export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
-  const [deleteRequest] = useDeletePatientDataAccessMutation()
   const [approveRequest] = usePatchPatientDataAccessApproveMutation()
   const [refuseRequest] = usePatchPatientDataAccessRefuseMutation()
   const [patchingRequestId, setPatchingRequestId] = useState<string | null>(null)
@@ -35,19 +33,6 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
     [patientDataAccess],
   )
 
-  const handleDeleteRequest = useCallback(async (accessId: string) => {
-    try {
-      setPatchingRequestId(accessId)
-
-      await deleteRequest({ accessId }).unwrap()
-      enqueueSnackbar('Request was deleted')
-    } catch (err) {
-      console.error(err)
-      setPatchingRequestId(null)
-      enqueueSnackbar('Request was not deleted', { variant: 'warning' })
-    }
-  }, [])
-
   const handleApproveRequest = useCallback(async (accessId: string) => {
     try {
       setPatchingRequestId(accessId)
@@ -60,7 +45,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
       setPatchingRequestId(null)
       enqueueSnackbar('Request was not approved', { variant: 'warning' })
     }
-  }, [])
+  }, [approveRequest, dispatch, enqueueSnackbar])
 
   const handleRefuseRequest = useCallback(async (accessId: string) => {
     try {
@@ -73,7 +58,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
       setPatchingRequestId(null)
       enqueueSnackbar('Request was not refused', { variant: 'warning' })
     }
-  }, [])
+  }, [enqueueSnackbar, refuseRequest])
 
   return (
     <List>

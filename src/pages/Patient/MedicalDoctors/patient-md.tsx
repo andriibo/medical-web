@@ -50,14 +50,14 @@ export const PatientMd = () => {
         enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
       }
     }
-  }, [])
+  }, [confirm, deleteDoctor, enqueueSnackbar, refetchPatientDoctors])
 
   useEffect(() => {
     if (dataAccessHasChanges) {
       refetchPatientDoctors()
       dispatch(setDataAccessHasChanges(false))
     }
-  }, [dataAccessHasChanges])
+  }, [dataAccessHasChanges, dispatch, refetchPatientDoctors])
 
   const handleInvitePopupOpen = () => {
     setInvitePopupOpen(true)

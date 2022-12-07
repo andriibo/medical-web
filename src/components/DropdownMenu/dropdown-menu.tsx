@@ -42,7 +42,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({ button, dropClose, handleD
     if (dropClose) {
       handleClose()
     }
-  }, [dropClose])
+  }, [dropClose, handleClose])
 
   const sx = {
     '& .MuiPaper-root': {

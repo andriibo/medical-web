@@ -73,11 +73,11 @@ export const VerificationCodeForm = () => {
 
       console.error(err)
     }
-  }, [newEmail])
+  }, [enqueueSnackbar, newEmail, resendCode])
 
   const onClosePopup = useCallback(() => {
     dispatch(closeEditEmailPopup())
-  }, [])
+  }, [dispatch])
 
   const fieldValidation = (name: AuthChangeEmailConfirmKeys) => ({
     error: Boolean(errors[name]),

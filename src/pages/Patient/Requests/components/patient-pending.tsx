@@ -38,7 +38,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
       setDeletingRequestId(null)
       enqueueSnackbar('Request was not deleted', { variant: 'warning' })
     }
-  }, [])
+  }, [deleteRequest, enqueueSnackbar])
 
   const isRefuse = (status: string) => status === DataAccessStatus.refused
 
