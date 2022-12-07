@@ -1,5 +1,6 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert,
+import {
+  Alert,
   AlertTitle,
   Button,
   Dialog,
@@ -11,7 +12,8 @@ import { Alert,
   InputLabel,
   MenuItem,
   Select,
-  TextField, } from '@mui/material'
+  TextField,
+} from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -21,7 +23,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
-import { Gender } from '~/enums/gender.emun'
+import { Gender } from '~/enums/gender.enum'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
@@ -73,7 +75,9 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
       handleClose()
       enqueueSnackbar('Profile was updated')
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

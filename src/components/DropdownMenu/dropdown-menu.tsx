@@ -26,19 +26,20 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({ button, dropClose, handleD
     event.stopPropagation()
     setAnchorEl(event.currentTarget)
   }
+
   const handleClose = useCallback(
-      (event?: MouseEvent<HTMLElement>) => {
-        if (event) {
-          event.stopPropagation()
-        }
+    (event?: MouseEvent<HTMLElement>) => {
+      if (event) {
+        event.stopPropagation()
+      }
 
-        setAnchorEl(null)
+      setAnchorEl(null)
 
-        if (handleDrop) {
-          handleDrop(false)
-        }
-      },
-      [handleDrop],
+      if (handleDrop) {
+        handleDrop(false)
+      }
+    },
+    [handleDrop],
   )
 
   useEffect(() => {

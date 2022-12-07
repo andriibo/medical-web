@@ -9,7 +9,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostAuthForgotPasswordMutation, } from '~stores/services/auth.api'
+import { usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
 
@@ -31,7 +31,9 @@ export const ForgotPassword = () => {
 
       navigate(PageUrls.ForgotPasswordConfirm, { state: { email } })
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

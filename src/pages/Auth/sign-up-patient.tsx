@@ -1,6 +1,7 @@
 import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert,
+import {
+  Alert,
   AlertTitle,
   Button,
   FormControl,
@@ -11,7 +12,8 @@ import { Alert,
   MenuItem,
   Select,
   TextField,
-  Typography, } from '@mui/material'
+  Typography,
+} from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -21,7 +23,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
-import { Gender } from '~/enums/gender.emun'
+import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
@@ -61,7 +63,9 @@ export const SignUpPatient = () => {
       setFormErrors(null)
       navigate(PageUrls.EmailVerification, { state: { email: data.email } })
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

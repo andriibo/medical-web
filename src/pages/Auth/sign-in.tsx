@@ -44,7 +44,9 @@ export const SignIn = () => {
       setFormErrors(null)
       navigate('/', { replace: true })
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setCurrentEmail(data.email)
       setFormErrors(Array.isArray(message) ? message : [message])

@@ -39,6 +39,38 @@ export const patientDataAccessApi = createApi({
       }),
       providesTags: ['PatientDataAccess'],
     }),
+
+    postDataAccessInitiate: build.mutation<null, IDataAccessEmail>({
+      query: (queryArg) => ({ url: 'data-access/initiate', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['PatientDataAccess'],
+    }),
+    patchDataAccessRefuse: build.mutation<null, { accessId: string }>({
+      query: ({ accessId }) => ({
+        url: `data-access/refuse/${accessId}`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['PatientDataAccess'],
+    }),
+    patchDataAccessApprove: build.mutation<null, { accessId: string }>({
+      query: ({ accessId }) => ({
+        url: `data-access/approve/${accessId}`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: ['PatientDataAccess'],
+    }),
+    deleteDataAccess: build.mutation<null, { accessId: string }>({
+      query: ({ accessId }) => ({
+        url: `data-access/${accessId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['PatientDataAccess'],
+    }),
+    getDataAccess: build.query<IDataAccessModel[], void>({
+      query: () => ({
+        url: 'data-accesses',
+      }),
+      providesTags: ['PatientDataAccess'],
+    }),
   }),
 })
 
@@ -48,4 +80,9 @@ export const {
   usePatchPatientDataAccessApproveMutation,
   useDeletePatientDataAccessMutation,
   useGetPatientDataAccessQuery,
+  usePostDataAccessInitiateMutation,
+  usePatchDataAccessRefuseMutation,
+  usePatchDataAccessApproveMutation,
+  useDeleteDataAccessMutation,
+  useGetDataAccessQuery,
 } = patientDataAccessApi

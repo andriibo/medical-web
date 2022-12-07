@@ -1,13 +1,6 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Alert,
-  AlertTitle,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  TextField, } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -71,7 +64,9 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
 
       navigate(PageUrls.SignIn, { replace: true, state: undefined })
     } catch (err) {
-      const { data: { message }, } = err as IErrorRequest
+      const {
+        data: { message },
+      } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

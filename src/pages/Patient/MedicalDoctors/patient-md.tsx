@@ -30,27 +30,30 @@ export const PatientMd = () => {
   const [deleteDoctor] = useDeletePatientDataAccessMutation()
   const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
 
-  const handleRemoveDoctor = useCallback(async (accessId: string) => {
-    try {
-      await confirm({
-        title: 'Remove doctor?',
-        description: 'The doctor will lost access to your account information.',
-        confirmationText: 'Remove',
-      })
+  const handleRemoveDoctor = useCallback(
+    async (accessId: string) => {
+      try {
+        await confirm({
+          title: 'Remove doctor?',
+          description: 'The doctor will lost access to your account information.',
+          confirmationText: 'Remove',
+        })
 
-      setDeletingDoctorId(accessId)
+        setDeletingDoctorId(accessId)
 
-      await deleteDoctor({ accessId }).unwrap()
-      refetchPatientDoctors()
-      enqueueSnackbar('Doctor removed')
-    } catch (err) {
-      console.error(err)
-      setDeletingDoctorId(null)
-      if (err) {
-        enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+        await deleteDoctor({ accessId }).unwrap()
+        refetchPatientDoctors()
+        enqueueSnackbar('Doctor removed')
+      } catch (err) {
+        console.error(err)
+        setDeletingDoctorId(null)
+        if (err) {
+          enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+        }
       }
-    }
-  }, [confirm, deleteDoctor, enqueueSnackbar, refetchPatientDoctors])
+    },
+    [confirm, deleteDoctor, enqueueSnackbar, refetchPatientDoctors],
+  )
 
   useEffect(() => {
     if (dataAccessHasChanges) {
