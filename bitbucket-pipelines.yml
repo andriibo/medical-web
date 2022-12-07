@@ -40,7 +40,7 @@ definitions:
               SERVER: $SERVER
               COMMAND: >
                 cd /var/www/${WORK_DIR}/web &&
-                docker cp /var/www/${WORK_DIR}/web/$BITBUCKET_REPO_SLUG/build/. \"\$(docker-compose ps -q medical-web)\":/usr/share/nginx/html
+                docker cp /var/www/${WORK_DIR}/web/build/. \"\$(docker-compose ps -q medical-web)\":/usr/share/nginx/html
 pipelines:
   branches:
     dev:
