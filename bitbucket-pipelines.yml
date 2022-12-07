@@ -46,7 +46,7 @@ pipelines:
         dev:
         - step:
             <<: *build
-            deployment: dev
+            deployment: Develop
         - step:
             <<: *scp-deploy
         - step:
