@@ -1,7 +1,6 @@
 import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import {
-  Alert,
+import { Alert,
   AlertTitle,
   Button,
   FormControl,
@@ -12,8 +11,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
-} from '@mui/material'
+  Typography, } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -63,9 +61,7 @@ export const SignUpPatient = () => {
       setFormErrors(null)
       navigate(PageUrls.EmailVerification, { state: { email: data.email } })
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 

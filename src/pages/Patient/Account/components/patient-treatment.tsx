@@ -10,10 +10,8 @@ import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-med
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { useDeletePatientDiagnosisMutation, useGetPatientDiagnosesQuery } from '~stores/services/patient-diagnosis.api'
-import {
-  useDeletePatientMedicationMutation,
-  useGetPatientMedicationsQuery,
-} from '~stores/services/patient-medication.api'
+import { useDeletePatientMedicationMutation,
+  useGetPatientMedicationsQuery, } from '~stores/services/patient-medication.api'
 import { useUserId } from '~stores/slices/auth.slice'
 
 export const PatientTreatment = () => {

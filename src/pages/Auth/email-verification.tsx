@@ -35,9 +35,7 @@ export const EmailVerification = () => {
 
       enqueueSnackbar('Verification code was sent to your email')
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
@@ -67,9 +65,7 @@ export const EmailVerification = () => {
       setFormErrors(null)
       navigate(PageUrls.SignIn, { replace: true })
     } catch (err) {
-      const {
-        data: { message },
-      } = err as IErrorRequest
+      const { data: { message }, } = err as IErrorRequest
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
