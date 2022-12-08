@@ -73,7 +73,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
 
       setFormErrors(null)
       handleClose()
-      enqueueSnackbar('Profile was updated')
+      enqueueSnackbar('Profile updated')
     } catch (err) {
       const {
         data: { message },

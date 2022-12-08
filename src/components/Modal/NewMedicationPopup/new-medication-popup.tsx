@@ -63,7 +63,7 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleCl
 
       setFormErrors(null)
       handleClose()
-      enqueueSnackbar('Medication was added')
+      enqueueSnackbar('Medication added')
     } catch (err) {
       const {
         data: { message },

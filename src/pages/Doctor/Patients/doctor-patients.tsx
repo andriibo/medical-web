@@ -48,7 +48,7 @@ export const DoctorPatients = () => {
         console.error(err)
         setDeletingPatientId(null)
         if (err) {
-          enqueueSnackbar('Patient was not removed', { variant: 'warning' })
+          enqueueSnackbar('Patient not removed', { variant: 'warning' })
         }
       }
     },

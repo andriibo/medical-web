@@ -37,7 +37,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
       } catch (err) {
         console.error(err)
         setDeletingRequestId(null)
-        enqueueSnackbar('Request was not deleted', { variant: 'warning' })
+        enqueueSnackbar('Invitation not withdrawn', { variant: 'warning' })
       }
     },
     [deleteRequest, enqueueSnackbar],
