@@ -1,12 +1,8 @@
-export const getAge = (birthday: string) => {
-  const today = new Date()
-  const birthDate = new Date(birthday)
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const month = today.getMonth() - birthDate.getMonth()
+export const getAge = (birthString: string) => {
+  const birthDate = new Date(birthString)
 
-  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
-    age -= 1
-  }
+  const ageDiffMilliseconds = Date.now() - birthDate.getTime()
+  const ageDate = new Date(ageDiffMilliseconds)
 
-  return age
+  return Math.abs(ageDate.getUTCFullYear() - 1970)
 }

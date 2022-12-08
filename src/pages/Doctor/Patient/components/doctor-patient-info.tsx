@@ -1,9 +1,14 @@
 import { Avatar, Box, Button, Divider, Typography } from '@mui/material'
-import React, { FC, useMemo } from 'react'
+import { useConfirm } from 'material-ui-confirm'
+import { useSnackbar } from 'notistack'
+import React, { FC, useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { getAcronym } from '~helpers/get-acronym'
 import { getAge } from '~helpers/get-age'
 import { IPatientProfile } from '~models/profie.model'
+import { useDeleteDataAccessMutation } from '~stores/services/patient-data-access.api'
 
 import styles from '../doctor-patient.module.scss'
 
@@ -12,7 +17,34 @@ interface DoctorPatientInfoProps {
 }
 
 export const DoctorPatientInfo: FC<DoctorPatientInfoProps> = ({ patientData }) => {
+  const navigate = useNavigate()
+  const { enqueueSnackbar } = useSnackbar()
+  const confirm = useConfirm()
+  const [deletePatient] = useDeleteDataAccessMutation()
+
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
+
+  const handleRemovePatient = useCallback(
+    async (accessId: string) => {
+      try {
+        await confirm({
+          title: 'Remove patient?',
+          description: 'You will lose access to patient data.',
+          confirmationText: 'Remove',
+        })
+
+        await deletePatient({ accessId }).unwrap()
+        enqueueSnackbar('Patient removed')
+        navigate(PageUrls.Patients, { replace: true })
+      } catch (err) {
+        console.error(err)
+        if (err) {
+          enqueueSnackbar('Patient not removed', { variant: 'warning' })
+        }
+      }
+    },
+    [confirm, deletePatient, enqueueSnackbar, navigate],
+  )
 
   return (
     <div className={styles.patientAside}>
@@ -52,7 +84,7 @@ export const DoctorPatientInfo: FC<DoctorPatientInfoProps> = ({ patientData }) =
         </li>
       </ul>
       <Box sx={{ textAlign: 'center', mt: 3 }}>
-        <Button color="error" variant="outlined">
+        <Button color="error" onClick={() => handleRemovePatient(patientData.id)} variant="outlined">
           Remove
         </Button>
       </Box>

@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
 import { DoctorPatientInfo } from '~pages/Doctor/Patient/components/doctor-patient-info'
-import { PatientTreatment } from '~pages/Patient/Account/components/patient-treatment'
 import { useGetDoctorPatientProfileQuery } from '~stores/services/profile.api'
 
 import styles from './doctor-patient.module.scss'
