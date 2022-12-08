@@ -35,7 +35,7 @@ export const DoctorOutgoing: FC<DoctorPendingProps> = ({ dataAccess }) => {
       } catch (err) {
         console.error(err)
         setDeletingRequestId(null)
-        enqueueSnackbar('Request was not deleted', { variant: 'warning' })
+        enqueueSnackbar('Invitation not withdrawn', { variant: 'warning' })
       }
     },
     [deleteRequest, enqueueSnackbar],
@@ -55,7 +55,7 @@ export const DoctorOutgoing: FC<DoctorPendingProps> = ({ dataAccess }) => {
           </ListItem>
         ))
       ) : (
-        <ListItem className="empty-list-item">No pending requests</ListItem>
+        <ListItem className="empty-list-item">No outgoing requests</ListItem>
       )}
     </List>
   )

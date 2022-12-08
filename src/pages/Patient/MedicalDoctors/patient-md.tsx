@@ -48,7 +48,7 @@ export const PatientMd = () => {
         console.error(err)
         setDeletingDoctorId(null)
         if (err) {
-          enqueueSnackbar('Doctor was not removed', { variant: 'warning' })
+          enqueueSnackbar('Doctor not removed', { variant: 'warning' })
         }
       }
     },
@@ -87,53 +87,59 @@ export const PatientMd = () => {
           <Spinner />
         ) : (
           <Grid container spacing={3} sx={{ mb: 1 }}>
-            {patientDoctors?.map(({ lastName, firstName, phone, email, institution, accessId }) => (
-              <Grid key={lastName} xs={6}>
-                <CardBox
-                  disable={deletingDoctorId === accessId}
-                  header={
-                    <>
-                      <Typography variant="subtitle1">
-                        {firstName} {lastName}
-                      </Typography>
-                      <div style={{ marginLeft: 'auto' }} />
-                      <IconButton edge="end" onClick={() => handleRemoveDoctor(accessId)}>
-                        <Clear fontSize="inherit" />
-                      </IconButton>
-                    </>
-                  }
-                >
-                  <List
-                    sx={{
-                      wordWrap: 'break-word',
-                      '& .MuiListItem-root': { py: '0.25rem' },
-                      '& .MuiListItemIcon-root': { minWidth: '2.125rem', color: '#323232' },
-                      '& .MuiListItemText-root': { m: 0 },
-                      '& .MuiTypography-root': { fontSize: '0.875rem', m: 0 },
-                    }}
+            {patientDoctors?.length ? (
+              patientDoctors.map(({ lastName, firstName, phone, email, institution, accessId }) => (
+                <Grid key={lastName} xs={6}>
+                  <CardBox
+                    disable={deletingDoctorId === accessId}
+                    header={
+                      <>
+                        <Typography variant="subtitle1">
+                          {firstName} {lastName}
+                        </Typography>
+                        <div style={{ marginLeft: 'auto' }} />
+                        <IconButton edge="end" onClick={() => handleRemoveDoctor(accessId)}>
+                          <Clear fontSize="inherit" />
+                        </IconButton>
+                      </>
+                    }
                   >
-                    <ListItem disableGutters>
-                      <ListItemIcon>
-                        <Phone />
-                      </ListItemIcon>
-                      <ListItemText>{phone}</ListItemText>
-                    </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemIcon>
-                        <MailOutline />
-                      </ListItemIcon>
-                      <ListItemText>{email}</ListItemText>
-                    </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemIcon>
-                        <LocationCity />
-                      </ListItemIcon>
-                      <ListItemText>{institution}</ListItemText>
-                    </ListItem>
-                  </List>
-                </CardBox>
+                    <List
+                      sx={{
+                        wordWrap: 'break-word',
+                        '& .MuiListItem-root': { py: '0.25rem' },
+                        '& .MuiListItemIcon-root': { minWidth: '2.125rem', color: '#323232' },
+                        '& .MuiListItemText-root': { m: 0 },
+                        '& .MuiTypography-root': { fontSize: '0.875rem', m: 0 },
+                      }}
+                    >
+                      <ListItem disableGutters>
+                        <ListItemIcon>
+                          <Phone />
+                        </ListItemIcon>
+                        <ListItemText>{phone}</ListItemText>
+                      </ListItem>
+                      <ListItem disableGutters>
+                        <ListItemIcon>
+                          <MailOutline />
+                        </ListItemIcon>
+                        <ListItemText>{email}</ListItemText>
+                      </ListItem>
+                      <ListItem disableGutters>
+                        <ListItemIcon>
+                          <LocationCity />
+                        </ListItemIcon>
+                        <ListItemText>{institution}</ListItemText>
+                      </ListItem>
+                    </List>
+                  </CardBox>
+                </Grid>
+              ))
+            ) : (
+              <Grid textAlign="center" xs>
+                No doctors added
               </Grid>
-            ))}
+            )}
           </Grid>
         )}
       </div>

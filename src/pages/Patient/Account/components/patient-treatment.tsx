@@ -47,11 +47,11 @@ export const PatientTreatment = () => {
       setDeletingDiagnosisId(diagnosisId)
       await deletePatientDiagnosis({ diagnosisId }).unwrap()
 
-      enqueueSnackbar('Diagnosis was deleted')
+      enqueueSnackbar('Diagnosis deleted')
     } catch (err) {
       console.error(err)
       setDeletingDiagnosisId(null)
-      enqueueSnackbar('Diagnosis was not deleted', { variant: 'warning' })
+      enqueueSnackbar('Diagnosis not deleted', { variant: 'warning' })
     }
   }
 
@@ -71,7 +71,7 @@ export const PatientTreatment = () => {
       enqueueSnackbar('Medication deleted')
     } catch (err) {
       setDeletingMedicationId(null)
-      enqueueSnackbar('Medication was not deleted', { variant: 'warning' })
+      enqueueSnackbar('Medication not deleted', { variant: 'warning' })
       console.error(err)
     }
   }

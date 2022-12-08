@@ -57,11 +57,11 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
         setPatchingRequestId(accessId)
 
         await refuseRequest({ accessId }).unwrap()
-        enqueueSnackbar('Request was refused')
+        enqueueSnackbar('Request rejected')
       } catch (err) {
         console.error(err)
         setPatchingRequestId(null)
-        enqueueSnackbar('Request was not refused', { variant: 'warning' })
+        enqueueSnackbar('Request not rejected', { variant: 'warning' })
       }
     },
     [enqueueSnackbar, refuseRequest],

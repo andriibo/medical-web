@@ -41,11 +41,11 @@ export const DoctorWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) => {
 
         await approveRequest({ accessId }).unwrap()
         dispatch(setDataAccessHasChanges(true))
-        enqueueSnackbar('Request was approved')
+        enqueueSnackbar('Request approved')
       } catch (err) {
         console.error(err)
         setPatchingRequestId(null)
-        enqueueSnackbar('Request was not approved', { variant: 'warning' })
+        enqueueSnackbar('Request not approved', { variant: 'warning' })
       }
     },
     [approveRequest, dispatch, enqueueSnackbar],
@@ -57,11 +57,11 @@ export const DoctorWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) => {
         setPatchingRequestId(accessId)
 
         await refuseRequest({ accessId }).unwrap()
-        enqueueSnackbar('Request was refused')
+        enqueueSnackbar('Request rejected')
       } catch (err) {
         console.error(err)
         setPatchingRequestId(null)
-        enqueueSnackbar('Request was not refused', { variant: 'warning' })
+        enqueueSnackbar('Request not rejected', { variant: 'warning' })
       }
     },
     [enqueueSnackbar, refuseRequest],
