@@ -8,5 +8,7 @@ services:
       dockerfile: Build.Dockerfile
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    env_file:
+      - .env
     ports:
       - ${NGINX_PORT}:80
