@@ -129,7 +129,7 @@ export const PatientMd = () => {
                         <ListItemIcon>
                           <LocationCity />
                         </ListItemIcon>
-                        <ListItemText>{institution}</ListItemText>
+                        <ListItemText>{institution ? institution : '-'}</ListItemText>
                       </ListItem>
                     </List>
                   </CardBox>

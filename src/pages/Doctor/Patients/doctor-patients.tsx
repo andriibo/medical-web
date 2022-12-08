@@ -4,7 +4,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { DoctorInvitePopup } from '~components/Modal/DoctorInvitePopup/doctor-invite-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
@@ -98,6 +100,9 @@ export const DoctorPatients = () => {
                 }
               >
                 <ListItemText primary={getRequestedUserName(patient)} secondary="Connected" />
+                <Button component={NavLink} to={`${PageUrls.Patient}/${patient.id}`}>
+                  Open
+                </Button>
               </ListItem>
             ))
           ) : (

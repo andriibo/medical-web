@@ -14,6 +14,7 @@ import { SignIn } from '~pages/Auth/sign-in'
 import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
+import { DoctorPatient } from '~pages/Doctor/Patient/doctor-patient'
 import { DoctorPatients } from '~pages/Doctor/Patients/doctor-patients'
 import { DoctorRequest } from '~pages/Doctor/Requests/doctor-request'
 import { Home } from '~pages/Home/home'
@@ -44,6 +45,7 @@ export const AppRouter = () => {
             <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
             <Route element={<DoctorPatients />} path={PageUrls.Patients} />
             <Route element={<DoctorRequest />} path={PageUrls.Requests} />
+            <Route element={<DoctorPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
           </>
         ) : (
           <>

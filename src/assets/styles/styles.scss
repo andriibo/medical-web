@@ -105,6 +105,16 @@ form {
   margin: 0 auto;
 }
 
+.content-lh {
+  max-width: 1220px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .white-box {
   padding: 1.5rem;
   border-radius: 0.25rem;
@@ -122,4 +132,13 @@ form {
 
 .dialog-footer-text {
   opacity: 0.6;
+}
+
+.text-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  white-space: nowrap;
 }
