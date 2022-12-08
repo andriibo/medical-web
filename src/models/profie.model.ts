@@ -1,6 +1,7 @@
 import { Gender } from '~/enums/gender.enum'
 
 export interface IPatientProfile {
+  id: string
   avatar: string
   email: string
   firstName: string

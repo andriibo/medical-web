@@ -35,7 +35,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
   const userId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
 
-  const { data: diagnosesData, isLoading: diagnosesDataIsLodading } = useGetDiagnosesQuery()
+  const { data: diagnosesData, isLoading: diagnosesDataIsLoading } = useGetDiagnosesQuery()
   const [createPatientDiagnosis, { isLoading: createPatientDiagnosisIsLoading }] = usePostPatientDiagnosisMutation()
 
   const {
@@ -94,7 +94,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
               </ul>
             </Alert>
           )}
-          {diagnosesDataIsLodading ? (
+          {diagnosesDataIsLoading ? (
             <Spinner />
           ) : !diagnosesData ? (
             <EmptyBox />

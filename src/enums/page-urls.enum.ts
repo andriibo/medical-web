@@ -11,4 +11,5 @@ export enum PageUrls {
   MedicalDoctors = '/medical-doctors',
   Requests = '/requests',
   Patients = '/patients',
+  Patient = '/patient',
 }
