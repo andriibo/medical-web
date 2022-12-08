@@ -9,6 +9,7 @@ import { medicationsApi } from '~stores/services/medications.api'
 import { patientDataAccessApi } from '~stores/services/patient-data-access.api'
 import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
+import { patientVitalThresholdApi } from '~stores/services/patient-vital-threshold.api'
 import { profileApi } from '~stores/services/profile.api'
 import { authReducer } from '~stores/slices/auth.slice'
 import { dataAccessReducer } from '~stores/slices/data-access.slice'
@@ -31,6 +32,7 @@ const reducer = combineReducers({
   [patientMedicationApi.reducerPath]: patientMedicationApi.reducer,
   [patientDataAccessApi.reducerPath]: patientDataAccessApi.reducer,
   [medicationsApi.reducerPath]: medicationsApi.reducer,
+  [patientVitalThresholdApi.reducerPath]: patientVitalThresholdApi.reducer,
 })
 
 const middlewares = [
@@ -41,6 +43,7 @@ const middlewares = [
   patientMedicationApi.middleware,
   patientDataAccessApi.middleware,
   medicationsApi.middleware,
+  patientVitalThresholdApi.middleware,
 ]
 
 export const store = configureStore({

@@ -15,8 +15,7 @@ import styles from './header.module.scss'
 const patientNav: IMainNav[] = [
   {
     label: 'Vitals',
-    to: '/vitals',
-    disabled: true,
+    to: PageUrls.Vitals,
   },
   {
     label: 'Emergency Contacts',
