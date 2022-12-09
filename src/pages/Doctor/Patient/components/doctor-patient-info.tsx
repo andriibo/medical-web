@@ -84,7 +84,7 @@ export const DoctorPatientInfo: FC<DoctorPatientInfoProps> = ({ patientData }) =
         </li>
       </ul>
       <Box sx={{ textAlign: 'center', mt: 3 }}>
-        <Button color="error" onClick={() => handleRemovePatient(patientData.id)} variant="outlined">
+        <Button color="error" onClick={() => handleRemovePatient(patientData.userId)} variant="outlined">
           Remove
         </Button>
       </Box>

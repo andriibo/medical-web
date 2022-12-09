@@ -8,7 +8,7 @@ export const PatientVitals = () => {
 
   return (
     <div className="white-box content-md">
-      <Typography>Thresholds</Typography>
+      <Typography variant="h5">Thresholds</Typography>
       <Thresholds />
     </div>
   )
