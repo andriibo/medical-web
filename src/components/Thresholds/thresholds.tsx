@@ -32,8 +32,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
   const convertThresholdsToObj = (thresholds: IThresholdModel[]) => {
     const thresholdsObj: ThresholdsObj = {}
 
-    thresholds.map((item) => {
-      thresholdsObj[item.thresholdName] = item
+    thresholds.map((threshold) => {
+      thresholdsObj[threshold.thresholdName] = threshold
     })
 
     return thresholdsObj
