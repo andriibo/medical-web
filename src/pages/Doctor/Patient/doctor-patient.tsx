@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
+import { Thresholds } from '~components/Thresholds/thresholds'
 import { DoctorPatientInfo } from '~pages/Doctor/Patient/components/doctor-patient-info'
 import { useGetDoctorPatientProfileQuery } from '~stores/services/profile.api'
 
@@ -28,7 +29,10 @@ export const DoctorPatient = () => {
     <div className="white-box content-lg">
       <div className={styles.patientContainer}>
         <DoctorPatientInfo patientData={patientData} />
-        <div>Patient {patientUserId}</div>
+        <div>
+          Patient {patientUserId}
+          <Thresholds patientUserId={patientUserId} />
+        </div>
       </div>
     </div>
   )

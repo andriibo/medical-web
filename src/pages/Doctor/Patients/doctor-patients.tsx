@@ -71,7 +71,7 @@ export const DoctorPatients = () => {
                   },
                 }}
               >
-                <ListItemButton component={NavLink} dense to={`${PageUrls.Patient}/${patient.id}`}>
+                <ListItemButton component={NavLink} dense to={`${PageUrls.Patient}/${patient.userId}`}>
                   <ListItemText primary={getRequestedUserName(patient)} secondary="Connected" />
                 </ListItemButton>
               </ListItem>
