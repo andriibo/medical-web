@@ -3,6 +3,7 @@ import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
+import iconBloodPressure from '~images/icon-blood-pressure.png'
 import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
@@ -127,7 +128,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
       <div className={`${styles.thresholdItem} ${styles.thresholdItemBlood}`}>
         <div className={styles.thresholdHeader}>
           <div className={styles.thresholdIcon}>
-            <img alt="Blood Pressure" src={iconHeartRate} />
+            <img alt="Blood Pressure" src={iconBloodPressure} />
           </div>
           <div className={styles.thresholdText}>
             <Typography variant="body1">Blood Pressure</Typography>
@@ -201,11 +202,6 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           <li className={styles.thresholdInfoMeasure}>rpm</li>
         </ul>
       </div>
-      {/* {thresholds.map(({ thresholdName, value }) => ( */}
-      {/*   <div className={styles.thresholdItem} key={thresholdName}> */}
-      {/*     {thresholdName}: {value} <br /> */}
-      {/*   </div> */}
-      {/* ))} */}
     </div>
   )
 }
