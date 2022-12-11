@@ -1,13 +1,10 @@
+import { IUserModel } from '~models/user.model'
+
 export interface IDiagnosis {
   diagnosisId: string
   diagnosisName: string
   createdAt: string
-  createdByUser: {
-    userId: string
-    email: string
-    firstName: string
-    lastName: string
-  }
+  createdByUser: IUserModel
 }
 
 export interface ICreateDiagnosisForm {

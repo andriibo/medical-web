@@ -1,3 +1,5 @@
+import { IUserModel } from '~models/user.model'
+
 export interface IMedicationItem {
   genericName: string
   brandNames: string[]
@@ -6,12 +8,7 @@ export interface IMedicationItem {
 export interface IMedication extends IMedicationItem {
   medicationId: string
   createdAt: string
-  createdByUser: {
-    userId: string
-    email: string
-    firstName: string
-    lastName: string
-  }
+  createdByUser: IUserModel
 }
 
 export interface ICreateMedicationForm {

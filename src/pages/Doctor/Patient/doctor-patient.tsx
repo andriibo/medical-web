@@ -1,4 +1,3 @@
-import { Tab, Tabs } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -8,6 +7,7 @@ import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { PatientTreatment } from '~components/PatientTreatment/patient-treatment';
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel';
+import { Thresholds } from '~components/Thresholds/thresholds'
 import { DoctorPatientInfo } from '~pages/Doctor/Patient/components/doctor-patient-info'
 import { useGetDoctorPatientProfileQuery } from '~stores/services/profile.api'
 
@@ -46,6 +46,9 @@ export const DoctorPatient = () => {
           </Tabs>
           <TabPanel activeTab={activeTab} value={PatientTab.treatment}>
             <PatientTreatment patientUserId={patientUserId} />
+          </TabPanel>
+          <TabPanel activeTab={activeTab} value={PatientTab.thresholds}>
+            <Thresholds patientUserId={patientUserId} />
           </TabPanel>
         </div>
       </div>

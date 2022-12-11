@@ -21,6 +21,7 @@ import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
 import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
 import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
+import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
 import { useUserRole } from '~stores/slices/auth.slice'
 
 export const AppRouter = () => {
@@ -52,6 +53,7 @@ export const AppRouter = () => {
             <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
             <Route element={<PatientMd />} path={PageUrls.MedicalDoctors} />
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
+            <Route element={<PatientVitals />} path={PageUrls.Vitals} />
           </>
         )}
       </Route>
