@@ -1,3 +1,4 @@
+import { Tab, Tabs } from '@mui/material';
 import { skipToken } from '@reduxjs/toolkit/query'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -44,11 +45,11 @@ export const DoctorPatient = () => {
             <Tab label="Treatment" value={PatientTab.treatment} />
             <Tab label="Emergency contacts" value={PatientTab.emergencyContacts} />
           </Tabs>
-          <TabPanel activeTab={activeTab} value={PatientTab.treatment}>
-            <PatientTreatment patientUserId={patientUserId} />
-          </TabPanel>
           <TabPanel activeTab={activeTab} value={PatientTab.thresholds}>
             <Thresholds patientUserId={patientUserId} />
+          </TabPanel>
+          <TabPanel activeTab={activeTab} value={PatientTab.treatment}>
+            <PatientTreatment patientUserId={patientUserId} />
           </TabPanel>
         </div>
       </div>
