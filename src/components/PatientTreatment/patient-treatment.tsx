@@ -15,11 +15,11 @@ import {
   useGetPatientMedicationsQuery,
 } from '~stores/services/patient-medication.api'
 
-interface PatientTreatmentUserId {
+interface PatientTreatmentProps {
   patientUserId: string
 }
 
-export const PatientTreatment: FC<PatientTreatmentUserId> = ({ patientUserId }) => {
+export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) => {
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
   const [deletingDiagnosisId, setDeletingDiagnosisId] = useState<string | null>(null)
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(null)

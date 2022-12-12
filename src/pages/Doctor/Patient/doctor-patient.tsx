@@ -16,7 +16,7 @@ import styles from './doctor-patient.module.scss'
 
 export const DoctorPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
-  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.treatment)
+  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.vitals)
 
   const { data: patientData, isLoading } = useGetDoctorPatientProfileQuery(
     patientUserId ? { patientUserId } : skipToken,
