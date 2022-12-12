@@ -2,7 +2,7 @@ import { Add, Close } from '@mui/icons-material'
 import { Button, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 
 import { Treatment } from '~/enums/treatment.enum'
 import { NewDiagnosisPopup } from '~components/Modal/NewDiagnosisPopup/new-diagnosis-popup'
@@ -14,15 +14,17 @@ import {
   useDeletePatientMedicationMutation,
   useGetPatientMedicationsQuery,
 } from '~stores/services/patient-medication.api'
-import { useUserId } from '~stores/slices/auth.slice'
 
-export const PatientTreatment = () => {
+interface PatientTreatmentProps {
+  patientUserId: string
+}
+
+export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) => {
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
   const [deletingDiagnosisId, setDeletingDiagnosisId] = useState<string | null>(null)
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(null)
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Treatment>(Treatment.diagnoses)
-  const patientUserId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
 
   const { data: patientDiagnosesData, isLoading: patientDiagnosesDataIsLoading } = useGetPatientDiagnosesQuery({
@@ -155,8 +157,10 @@ export const PatientTreatment = () => {
           )}
         </List>
       </TabPanel>
-      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen} />
-      <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen} />
+      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen}
+                         patientUserId={patientUserId} />
+      <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen}
+                          patientUserId={patientUserId} />
     </>
   )
 }

@@ -23,16 +23,15 @@ import { ICreateDiagnosesFormKeys, ICreateDiagnosisForm } from '~models/diagnose
 import { IErrorRequest } from '~models/error-request.model'
 import { useGetDiagnosesQuery } from '~stores/services/diagnoses.api'
 import { usePostPatientDiagnosisMutation } from '~stores/services/patient-diagnosis.api'
-import { useUserId } from '~stores/slices/auth.slice'
 
 interface NewDiagnosisPopupProps {
+  patientUserId: string
   open: boolean
   handleClose: () => void
 }
 
-export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClose }) => {
+export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ patientUserId, open, handleClose }) => {
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const userId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
 
   const { data: diagnosesData, isLoading: diagnosesDataIsLoading } = useGetDiagnosesQuery()
@@ -57,7 +56,7 @@ export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ open, handleClos
     try {
       await createPatientDiagnosis({
         diagnosisName,
-        patientUserId: userId,
+        patientUserId,
       }).unwrap()
 
       setFormErrors(null)
