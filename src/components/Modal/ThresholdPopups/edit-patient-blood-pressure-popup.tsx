@@ -82,7 +82,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
   return (
     <>
       <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle textTransform="capitalize">Patient&apos;s heart rate</DialogTitle>
+        <DialogTitle textTransform="capitalize">Patient&apos;s blood pressure</DialogTitle>
         <DialogContent>
           {formErrors && (
             <Alert className="form-alert" severity="error">
