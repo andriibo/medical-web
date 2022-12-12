@@ -1,13 +1,13 @@
-import { Tab, Tabs } from '@mui/material';
+import { Tab, Tabs } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { PatientTab } from '~/enums/patient-tab.enum';
+import { PatientTab } from '~/enums/patient-tab.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
-import { PatientTreatment } from '~components/PatientTreatment/patient-treatment';
+import { PatientTreatment } from '~components/PatientTreatment/patient-treatment'
 import { Spinner } from '~components/Spinner/spinner'
-import { TabPanel } from '~components/TabPanel/tab-panel';
+import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
 import { DoctorPatientInfo } from '~pages/Doctor/Patient/components/doctor-patient-info'
 import { useGetDoctorPatientProfileQuery } from '~stores/services/profile.api'
@@ -16,7 +16,7 @@ import styles from './doctor-patient.module.scss'
 
 export const DoctorPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
-  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.vitals)
+  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.thresholds)
 
   const { data: patientData, isLoading } = useGetDoctorPatientProfileQuery(
     patientUserId ? { patientUserId } : skipToken,
