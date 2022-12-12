@@ -157,8 +157,10 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           )}
         </List>
       </TabPanel>
-      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen} />
-      <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen} />
+      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen}
+                         patientUserId={patientUserId} />
+      <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen}
+                          patientUserId={patientUserId} />
     </>
   )
 }

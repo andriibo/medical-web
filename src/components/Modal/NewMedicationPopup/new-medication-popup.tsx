@@ -24,16 +24,15 @@ import { IErrorRequest } from '~models/error-request.model'
 import { CreateMedicationFormKeys, ICreateMedicationForm } from '~models/medications.model'
 import { useGetMedicationsQuery } from '~stores/services/medications.api'
 import { usePostPatientMedicationMutation } from '~stores/services/patient-medication.api'
-import { useUserId } from '~stores/slices/auth.slice'
 
 interface NewMedicationPopupProps {
+  patientUserId: string
   open: boolean
   handleClose: () => void
 }
 
-export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleClose }) => {
+export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ patientUserId, open, handleClose }) => {
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const userId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
 
   const { data: medicationsData, isLoading: medicationsDataIsLoading } = useGetMedicationsQuery()
@@ -58,7 +57,7 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ open, handleCl
     try {
       await createPatientMedication({
         ...data.medicationName,
-        patientUserId: userId,
+        patientUserId,
       }).unwrap()
 
       setFormErrors(null)
