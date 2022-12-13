@@ -106,7 +106,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
         </Grid>
       </Grid>
       <TabPanel activeTab={activeTab} value={Treatment.diagnoses}>
-        <List>
+        <List className="list-divided">
           {patientDiagnosesDataIsLoading ? (
             <Spinner />
           ) : patientDiagnosesData?.length ? (
@@ -132,7 +132,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
         </List>
       </TabPanel>
       <TabPanel activeTab={activeTab} value={Treatment.medications}>
-        <List>
+        <List className="list-divided">
           {patientMedicationsDataIsLoading ? (
             <Spinner />
           ) : patientMedicationsData?.length ? (
@@ -157,10 +157,16 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           )}
         </List>
       </TabPanel>
-      <NewDiagnosisPopup handleClose={handleNewDiagnosisClose} open={diagnosisPopupOpen}
-                         patientUserId={patientUserId} />
-      <NewMedicationPopup handleClose={handleNewMedicationClose} open={isMedicationPopupOpen}
-                          patientUserId={patientUserId} />
+      <NewDiagnosisPopup
+        handleClose={handleNewDiagnosisClose}
+        open={diagnosisPopupOpen}
+        patientUserId={patientUserId}
+      />
+      <NewMedicationPopup
+        handleClose={handleNewMedicationClose}
+        open={isMedicationPopupOpen}
+        patientUserId={patientUserId}
+      />
     </>
   )
 }

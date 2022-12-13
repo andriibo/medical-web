@@ -79,6 +79,14 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
     setIsLoading(false)
   }, [myThresholdsIsLoading, patientThresholdsIsLoading])
 
+  const getSetByName = (threshold: IThresholdModel) => {
+    if (threshold.setByUser) {
+      return `updated by ${threshold.setByUser.firstName} ${threshold.setByUser.lastName}`
+    }
+
+    return 'default'
+  }
+
   return (
     <>
       {isLoading ? (
@@ -94,7 +102,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Heart Rate</Typography>
-                <Typography variant="body2">default</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.MinHR)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -123,7 +131,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Temperature</Typography>
-                <Typography variant="body2">default</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.MinTemp)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -152,7 +160,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Blood Pressure</Typography>
-                <Typography variant="body2">default</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.MinDBP)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -196,7 +204,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">O2 Saturation</Typography>
-                <Typography variant="body2">default</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.MinSpO2)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -221,7 +229,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Respiration Rate</Typography>
-                <Typography variant="body2">default</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.MinRR)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
