@@ -35,9 +35,6 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
   const [saturationPopupOpen, setSaturationPopupOpen] = useState(false)
   const [respirationRatePopupOpen, setRespirationRatePopupOpen] = useState(false)
   const [bloodPressurePopupOpen, setBloodPressurePopupOpen] = useState(false)
-  // const [PopupOpen, setPopupOpen] = useState(false)
-  // const [PopupOpen, setPopupOpen] = useState(false)
-  // const [PopupOpen, setPopupOpen] = useState(false)
 
   const { data: myThresholds, isLoading: myThresholdsIsLoading } = useGetMyVitalThresholdsQuery(
     patientUserId ? skipToken : undefined,

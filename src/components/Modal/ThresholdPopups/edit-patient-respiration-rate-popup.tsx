@@ -78,84 +78,82 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
   })
 
   return (
-    <>
-      <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle textTransform="capitalize">Patient&apos;s respiration</DialogTitle>
-        <DialogContent>
-          {formErrors && (
-            <Alert className="form-alert" severity="error">
-              <AlertTitle>Error</AlertTitle>
-              <ul>
-                {formErrors.map((error) => (
-                  <li key={error}>{error}</li>
-                ))}
-              </ul>
-            </Alert>
-          )}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="min"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 12, max: 25, step: 1 },
-                        endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Min"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.respirationRate}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="max"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 12, max: 25, step: 1 },
-                        endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Max"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.respirationRate}
-                />
-              </Grid>
+    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
+      <DialogTitle textTransform="capitalize">Patient&apos;s respiration</DialogTitle>
+      <DialogContent>
+        {formErrors && (
+          <Alert className="form-alert" severity="error">
+            <AlertTitle>Error</AlertTitle>
+            <ul>
+              {formErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="min"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 12, max: 25, step: 1 },
+                      endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Min"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.respirationRate}
+              />
             </Grid>
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid xs={6}>
-                <LoadingButton
-                  fullWidth
-                  loading={updateThresholdsIsLoading}
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
-                  Update
-                </LoadingButton>
-              </Grid>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="max"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 12, max: 25, step: 1 },
+                      endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Max"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.respirationRate}
+              />
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                Cancel
+              </Button>
+            </Grid>
+            <Grid xs={6}>
+              <LoadingButton
+                fullWidth
+                loading={updateThresholdsIsLoading}
+                size="large"
+                type="submit"
+                variant="contained"
+              >
+                Update
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -80,126 +80,124 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
   })
 
   return (
-    <>
-      <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle textTransform="capitalize">Patient&apos;s blood pressure</DialogTitle>
-        <DialogContent>
-          {formErrors && (
-            <Alert className="form-alert" severity="error">
-              <AlertTitle>Error</AlertTitle>
-              <ul>
-                {formErrors.map((error) => (
-                  <li key={error}>{error}</li>
-                ))}
-              </ul>
-            </Alert>
-          )}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="minDBP"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 60, max: 80, step: 1 },
-                        endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Min DBP"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.dbp}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="maxDBP"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 60, max: 80, step: 1 },
-                        endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Max DBP"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.dbp}
-                />
-              </Grid>
+    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
+      <DialogTitle textTransform="capitalize">Patient&apos;s blood pressure</DialogTitle>
+      <DialogContent>
+        {formErrors && (
+          <Alert className="form-alert" severity="error">
+            <AlertTitle>Error</AlertTitle>
+            <ul>
+              {formErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="minDBP"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 60, max: 80, step: 1 },
+                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Min DBP"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.dbp}
+              />
             </Grid>
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="minSBP"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 100, max: 130, step: 1 },
-                        endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Min SBP"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.sbp}
-                />
-              </Grid>
-              <Grid xs={6}>
-                <Controller
-                  control={control}
-                  name="maxSBP"
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      {...fieldValidation(field.name)}
-                      InputProps={{
-                        inputProps: { min: 100, max: 130, step: 1 },
-                        endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                      }}
-                      fullWidth
-                      label="Max SBP"
-                      type="number"
-                    />
-                  )}
-                  rules={validationRules.sbp}
-                />
-              </Grid>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="maxDBP"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 60, max: 80, step: 1 },
+                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Max DBP"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.dbp}
+              />
             </Grid>
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid xs={6}>
-                <LoadingButton
-                  fullWidth
-                  loading={updateThresholdsIsLoading}
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
-                  Update
-                </LoadingButton>
-              </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="minSBP"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 100, max: 130, step: 1 },
+                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Min SBP"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.sbp}
+              />
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+            <Grid xs={6}>
+              <Controller
+                control={control}
+                name="maxSBP"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    {...fieldValidation(field.name)}
+                    InputProps={{
+                      inputProps: { min: 100, max: 130, step: 1 },
+                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
+                    }}
+                    fullWidth
+                    label="Max SBP"
+                    type="number"
+                  />
+                )}
+                rules={validationRules.sbp}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                Cancel
+              </Button>
+            </Grid>
+            <Grid xs={6}>
+              <LoadingButton
+                fullWidth
+                loading={updateThresholdsIsLoading}
+                size="large"
+                type="submit"
+                variant="contained"
+              >
+                Update
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }
