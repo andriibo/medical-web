@@ -15,8 +15,8 @@ type thresholdNameKeys =
   | 'MinMAP'
   | 'MaxMAP'
 
-export type ThresholdsObj = {
-  [key in thresholdNameKeys]?: IThresholdModel
+export type IThresholdsObj = {
+  [key in thresholdNameKeys]: IThresholdModel
 }
 
 export interface IThresholdModel {
@@ -25,3 +25,23 @@ export interface IThresholdModel {
   setAtTimestamp: number
   setByUser: IUserModel
 }
+
+export interface IThresholdsCommon {
+  min: number
+  max: number
+}
+
+export interface IThresholdsSaturation {
+  min: number
+}
+
+export interface IThresholdsBloodPressure {
+  minDBP: number
+  maxDBP: number
+  minSBP: number
+  maxSBP: number
+}
+
+export type ThresholdsCommonKeys = keyof IThresholdsCommon
+export type ThresholdsSaturationKeys = keyof IThresholdsSaturation
+export type ThresholdsBloodPressureKeys = keyof IThresholdsBloodPressure

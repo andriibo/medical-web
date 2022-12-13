@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IThresholdModel } from '~models/threshold.model'
+import {
+  IThresholdModel,
+  IThresholdsBloodPressure,
+  IThresholdsCommon,
+  IThresholdsSaturation,
+} from '~models/threshold.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const patientVitalThresholdApi = createApi({
@@ -8,6 +13,46 @@ export const patientVitalThresholdApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['PatientVitalThreshold'],
   endpoints: (build) => ({
+    patchPatientBloodPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsBloodPressure }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/blood-pressure/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
+    patchPatientHeartRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/heart-rate/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
+    patchPatientTemperature: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/temperature/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
+    patchPatientSaturation: build.mutation<null, { patientUserId: string; thresholds: IThresholdsSaturation }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/oxygen-saturation/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
+    patchPatientRespirationRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/respiration-rate/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
     getMyVitalThresholds: build.query<IThresholdModel[], void>({
       query: () => ({
         url: 'patient/my-vital-thresholds',
@@ -24,8 +69,11 @@ export const patientVitalThresholdApi = createApi({
 })
 
 export const {
+  usePatchPatientBloodPressureMutation,
+  usePatchPatientHeartRateMutation,
+  usePatchPatientTemperatureMutation,
+  usePatchPatientSaturationMutation,
+  usePatchPatientRespirationRateMutation,
   useGetMyVitalThresholdsQuery,
-  useLazyGetMyVitalThresholdsQuery,
   useGetPatientVirtualThresholdsQuery,
-  useLazyGetPatientVirtualThresholdsQuery,
 } = patientVitalThresholdApi
