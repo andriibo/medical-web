@@ -9,7 +9,7 @@
     "es2021": true
   },
   "root": true,
-  "plugins": ["@typescript-eslint", "react", "react-hooks", "simple-import-sort"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "simple-import-sort", "prettier"],
   "parser": "@typescript-eslint/parser",
   "extends": ["eslint:all", "plugin:react/all", "prettier"],
   "parserOptions": {
@@ -20,6 +20,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "prettier/prettier": "error",
     "max-params": ["error", 4],
     "func-names": "off",
     "no-return-await": "off",
@@ -46,7 +47,6 @@
     "react/require-default-props": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
-    "@typescript-eslint/no-unused-vars": "error",
     "react/jsx-fragments": "off",
     "react/jsx-no-bind": [
       "error",
@@ -175,7 +175,7 @@
     ],
     "arrow-body-style": ["warn", "as-needed"],
     "react/jsx-props-no-spreading": "off",
-    "no-confusing-arrow": "warn",
+    "no-confusing-arrow": "off",
     "no-useless-constructor": "warn",
     "no-dupe-class-members": "error",
     "no-duplicate-imports": "error",
