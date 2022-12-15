@@ -17,12 +17,15 @@ export interface IUpdatePatientProfile extends Omit<IPatientProfile, 'email' | '
 
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
-export interface IDoctorProfile {
+export interface ICaregiverProfile {
   avatar: string
   email: string
   firstName: string
   lastName: string
   phone: string
+}
+
+export interface IDoctorProfile extends ICaregiverProfile {
   institution: string
 }
 

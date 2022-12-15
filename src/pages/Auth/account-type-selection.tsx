@@ -26,7 +26,7 @@ export const AccountTypeSelection = () => (
         </div>
         <strong className={styles.accountSwitcherTitle}>MD</strong>
       </NavLink>
-      <NavLink className={`${styles.accountSwitcherLink} ${styles.disabled}`} to="">
+      <NavLink className={styles.accountSwitcherLink} to={PageUrls.SignUpCaregiver}>
         <div className={styles.accountSwitcherVisual}>
           <img alt="caregiver" src={iconCaregiver} />
         </div>
