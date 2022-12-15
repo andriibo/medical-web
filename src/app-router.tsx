@@ -38,7 +38,7 @@ export const AppRouter = () => {
         <Route element={<AccountTypeSelection />} path={PageUrls.AccountType} />
         <Route element={<SignUpPatient />} path={PageUrls.SignUpPatient} />
         <Route element={<SignUpDoctor />} path={PageUrls.SignUpDoctor} />
-          <Route element={<SignUpCaregiver />} path={PageUrls.SignUpCaregiver} />
+        <Route element={<SignUpCaregiver />} path={PageUrls.SignUpCaregiver} />
         <Route element={<EmailVerification />} path={PageUrls.EmailVerification} />
       </Route>
       <Route element={<DefaultLayout />}>
