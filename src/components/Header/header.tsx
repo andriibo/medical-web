@@ -4,9 +4,9 @@ import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { UserRoles } from '~/enums/user-roles.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
+import { isUserRoleGrantable } from '~helpers/user-role'
 import { IMainNav } from '~models/main-nav.model'
 import { useUserRole } from '~stores/slices/auth.slice'
 
@@ -57,7 +57,7 @@ export const Header = () => {
         LIFE ZENZERS
       </NavLink>
       <nav className={styles.nav}>
-        {userRole === UserRoles.doctor
+        {isUserRoleGrantable(userRole)
           ? doctorNav.map(({ label, to, disabled }) => (
               <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
                 {label}
