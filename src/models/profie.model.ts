@@ -26,6 +26,14 @@ export interface IDoctorProfile {
   institution: string
 }
 
+export interface ICaregiverProfile {
+  avatar: string
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+}
+
 export interface IPatientDoctors extends IDoctorProfile {
   accessId: string
 }

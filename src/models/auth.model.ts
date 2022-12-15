@@ -1,5 +1,5 @@
 import { Modify } from '~/types/modify.type'
-import { IDoctorProfile, IPatientProfile } from '~models/profie.model'
+import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
 
 export interface IAuthData {
   token: string
@@ -31,6 +31,10 @@ export interface IAuthSignUpPatientForm
   > {}
 
 export interface IAuthSignUpDoctor extends IDoctorProfile {
+  password: string
+}
+
+export interface IAuthSignUpCaregiver extends ICaregiverProfile {
   password: string
 }
 
@@ -69,6 +73,7 @@ export interface IAuthChangeEmailConfirm {
 export type AuthSignInKeys = keyof IAuthSignIn
 export type AuthSignUpPatientKeys = keyof IAuthSignUpPatient
 export type AuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
+export type AuthSignUpCaregiverKeys = keyof IAuthSignUpCaregiver
 export type AuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
 export type AuthEmailKeys = keyof IAuthEmail
 export type AuthForgotPasswordConfirmFormKeys = keyof IAuthForgotPasswordConfirmForm
