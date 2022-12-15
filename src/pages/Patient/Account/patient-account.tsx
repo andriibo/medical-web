@@ -6,7 +6,7 @@ import { PatientTreatment } from '~components/PatientTreatment/patient-treatment
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { PatientPersonalInfo } from '~pages/Patient/Account/components/patient-personal-info'
 import { PatientSettings } from '~pages/Patient/Account/components/patient-settings'
-import { useUserId } from '~stores/slices/auth.slice';
+import { useUserId } from '~stores/slices/auth.slice'
 
 export const PatientAccount = () => {
   const patientUserId = useUserId()
