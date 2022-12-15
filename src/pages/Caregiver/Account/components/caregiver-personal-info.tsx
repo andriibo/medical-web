@@ -98,7 +98,7 @@ export const CaregiverPersonalInfo = () => {
         </div>
       </div>
       <EditCaregiverProfilePopup
-        doctorData={caregiverData}
+        caregiverData={caregiverData}
         handleClose={handleProfilePopupClose}
         open={profilePopupOpen}
       />

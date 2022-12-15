@@ -11,7 +11,7 @@ import { ForgotPassword } from '~pages/Auth/forgot-password'
 import { ForgotPasswordConfirm } from '~pages/Auth/forgot-password-confirm'
 import { ForgotPasswordSuccess } from '~pages/Auth/forgot-password-success'
 import { SignIn } from '~pages/Auth/sign-in'
-import { SignUpCaregiver } from '~pages/Auth/sign-up-caregiver';
+import { SignUpCaregiver } from '~pages/Auth/sign-up-caregiver'
 import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { CaregiverAccount } from '~pages/Caregiver/Account/caregiver-account'
@@ -29,6 +29,9 @@ import { useUserRole } from '~stores/slices/auth.slice'
 export const AppRouter = () => {
   const userRole = useUserRole()
 
+  console.log(isUserRoleCaregiver(userRole))
+  console.log(isUserRoleDoctor(userRole))
+
   return (
     <Routes>
       <Route element={<AuthLayout />}>
@@ -44,11 +47,10 @@ export const AppRouter = () => {
       </Route>
       <Route element={<DefaultLayout />}>
         <Route element={<Home />} path="/" />
-        {isUserRoleDoctor(userRole) ?? <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />}
-        {isUserRoleCaregiver(userRole) ?? <Route element={<CaregiverAccount />} path={PageUrls.MyAccount} />}
+        {isUserRoleDoctor(userRole) && <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />}
+        {isUserRoleCaregiver(userRole) && <Route element={<CaregiverAccount />} path={PageUrls.MyAccount} />}
         {isUserRoleGrantable(userRole) ? (
           <>
-            <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
             <Route element={<DoctorPatients />} path={PageUrls.Patients} />
             <Route element={<DoctorRequest />} path={PageUrls.Requests} />
             <Route element={<DoctorPatient />} path={`${PageUrls.Patient}/:patientUserId`} />

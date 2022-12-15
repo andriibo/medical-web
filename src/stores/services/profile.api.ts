@@ -6,6 +6,7 @@ import {
   IDoctorProfile,
   IPatientDoctors,
   IPatientProfile,
+  IUpdateCaregiverProfile,
   IUpdateDoctorProfile,
   IUpdatePatientProfile,
 } from '~models/profie.model'
@@ -46,6 +47,10 @@ export const profileApi = createApi({
       query: (queryArg) => ({ url: 'doctor/my-profile', method: 'PATCH', body: { ...queryArg } }),
       invalidatesTags: ['Profile'],
     }),
+    patchCaregiverProfile: build.mutation<null, IUpdateCaregiverProfile>({
+      query: (queryArg) => ({ url: 'caregiver/my-profile', method: 'PATCH', body: { ...queryArg } }),
+      invalidatesTags: ['Profile'],
+    }),
     getDoctorPatientProfile: build.query<IPatientProfile, { patientUserId: string }>({
       query: ({ patientUserId }) => ({ url: `doctor/patient-profile/${patientUserId}` }),
       providesTags: ['Profile'],
@@ -64,6 +69,7 @@ export const {
   useGetCaregiverProfileQuery,
   useGetDoctorProfileQuery,
   usePatchDoctorProfileMutation,
+  usePatchCaregiverProfileMutation,
   useGetDoctorPatientProfileQuery,
   useGetProfilePatientsQuery,
 } = profileApi
