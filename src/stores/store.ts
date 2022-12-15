@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'
 
 import { authApi } from '~stores/services/auth.api'
 import { diagnosesApi } from '~stores/services/diagnoses.api'
+import { emergencyContactApi } from '~stores/services/emergency-contact.api'
 import { medicationsApi } from '~stores/services/medications.api'
 import { patientDataAccessApi } from '~stores/services/patient-data-access.api'
 import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   [patientDataAccessApi.reducerPath]: patientDataAccessApi.reducer,
   [medicationsApi.reducerPath]: medicationsApi.reducer,
   [patientVitalThresholdApi.reducerPath]: patientVitalThresholdApi.reducer,
+  [emergencyContactApi.reducerPath]: emergencyContactApi.reducer,
 })
 
 const middlewares = [
@@ -44,6 +46,7 @@ const middlewares = [
   patientDataAccessApi.middleware,
   medicationsApi.middleware,
   patientVitalThresholdApi.middleware,
+  emergencyContactApi.middleware,
 ]
 
 export const store = configureStore({

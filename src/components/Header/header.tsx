@@ -19,8 +19,7 @@ const patientNav: IMainNav[] = [
   },
   {
     label: 'Emergency Contacts',
-    to: '/emergency-contacts',
-    disabled: true,
+    to: PageUrls.EmergencyContacts,
   },
   {
     label: 'Medical Doctors',

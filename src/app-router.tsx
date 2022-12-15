@@ -19,6 +19,7 @@ import { DoctorPatients } from '~pages/Doctor/Patients/doctor-patients'
 import { DoctorRequest } from '~pages/Doctor/Requests/doctor-request'
 import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
+import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patient-emergency-contacts'
 import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
 import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
@@ -51,9 +52,10 @@ export const AppRouter = () => {
         ) : (
           <>
             <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
+            <Route element={<PatientVitals />} path={PageUrls.Vitals} />
+            <Route element={<PatientEmergencyContacts />} path={PageUrls.EmergencyContacts} />
             <Route element={<PatientMd />} path={PageUrls.MedicalDoctors} />
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
-            <Route element={<PatientVitals />} path={PageUrls.Vitals} />
           </>
         )}
       </Route>

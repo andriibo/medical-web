@@ -103,36 +103,29 @@ export const PatientMd = () => {
                         </IconButton>
                       </>
                     }
-                  >
-                    <List
-                      sx={{
-                        wordWrap: 'break-word',
-                        '& .MuiListItem-root': { py: '0.25rem' },
-                        '& .MuiListItemIcon-root': { minWidth: '2.125rem', color: '#323232' },
-                        '& .MuiListItemText-root': { m: 0 },
-                        '& .MuiTypography-root': { fontSize: '0.875rem', m: 0 },
-                      }}
-                    >
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <Phone />
-                        </ListItemIcon>
-                        <ListItemText>{phone}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <MailOutline />
-                        </ListItemIcon>
-                        <ListItemText>{email}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <LocationCity />
-                        </ListItemIcon>
-                        <ListItemText>{institution ? institution : '-'}</ListItemText>
-                      </ListItem>
-                    </List>
-                  </CardBox>
+                    infoListItems={
+                      <>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <Phone />
+                          </ListItemIcon>
+                          <ListItemText>{phone}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <MailOutline />
+                          </ListItemIcon>
+                          <ListItemText>{email}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <LocationCity />
+                          </ListItemIcon>
+                          <ListItemText>{institution ? institution : '-'}</ListItemText>
+                        </ListItem>
+                      </>
+                    }
+                  />
                 </Grid>
               ))
             ) : (
