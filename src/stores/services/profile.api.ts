@@ -1,6 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
+  ICaregiverProfile,
   IDoctorPatients,
   IDoctorProfile,
   IPatientDoctors,
@@ -29,6 +30,12 @@ export const profileApi = createApi({
       query: () => ({ url: 'patient/my-doctors' }),
       providesTags: ['Profile'],
     }),
+    getCaregiverProfile: build.query<ICaregiverProfile, void>({
+      query: () => ({
+        url: 'caregiver/my-profile',
+      }),
+      providesTags: ['Profile'],
+    }),
     getDoctorProfile: build.query<IDoctorProfile, void>({
       query: () => ({
         url: 'doctor/my-profile',
@@ -54,6 +61,7 @@ export const {
   useGetPatientProfileQuery,
   usePatchPatientProfileMutation,
   useGetPatientDoctorsQuery,
+  useGetCaregiverProfileQuery,
   useGetDoctorProfileQuery,
   usePatchDoctorProfileMutation,
   useGetDoctorPatientProfileQuery,
