@@ -11,6 +11,7 @@ import { ForgotPassword } from '~pages/Auth/forgot-password'
 import { ForgotPasswordConfirm } from '~pages/Auth/forgot-password-confirm'
 import { ForgotPasswordSuccess } from '~pages/Auth/forgot-password-success'
 import { SignIn } from '~pages/Auth/sign-in'
+import { SignUpCaregiver } from '~pages/Auth/sign-up-caregiver';
 import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
@@ -37,6 +38,7 @@ export const AppRouter = () => {
         <Route element={<AccountTypeSelection />} path={PageUrls.AccountType} />
         <Route element={<SignUpPatient />} path={PageUrls.SignUpPatient} />
         <Route element={<SignUpDoctor />} path={PageUrls.SignUpDoctor} />
+        <Route element={<SignUpCaregiver />} path={PageUrls.SignUpCaregiver} />
         <Route element={<EmailVerification />} path={PageUrls.EmailVerification} />
       </Route>
       <Route element={<DefaultLayout />}>
