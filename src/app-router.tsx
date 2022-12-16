@@ -2,9 +2,9 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { UserRoles } from '~/enums/user-roles.enum'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
+import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
 import { EmailVerification } from '~pages/Auth/email-verification'
 import { ForgotPassword } from '~pages/Auth/forgot-password'
@@ -43,7 +43,7 @@ export const AppRouter = () => {
       </Route>
       <Route element={<DefaultLayout />}>
         <Route element={<Home />} path="/" />
-        {userRole === UserRoles.doctor ? (
+        {isUserRoleGrantable(userRole) ? (
           <>
             <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />
             <Route element={<DoctorPatients />} path={PageUrls.Patients} />
