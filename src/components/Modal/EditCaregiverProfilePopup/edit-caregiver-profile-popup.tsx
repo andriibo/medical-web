@@ -24,7 +24,7 @@ export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ 
   const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchCaregiverProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
-  const doctorDefaultValues = useMemo(
+  const caregiverDefaultValues = useMemo(
     () => deleteKeysFormObject({ ...caregiverData }, ['email', 'avatar']),
     [caregiverData],
   )
@@ -36,14 +36,14 @@ export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ 
     formState: { errors },
   } = useForm<IUpdateCaregiverProfile>({
     mode: 'onBlur',
-    defaultValues: doctorDefaultValues,
+    defaultValues: caregiverDefaultValues,
   })
 
   useEffect(() => {
     if (open) {
-      reset(doctorDefaultValues)
+      reset(caregiverDefaultValues)
     }
-  }, [open, reset, doctorDefaultValues])
+  }, [open, reset, caregiverDefaultValues])
 
   const onSubmit: SubmitHandler<IUpdateCaregiverProfile> = async (data) => {
     try {

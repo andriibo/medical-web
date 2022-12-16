@@ -29,9 +29,6 @@ import { useUserRole } from '~stores/slices/auth.slice'
 export const AppRouter = () => {
   const userRole = useUserRole()
 
-  console.log(isUserRoleCaregiver(userRole))
-  console.log(isUserRoleDoctor(userRole))
-
   return (
     <Routes>
       <Route element={<AuthLayout />}>
