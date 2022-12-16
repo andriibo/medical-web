@@ -1,10 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
+  ICaregiverProfile,
   IDoctorPatients,
   IDoctorProfile,
   IPatientDoctors,
   IPatientProfile,
+  IUpdateCaregiverProfile,
   IUpdateDoctorProfile,
   IUpdatePatientProfile,
 } from '~models/profie.model'
@@ -29,6 +31,12 @@ export const profileApi = createApi({
       query: () => ({ url: 'patient/my-doctors' }),
       providesTags: ['Profile'],
     }),
+    getCaregiverProfile: build.query<ICaregiverProfile, void>({
+      query: () => ({
+        url: 'caregiver/my-profile',
+      }),
+      providesTags: ['Profile'],
+    }),
     getDoctorProfile: build.query<IDoctorProfile, void>({
       query: () => ({
         url: 'doctor/my-profile',
@@ -37,6 +45,10 @@ export const profileApi = createApi({
     }),
     patchDoctorProfile: build.mutation<null, IUpdateDoctorProfile>({
       query: (queryArg) => ({ url: 'doctor/my-profile', method: 'PATCH', body: { ...queryArg } }),
+      invalidatesTags: ['Profile'],
+    }),
+    patchCaregiverProfile: build.mutation<null, IUpdateCaregiverProfile>({
+      query: (queryArg) => ({ url: 'caregiver/my-profile', method: 'PATCH', body: { ...queryArg } }),
       invalidatesTags: ['Profile'],
     }),
     getDoctorPatientProfile: build.query<IPatientProfile, { patientUserId: string }>({
@@ -54,8 +66,10 @@ export const {
   useGetPatientProfileQuery,
   usePatchPatientProfileMutation,
   useGetPatientDoctorsQuery,
+  useGetCaregiverProfileQuery,
   useGetDoctorProfileQuery,
   usePatchDoctorProfileMutation,
+  usePatchCaregiverProfileMutation,
   useGetDoctorPatientProfileQuery,
   useGetProfilePatientsQuery,
 } = profileApi

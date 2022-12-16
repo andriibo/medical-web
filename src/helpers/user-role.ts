@@ -6,6 +6,8 @@ export const isUserRoleGrantable = (role: string) => {
   return grantableRoles.includes(role as UserRoles)
 }
 
+export const isUserRoleCaregiver = (role: string) => UserRoles.caregiver === role
+
 export const isUserRolePatient = (role: string) => UserRoles.patient === role
 
 export const isUserRoleDoctor = (role: string) => UserRoles.doctor === role
