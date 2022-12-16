@@ -17,8 +17,8 @@ import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { CaregiverAccount } from '~pages/Caregiver/Account/caregiver-account'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
 import { DoctorPatient } from '~pages/Doctor/Patient/doctor-patient'
-import { DoctorPatients } from '~pages/Doctor/Patients/doctor-patients'
-import { DoctorRequest } from '~pages/Doctor/Requests/doctor-request'
+import { GrantedUserPatients } from '~pages/GrantedUser/Patients/granted-user-patients'
+import { GrantedUserRequest } from '~pages/GrantedUser/Requests/granted-user-request'
 import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
 import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
@@ -48,8 +48,8 @@ export const AppRouter = () => {
         {isUserRoleCaregiver(userRole) && <Route element={<CaregiverAccount />} path={PageUrls.MyAccount} />}
         {isUserRoleGrantable(userRole) ? (
           <>
-            <Route element={<DoctorPatients />} path={PageUrls.Patients} />
-            <Route element={<DoctorRequest />} path={PageUrls.Requests} />
+            <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
+            <Route element={<GrantedUserRequest />} path={PageUrls.Requests} />
             <Route element={<DoctorPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
           </>
         ) : (

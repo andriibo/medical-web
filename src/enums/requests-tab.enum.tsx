@@ -3,7 +3,7 @@ export enum RequestsPatientTab {
   incoming = 'tab-incoming',
 }
 
-export enum RequestsDoctorTab {
+export enum RequestsGrantedUserTab {
   waitingRoom = 'tab-waiting-room',
   outgoing = 'tab-outgoing',
 }
