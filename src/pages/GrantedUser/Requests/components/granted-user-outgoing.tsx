@@ -12,7 +12,7 @@ interface DoctorPendingProps {
   dataAccess: IDataAccessModel[]
 }
 
-export const DoctorOutgoing: FC<DoctorPendingProps> = ({ dataAccess }) => {
+export const GrantedUserOutgoing: FC<DoctorPendingProps> = ({ dataAccess }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [deleteRequest] = useDeleteDataAccessMutation()
   const [deletingRequestId, setDeletingRequestId] = useState<string | null>(null)

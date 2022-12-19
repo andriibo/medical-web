@@ -17,7 +17,7 @@ interface DoctorIncomingProps {
   dataAccess: IDataAccessModel[]
 }
 
-export const DoctorWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) => {
+export const GrantedUserWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [approveRequest] = usePatchDataAccessApproveMutation()
