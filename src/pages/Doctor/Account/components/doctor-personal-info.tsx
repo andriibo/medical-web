@@ -9,7 +9,7 @@ import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popu
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetDoctorProfileQuery } from '~stores/services/profile.api'
+import { useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../doctor-account.module.scss'
@@ -19,7 +19,7 @@ export const DoctorPersonalInfo = () => {
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
-  const { data: doctorData, isLoading } = useGetDoctorProfileQuery()
+  const { data: doctorData, isLoading } = useGetMyDoctorProfileQuery()
 
   const fullName = useMemo(() => `${doctorData?.firstName} ${doctorData?.lastName}`, [doctorData])
 

@@ -11,7 +11,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdateDoctorProfile, UpdateDoctorProfileKeys } from '~models/profie.model'
-import { usePatchDoctorProfileMutation } from '~stores/services/profile.api'
+import { usePatchMyDoctorProfileMutation } from '~stores/services/profile.api'
 
 interface EditDoctorProfilePopupProps {
   doctorData: IUpdateDoctorProfile
@@ -21,7 +21,7 @@ interface EditDoctorProfilePopupProps {
 
 export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctorData, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [updateDoctorProfile, { isLoading: updateDoctorProfileIsLoading }] = usePatchDoctorProfileMutation()
+  const [updateDoctorProfile, { isLoading: updateDoctorProfileIsLoading }] = usePatchMyDoctorProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const doctorDefaultValues = useMemo(() => deleteKeysFormObject({ ...doctorData }, ['email', 'avatar']), [doctorData])

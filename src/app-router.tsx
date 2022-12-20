@@ -16,7 +16,7 @@ import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
 import { CaregiverAccount } from '~pages/Caregiver/Account/caregiver-account'
 import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
-import { DoctorPatient } from '~pages/Doctor/Patient/doctor-patient'
+import { GrantedUserPatient } from '~pages/GrantedUser/Patient/granted-user-patient'
 import { GrantedUserPatients } from '~pages/GrantedUser/Patients/granted-user-patients'
 import { GrantedUserRequest } from '~pages/GrantedUser/Requests/granted-user-request'
 import { Home } from '~pages/Home/home'
@@ -50,7 +50,7 @@ export const AppRouter = () => {
           <>
             <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
             <Route element={<GrantedUserRequest />} path={PageUrls.Requests} />
-            <Route element={<DoctorPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
+            <Route element={<GrantedUserPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
           </>
         ) : (
           <>

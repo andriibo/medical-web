@@ -9,7 +9,7 @@ import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popu
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetCaregiverProfileQuery } from '~stores/services/profile.api'
+import { useGetMyCaregiverProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../caregiver-account.module.scss'
@@ -19,7 +19,7 @@ export const CaregiverPersonalInfo = () => {
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
-  const { data: caregiverData, isLoading } = useGetCaregiverProfileQuery()
+  const { data: caregiverData, isLoading } = useGetMyCaregiverProfileQuery()
 
   const fullName = useMemo(() => `${caregiverData?.firstName} ${caregiverData?.lastName}`, [caregiverData])
 
