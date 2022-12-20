@@ -12,11 +12,11 @@ import { useDeleteDataAccessMutation } from '~stores/services/patient-data-acces
 
 import styles from '../granted-user-patient.module.scss'
 
-interface PatientInfoProps {
+interface GrantedUserPatientInfoProps {
   patientData: IPatientProfile
 }
 
-export const GrantedUserPatientInfo: FC<PatientInfoProps> = ({ patientData }) => {
+export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patientData }) => {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
