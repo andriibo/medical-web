@@ -10,13 +10,13 @@ import { getAge } from '~helpers/get-age'
 import { IPatientProfile } from '~models/profie.model'
 import { useDeleteDataAccessMutation } from '~stores/services/patient-data-access.api'
 
-import styles from '../doctor-patient.module.scss'
+import styles from '../granted-user-patient.module.scss'
 
-interface DoctorPatientInfoProps {
+interface PatientInfoProps {
   patientData: IPatientProfile
 }
 
-export const DoctorPatientInfo: FC<DoctorPatientInfoProps> = ({ patientData }) => {
+export const GrantedUserPatientInfo: FC<PatientInfoProps> = ({ patientData }) => {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()

@@ -11,7 +11,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdateCaregiverProfile, UpdateCaregiverProfileKeys } from '~models/profie.model'
-import { usePatchCaregiverProfileMutation } from '~stores/services/profile.api'
+import { usePatchMyCaregiverProfileMutation } from '~stores/services/profile.api'
 
 interface EditCaregiverProfilePopupProps {
   caregiverData: IUpdateCaregiverProfile
@@ -21,7 +21,7 @@ interface EditCaregiverProfilePopupProps {
 
 export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ caregiverData, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchCaregiverProfileMutation()
+  const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchMyCaregiverProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const caregiverDefaultValues = useMemo(

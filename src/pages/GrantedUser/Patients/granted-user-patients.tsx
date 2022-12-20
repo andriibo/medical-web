@@ -9,7 +9,7 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { Spinner } from '~components/Spinner/spinner'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetProfilePatientsQuery } from '~stores/services/profile.api'
+import { useGetMyPatientsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 export const GrantedUserPatients = () => {
@@ -22,7 +22,7 @@ export const GrantedUserPatients = () => {
     data: grantedUserPatients,
     isLoading: grantedUserPatientsIsLoading,
     refetch: refetchGrantedUserPatients,
-  } = useGetProfilePatientsQuery()
+  } = useGetMyPatientsQuery()
 
   useEffect(() => {
     if (dataAccessHasChanges) {

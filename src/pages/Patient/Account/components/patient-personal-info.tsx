@@ -10,7 +10,7 @@ import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePop
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetPatientProfileQuery } from '~stores/services/profile.api'
+import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
@@ -20,7 +20,7 @@ export const PatientPersonalInfo = () => {
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
-  const { data: patientData, isLoading } = useGetPatientProfileQuery()
+  const { data: patientData, isLoading } = useGetMyPatientProfileQuery()
 
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
 

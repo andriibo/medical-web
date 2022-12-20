@@ -9,18 +9,16 @@ import { PatientTreatment } from '~components/PatientTreatment/patient-treatment
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
-import { DoctorPatientInfo } from '~pages/Doctor/Patient/components/doctor-patient-info'
-import { useGetDoctorPatientProfileQuery } from '~stores/services/profile.api'
+import { GrantedUserPatientInfo } from '~pages/GrantedUser/Patient/components/granted-user-patient-info'
+import { useGetPatientProfileQuery } from '~stores/services/profile.api'
 
-import styles from './doctor-patient.module.scss'
+import styles from './granted-user-patient.module.scss'
 
-export const DoctorPatient = () => {
+export const GrantedUserPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
   const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.thresholds)
 
-  const { data: patientData, isLoading } = useGetDoctorPatientProfileQuery(
-    patientUserId ? { patientUserId } : skipToken,
-  )
+  const { data: patientData, isLoading } = useGetPatientProfileQuery(patientUserId ? { patientUserId } : skipToken)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: PatientTab) => {
     setActiveTab(value)
@@ -37,7 +35,7 @@ export const DoctorPatient = () => {
   return (
     <div className="white-box content-lg">
       <div className={styles.patientContainer}>
-        <DoctorPatientInfo patientData={patientData} />
+        <GrantedUserPatientInfo patientData={patientData} />
         <div>
           <Tabs className="tabs" onChange={handleChangeTab} value={activeTab}>
             <Tab label="Vitals" value={PatientTab.vitals} />
