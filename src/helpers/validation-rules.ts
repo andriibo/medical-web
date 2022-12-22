@@ -21,6 +21,7 @@ type ValidationKeyType =
   | 'saturation'
   | 'sbp'
   | 'dbp'
+  | 'relationship'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -91,6 +92,9 @@ export const validationRules: ValidationRulesType = {
     },
   },
   gender: {
+    required: true,
+  },
+  relationship: {
     required: true,
   },
   dob: {

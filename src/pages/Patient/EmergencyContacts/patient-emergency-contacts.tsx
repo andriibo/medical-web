@@ -1,14 +1,21 @@
 import { PersonAdd } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
+import { NewEmergencyContactPopup } from '~components/Modal/NewEmergencyContactPopup/new-emergency-contact-popup'
 
 export const PatientEmergencyContacts = () => {
   console.log('EmergencyContacts')
+  const [emergencyContactPopupOpen, setEmergencyContactPopupOpen] = useState(false)
+
   const handleEmergencyContactPopupOpen = () => {
-    console.log(11)
+    setEmergencyContactPopupOpen(true)
+  }
+
+  const handleEmergencyContactPopupClose = () => {
+    setEmergencyContactPopupOpen(false)
   }
 
   return (
@@ -23,8 +30,8 @@ export const PatientEmergencyContacts = () => {
           </Button>
         </Grid>
       </Grid>
-      Emergency contacts
       <EmergencyContacts />
+      <NewEmergencyContactPopup handleClose={handleEmergencyContactPopupClose} open={emergencyContactPopupOpen} />
     </div>
   )
 }

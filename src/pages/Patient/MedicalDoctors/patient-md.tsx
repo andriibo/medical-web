@@ -1,5 +1,5 @@
 import { Clear, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
-import { Button, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Button, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'

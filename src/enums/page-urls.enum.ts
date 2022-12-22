@@ -1,5 +1,3 @@
-import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patient-emergency-contacts'
-
 export enum PageUrls {
   SignIn = '/sign-in',
   AccountType = '/account-type',

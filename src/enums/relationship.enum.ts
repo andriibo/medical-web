@@ -1,5 +1,7 @@
 export enum Relationship {
-  MedicalProfessional = 'Medical professional',
+  MedicalProfessional = 'Medical Professional',
   Caregiver = 'Caregiver',
-  FriendsFamily = 'Friends & Family',
+  'Friends&Family' = 'Friends & Family',
 }
+
+export type RelationshipValues = keyof typeof Relationship
