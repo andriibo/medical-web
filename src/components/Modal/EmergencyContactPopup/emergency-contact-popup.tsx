@@ -15,7 +15,7 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
@@ -24,25 +24,56 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IEmergencyContact, IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { useAppDispatch } from '~stores/hooks'
 import {
   usePatchPatientEmergencyContactMutation,
   usePostMyEmergencyContactMutation,
 } from '~stores/services/emergency-contact.api'
+import { usePostSuggestedContactMutation } from '~stores/services/suggested-contact.api'
+import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
-interface NewEmergencyContactPopupProps {
+interface EmergencyContactPopupProps {
   open: boolean
   handleClose: () => void
   contactData?: IEmergencyContact
+  suggested?: boolean
 }
 
-export const NewEmergencyContactPopup: FC<NewEmergencyContactPopupProps> = ({ open, handleClose, contactData }) => {
-  console.log('NewEmergencyContactPopup')
+export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
+  open,
+  handleClose,
+  contactData,
+  suggested,
+}) => {
+  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const contactId = useMemo(() => contactData?.contactId, [contactData])
+
+  const popupText = useMemo(() => {
+    if (suggested) {
+      return {
+        title: 'Suggest emergency contact',
+        successButtonText: 'Suggest',
+      }
+    }
+
+    if (contactId) {
+      return {
+        title: 'Edit emergency contact',
+        successButtonText: 'Edit',
+      }
+    }
+
+    return {
+      title: 'New emergency contact',
+      successButtonText: 'Add',
+    }
+  }, [suggested, contactId])
 
   const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
-
-  const [editEmergencyContact] = usePatchPatientEmergencyContactMutation()
+  const [editEmergencyContact, { isLoading: editEmergencyContactIsLoading }] = usePatchPatientEmergencyContactMutation()
+  const [addSuggestedContact, { isLoading: addSuggestedContactIsLoading }] = usePostSuggestedContactMutation()
 
   const {
     handleSubmit,
@@ -51,28 +82,59 @@ export const NewEmergencyContactPopup: FC<NewEmergencyContactPopupProps> = ({ op
     formState: { errors },
   } = useForm<IEmergencyContactModel>({
     mode: 'onBlur',
-    defaultValues: contactData || undefined,
+    defaultValues: contactData,
   })
 
   useEffect(() => {
     if (open) {
       setFormErrors(null)
-      reset()
+      reset(contactData)
     }
-  }, [open, reset])
+  }, [contactData, dispatch, open, reset])
+
+  const initiateClosePopup = () => {
+    handleClose()
+    setTimeout(() => {
+      dispatch(clearEmergencyContact())
+    }, 300)
+  }
 
   const onSubmit: SubmitHandler<IEmergencyContactModel> = async (data) => {
-    if (contactData) {
+    if (suggested) {
+      try {
+        await addSuggestedContact({
+          ...data,
+          phone: data.phone.split('-').join(''),
+          patientUserId: 'sss',
+        }).unwrap()
+
+        initiateClosePopup()
+        setFormErrors(null)
+        enqueueSnackbar('Emergency contact updated')
+      } catch (err) {
+        const {
+          data: { message },
+        } = err as IErrorRequest
+
+        setFormErrors(Array.isArray(message) ? message : [message])
+
+        console.error(err)
+      }
+
+      return
+    }
+
+    if (contactId) {
       try {
         await editEmergencyContact({
-          contactId: contactData.contactId,
+          contactId,
           contact: {
             ...data,
             phone: data.phone.split('-').join(''),
           },
         }).unwrap()
 
-        handleClose()
+        initiateClosePopup()
         setFormErrors(null)
         enqueueSnackbar('Emergency contact updated')
       } catch (err) {
@@ -94,7 +156,7 @@ export const NewEmergencyContactPopup: FC<NewEmergencyContactPopupProps> = ({ op
         phone: data.phone.split('-').join(''),
       }).unwrap()
 
-      handleClose()
+      initiateClosePopup()
       setFormErrors(null)
       enqueueSnackbar('Emergency contact added')
     } catch (err) {
@@ -114,8 +176,11 @@ export const NewEmergencyContactPopup: FC<NewEmergencyContactPopupProps> = ({ op
   })
 
   return (
-    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-      <DialogTitle>New emergency contact</DialogTitle>
+    <Dialog fullWidth maxWidth="xs" onClose={initiateClosePopup} open={open} scroll="body">
+      <DialogTitle>
+        {popupText.title}
+        {contactId ? 'Edit' : 'New'} emergency contact
+      </DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">
@@ -206,19 +271,20 @@ export const NewEmergencyContactPopup: FC<NewEmergencyContactPopupProps> = ({ op
           />
           <Grid container spacing={2}>
             <Grid xs={6}>
-              <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+              <Button fullWidth onClick={initiateClosePopup} size="large" variant="outlined">
                 Cancel
               </Button>
             </Grid>
             <Grid xs={6}>
               <LoadingButton
                 fullWidth
-                loading={addEmergencyContactIsLoading}
+                loading={addEmergencyContactIsLoading || editEmergencyContactIsLoading}
                 size="large"
                 type="submit"
                 variant="contained"
               >
-                Add
+                {popupText.successButtonText}
+                {contactId ? 'Edit' : 'Add'}
               </LoadingButton>
             </Grid>
           </Grid>

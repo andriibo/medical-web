@@ -12,9 +12,11 @@ import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
 import { patientVitalThresholdApi } from '~stores/services/patient-vital-threshold.api'
 import { profileApi } from '~stores/services/profile.api'
+import { suggestedContactApi } from '~stores/services/suggested-contact.api'
 import { authReducer } from '~stores/slices/auth.slice'
 import { dataAccessReducer } from '~stores/slices/data-access.slice'
 import { editEmailReducer } from '~stores/slices/edit-email.slice'
+import { emergencyContactReducer } from '~stores/slices/emergency-contact.slice'
 
 const persistConfig = {
   key: 'root',
@@ -25,6 +27,7 @@ const reducer = combineReducers({
   auth: persistReducer(persistConfig, authReducer),
   editEmail: editEmailReducer,
   dataAccess: dataAccessReducer,
+  emergencyContact: emergencyContactReducer,
 
   [authApi.reducerPath]: authApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,
@@ -35,6 +38,7 @@ const reducer = combineReducers({
   [medicationsApi.reducerPath]: medicationsApi.reducer,
   [patientVitalThresholdApi.reducerPath]: patientVitalThresholdApi.reducer,
   [emergencyContactApi.reducerPath]: emergencyContactApi.reducer,
+  [suggestedContactApi.reducerPath]: suggestedContactApi.reducer,
 })
 
 const middlewares = [
@@ -47,6 +51,7 @@ const middlewares = [
   medicationsApi.middleware,
   patientVitalThresholdApi.middleware,
   emergencyContactApi.middleware,
+  suggestedContactApi.middleware,
 ]
 
 export const store = configureStore({

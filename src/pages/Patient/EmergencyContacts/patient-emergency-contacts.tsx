@@ -1,14 +1,16 @@
 import { PersonAdd } from '@mui/icons-material'
 import { Button, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
-import { NewEmergencyContactPopup } from '~components/Modal/NewEmergencyContactPopup/new-emergency-contact-popup'
+import { ExistingEmergencyContacts } from '~components/ExistingEmergencyContacts/existing-emergency-contacts'
+import { EmergencyContactPopup } from '~components/Modal/EmergencyContactPopup/emergency-contact-popup'
+import { IEmergencyContact } from '~models/emergency-contact.model'
+import { useEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 export const PatientEmergencyContacts = () => {
-  console.log('EmergencyContacts')
   const [emergencyContactPopupOpen, setEmergencyContactPopupOpen] = useState(false)
+  const emergencyContact = useEmergencyContact()
 
   const handleEmergencyContactPopupOpen = () => {
     setEmergencyContactPopupOpen(true)
@@ -17,6 +19,12 @@ export const PatientEmergencyContacts = () => {
   const handleEmergencyContactPopupClose = () => {
     setEmergencyContactPopupOpen(false)
   }
+
+  useEffect(() => {
+    if (emergencyContact.contactId) {
+      handleEmergencyContactPopupOpen()
+    }
+  }, [emergencyContact])
 
   return (
     <div className="white-box content-md">
@@ -30,8 +38,12 @@ export const PatientEmergencyContacts = () => {
           </Button>
         </Grid>
       </Grid>
-      <EmergencyContacts />
-      <NewEmergencyContactPopup handleClose={handleEmergencyContactPopupClose} open={emergencyContactPopupOpen} />
+      <ExistingEmergencyContacts />
+      <EmergencyContactPopup
+        contactData={emergencyContact}
+        handleClose={handleEmergencyContactPopupClose}
+        open={emergencyContactPopupOpen}
+      />
     </div>
   )
 }

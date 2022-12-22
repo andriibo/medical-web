@@ -4,7 +4,7 @@ import { IEmergencyContact, IEmergencyContactModel } from '~models/emergency-con
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const emergencyContactApi = createApi({
-  reducerPath: 'emergencyContactsApi',
+  reducerPath: 'emergencyContactApi',
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['EmergencyContact'],
   endpoints: (build) => ({

@@ -12,12 +12,13 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   padding: 0 0 0.5rem;
   border-bottom: 1px solid var(--gray);
 }
 
-.cardInfoList {
+ul.cardInfoList {
+  padding: 0;
   word-wrap: break-word;
 
   :global {

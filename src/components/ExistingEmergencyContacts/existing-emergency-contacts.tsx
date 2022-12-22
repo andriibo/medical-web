@@ -10,16 +10,19 @@ import { CardBox } from '~components/Card/card-box'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { Spinner } from '~components/Spinner/spinner'
 import { IEmergencyContact } from '~models/emergency-contact.model'
+import { useAppDispatch } from '~stores/hooks'
 import {
   useDeletePatientEmergencyContactMutation,
   useGetMyEmergencyContactsQuery,
   useGetPatientEmergencyContactsQuery,
 } from '~stores/services/emergency-contact.api'
+import { setEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 interface EmergencyContactsProps {
   patientUserId?: string
 }
-export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
+export const ExistingEmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
+  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [emergencyContacts, setEmergencyContacts] = useState<IEmergencyContact[]>()
   const [isLoading, setIsLoading] = useState(false)
@@ -61,6 +64,14 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
     setDropClose(val)
   }, [])
 
+  const handleEditEmergencyContact = useCallback(
+    (contact: IEmergencyContact) => {
+      handleDrop(true)
+      dispatch(setEmergencyContact(contact))
+    },
+    [dispatch, handleDrop],
+  )
+
   const handleDeleteEmergencyContact = useCallback(
     async (contactId: string) => {
       try {
@@ -79,56 +90,54 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
   )
 
   return (
-    <div>
+    <>
       {isLoading ? (
         <Spinner />
       ) : (
         <Grid container spacing={3} sx={{ mb: 1 }}>
           {emergencyContacts?.length ? (
-            emergencyContacts.map(({ lastName, firstName, phone, email, relationship, contactId }, index) => (
-              <Grid key={firstName + index} xs={6}>
-                <CardBox
-                  disable={setDeletingContactId === contactId}
-                  header={
-                    <>
-                      <Typography variant="subtitle1">
-                        {firstName} {lastName}
-                      </Typography>
-                      <div style={{ marginLeft: 'auto' }} />
-                      <Chip label={Relationship[relationship]} size="small" />
-                      {!patientUserId && (
-                        <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
-                          <MenuItem
-                          // disabled={action === actions.preview}
-                          // key={action}
-                          // onClick={(event) => handleMenuActions(event, action)}
-                          >
-                            Edit
-                          </MenuItem>
-                          <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
-                        </DropdownMenu>
-                      )}
-                    </>
-                  }
-                  infoListItems={
-                    <>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <Phone />
-                        </ListItemIcon>
-                        <ListItemText>{phone}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <MailOutline />
-                        </ListItemIcon>
-                        <ListItemText>{email}</ListItemText>
-                      </ListItem>
-                    </>
-                  }
-                />
-              </Grid>
-            ))
+            emergencyContacts.map((emergencyContact) => {
+              const { lastName, firstName, phone, email, relationship, contactId } = emergencyContact
+
+              return (
+                <Grid key={contactId} xs={6}>
+                  <CardBox
+                    disable={setDeletingContactId === contactId}
+                    header={
+                      <>
+                        <Typography variant="subtitle1">
+                          {firstName} {lastName}
+                        </Typography>
+                        <div style={{ marginLeft: 'auto' }} />
+                        <Chip label={Relationship[relationship]} size="small" />
+                        {!patientUserId && (
+                          <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                            <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
+                            <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
+                          </DropdownMenu>
+                        )}
+                      </>
+                    }
+                    infoListItems={
+                      <>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <Phone />
+                          </ListItemIcon>
+                          <ListItemText>{phone}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <MailOutline />
+                          </ListItemIcon>
+                          <ListItemText>{email}</ListItemText>
+                        </ListItem>
+                      </>
+                    }
+                  />
+                </Grid>
+              )
+            })
           ) : (
             <Grid textAlign="center" xs>
               No emergency contacts added
@@ -136,6 +145,6 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
           )}
         </Grid>
       )}
-    </div>
+    </>
   )
 }
