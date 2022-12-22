@@ -7,7 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { RequestsDoctorTab } from '~/enums/requests-tab.enum'
+import { RequestsGrantedUserTab } from '~/enums/requests-tab.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
@@ -15,17 +15,17 @@ import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
 
-interface DoctorInvitePopupProps {
+interface GrantedUserInvitePopupProps {
   open: boolean
   handleClose: () => void
 }
 
-export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClose }) => {
+export const GrantedUserInvitePopup: FC<GrantedUserInvitePopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const navigate = useNavigate()
 
-  const [doctorInitiate, { isLoading: doctorInitiateIsLoading }] = usePostDataAccessInitiateMutation()
+  const [grantedUserInitiate, { isLoading: grantedUserInitiateIsLoading }] = usePostDataAccessInitiateMutation()
 
   const {
     handleSubmit,
@@ -45,10 +45,10 @@ export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClos
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
     try {
-      await doctorInitiate({ email }).unwrap()
+      await grantedUserInitiate({ email }).unwrap()
 
       handleClose()
-      navigate(PageUrls.Requests, { state: { activeTab: RequestsDoctorTab.outgoing } })
+      navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
@@ -95,7 +95,13 @@ export const DoctorInvitePopup: FC<DoctorInvitePopupProps> = ({ open, handleClos
               </Button>
             </Grid>
             <Grid xs={6}>
-              <LoadingButton fullWidth loading={doctorInitiateIsLoading} size="large" type="submit" variant="contained">
+              <LoadingButton
+                fullWidth
+                loading={grantedUserInitiateIsLoading}
+                size="large"
+                type="submit"
+                variant="contained"
+              >
                 Invite
               </LoadingButton>
             </Grid>

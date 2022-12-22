@@ -10,7 +10,7 @@ import { PatientInvitePopup } from '~components/Modal/PatientInvitePopup/patient
 import { Spinner } from '~components/Spinner/spinner'
 import { useAppDispatch } from '~stores/hooks'
 import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
-import { useGetPatientDoctorsQuery } from '~stores/services/profile.api'
+import { useGetMyDoctorsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 export const PatientMd = () => {
@@ -25,7 +25,7 @@ export const PatientMd = () => {
     data: patientDoctors,
     isLoading: patientDoctorsIsLoading,
     refetch: refetchPatientDoctors,
-  } = useGetPatientDoctorsQuery()
+  } = useGetMyDoctorsQuery()
 
   const [deleteDoctor] = useDeletePatientDataAccessMutation()
   const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)

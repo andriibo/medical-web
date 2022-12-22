@@ -4,24 +4,24 @@ import React, { useCallback, useMemo, useState } from 'react'
 
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
-import { EditDoctorProfilePopup } from '~components/Modal/EditDoctorProfilePopup/edit-doctor-profile-popup'
+import { EditCaregiverProfilePopup } from '~components/Modal/EditCaregiverProfilePopup/edit-caregiver-profile-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getAcronym } from '~helpers/get-acronym'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
+import { useGetMyCaregiverProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
-import styles from '../doctor-account.module.scss'
+import styles from '../caregiver-account.module.scss'
 
-export const DoctorPersonalInfo = () => {
+export const CaregiverPersonalInfo = () => {
   const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
-  const { data: doctorData, isLoading } = useGetMyDoctorProfileQuery()
+  const { data: caregiverData, isLoading } = useGetMyCaregiverProfileQuery()
 
-  const fullName = useMemo(() => `${doctorData?.firstName} ${doctorData?.lastName}`, [doctorData])
+  const fullName = useMemo(() => `${caregiverData?.firstName} ${caregiverData?.lastName}`, [caregiverData])
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
@@ -47,7 +47,7 @@ export const DoctorPersonalInfo = () => {
     return <Spinner />
   }
 
-  if (!doctorData) {
+  if (!caregiverData) {
     return <EmptyBox />
   }
 
@@ -60,18 +60,14 @@ export const DoctorPersonalInfo = () => {
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
             <strong className={styles.userName}>{fullName}</strong>
-            <Chip label="Doctor" size="small" />
+            <Chip label="Caregiver" size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit
             </Button>
           </div>
           <ul className={styles.personalInfoList}>
             <li>
-              <span className={styles.infoListLabel}>Phone</span>+{doctorData.phone}
-            </li>
-            <li>
-              <span className={styles.infoListLabel}>Institution</span>
-              {doctorData.institution ? doctorData.institution : '-'}
+              <span className={styles.infoListLabel}>Phone</span>+{caregiverData.phone}
             </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />
@@ -81,7 +77,7 @@ export const DoctorPersonalInfo = () => {
           <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
             <li>
               <span className={styles.infoListLabel}>Email</span>
-              {doctorData.email}
+              {caregiverData.email}
               <IconButton className={styles.infoListButton} onClick={handleOpenEditEmailPopup} size="small">
                 <Edit fontSize="inherit" />
               </IconButton>
@@ -101,7 +97,11 @@ export const DoctorPersonalInfo = () => {
           </Button>
         </div>
       </div>
-      <EditDoctorProfilePopup doctorData={doctorData} handleClose={handleProfilePopupClose} open={profilePopupOpen} />
+      <EditCaregiverProfilePopup
+        caregiverData={caregiverData}
+        handleClose={handleProfilePopupClose}
+        open={profilePopupOpen}
+      />
       <EditEmailPopup />
       <ChangePasswordPopup handleClose={handleChangePasswordPopupClose} open={changePasswordPopupOpen} />
     </>

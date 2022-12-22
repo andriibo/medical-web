@@ -10,41 +10,44 @@ import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
-import { IUpdateDoctorProfile, UpdateDoctorProfileKeys } from '~models/profie.model'
-import { usePatchMyDoctorProfileMutation } from '~stores/services/profile.api'
+import { IUpdateCaregiverProfile, UpdateCaregiverProfileKeys } from '~models/profie.model'
+import { usePatchMyCaregiverProfileMutation } from '~stores/services/profile.api'
 
-interface EditDoctorProfilePopupProps {
-  doctorData: IUpdateDoctorProfile
+interface EditCaregiverProfilePopupProps {
+  caregiverData: IUpdateCaregiverProfile
   open: boolean
   handleClose: () => void
 }
 
-export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctorData, open, handleClose }) => {
+export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ caregiverData, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [updateDoctorProfile, { isLoading: updateDoctorProfileIsLoading }] = usePatchMyDoctorProfileMutation()
+  const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchMyCaregiverProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
-  const doctorDefaultValues = useMemo(() => deleteKeysFormObject({ ...doctorData }, ['email', 'avatar']), [doctorData])
+  const caregiverDefaultValues = useMemo(
+    () => deleteKeysFormObject({ ...caregiverData }, ['email', 'avatar']),
+    [caregiverData],
+  )
 
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<IUpdateDoctorProfile>({
+  } = useForm<IUpdateCaregiverProfile>({
     mode: 'onBlur',
-    defaultValues: doctorDefaultValues,
+    defaultValues: caregiverDefaultValues,
   })
 
   useEffect(() => {
     if (open) {
-      reset(doctorDefaultValues)
+      reset(caregiverDefaultValues)
     }
-  }, [open, reset, doctorDefaultValues])
+  }, [open, reset, caregiverDefaultValues])
 
-  const onSubmit: SubmitHandler<IUpdateDoctorProfile> = async (data) => {
+  const onSubmit: SubmitHandler<IUpdateCaregiverProfile> = async (data) => {
     try {
-      await updateDoctorProfile({
+      await updateCaregiverProfile({
         ...data,
       }).unwrap()
 
@@ -62,7 +65,7 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
     }
   }
 
-  const fieldValidation = (name: UpdateDoctorProfileKeys) => ({
+  const fieldValidation = (name: UpdateCaregiverProfileKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
@@ -128,12 +131,6 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
               )}
               rules={validationRules.phone}
             />
-            <Controller
-              control={control}
-              defaultValue=""
-              name="institution"
-              render={({ field }) => <TextField {...field} fullWidth label="Institution (optional)" />}
-            />
             <Grid container spacing={2}>
               <Grid xs={6}>
                 <Button fullWidth onClick={handleClose} size="large" variant="outlined">
@@ -143,7 +140,7 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
               <Grid xs={6}>
                 <LoadingButton
                   fullWidth
-                  loading={updateDoctorProfileIsLoading}
+                  loading={updateCaregiverProfileIsLoading}
                   size="large"
                   type="submit"
                   variant="contained"

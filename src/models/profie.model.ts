@@ -17,12 +17,15 @@ export interface IUpdatePatientProfile extends Omit<IPatientProfile, 'email' | '
 
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
-export interface IDoctorProfile {
+export interface ICaregiverProfile {
   avatar: string
   email: string
   firstName: string
   lastName: string
   phone: string
+}
+
+export interface IDoctorProfile extends ICaregiverProfile {
   institution: string
 }
 
@@ -36,4 +39,8 @@ export interface IDoctorPatients extends IPatientProfile {
 
 export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}
 
+export interface IUpdateCaregiverProfile extends Omit<ICaregiverProfile, 'email' | 'avatar'> {}
+
 export type UpdateDoctorProfileKeys = keyof IUpdateDoctorProfile
+
+export type UpdateCaregiverProfileKeys = keyof IUpdateCaregiverProfile

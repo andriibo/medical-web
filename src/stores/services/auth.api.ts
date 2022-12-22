@@ -7,6 +7,7 @@ import {
   IAuthEmailResponse,
   IAuthForgotPasswordConfirm,
   IAuthSignIn,
+  IAuthSignUpCaregiver,
   IAuthSignUpConfirm,
   IAuthSignUpDoctor,
   IAuthSignUpPatient,
@@ -24,6 +25,10 @@ export const authApi = createApi({
     }),
     postAuthSignUpDoctor: build.mutation<null, IAuthSignUpDoctor>({
       query: (queryArg) => ({ url: 'doctor/sign-up', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Auth'],
+    }),
+    postAuthSignUpCaregiver: build.mutation<null, IAuthSignUpCaregiver>({
+      query: (queryArg) => ({ url: 'caregiver/sign-up', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Auth'],
     }),
     postAuthSignUpPatient: build.mutation<null, IAuthSignUpPatient>({
@@ -64,6 +69,7 @@ export const authApi = createApi({
 export const {
   usePostAuthSignInMutation,
   usePostAuthSignUpDoctorMutation,
+  usePostAuthSignUpCaregiverMutation,
   usePostAuthSignUpPatientMutation,
   usePostAuthSignUpConfirmMutation,
   usePostAuthSignUpResendCodeMutation,

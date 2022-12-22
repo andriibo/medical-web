@@ -3,6 +3,7 @@ export enum PageUrls {
   AccountType = '/account-type',
   SignUpPatient = '/sign-up-patient',
   SignUpDoctor = '/sign-up-doctor',
+  SignUpCaregiver = '/sign-up-caregiver',
   EmailVerification = '/email-verification',
   MyAccount = '/my-account',
   ForgotPassword = '/forgot-password',

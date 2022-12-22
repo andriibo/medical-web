@@ -29,7 +29,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdatePatientProfile, UpdatePatientProfileKeys } from '~models/profie.model'
-import { usePatchPatientProfileMutation } from '~stores/services/profile.api'
+import { usePatchMyPatientProfileMutation } from '~stores/services/profile.api'
 
 interface EditPatientProfilePopupProps {
   patientData: IUpdatePatientProfile
@@ -39,7 +39,7 @@ interface EditPatientProfilePopupProps {
 
 export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ patientData, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [updatePatientProfile, { isLoading: updatePatientProfileIsLoading }] = usePatchPatientProfileMutation()
+  const [updatePatientProfile, { isLoading: updatePatientProfileIsLoading }] = usePatchMyPatientProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const patientDefaultValues = useMemo(
