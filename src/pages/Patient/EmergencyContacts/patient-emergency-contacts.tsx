@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 import { ExistingEmergencyContacts } from '~components/ExistingEmergencyContacts/existing-emergency-contacts'
 import { EmergencyContactPopup } from '~components/Modal/EmergencyContactPopup/emergency-contact-popup'
+import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
 import { IEmergencyContact } from '~models/emergency-contact.model'
 import { useEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
@@ -28,6 +29,13 @@ export const PatientEmergencyContacts = () => {
 
   return (
     <div className="white-box content-md">
+      <SuggestedContacts
+        heading={
+          <Typography sx={{ mb: 2 }} variant="h5">
+            Suggested
+          </Typography>
+        }
+      />
       <Grid container spacing={3} sx={{ mb: 1 }}>
         <Grid xs>
           <Typography variant="h5">Existing</Typography>

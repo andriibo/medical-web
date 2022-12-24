@@ -50,27 +50,6 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const contactId = useMemo(() => contactData?.contactId, [contactData])
 
-  const popupText = useMemo(() => {
-    if (suggested) {
-      return {
-        title: 'Suggest emergency contact',
-        successButtonText: 'Suggest',
-      }
-    }
-
-    if (contactId) {
-      return {
-        title: 'Edit emergency contact',
-        successButtonText: 'Edit',
-      }
-    }
-
-    return {
-      title: 'New emergency contact',
-      successButtonText: 'Add',
-    }
-  }, [suggested, contactId])
-
   const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
   const [editEmergencyContact, { isLoading: editEmergencyContactIsLoading }] = usePatchPatientEmergencyContactMutation()
   const [addSuggestedContact, { isLoading: addSuggestedContactIsLoading }] = usePostSuggestedContactMutation()
@@ -177,10 +156,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
 
   return (
     <Dialog fullWidth maxWidth="xs" onClose={initiateClosePopup} open={open} scroll="body">
-      <DialogTitle>
-        {popupText.title}
-        {contactId ? 'Edit' : 'New'} emergency contact
-      </DialogTitle>
+      <DialogTitle>{contactId ? 'Edit' : 'New'} emergency contact</DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">
@@ -283,7 +259,6 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
                 type="submit"
                 variant="contained"
               >
-                {popupText.successButtonText}
                 {contactId ? 'Edit' : 'Add'}
               </LoadingButton>
             </Grid>

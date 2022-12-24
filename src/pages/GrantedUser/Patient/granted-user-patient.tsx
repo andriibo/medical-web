@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom'
 import { PatientTab } from '~/enums/patient-tab.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ExistingEmergencyContacts } from '~components/ExistingEmergencyContacts/existing-emergency-contacts'
+import { SuggestedContactPopup } from '~components/Modal/SuggestedContactPopup/suggested-contact-popup'
 import { PatientTreatment } from '~components/PatientTreatment/patient-treatment'
 import { Spinner } from '~components/Spinner/spinner'
 import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
@@ -21,11 +22,20 @@ import styles from './granted-user-patient.module.scss'
 export const GrantedUserPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
   const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.thresholds)
+  const [suggestedContactPopupOpen, setSuggestedContactPopupOpen] = useState(false)
 
   const { data: patientData, isLoading } = useGetPatientProfileQuery(patientUserId ? { patientUserId } : skipToken)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: PatientTab) => {
     setActiveTab(value)
+  }
+
+  const handleSuggestedContactPopupOpen = () => {
+    setSuggestedContactPopupOpen(true)
+  }
+
+  const handleSuggestedContactPopupClose = () => {
+    setSuggestedContactPopupOpen(false)
   }
 
   if (isLoading) {
@@ -59,9 +69,9 @@ export const GrantedUserPatient = () => {
                 <Typography variant="h5">Suggested by me</Typography>
               </Grid>
               <Grid>
-                {/* <Button onClick={handleEmergencyContactPopupOpen} startIcon={<PersonAdd />} variant="outlined"> */}
-                {/*   Suggest contact */}
-                {/* </Button> */}
+                <Button onClick={handleSuggestedContactPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+                  Suggest contact
+                </Button>
               </Grid>
             </Grid>
             <SuggestedContacts patientUserId={patientUserId} />
@@ -72,6 +82,11 @@ export const GrantedUserPatient = () => {
           </TabPanel>
         </div>
       </div>
+      <SuggestedContactPopup
+        handleClose={handleSuggestedContactPopupClose}
+        open={suggestedContactPopupOpen}
+        patientUserId={patientUserId}
+      />
     </div>
   )
 }

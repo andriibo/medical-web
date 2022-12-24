@@ -36,9 +36,10 @@ import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 interface SuggestedContactPopupProps {
   open: boolean
   handleClose: () => void
+  patientUserId: string
 }
 
-export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, handleClose }) => {
+export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, handleClose, patientUserId }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
@@ -73,7 +74,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
       await suggestedContact({
         ...data,
         phone: data.phone.split('-').join(''),
-        patientUserId: 'sss',
+        patientUserId,
       }).unwrap()
 
       initiateClosePopup()
