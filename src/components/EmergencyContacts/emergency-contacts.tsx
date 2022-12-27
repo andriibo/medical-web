@@ -27,6 +27,23 @@ interface EmergencyContactsProps {
   patientUserId?: string
 }
 
+const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }) => (
+  <>
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <Phone />
+      </ListItemIcon>
+      <ListItemText>{emergencyContact.phone}</ListItemText>
+    </ListItem>
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <MailOutline />
+      </ListItemIcon>
+      <ListItemText>{emergencyContact.email}</ListItemText>
+    </ListItem>
+  </>
+)
+
 export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
@@ -133,7 +150,7 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
         <Grid container spacing={3} sx={{ mb: 1 }}>
           {emergencyContacts?.length ? (
             emergencyContacts.map((emergencyContact) => {
-              const { lastName, firstName, phone, email, relationship, contactId } = emergencyContact
+              const { lastName, firstName, relationship, contactId } = emergencyContact
 
               return (
                 <Grid key={contactId} xs={6}>
@@ -154,22 +171,7 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
                         )}
                       </>
                     }
-                    infoListItems={
-                      <>
-                        <ListItem disableGutters>
-                          <ListItemIcon>
-                            <Phone />
-                          </ListItemIcon>
-                          <ListItemText>{phone}</ListItemText>
-                        </ListItem>
-                        <ListItem disableGutters>
-                          <ListItemIcon>
-                            <MailOutline />
-                          </ListItemIcon>
-                          <ListItemText>{email}</ListItemText>
-                        </ListItem>
-                      </>
-                    }
+                    infoListItems={<ListItems emergencyContact={emergencyContact} />}
                   />
                 </Grid>
               )

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { Relationship, RelationshipValues } from '~/enums/relationship.enum'
 import { IEmergencyContact } from '~models/emergency-contact.model'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
@@ -15,7 +16,7 @@ const initialState: IEmergencyContactData = {
     lastName: '',
     email: '',
     phone: '',
-    relationship: 'Friends&Family',
+    relationship: Object.keys(Relationship)[0] as RelationshipValues,
     contactId: '',
     createdAt: '',
   },
