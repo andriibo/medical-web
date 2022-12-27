@@ -3,10 +3,9 @@ import { Button, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useEffect, useState } from 'react'
 
-import { ExistingEmergencyContacts } from '~components/ExistingEmergencyContacts/existing-emergency-contacts'
+import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
 import { EmergencyContactPopup } from '~components/Modal/EmergencyContactPopup/emergency-contact-popup'
 import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
-import { IEmergencyContact } from '~models/emergency-contact.model'
 import { useEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 export const PatientEmergencyContacts = () => {
@@ -46,7 +45,7 @@ export const PatientEmergencyContacts = () => {
           </Button>
         </Grid>
       </Grid>
-      <ExistingEmergencyContacts />
+      <EmergencyContacts />
       <EmergencyContactPopup
         contactData={emergencyContact}
         handleClose={handleEmergencyContactPopupClose}

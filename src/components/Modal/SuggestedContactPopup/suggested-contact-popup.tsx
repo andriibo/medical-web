@@ -15,21 +15,17 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 
 import { Relationship, RelationshipValues } from '~/enums/relationship.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
-import { IEmergencyContact, IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { ISuggestedContactModel } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
-import {
-  usePatchPatientEmergencyContactMutation,
-  usePostMyEmergencyContactMutation,
-} from '~stores/services/emergency-contact.api'
 import { usePostSuggestedContactMutation } from '~stores/services/suggested-contact.api'
 import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 

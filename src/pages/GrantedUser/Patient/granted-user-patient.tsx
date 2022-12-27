@@ -6,8 +6,8 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { PatientTab } from '~/enums/patient-tab.enum'
+import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
-import { ExistingEmergencyContacts } from '~components/ExistingEmergencyContacts/existing-emergency-contacts'
 import { SuggestedContactPopup } from '~components/Modal/SuggestedContactPopup/suggested-contact-popup'
 import { PatientTreatment } from '~components/PatientTreatment/patient-treatment'
 import { Spinner } from '~components/Spinner/spinner'
@@ -23,6 +23,7 @@ export const GrantedUserPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
   const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.thresholds)
   const [suggestedContactPopupOpen, setSuggestedContactPopupOpen] = useState(false)
+  const [hasSuggestedContact, setHasSuggestedContact] = useState(true)
 
   const { data: patientData, isLoading } = useGetPatientProfileQuery(patientUserId ? { patientUserId } : skipToken)
 
@@ -64,21 +65,37 @@ export const GrantedUserPatient = () => {
             <PatientTreatment patientUserId={patientUserId} />
           </TabPanel>
           <TabPanel activeTab={activeTab} value={PatientTab.emergencyContacts}>
+            <SuggestedContacts
+              heading={
+                <>
+                  <Grid container spacing={3} sx={{ mb: 1 }}>
+                    <Grid xs>
+                      <Typography variant="h5">Suggested by me</Typography>
+                    </Grid>
+                    <Grid>
+                      <Button onClick={handleSuggestedContactPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+                        Suggest contact
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </>
+              }
+              mounted={setHasSuggestedContact}
+              patientUserId={patientUserId}
+            />
             <Grid container spacing={3} sx={{ mb: 1 }}>
               <Grid xs>
-                <Typography variant="h5">Suggested by me</Typography>
+                <Typography variant="h5">Existing</Typography>
               </Grid>
-              <Grid>
-                <Button onClick={handleSuggestedContactPopupOpen} startIcon={<PersonAdd />} variant="outlined">
-                  Suggest contact
-                </Button>
-              </Grid>
+              {!hasSuggestedContact && (
+                <Grid>
+                  <Button onClick={handleSuggestedContactPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+                    Suggest contact
+                  </Button>
+                </Grid>
+              )}
             </Grid>
-            <SuggestedContacts patientUserId={patientUserId} />
-            <Typography sx={{ mb: 2 }} variant="h5">
-              Existing
-            </Typography>
-            <ExistingEmergencyContacts patientUserId={patientUserId} />
+            <EmergencyContacts patientUserId={patientUserId} />
           </TabPanel>
         </div>
       </div>

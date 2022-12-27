@@ -102,7 +102,7 @@ export const EditPatientHeartRatePopup: FC<EditPatientHeartRatePopupProps> = ({
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 40, max: 100, step: 1 },
+                      inputProps: { min: validationRules.heartRate.min, max: validationRules.heartRate.max, step: 1 },
                       endAdornment: <InputAdornment position="end">bpm</InputAdornment>,
                     }}
                     fullWidth
@@ -122,7 +122,7 @@ export const EditPatientHeartRatePopup: FC<EditPatientHeartRatePopupProps> = ({
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 40, max: 100, step: 1 },
+                      inputProps: { min: validationRules.heartRate.min, max: validationRules.heartRate.max, step: 1 },
                       endAdornment: <InputAdornment position="end">bpm</InputAdornment>,
                     }}
                     fullWidth

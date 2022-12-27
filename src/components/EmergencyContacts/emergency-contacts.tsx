@@ -2,6 +2,7 @@ import { MailOutline, Phone } from '@mui/icons-material'
 import { Chip, ListItem, ListItemIcon, ListItemText, MenuItem, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
@@ -16,37 +17,59 @@ import {
   useGetMyEmergencyContactsQuery,
   useGetPatientEmergencyContactsQuery,
 } from '~stores/services/emergency-contact.api'
-import { setEmergencyContact } from '~stores/slices/emergency-contact.slice'
+import {
+  setEmergencyContact,
+  setEmergencyContactHasChanges,
+  useEmergencyContactHasChanges,
+} from '~stores/slices/emergency-contact.slice'
 
 interface EmergencyContactsProps {
   patientUserId?: string
 }
-export const ExistingEmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
+
+export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const confirm = useConfirm()
   const [emergencyContacts, setEmergencyContacts] = useState<IEmergencyContact[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [dropClose, setDropClose] = useState(false)
   const [setDeletingContactId, setSetDeletingContactId] = useState<string | null>(null)
+  const emergencyContactHasChanges = useEmergencyContactHasChanges()
 
-  const { data: myEmergencyContacts, isLoading: myEmergencyContactsIsLoading } = useGetMyEmergencyContactsQuery(
-    patientUserId ? skipToken : undefined,
-  )
+  const {
+    data: myEmergencyContacts,
+    isLoading: myEmergencyContactsIsLoading,
+    refetch: refetchMyEmergencyContacts,
+  } = useGetMyEmergencyContactsQuery(patientUserId ? skipToken : undefined)
 
   const { data: patientEmergencyContacts, isLoading: patientEmergencyContactsIsLoading } =
     useGetPatientEmergencyContactsQuery(patientUserId ? { patientUserId } : skipToken)
 
   const [deleteEmergencyContact] = useDeletePatientEmergencyContactMutation()
 
+  const getSortedContacts = (contacts: IEmergencyContact[]) =>
+    contacts.sort((a, b) => {
+      if (a.lastName < b.lastName || a.firstName < b.firstName) {
+        return -1
+      }
+
+      if (a.lastName > b.lastName || a.firstName > b.firstName) {
+        return 1
+      }
+
+      return 0
+    })
+
   useEffect(() => {
     if (myEmergencyContacts && !myEmergencyContactsIsLoading) {
-      setEmergencyContacts([...myEmergencyContacts])
+      setEmergencyContacts(getSortedContacts([...myEmergencyContacts]))
 
       return
     }
 
     if (patientEmergencyContacts && !patientEmergencyContactsIsLoading) {
-      setEmergencyContacts([...patientEmergencyContacts])
+      setEmergencyContacts(getSortedContacts([...patientEmergencyContacts]))
     }
   }, [myEmergencyContacts, myEmergencyContactsIsLoading, patientEmergencyContacts, patientEmergencyContactsIsLoading])
 
@@ -75,8 +98,14 @@ export const ExistingEmergencyContacts: FC<EmergencyContactsProps> = ({ patientU
   const handleDeleteEmergencyContact = useCallback(
     async (contactId: string) => {
       try {
-        setSetDeletingContactId(contactId)
         handleDrop(true)
+        await confirm({
+          title: 'Remove emergency contact?',
+          description: 'The emergency contact will be removed.',
+          confirmationText: 'Remove',
+        })
+
+        setSetDeletingContactId(contactId)
 
         await deleteEmergencyContact({ contactId }).unwrap()
         enqueueSnackbar('Contact deleted')
@@ -86,8 +115,15 @@ export const ExistingEmergencyContacts: FC<EmergencyContactsProps> = ({ patientU
         enqueueSnackbar('Contact not deleted', { variant: 'warning' })
       }
     },
-    [deleteEmergencyContact, enqueueSnackbar, handleDrop],
+    [confirm, deleteEmergencyContact, enqueueSnackbar, handleDrop],
   )
+
+  useEffect(() => {
+    if (emergencyContactHasChanges) {
+      refetchMyEmergencyContacts()
+      dispatch(setEmergencyContactHasChanges(false))
+    }
+  }, [emergencyContactHasChanges, dispatch, refetchMyEmergencyContacts])
 
   return (
     <>

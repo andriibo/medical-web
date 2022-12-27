@@ -99,7 +99,7 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
                 {...field}
                 {...fieldValidation(field.name)}
                 InputProps={{
-                  inputProps: { min: 80, max: 100, step: 1 },
+                  inputProps: { min: validationRules.saturation.min, max: validationRules.saturation.max, step: 1 },
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
                 }}
                 fullWidth

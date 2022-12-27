@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IEmergencyContact, IEmergencyContactModel } from '~models/emergency-contact.model'
-import { ISuggestedContact, ISuggestedContactModel, ISuggestedContactRequest } from '~models/suggested-contact.model'
+import { ISuggestedContact, ISuggestedContactRequest } from '~models/suggested-contact.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const suggestedContactApi = createApi({
@@ -28,7 +27,7 @@ export const suggestedContactApi = createApi({
     }),
     postSuggestedContactApprove: build.mutation<null, { contactId: string }>({
       query: ({ contactId }) => ({
-        url: `patient/suggested-contact/${contactId}`,
+        url: `patient/suggested-contact/approve/${contactId}`,
         method: 'POST',
       }),
       invalidatesTags: ['Suggested'],

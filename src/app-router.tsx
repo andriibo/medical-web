@@ -22,7 +22,7 @@ import { GrantedUserRequest } from '~pages/GrantedUser/Requests/granted-user-req
 import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
 import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patient-emergency-contacts'
-import { PatientMd } from '~pages/Patient/MedicalDoctors/patient-md'
+import { PatientGrantedUsers } from '~pages/Patient/GrantedUsers/patient-granted-users'
 import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
 import { useUserRole } from '~stores/slices/auth.slice'
@@ -50,15 +50,15 @@ export const AppRouter = () => {
         {isUserRoleGrantable(userRole) ? (
           <>
             <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
-            <Route element={<GrantedUserRequest />} path={PageUrls.Requests} />
             <Route element={<GrantedUserPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
+            <Route element={<GrantedUserRequest />} path={PageUrls.Requests} />
           </>
         ) : (
           <>
             <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
             <Route element={<PatientVitals />} path={PageUrls.Vitals} />
             <Route element={<PatientEmergencyContacts />} path={PageUrls.EmergencyContacts} />
-            <Route element={<PatientMd />} path={PageUrls.MedicalDoctors} />
+            <Route element={<PatientGrantedUsers />} path={PageUrls.GrantedUsers} />
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
           </>
         )}

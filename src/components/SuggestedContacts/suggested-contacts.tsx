@@ -13,22 +13,26 @@ import { Spinner } from '~components/Spinner/spinner'
 import { ISuggestedContact } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
+  useDeletePatientSuggestedContactMutation,
   useDeleteSuggestedContactMutation,
   useGetMySuggestedContactsQuery,
   useGetPatientSuggestedContactsQuery,
+  usePostSuggestedContactApproveMutation,
 } from '~stores/services/suggested-contact.api'
+import { setEmergencyContactHasChanges } from '~stores/slices/emergency-contact.slice'
 
 interface SuggestedContactsProps {
   patientUserId?: string
   heading?: ReactNode
+  mounted?: (val: boolean) => void
 }
-export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, heading }) => {
+export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, heading, mounted }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
   const [suggestedContacts, setSuggestedContacts] = useState<ISuggestedContact[]>()
   const [isLoading, setIsLoading] = useState(false)
-  const [setDeletingContactId, setSetDeletingContactId] = useState<string | null>(null)
+  const [setDisableContactId, setSetDisableContactId] = useState<string | null>(null)
 
   const { data: mySuggestedContacts, isLoading: mySuggestedContactsIsLoading } = useGetMySuggestedContactsQuery(
     patientUserId ? skipToken : undefined,
@@ -38,16 +42,31 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
     useGetPatientSuggestedContactsQuery(patientUserId ? { patientUserId } : skipToken)
 
   const [deleteSuggestedContact] = useDeleteSuggestedContactMutation()
+  const [suggestedContactApprove] = usePostSuggestedContactApproveMutation()
+  const [suggestedContactReject] = useDeletePatientSuggestedContactMutation()
+
+  const getSortedContacts = (contacts: ISuggestedContact[]) =>
+    contacts.sort((a, b) => {
+      if (a.lastName < b.lastName || a.firstName < b.firstName) {
+        return -1
+      }
+
+      if (a.lastName > b.lastName || a.firstName > b.firstName) {
+        return 1
+      }
+
+      return 0
+    })
 
   useEffect(() => {
     if (patientSuggestedContacts && !mySuggestedContactsIsLoading) {
-      setSuggestedContacts([...patientSuggestedContacts])
+      setSuggestedContacts(getSortedContacts([...patientSuggestedContacts]))
 
       return
     }
 
     if (mySuggestedContacts && !patientSuggestedContactsIsLoading) {
-      setSuggestedContacts([...mySuggestedContacts])
+      setSuggestedContacts(getSortedContacts([...mySuggestedContacts]))
     }
   }, [patientSuggestedContacts, mySuggestedContactsIsLoading, mySuggestedContacts, patientSuggestedContactsIsLoading])
 
@@ -70,18 +89,64 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
           confirmationText: 'Remove',
         })
 
-        setSetDeletingContactId(contactId)
+        setSetDisableContactId(contactId)
 
         await deleteSuggestedContact({ contactId }).unwrap()
         enqueueSnackbar('Contact removed')
       } catch (err) {
         console.error(err)
-        setSetDeletingContactId(null)
+        setSetDisableContactId(null)
         enqueueSnackbar('Contact not removed', { variant: 'warning' })
       }
     },
     [confirm, deleteSuggestedContact, enqueueSnackbar],
   )
+
+  const handleApproveContact = useCallback(
+    async (contactId: string) => {
+      try {
+        setSetDisableContactId(contactId)
+
+        await suggestedContactApprove({ contactId }).unwrap()
+        dispatch(setEmergencyContactHasChanges(true))
+        enqueueSnackbar('Contact accepted')
+      } catch (err) {
+        console.error(err)
+        setSetDisableContactId(null)
+        enqueueSnackbar('Contact not accepted', { variant: 'warning' })
+      }
+    },
+    [dispatch, enqueueSnackbar, suggestedContactApprove],
+  )
+
+  const handleRejectContact = useCallback(
+    async (contactId: string) => {
+      try {
+        setSetDisableContactId(contactId)
+
+        await suggestedContactReject({ contactId }).unwrap()
+        enqueueSnackbar('Contact rejected')
+      } catch (err) {
+        console.error(err)
+
+        setSetDisableContactId(null)
+        enqueueSnackbar('Contact not rejected', { variant: 'warning' })
+      }
+    },
+    [enqueueSnackbar, suggestedContactReject],
+  )
+
+  useEffect(() => {
+    if (mounted) {
+      if (suggestedContacts && !suggestedContacts?.length) {
+        mounted(false)
+
+        return
+      }
+
+      mounted(true)
+    }
+  }, [mounted, suggestedContacts])
 
   if (isLoading) {
     return <Spinner />
@@ -101,7 +166,7 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
           return (
             <Grid key={contactId} xs={6}>
               <CardBox
-                disable={setDeletingContactId === contactId}
+                disable={setDisableContactId === contactId}
                 header={
                   <>
                     <Typography variant="subtitle1">
@@ -133,6 +198,7 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
                         <Box sx={{ my: '-0.5rem' }}>
                           <IconButton
                             color="error"
+                            onClick={() => handleRejectContact(contactId)}
                             sx={{
                               ml: 1,
                               bgcolor: `${red[700]}1F`,
@@ -145,6 +211,7 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
                           </IconButton>
                           <IconButton
                             color="success"
+                            onClick={() => handleApproveContact(contactId)}
                             sx={{
                               ml: 1,
                               bgcolor: `${green[800]}1F`,

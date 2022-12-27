@@ -72,7 +72,7 @@ export const PatientIncoming: FC<PatientIncomingProps> = ({ patientDataAccess })
       {incomingRequests?.length ? (
         incomingRequests.map(({ accessId, createdAt, requestedUser }) => (
           <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
-            <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
+            <ListItemText secondary={`${dayjs(createdAt).format('MMMM D, YYYY')}`}>
               {getRequestedUserName(requestedUser)}
             </ListItemText>
             <Button onClick={() => handleRefuseRequest(accessId)} sx={{ ml: 2 }}>

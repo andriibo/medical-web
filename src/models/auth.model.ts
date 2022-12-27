@@ -1,3 +1,4 @@
+import { UserRoles } from '~/enums/user-roles.enum'
 import { Modify } from '~/types/modify.type'
 import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
 
@@ -7,7 +8,7 @@ export interface IAuthData {
   user: {
     id: string
     email: string
-    roles: string[]
+    roles: UserRoles[]
   }
 }
 

@@ -17,3 +17,10 @@ export interface IDataAccessUser {
 export interface IDataAccessEmail {
   email: string
 }
+
+export interface IDataAccessInitiateForGrantedUser {
+  role: string
+  email: string
+}
+
+export type DataAccessInitiateForGrantedUserKeys = keyof IDataAccessInitiateForGrantedUser

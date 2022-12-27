@@ -13,7 +13,7 @@ import { useDeletePatientDataAccessMutation } from '~stores/services/patient-dat
 import { useGetMyDoctorsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
-export const PatientMd = () => {
+export const PatientGrantedUsers = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
@@ -75,7 +75,7 @@ export const PatientMd = () => {
       <div className="white-box content-md">
         <Grid container spacing={3} sx={{ mb: 1 }}>
           <Grid xs>
-            <Typography variant="h5">Medical Doctors</Typography>
+            <Typography variant="h5">Medical Doctors & Caregivers</Typography>
           </Grid>
           <Grid>
             <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">

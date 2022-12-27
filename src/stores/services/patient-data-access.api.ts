@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IDataAccessEmail, IDataAccessModel } from '~models/data-access.model'
+import { IDataAccessEmail, IDataAccessInitiateForGrantedUser, IDataAccessModel } from '~models/data-access.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const patientDataAccessApi = createApi({
@@ -8,8 +8,12 @@ export const patientDataAccessApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['PatientDataAccess'],
   endpoints: (build) => ({
-    postPatientDataAccessInitiate: build.mutation<null, IDataAccessEmail>({
-      query: (queryArg) => ({ url: 'patient/data-access/initiate', method: 'POST', body: { ...queryArg } }),
+    postPatientDataAccessInitiateForGrantedUser: build.mutation<null, IDataAccessInitiateForGrantedUser>({
+      query: ({ role, email }) => ({
+        url: `patient/data-access/initiate-for-${role}`,
+        method: 'POST',
+        body: { email },
+      }),
       invalidatesTags: ['PatientDataAccess'],
     }),
     patchPatientDataAccessRefuse: build.mutation<null, { accessId: string }>({
@@ -75,7 +79,7 @@ export const patientDataAccessApi = createApi({
 })
 
 export const {
-  usePostPatientDataAccessInitiateMutation,
+  usePostPatientDataAccessInitiateForGrantedUserMutation,
   usePatchPatientDataAccessRefuseMutation,
   usePatchPatientDataAccessApproveMutation,
   useDeletePatientDataAccessMutation,

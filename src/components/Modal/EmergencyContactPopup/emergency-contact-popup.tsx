@@ -29,22 +29,15 @@ import {
   usePatchPatientEmergencyContactMutation,
   usePostMyEmergencyContactMutation,
 } from '~stores/services/emergency-contact.api'
-import { usePostSuggestedContactMutation } from '~stores/services/suggested-contact.api'
 import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 interface EmergencyContactPopupProps {
   open: boolean
   handleClose: () => void
   contactData?: IEmergencyContact
-  suggested?: boolean
 }
 
-export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
-  open,
-  handleClose,
-  contactData,
-  suggested,
-}) => {
+export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, handleClose, contactData }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
@@ -52,7 +45,6 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
 
   const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
   const [editEmergencyContact, { isLoading: editEmergencyContactIsLoading }] = usePatchPatientEmergencyContactMutation()
-  const [addSuggestedContact, { isLoading: addSuggestedContactIsLoading }] = usePostSuggestedContactMutation()
 
   const {
     handleSubmit,
@@ -79,30 +71,6 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
   }
 
   const onSubmit: SubmitHandler<IEmergencyContactModel> = async (data) => {
-    if (suggested) {
-      try {
-        await addSuggestedContact({
-          ...data,
-          phone: data.phone.split('-').join(''),
-          patientUserId: 'sss',
-        }).unwrap()
-
-        initiateClosePopup()
-        setFormErrors(null)
-        enqueueSnackbar('Emergency contact updated')
-      } catch (err) {
-        const {
-          data: { message },
-        } = err as IErrorRequest
-
-        setFormErrors(Array.isArray(message) ? message : [message])
-
-        console.error(err)
-      }
-
-      return
-    }
-
     if (contactId) {
       try {
         await editEmergencyContact({
