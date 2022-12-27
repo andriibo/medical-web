@@ -6,6 +6,7 @@ import React, { FC, MouseEvent, useCallback, useEffect, useState } from 'react'
 
 interface DropdownMenuProps {
   button?: React.ReactNode
+  buttonEdge?: 'start' | 'end'
   children: React.ReactNode
   dropClose?: boolean
   handleDrop?: (val: boolean) => void
@@ -18,7 +19,14 @@ const openerStyles = {
   cursor: 'pointer',
 }
 
-export const DropdownMenu: FC<DropdownMenuProps> = ({ button, dropClose, handleDrop, children, menuStyles }) => {
+export const DropdownMenu: FC<DropdownMenuProps> = ({
+  button,
+  dropClose,
+  handleDrop,
+  children,
+  menuStyles,
+  buttonEdge,
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -61,7 +69,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({ button, dropClose, handleD
         {button ? (
           button
         ) : (
-          <IconButton>
+          <IconButton edge={buttonEdge}>
             <MoreVert />
           </IconButton>
         )}

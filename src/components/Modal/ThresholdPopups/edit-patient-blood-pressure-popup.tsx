@@ -104,7 +104,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 60, max: 80, step: 1 },
+                      inputProps: { min: validationRules.dbp.min, max: validationRules.dbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -124,7 +124,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 60, max: 80, step: 1 },
+                      inputProps: { min: validationRules.dbp.min, max: validationRules.dbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -146,7 +146,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 100, max: 130, step: 1 },
+                      inputProps: { min: validationRules.sbp.min, max: validationRules.sbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -166,7 +166,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 100, max: 130, step: 1 },
+                      inputProps: { min: validationRules.sbp.min, max: validationRules.sbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth

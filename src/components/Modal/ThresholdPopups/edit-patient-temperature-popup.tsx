@@ -102,7 +102,11 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 35, max: 42, step: 1 },
+                      inputProps: {
+                        min: validationRules.temperature.min,
+                        max: validationRules.temperature.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">°C</InputAdornment>,
                     }}
                     fullWidth
@@ -122,7 +126,11 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 35, max: 42, step: 1 },
+                      inputProps: {
+                        min: validationRules.temperature.min,
+                        max: validationRules.temperature.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">°C</InputAdornment>,
                     }}
                     fullWidth

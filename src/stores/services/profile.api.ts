@@ -51,12 +51,12 @@ export const profileApi = createApi({
       query: (queryArg) => ({ url: 'caregiver/my-profile', method: 'PATCH', body: { ...queryArg } }),
       invalidatesTags: ['Profile'],
     }),
-    getPatientProfile: build.query<IPatientProfile, { patientUserId: string }>({
-      query: ({ patientUserId }) => ({ url: `patient-profile/${patientUserId}` }),
-      providesTags: ['Profile'],
-    }),
     getMyPatients: build.query<IDoctorPatients[], void>({
       query: () => ({ url: 'profile/my-patients' }),
+      providesTags: ['Profile'],
+    }),
+    getPatientProfile: build.query<IPatientProfile, { patientUserId: string }>({
+      query: ({ patientUserId }) => ({ url: `patient-profile/${patientUserId}` }),
       providesTags: ['Profile'],
     }),
   }),
