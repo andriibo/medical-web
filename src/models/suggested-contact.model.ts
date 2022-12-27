@@ -15,14 +15,14 @@ export interface ISuggestedContactRequest extends ISuggestedContactModel {
 export interface ISuggestedContact extends ISuggestedContactModel {
   contactId: string
   suggestedAt: string
-  // suggestedByUser: {
-  //   userId: string
-  //   email: string
-  //   firstName: string
-  //   lastName: string
-  //   phone: string
-  //   avatar: string
-  // }
+  suggestedByUser: {
+    userId: string
+    email: string
+    firstName: string
+    lastName: string
+    phone: string
+    avatar: string
+  }
 }
 
 export type ISuggestedContactModelKeys = keyof ISuggestedContactModel
