@@ -1,5 +1,5 @@
 import { Clear, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
-import { Button, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Button, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
@@ -13,7 +13,7 @@ import { useDeletePatientDataAccessMutation } from '~stores/services/patient-dat
 import { useGetMyDoctorsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
-export const PatientMd = () => {
+export const PatientGrantedUsers = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
@@ -75,7 +75,7 @@ export const PatientMd = () => {
       <div className="white-box content-md">
         <Grid container spacing={3} sx={{ mb: 1 }}>
           <Grid xs>
-            <Typography variant="h5">Medical Doctors</Typography>
+            <Typography variant="h5">Medical Doctors & Caregivers</Typography>
           </Grid>
           <Grid>
             <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">
@@ -103,36 +103,29 @@ export const PatientMd = () => {
                         </IconButton>
                       </>
                     }
-                  >
-                    <List
-                      sx={{
-                        wordWrap: 'break-word',
-                        '& .MuiListItem-root': { py: '0.25rem' },
-                        '& .MuiListItemIcon-root': { minWidth: '2.125rem', color: '#323232' },
-                        '& .MuiListItemText-root': { m: 0 },
-                        '& .MuiTypography-root': { fontSize: '0.875rem', m: 0 },
-                      }}
-                    >
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <Phone />
-                        </ListItemIcon>
-                        <ListItemText>{phone}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <MailOutline />
-                        </ListItemIcon>
-                        <ListItemText>{email}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <LocationCity />
-                        </ListItemIcon>
-                        <ListItemText>{institution ? institution : '-'}</ListItemText>
-                      </ListItem>
-                    </List>
-                  </CardBox>
+                    infoListItems={
+                      <>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <Phone />
+                          </ListItemIcon>
+                          <ListItemText>{phone}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <MailOutline />
+                          </ListItemIcon>
+                          <ListItemText>{email}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <LocationCity />
+                          </ListItemIcon>
+                          <ListItemText>{institution ? institution : '-'}</ListItemText>
+                        </ListItem>
+                      </>
+                    }
+                  />
                 </Grid>
               ))
             ) : (

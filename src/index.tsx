@@ -26,7 +26,8 @@ root.render(
           horizontal: 'left',
         }}
         autoHideDuration={4000}
-        maxSnack={1}
+        maxSnack={4}
+        preventDuplicate
       >
         <ConfirmProvider
           defaultOptions={{

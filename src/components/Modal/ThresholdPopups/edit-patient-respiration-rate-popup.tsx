@@ -102,7 +102,11 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 12, max: 25, step: 1 },
+                      inputProps: {
+                        min: validationRules.respirationRate.min,
+                        max: validationRules.respirationRate.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
                     }}
                     fullWidth
@@ -122,7 +126,11 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 12, max: 25, step: 1 },
+                      inputProps: {
+                        min: validationRules.respirationRate.min,
+                        max: validationRules.respirationRate.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
                     }}
                     fullWidth

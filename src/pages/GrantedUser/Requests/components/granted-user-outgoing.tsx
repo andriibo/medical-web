@@ -48,7 +48,7 @@ export const GrantedUserOutgoing: FC<DoctorPendingProps> = ({ dataAccess }) => {
       {outgoingRequests.length ? (
         outgoingRequests.map(({ accessId, createdAt, requestedUser, status }) => (
           <ListItem className={deletingRequestId === accessId ? 'disabled' : ''} key={accessId}>
-            <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
+            <ListItemText secondary={`${dayjs(createdAt).format('MMMM D, YYYY')}`}>
               {getRequestedUserName(requestedUser)} {isRefuse(status) && <>(Rejected)</>}
             </ListItemText>
             <Button onClick={() => handleDeleteRequest(accessId)}>{isRefuse(status) ? 'Delete' : 'Withdraw'}</Button>

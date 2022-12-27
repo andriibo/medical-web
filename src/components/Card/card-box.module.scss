@@ -12,7 +12,33 @@
 .cardHeader {
   display: flex;
   align-items: center;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
   padding: 0 0 0.5rem;
   border-bottom: 1px solid var(--gray);
+}
+
+ul.cardInfoList {
+  padding: 0;
+  word-wrap: break-word;
+
+  :global {
+    .MuiListItem-root {
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
+    }
+
+    .MuiListItemIcon-root {
+      min-width: 2.125rem;
+      color: #323232;
+    }
+
+    .MuiListItemText-root {
+      margin: 0;
+    }
+
+    .MuiTypography-root {
+      margin: 0;
+      font-size: 0.875rem;
+    }
+  }
 }

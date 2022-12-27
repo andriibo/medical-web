@@ -21,6 +21,8 @@ type ValidationKeyType =
   | 'saturation'
   | 'sbp'
   | 'dbp'
+  | 'relationship'
+  | 'role'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -93,6 +95,12 @@ export const validationRules: ValidationRulesType = {
   gender: {
     required: true,
   },
+  relationship: {
+    required: true,
+  },
+  role: {
+    required: true,
+  },
   dob: {
     required: true,
   },
@@ -116,19 +124,19 @@ export const validationRules: ValidationRulesType = {
       message: 'Min heart rate is 40 bpm',
     },
     max: {
-      value: 100,
-      message: 'Max heart rate is 100 bpm',
+      value: 220,
+      message: 'Max heart rate is 220 bpm',
     },
   },
   respirationRate: {
     required: true,
     min: {
-      value: 12,
-      message: 'Min respiration rate is 12 rpm',
+      value: 4,
+      message: 'Min respiration rate is 4 rpm',
     },
     max: {
-      value: 25,
-      message: 'Max respiration rate is 25 rpm',
+      value: 60,
+      message: 'Max respiration rate is 60 rpm',
     },
   },
   arterialPressure: {
@@ -145,8 +153,8 @@ export const validationRules: ValidationRulesType = {
   temperature: {
     required: true,
     min: {
-      value: 35,
-      message: 'Min temperature is 35 °C',
+      value: 32,
+      message: 'Min temperature is 32 °C',
     },
     max: {
       value: 42,
@@ -156,8 +164,8 @@ export const validationRules: ValidationRulesType = {
   saturation: {
     required: true,
     min: {
-      value: 80,
-      message: 'Min oxygen saturation is 80 %',
+      value: 40,
+      message: 'Min oxygen saturation is 40 %',
     },
     max: {
       value: 100,
@@ -167,23 +175,23 @@ export const validationRules: ValidationRulesType = {
   dbp: {
     required: true,
     min: {
-      value: 60,
-      message: 'Min SBP is 60 mmHg',
+      value: 30,
+      message: 'Min SBP is 30 mmHg',
     },
     max: {
-      value: 80,
-      message: 'Max SBP is 80 mmHg',
+      value: 130,
+      message: 'Max SBP is 130 mmHg',
     },
   },
   sbp: {
     required: true,
     min: {
-      value: 100,
-      message: 'Min DBP is 100 mmHg',
+      value: 70,
+      message: 'Min DBP is 70 mmHg',
     },
     max: {
-      value: 130,
-      message: 'Max DBP is 130 mmHg',
+      value: 220,
+      message: 'Max DBP is 220 mmHg',
     },
   },
 }

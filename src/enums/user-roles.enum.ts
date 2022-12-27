@@ -3,3 +3,5 @@ export enum UserRoles {
   doctor = 'Doctor',
   caregiver = 'Caregiver',
 }
+
+export type UserRolesValues = keyof typeof UserRoles

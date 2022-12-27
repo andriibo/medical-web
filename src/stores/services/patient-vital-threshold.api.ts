@@ -29,6 +29,14 @@ export const patientVitalThresholdApi = createApi({
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
+    patchPatientMeanArterialPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+      query: ({ patientUserId, thresholds }) => ({
+        url: `doctor/mean-arterial-pressure/${patientUserId}`,
+        method: 'PATCH',
+        body: { ...thresholds },
+      }),
+      invalidatesTags: ['PatientVitalThreshold'],
+    }),
     patchPatientTemperature: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/temperature/${patientUserId}`,
@@ -71,6 +79,7 @@ export const patientVitalThresholdApi = createApi({
 export const {
   usePatchPatientBloodPressureMutation,
   usePatchPatientHeartRateMutation,
+  usePatchPatientMeanArterialPressureMutation,
   usePatchPatientTemperatureMutation,
   usePatchPatientSaturationMutation,
   usePatchPatientRespirationRateMutation,

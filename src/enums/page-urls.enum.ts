@@ -10,8 +10,9 @@ export enum PageUrls {
   ForgotPasswordConfirm = '/forgot-password/confirm',
   ForgotPasswordSuccess = '/forgot-password/success',
   Vitals = '/vitals',
-  MedicalDoctors = '/medical-doctors',
+  GrantedUsers = '/granted-users',
   Requests = '/requests',
   Patients = '/patients',
   Patient = '/patient',
+  EmergencyContacts = '/emergency-contacts',
 }
