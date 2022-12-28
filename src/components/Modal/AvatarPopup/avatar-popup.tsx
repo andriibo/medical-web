@@ -1,13 +1,10 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
-import React, { FC, LegacyRef, useCallback, useMemo, useRef, useState } from 'react'
+import React, { FC, useCallback, useMemo, useRef, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
 import { useDropzone } from 'react-dropzone'
 
-import { updateAgencyLogo } from '~/networks/update-agency-logo'
-import { useAppDispatch } from '~stores/hooks'
 import { usePostAvatarMutation } from '~stores/services/profile.api'
-import { useToken } from '~stores/slices/auth.slice'
 
 import styles from './avatar-popup.module.scss'
 
@@ -36,8 +33,6 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
   const avatarEditor = useRef<AvatarEditor | null>(null)
   const [avatarSettings, setAvatarSettings] = useState(avatarInitialSettings)
   const [files, setFiles] = useState<any[]>([])
-  const [companyLogo, setCompanyLogo] = useState<string | null>(null)
-  const [avatarImg, setAvatarImg] = useState<Blob>()
 
   const [updateAvatar] = usePostAvatarMutation()
 
@@ -62,17 +57,6 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
     }, 300)
   }, [handleClose, removeAvatar])
 
-  const getBase64 = (file: Blob) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-
-      console.log(reader)
-
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = (error) => reject(error)
-      reader.readAsDataURL(file)
-    })
-
   const handleChangeAvatar = useCallback(async () => {
     if (avatarEditor.current && files.length) {
       const avatarData = avatarEditor.current.getImageScaledToCanvas().toDataURL()
@@ -88,34 +72,11 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
 
         closeAncClear()
         enqueueSnackbar('Avatar changed')
-      } catch (e) {
-        console.log(e)
+      } catch (err) {
+        console.error(err)
       }
     }
   }, [closeAncClear, enqueueSnackbar, files, updateAvatar])
-
-  // const handleChangeAvatar = (image: any) => {
-  //   // getBase64(image).then((base64) => {
-  //   //   if (typeof base64 === 'string') {
-  //   //     // dispatch(saveLogo(base64))
-  //   //     setCompanyLogo(base64)
-  //   //   }
-  //   // })
-  //   // setFiles([])
-  //   if (companyLogo) {
-  //     // dispatch(saveLogo(companyLogo))
-  //   }
-  //
-  //   closeAncClear()
-  // }
-
-  const setImage = (image: Blob) => {
-    getBase64(image).then((base64) => {
-      if (typeof base64 === 'string') {
-        setCompanyLogo(base64)
-      }
-    })
-  }
 
   const { getRootProps, isDragAccept, isDragReject, getInputProps, fileRejections } = useDropzone({
     multiple: false,
@@ -135,7 +96,6 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
         ),
       )
       handleDrop(acceptedFiles)
-      setAvatarImg(acceptedFiles[0])
     },
   })
 
@@ -186,7 +146,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
                 </div>
               </div>
             ) : (
-              <div className="crop-container">
+              <div className={styles.cropContainer}>
                 <AvatarEditor
                   border={avatarSettings.border}
                   borderRadius={avatarSettings.borderRadius}
@@ -222,9 +182,11 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
         <Button color="inherit" onClick={closeAncClear}>
           Cancel
         </Button>
-        <Button autoFocus onClick={() => handleChangeAvatar()} variant="outlined">
-          Agree
-        </Button>
+        {files.length > 0 && (
+          <Button autoFocus onClick={() => handleChangeAvatar()} variant="outlined">
+            Agree
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   )
