@@ -1,5 +1,5 @@
 import { Edit } from '@mui/icons-material'
-import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/material'
+import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
 
@@ -8,7 +8,7 @@ import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/chang
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
-import { getAcronym } from '~helpers/get-acronym'
+import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
@@ -56,7 +56,7 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <Avatar className={styles.userAvatar}>{getAcronym(fullName)}</Avatar>
+          <UserAvatar avatarSrc={patientData.avatar} fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>

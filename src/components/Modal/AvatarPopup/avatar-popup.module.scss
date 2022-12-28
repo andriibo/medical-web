@@ -1,0 +1,75 @@
+.cropContainer {
+  // padding: 0 1rem;
+
+  canvas {
+    margin: 0 0 20px;
+  }
+
+  .btn-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    transition: color 0.3s ease;
+    color: #444;
+
+    &:hover {
+      color: #000;
+    }
+  }
+}
+
+.hasLoader {
+  > * {
+    transition: filter 0.2s ease;
+  }
+}
+
+.dropZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 120px;
+  padding: 20px;
+  transition: border-color 0.3s ease;
+  border: 2px dashed #bbb;
+  border-radius: 4px;
+  color: #777;
+  font-size: 16px;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #999;
+  }
+
+  &.onReject {
+    border-color: #f91d1d;
+  }
+
+  &.onDrop {
+    border-color: #2196f3;
+  }
+}
+
+.imgPreview {
+  position: relative;
+  padding: 1rem;
+  background: #eee;
+  text-align: center;
+
+  img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 300px;
+    vertical-align: top;
+
+    // &[src*='svg'],
+    // &[src*='png'] {
+    //   filter: brightness(0) invert(1);
+    // }
+  }
+}
