@@ -1,11 +1,11 @@
-import { Avatar, Box, Button, Divider, Typography } from '@mui/material'
+import { Box, Button, Divider, Typography } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { getAcronym } from '~helpers/get-acronym'
+import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { getAge } from '~helpers/get-age'
 import { IPatientProfile } from '~models/profie.model'
 import { useDeleteDataAccessMutation } from '~stores/services/patient-data-access.api'
@@ -48,7 +48,7 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patien
 
   return (
     <div className={styles.patientAside}>
-      <Avatar className={styles.userAvatar}>{getAcronym(fullName)}</Avatar>
+      <UserAvatar avatarSrc={patientData.avatar} className={styles.userAvatar} fullName={fullName} readOnly />
       <Typography textAlign="center" variant="body1">
         {fullName}
       </Typography>

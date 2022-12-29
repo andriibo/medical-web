@@ -59,6 +59,14 @@ export const profileApi = createApi({
       query: ({ patientUserId }) => ({ url: `patient-profile/${patientUserId}` }),
       providesTags: ['Profile'],
     }),
+    postAvatar: build.mutation<null, FormData>({
+      query: (body) => ({
+        url: 'avatar/upload',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Profile'],
+    }),
   }),
 })
 
@@ -72,4 +80,5 @@ export const {
   usePatchMyCaregiverProfileMutation,
   useGetPatientProfileQuery,
   useGetMyPatientsQuery,
+  usePostAvatarMutation,
 } = profileApi
