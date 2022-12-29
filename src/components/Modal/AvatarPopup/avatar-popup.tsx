@@ -1,21 +1,32 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import { HighlightOff } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo, useRef, useState } from 'react'
-import AvatarEditor from 'react-avatar-editor'
-import { useDropzone } from 'react-dropzone'
+import AvatarEditor, { AvatarEditorProps } from 'react-avatar-editor'
+import { FileError, useDropzone } from 'react-dropzone'
 
 import { usePostAvatarMutation } from '~stores/services/profile.api'
 
 import styles from './avatar-popup.module.scss'
 
-const avatarInitialSettings = {
+interface IAvatarInitialSettings extends AvatarEditorProps {
+  size: number
+  scalePercent: number
+  scaleMax: number
+  scaleMin: number
+  scaleStep: number
+  maxSize: number
+}
+
+const avatarInitialSettings: IAvatarInitialSettings = {
   border: 20,
   borderRadius: 100,
   color: [0, 0, 0, 0.6],
-  size: 200,
   image: '',
   rotate: 0,
   scale: 1.6,
+  size: 200,
   scalePercent: 20,
   scaleMax: 6,
   scaleMin: 0.5,
@@ -32,11 +43,11 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const avatarEditor = useRef<AvatarEditor | null>(null)
   const [avatarSettings, setAvatarSettings] = useState(avatarInitialSettings)
-  const [files, setFiles] = useState<any[]>([])
+  const [files, setFiles] = useState<File[]>([])
 
-  const [updateAvatar] = usePostAvatarMutation()
+  const [updateAvatar, { isLoading: updateAvatarIsLoading }] = usePostAvatarMutation()
 
-  const handleDrop = (dropped: any) => {
+  const handleDrop = (dropped: File[]) => {
     setAvatarSettings({ ...avatarSettings, image: dropped[0] })
   }
 
@@ -78,7 +89,25 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
     }
   }, [closeAncClear, enqueueSnackbar, files, updateAvatar])
 
-  const { getRootProps, isDragAccept, isDragReject, getInputProps, fileRejections } = useDropzone({
+  const getDropzoneErrors = (errors: FileError[]): string => {
+    if (errors.some((error) => error.code === 'file-invalid-type')) {
+      return 'We do not accept this type of file. Recommended: JPEG, JPG, GIF, WEBP or PNG'
+    }
+
+    if (errors.some((error) => error.code === 'file-too-large')) {
+      return 'The file is too large (max size is 1 MB)'
+    }
+
+    let response = ''
+
+    for (let i = 0; i < errors.length; i += 1) {
+      response += errors[i].message.replace('/*', '')
+    }
+
+    return response
+  }
+
+  const { getRootProps, getInputProps, isDragAccept, isDragReject, fileRejections } = useDropzone({
     multiple: false,
     accept: {
       'image/png': ['.png'],
@@ -116,76 +145,65 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
   }, [isDragAccept, isDragReject, fileRejections])
 
   return (
-    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
+    <Dialog fullWidth maxWidth="xs" onClose={closeAncClear} open={open} scroll="body">
       <DialogTitle>Choose Image</DialogTitle>
       <DialogContent>
-        <div className={styles.cropContainer}>
-          <div className={styles.hasLoader}>
-            {!files.length ? (
-              <div {...getRootProps({ className: dropClassName })}>
-                <input {...getInputProps()} />
-                <div>
-                  <Typography variant="body1">
-                    Drag and drop image file here, <br /> or click to select file
-                  </Typography>
-                  {fileRejections.length ? (
-                    <Typography color="red" mt={1} variant="body1">
-                      {fileRejections[0].errors.map((e) => (
-                        <React.Fragment key={e.code}>
-                          {e.code === 'file-too-large' ? (
-                            'The file is too large'
-                          ) : (
-                            <>
-                              {e.message.replace('/*', '')} <br />
-                            </>
-                          )}
-                        </React.Fragment>
-                      ))}
-                    </Typography>
-                  ) : null}
-                </div>
-              </div>
-            ) : (
-              <div className={styles.cropContainer}>
-                <AvatarEditor
-                  border={avatarSettings.border}
-                  borderRadius={avatarSettings.borderRadius}
-                  color={avatarSettings.color}
-                  height={avatarSettings.size}
-                  image={avatarSettings.image}
-                  ref={avatarEditor}
-                  rotate={avatarSettings.rotate}
-                  scale={avatarSettings.scale}
-                  width={avatarSettings.size}
-                />
-                <input
-                  max={avatarSettings.scaleMax}
-                  min={avatarSettings.scaleMin}
-                  name="scale"
-                  onChange={(e) => handleScales(e)}
-                  step={avatarSettings.scaleStep}
-                  style={{ backgroundSize: `${avatarSettings.scalePercent}% 100%` }}
-                  type="range"
-                  value={avatarSettings.scale}
-                />
-              </div>
-            )}
+        {!files.length ? (
+          <div {...getRootProps({ className: dropClassName })}>
+            <input {...getInputProps()} />
+            <div>
+              <Typography variant="body1">
+                Drag and drop image file here, <br /> or click to select file
+              </Typography>
+              {Boolean(fileRejections.length) && (
+                <Typography color="red" mt={1} variant="body1">
+                  {getDropzoneErrors(fileRejections[0].errors)}
+                </Typography>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.cropContainer}>
+            {files.length > 0 && (
+              <IconButton className={styles.userAvatarEdit} onClick={removeAvatar}>
+                <HighlightOff fontSize="inherit" />
+              </IconButton>
+            )}
+            <AvatarEditor
+              border={avatarSettings.border}
+              borderRadius={avatarSettings.borderRadius}
+              color={avatarSettings.color}
+              height={avatarSettings.size}
+              image={avatarSettings.image}
+              ref={avatarEditor}
+              rotate={avatarSettings.rotate}
+              scale={avatarSettings.scale}
+              width={avatarSettings.size}
+            />
+            <input
+              max={avatarSettings.scaleMax}
+              min={avatarSettings.scaleMin}
+              name="scale"
+              onChange={(e) => handleScales(e)}
+              step={avatarSettings.scaleStep}
+              style={{ backgroundSize: `${avatarSettings.scalePercent}% 100%` }}
+              type="range"
+              value={avatarSettings.scale}
+            />
+          </div>
+        )}
       </DialogContent>
       <DialogActions sx={{ padding: '0 1.5rem 1rem' }}>
+        <Button onClick={closeAncClear}>Cancel</Button>
         {files.length > 0 && (
-          <Button color="error" onClick={removeAvatar} sx={{ mr: 'auto' }}>
-            Clear Logo
-          </Button>
-        )}
-        <Button color="inherit" onClick={closeAncClear}>
-          Cancel
-        </Button>
-        {files.length > 0 && (
-          <Button autoFocus onClick={() => handleChangeAvatar()} variant="outlined">
-            Agree
-          </Button>
+          <LoadingButton
+            loading={updateAvatarIsLoading}
+            onClick={() => handleChangeAvatar()}
+            type="submit"
+            variant="contained"
+          >
+            Update
+          </LoadingButton>
         )}
       </DialogActions>
     </Dialog>
