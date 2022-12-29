@@ -61,7 +61,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
     })
   }, [avatarSettings])
 
-  const closeAncClear = useCallback(() => {
+  const closeAndClear = useCallback(() => {
     handleClose()
     setTimeout(() => {
       removeAvatar()
@@ -81,13 +81,13 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
 
         await updateAvatar(formData).unwrap()
 
-        closeAncClear()
+        closeAndClear()
         enqueueSnackbar('Avatar changed')
       } catch (err) {
         console.error(err)
       }
     }
-  }, [closeAncClear, enqueueSnackbar, files, updateAvatar])
+  }, [closeAndClear, enqueueSnackbar, files, updateAvatar])
 
   const getDropzoneErrors = (errors: FileError[]): string => {
     if (errors.some((error) => error.code === 'file-invalid-type')) {
@@ -145,7 +145,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
   }, [isDragAccept, isDragReject, fileRejections])
 
   return (
-    <Dialog fullWidth maxWidth="xs" onClose={closeAncClear} open={open} scroll="body">
+    <Dialog fullWidth maxWidth="xs" onClose={closeAndClear} open={open} scroll="body">
       <DialogTitle>Choose Image</DialogTitle>
       <DialogContent>
         {!files.length ? (
@@ -194,7 +194,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
         )}
       </DialogContent>
       <DialogActions sx={{ padding: '0 1.5rem 1rem' }}>
-        <Button onClick={closeAncClear}>Cancel</Button>
+        <Button onClick={closeAndClear}>Cancel</Button>
         {files.length > 0 && (
           <LoadingButton
             loading={updateAvatarIsLoading}
