@@ -1,9 +1,8 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { UserRoles } from '~/enums/user-roles.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditCaregiverProfilePopup } from '~components/Modal/EditCaregiverProfilePopup/edit-caregiver-profile-popup'
@@ -20,11 +19,7 @@ import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../granted-user-account.module.scss'
 
-interface GrantedUserPersonalInfoProps {
-  userRole2?: UserRoles.doctor | UserRoles.caregiver
-}
-
-export const GrantedUserPersonalInfo: FC<GrantedUserPersonalInfoProps> = ({ userRole2 = UserRoles.caregiver }) => {
+export const GrantedUserPersonalInfo = () => {
   const userRole = useUserRole()
   const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
