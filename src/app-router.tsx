@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
-import { isUserRoleCaregiver, isUserRoleDoctor, isUserRoleGrantable } from '~helpers/user-role'
+import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
 import { EmailVerification } from '~pages/Auth/email-verification'
 import { ForgotPassword } from '~pages/Auth/forgot-password'
@@ -14,8 +14,7 @@ import { SignIn } from '~pages/Auth/sign-in'
 import { SignUpCaregiver } from '~pages/Auth/sign-up-caregiver'
 import { SignUpDoctor } from '~pages/Auth/sign-up-doctor'
 import { SignUpPatient } from '~pages/Auth/sign-up-patient'
-import { CaregiverAccount } from '~pages/Caregiver/Account/caregiver-account'
-import { DoctorAccount } from '~pages/Doctor/Account/doctor-account'
+import { GrantedUserAccount } from '~pages/GrantedUser/Account/granted-user-account'
 import { GrantedUserPatient } from '~pages/GrantedUser/Patient/granted-user-patient'
 import { GrantedUserPatients } from '~pages/GrantedUser/Patients/granted-user-patients'
 import { GrantedUserRequest } from '~pages/GrantedUser/Requests/granted-user-request'
@@ -45,10 +44,9 @@ export const AppRouter = () => {
       </Route>
       <Route element={<DefaultLayout />}>
         <Route element={<Home />} path="/" />
-        {isUserRoleDoctor(userRole) && <Route element={<DoctorAccount />} path={PageUrls.MyAccount} />}
-        {isUserRoleCaregiver(userRole) && <Route element={<CaregiverAccount />} path={PageUrls.MyAccount} />}
         {isUserRoleGrantable(userRole) ? (
           <>
+            <Route element={<GrantedUserAccount />} path={PageUrls.MyAccount} />
             <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
             <Route element={<GrantedUserPatient />} path={`${PageUrls.Patient}/:patientUserId`} />
             <Route element={<GrantedUserRequest />} path={PageUrls.Requests} />
