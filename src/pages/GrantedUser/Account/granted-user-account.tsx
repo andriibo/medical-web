@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 
 import { AccountTab } from '~/enums/account-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
-import { DoctorPersonalInfo } from '~pages/Doctor/Account/components/doctor-personal-info'
-import { DoctorSettings } from '~pages/Doctor/Account/components/doctor-settings'
+import { GrantedUserPersonalInfo } from '~pages/GrantedUser/Account/components/granted-user-personal-info'
+import { GrantedUserSettings } from '~pages/GrantedUser/Account/components/granted-user-settings'
 
-import styles from './doctor-account.module.scss'
+import styles from './granted-user-account.module.scss'
 
-export const DoctorAccount = () => {
+export const GrantedUserAccount = () => {
   const [activeTab, setActiveTab] = useState<AccountTab>(AccountTab.personalInfo)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: AccountTab) => {
@@ -23,10 +23,10 @@ export const DoctorAccount = () => {
         <Tab label="Settings" value={AccountTab.settings} />
       </Tabs>
       <TabPanel activeTab={activeTab} value={AccountTab.personalInfo}>
-        <DoctorPersonalInfo />
+        <GrantedUserPersonalInfo />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={AccountTab.settings}>
-        <DoctorSettings />
+        <GrantedUserSettings />
       </TabPanel>
     </div>
   )

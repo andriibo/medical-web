@@ -1,7 +1,7 @@
 import { FormControlLabel, FormGroup, Switch, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-export const CaregiverSettings = () => {
+export const GrantedUserSettings = () => {
   const [settings, setSettings] = useState({
     inApp: true,
     email: false,
