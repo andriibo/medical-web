@@ -33,6 +33,10 @@ export interface IPatientDoctors extends IDoctorProfile {
   accessId: string
 }
 
+export interface IPatientCaregivers extends ICaregiverProfile {
+  accessId: string
+}
+
 export interface IDoctorPatients extends IPatientProfile {
   accessId: string
 }

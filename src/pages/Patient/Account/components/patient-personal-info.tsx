@@ -56,7 +56,7 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatar avatarSrc={patientData.avatar} fullName={fullName} />
+          <UserAvatar avatarSrc={patientData.avatar} editable fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>

@@ -93,7 +93,7 @@ export const GrantedUserPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatar avatarSrc={userData.avatar} fullName={fullName} />
+          <UserAvatar avatarSrc={userData.avatar} editable fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
