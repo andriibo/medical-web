@@ -26,6 +26,48 @@ type ValidationKeyType =
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
+export const minMaxValidationRules = {
+  height: {
+    min: 50,
+    max: 250,
+  },
+  weight: {
+    min: 10,
+    max: 200,
+  },
+  heartRate: {
+    min: 40,
+    max: 220,
+  },
+  respirationRate: {
+    min: 4,
+    max: 60,
+  },
+  arterialPressure: {
+    min: 40,
+    max: 100,
+  },
+  temperature: {
+    min: 32,
+    max: 42,
+  },
+  saturation: {
+    min: 40,
+    max: 100,
+  },
+  dbp: {
+    min: 30,
+    max: 130,
+  },
+  sbp: {
+    min: 70,
+    max: 220,
+  },
+}
+
+const { height, weight, heartRate, respirationRate, arterialPressure, temperature, saturation, dbp, sbp } =
+  minMaxValidationRules
+
 export const validationRules: ValidationRulesType = {
   text: {
     required: true,
@@ -73,23 +115,23 @@ export const validationRules: ValidationRulesType = {
   height: {
     required: true,
     min: {
-      value: 50,
-      message: 'Min height is 50cm',
+      value: height.min,
+      message: `Min height is ${height.min}cm`,
     },
     max: {
-      value: 250,
-      message: 'Max height is 250cm',
+      value: height.max,
+      message: `Max height is ${height.max}cm`,
     },
   },
   weight: {
     required: true,
     min: {
-      value: 10,
-      message: 'Min weight is 10cm',
+      value: weight.min,
+      message: `Min weight is ${weight.min}cm`,
     },
     max: {
-      value: 200,
-      message: 'Max weight is 200cm',
+      value: weight.max,
+      message: `Max weight is ${weight.max}cm`,
     },
   },
   gender: {
@@ -120,78 +162,79 @@ export const validationRules: ValidationRulesType = {
   heartRate: {
     required: true,
     min: {
-      value: 40,
-      message: 'Min heart rate is 40 bpm',
+      value: heartRate.min,
+      message: `Min heart rate is ${heartRate.min} bpm`,
     },
     max: {
-      value: 220,
-      message: 'Max heart rate is 220 bpm',
+      value: heartRate.max,
+      message: `Max heart rate is ${heartRate.max} bpm`,
     },
   },
   respirationRate: {
     required: true,
     min: {
-      value: 4,
-      message: 'Min respiration rate is 4 rpm',
+      value: respirationRate.min,
+      message: `Min respiration rate is ${respirationRate.min} rpm`,
     },
     max: {
-      value: 60,
-      message: 'Max respiration rate is 60 rpm',
+      value: respirationRate.max,
+      message: `Max respiration rate is ${respirationRate.max} rpm`,
     },
   },
   arterialPressure: {
     required: true,
     min: {
-      value: 40,
-      message: 'Min mean-arterial-pressure rate is 40 bpm',
+      value: arterialPressure.min,
+      message: `Min mean-arterial-pressure rate is ${arterialPressure.min} bpm`,
     },
     max: {
-      value: 100,
-      message: 'Max mean-arterial-pressure rate is 100 bpm',
+      value: arterialPressure.max,
+      message: `Max mean-arterial-pressure rate is ${arterialPressure.max} bpm`,
     },
   },
   temperature: {
     required: true,
     min: {
-      value: 32,
-      message: 'Min temperature is 32 °C',
+      value: temperature.min,
+      message: `Min temperature is ${temperature.min} °C`,
     },
     max: {
-      value: 42,
-      message: 'Max temperature is 42 °C',
+      value: temperature.max,
+      message: `Max temperature is ${temperature.max} °C`,
     },
   },
   saturation: {
     required: true,
     min: {
-      value: 40,
-      message: 'Min oxygen saturation is 40 %',
+      value: saturation.min,
+      message: `Min oxygen saturation is ${saturation.min} %`,
     },
     max: {
-      value: 100,
-      message: 'Max oxygen saturation is 100 %',
+      value: saturation.max,
+      message: `Max oxygen saturation is ${saturation.max} %`,
     },
+    maxLength: 40,
   },
   dbp: {
     required: true,
     min: {
-      value: 30,
-      message: 'Min SBP is 30 mmHg',
+      value: dbp.min,
+      message: `Min SBP is ${dbp.min} mmHg`,
     },
     max: {
-      value: 130,
-      message: 'Max SBP is 130 mmHg',
+      value: dbp.max,
+      message: `Max SBP is ${dbp.max} mmHg`,
     },
   },
   sbp: {
     required: true,
     min: {
-      value: 70,
-      message: 'Min DBP is 70 mmHg',
+      value: sbp.min,
+      message: `Min DBP is ${sbp.min} mmHg`,
     },
     max: {
-      value: 220,
-      message: 'Max DBP is 220 mmHg',
+      value: sbp.max,
+      message: `Max DBP is ${sbp.max} mmHg`,
     },
   },
 }

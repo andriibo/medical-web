@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsBloodPressure, ThresholdsBloodPressureKeys } from '~models/threshold.model'
 import { usePatchPatientBloodPressureMutation } from '~stores/services/patient-vital-threshold.api'
@@ -104,7 +104,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.dbp.min, max: validationRules.dbp.max, step: 1 },
+                      inputProps: { min: minMaxValidationRules.dbp.min, max: minMaxValidationRules.dbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -124,7 +124,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.dbp.min, max: validationRules.dbp.max, step: 1 },
+                      inputProps: { min: minMaxValidationRules.dbp.min, max: minMaxValidationRules.dbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -146,7 +146,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.sbp.min, max: validationRules.sbp.max, step: 1 },
+                      inputProps: { min: minMaxValidationRules.sbp.min, max: minMaxValidationRules.sbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth
@@ -166,7 +166,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.sbp.min, max: validationRules.sbp.max, step: 1 },
+                      inputProps: { min: minMaxValidationRules.sbp.min, max: minMaxValidationRules.sbp.max, step: 1 },
                       endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
                     }}
                     fullWidth

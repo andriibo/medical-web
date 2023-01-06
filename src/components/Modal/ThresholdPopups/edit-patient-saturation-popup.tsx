@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsSaturation, ThresholdsSaturationKeys } from '~models/threshold.model'
 import { usePatchPatientSaturationMutation } from '~stores/services/patient-vital-threshold.api'
@@ -99,7 +99,11 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
                 {...field}
                 {...fieldValidation(field.name)}
                 InputProps={{
-                  inputProps: { min: validationRules.saturation.min, max: validationRules.saturation.max, step: 1 },
+                  inputProps: {
+                    min: minMaxValidationRules.saturation.min,
+                    max: minMaxValidationRules.saturation.max,
+                    step: 1,
+                  },
                   endAdornment: <InputAdornment position="end">%</InputAdornment>,
                 }}
                 fullWidth

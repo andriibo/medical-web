@@ -1,29 +1,33 @@
 import { IUserModel } from '~models/user.model'
 
-type thresholdNameKeys =
-  | 'MinHR'
-  | 'MaxHR'
-  | 'MinTemp'
-  | 'MaxTemp'
-  | 'MinSpO2'
-  | 'MinRR'
-  | 'MaxRR'
-  | 'MinDBP'
-  | 'MaxDBP'
-  | 'MinSBP'
-  | 'MaxSBP'
-  | 'MinMAP'
-  | 'MaxMAP'
-
-export type IThresholdsObj = {
-  [key in thresholdNameKeys]: IThresholdModel
-}
-
-export interface IThresholdModel {
-  thresholdName: thresholdNameKeys
-  value: number
-  setAtTimestamp: number
-  setByUser: IUserModel
+export interface IThresholds {
+  minHr: number
+  maxHr: number
+  hrSetBy: IUserModel | null
+  hrSetAt: number
+  minTemp: number
+  maxTemp: number
+  tempSetBy: IUserModel | null
+  tempSetAt: number
+  minSpo2: number
+  spo2SetBy: IUserModel | null
+  spo2SetAt: number
+  minRr: number
+  maxRr: number
+  rrSetBy: IUserModel | null
+  rrSetAt: number
+  minDbp: number
+  maxDbp: number
+  dbpSetBy: IUserModel | null
+  dbpSetAt: number
+  minSbp: number
+  maxSbp: number
+  sbpSetBy: IUserModel | null
+  sbpSetAt: number
+  minMap: number
+  maxMap: number
+  mapSetBy: IUserModel | null
+  mapSetAt: number
 }
 
 export interface IThresholdsCommon {
