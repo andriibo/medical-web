@@ -1,142 +1,69 @@
-import { Clear, LocationCity, MailOutline, PersonAdd, Phone } from '@mui/icons-material'
-import { Button, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { PersonAdd } from '@mui/icons-material'
+import { Button, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { useConfirm } from 'material-ui-confirm'
-import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
-import { CardBox } from '~components/Card/card-box'
-import { PatientInvitePopup } from '~components/Modal/PatientInvitePopup/patient-invite-popup'
-import { Spinner } from '~components/Spinner/spinner'
-import { useAppDispatch } from '~stores/hooks'
-import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
-import { useGetMyDoctorsQuery } from '~stores/services/profile.api'
-import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
+import { UserRoles } from '~/enums/user-roles.enum'
+import { InviteCaregiverPopup } from '~components/Modal/InviteCaregiverPopup/invite-caregiver-popup'
+import { InviteDoctorPopup } from '~components/Modal/InviteDoctorPopup/invite-doctor-popup'
+import { TabPanel } from '~components/TabPanel/tab-panel'
+import { PatientCaregivers } from '~pages/Patient/GrantedUsers/components/patient-caregivers'
+import { PatientDoctors } from '~pages/Patient/GrantedUsers/components/patient-doctors'
 
 export const PatientGrantedUsers = () => {
-  const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
-  const confirm = useConfirm()
+  const [activeTab, setActiveTab] = useState<UserRoles>(UserRoles.doctor)
 
-  const [invitePopupOpen, setInvitePopupOpen] = useState(false)
-  const dataAccessHasChanges = useDataAccessHasChanges()
+  const [inviteDoctorPopupOpen, setInviteDoctorPopupOpen] = useState(false)
+  const [inviteCaregiverPopupOpen, setInviteCaregiverPopupOpen] = useState(false)
 
-  const {
-    data: patientDoctors,
-    isLoading: patientDoctorsIsLoading,
-    refetch: refetchPatientDoctors,
-  } = useGetMyDoctorsQuery()
-
-  const [deleteDoctor] = useDeletePatientDataAccessMutation()
-  const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
-
-  const handleRemoveDoctor = useCallback(
-    async (accessId: string) => {
-      try {
-        await confirm({
-          title: 'Remove doctor?',
-          description: 'The doctor will lost access to your account information.',
-          confirmationText: 'Remove',
-        })
-
-        setDeletingDoctorId(accessId)
-
-        await deleteDoctor({ accessId }).unwrap()
-        refetchPatientDoctors()
-        enqueueSnackbar('Doctor removed')
-      } catch (err) {
-        console.error(err)
-        setDeletingDoctorId(null)
-        if (err) {
-          enqueueSnackbar('Doctor not removed', { variant: 'warning' })
-        }
-      }
-    },
-    [confirm, deleteDoctor, enqueueSnackbar, refetchPatientDoctors],
-  )
-
-  useEffect(() => {
-    if (dataAccessHasChanges) {
-      refetchPatientDoctors()
-      dispatch(setDataAccessHasChanges(false))
+  const handleChangeTab = (event: React.SyntheticEvent, value: UserRoles) => {
+    if (value !== null) {
+      setActiveTab(value)
     }
-  }, [dataAccessHasChanges, dispatch, refetchPatientDoctors])
-
-  const handleInvitePopupOpen = () => {
-    setInvitePopupOpen(true)
   }
 
-  const handleInvitePopupClose = () => {
-    setInvitePopupOpen(false)
-  }
+  const handleInviteDoctorPopupOpen = () => setInviteDoctorPopupOpen(true)
+
+  const handleInviteDoctorPopupClose = () => setInviteDoctorPopupOpen(false)
+
+  const handleInviteCaregiverPopupOpen = () => setInviteCaregiverPopupOpen(true)
+
+  const handleInviteCaregiverPopupClose = () => setInviteCaregiverPopupOpen(false)
 
   return (
     <>
       <div className="white-box content-md">
+        <Typography sx={{ mb: 1 }} variant="h5">
+          Medical Doctors & Caregivers
+        </Typography>
         <Grid container spacing={3} sx={{ mb: 1 }}>
-          <Grid xs>
-            <Typography variant="h5">Medical Doctors & Caregivers</Typography>
-          </Grid>
           <Grid>
-            <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">
-              Invite
-            </Button>
+            <Tabs onChange={handleChangeTab} value={activeTab}>
+              <Tab label="Medical Doctors" value={UserRoles.doctor} />
+              <Tab label="Caregivers" value={UserRoles.caregiver} />
+            </Tabs>
+          </Grid>
+          <Grid mdOffset="auto">
+            {activeTab === UserRoles.doctor ? (
+              <Button onClick={handleInviteDoctorPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+                Invite
+              </Button>
+            ) : activeTab === UserRoles.caregiver ? (
+              <Button onClick={handleInviteCaregiverPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+                Invite
+              </Button>
+            ) : null}
           </Grid>
         </Grid>
-        {patientDoctorsIsLoading ? (
-          <Spinner />
-        ) : (
-          <Grid container spacing={3} sx={{ mb: 1 }}>
-            {patientDoctors?.length ? (
-              patientDoctors.map(({ lastName, firstName, phone, email, institution, accessId }) => (
-                <Grid key={lastName} xs={6}>
-                  <CardBox
-                    disable={deletingDoctorId === accessId}
-                    header={
-                      <>
-                        <Typography variant="subtitle1">
-                          {firstName} {lastName}
-                        </Typography>
-                        <div style={{ marginLeft: 'auto' }} />
-                        <IconButton edge="end" onClick={() => handleRemoveDoctor(accessId)}>
-                          <Clear fontSize="inherit" />
-                        </IconButton>
-                      </>
-                    }
-                    infoListItems={
-                      <>
-                        <ListItem disableGutters>
-                          <ListItemIcon>
-                            <Phone />
-                          </ListItemIcon>
-                          <ListItemText>{phone}</ListItemText>
-                        </ListItem>
-                        <ListItem disableGutters>
-                          <ListItemIcon>
-                            <MailOutline />
-                          </ListItemIcon>
-                          <ListItemText>{email}</ListItemText>
-                        </ListItem>
-                        <ListItem disableGutters>
-                          <ListItemIcon>
-                            <LocationCity />
-                          </ListItemIcon>
-                          <ListItemText>{institution ? institution : '-'}</ListItemText>
-                        </ListItem>
-                      </>
-                    }
-                  />
-                </Grid>
-              ))
-            ) : (
-              <Grid textAlign="center" xs>
-                No doctors added
-              </Grid>
-            )}
-          </Grid>
-        )}
+        <TabPanel activeTab={activeTab} value={UserRoles.doctor}>
+          <PatientDoctors />
+        </TabPanel>
+        <TabPanel activeTab={activeTab} value={UserRoles.caregiver}>
+          <PatientCaregivers />
+        </TabPanel>
       </div>
-      <PatientInvitePopup handleClose={handleInvitePopupClose} open={invitePopupOpen} />
+      <InviteDoctorPopup handleClose={handleInviteDoctorPopupClose} open={inviteDoctorPopupOpen} />
+      <InviteCaregiverPopup handleClose={handleInviteCaregiverPopupClose} open={inviteCaregiverPopupOpen} />
     </>
   )
 }

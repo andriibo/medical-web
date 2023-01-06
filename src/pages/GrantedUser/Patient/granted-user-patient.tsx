@@ -21,7 +21,7 @@ import styles from './granted-user-patient.module.scss'
 
 export const GrantedUserPatient = () => {
   const { patientUserId } = useParams() as { patientUserId: string }
-  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.thresholds)
+  const [activeTab, setActiveTab] = useState<PatientTab>(PatientTab.vitals)
   const [suggestedContactPopupOpen, setSuggestedContactPopupOpen] = useState(false)
   const [hasSuggestedContact, setHasSuggestedContact] = useState(true)
 

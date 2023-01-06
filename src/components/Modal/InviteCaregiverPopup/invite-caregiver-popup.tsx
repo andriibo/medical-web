@@ -7,25 +7,25 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { RequestsGrantedUserTab } from '~/enums/requests-tab.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { usePostDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
+import { usePostPatientDataAccessInitiateForCaregiverMutation } from '~stores/services/patient-data-access.api'
 
-interface GrantedUserInvitePopupProps {
+interface InviteCaregiverPopupProps {
   open: boolean
   handleClose: () => void
 }
 
-export const GrantedUserInvitePopup: FC<GrantedUserInvitePopupProps> = ({ open, handleClose }) => {
+export const InviteCaregiverPopup: FC<InviteCaregiverPopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const navigate = useNavigate()
 
-  const [grantedUserInitiate, { isLoading: grantedUserInitiateIsLoading }] = usePostDataAccessInitiateMutation()
+  const [initiateCaregiver, { isLoading: initiateCaregiverIsLoading }] =
+    usePostPatientDataAccessInitiateForCaregiverMutation()
 
   const {
     handleSubmit,
@@ -43,12 +43,12 @@ export const GrantedUserInvitePopup: FC<GrantedUserInvitePopupProps> = ({ open, 
     }
   }, [open, reset])
 
-  const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
+  const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await grantedUserInitiate({ email }).unwrap()
+      await initiateCaregiver(data).unwrap()
 
       handleClose()
-      navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })
+      navigate(PageUrls.Requests)
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
@@ -68,7 +68,7 @@ export const GrantedUserInvitePopup: FC<GrantedUserInvitePopupProps> = ({ open, 
 
   return (
     <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-      <DialogTitle>Invite a new Patient</DialogTitle>
+      <DialogTitle>Invite a new Caregiver</DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">
@@ -97,7 +97,7 @@ export const GrantedUserInvitePopup: FC<GrantedUserInvitePopupProps> = ({ open, 
             <Grid xs={6}>
               <LoadingButton
                 fullWidth
-                loading={grantedUserInitiateIsLoading}
+                loading={initiateCaregiverIsLoading}
                 size="large"
                 type="submit"
                 variant="contained"

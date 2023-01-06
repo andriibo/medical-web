@@ -4,6 +4,7 @@ import {
   ICaregiverProfile,
   IDoctorPatients,
   IDoctorProfile,
+  IPatientCaregivers,
   IPatientDoctors,
   IPatientProfile,
   IUpdateCaregiverProfile,
@@ -29,6 +30,10 @@ export const profileApi = createApi({
     }),
     getMyDoctors: build.query<IPatientDoctors[], void>({
       query: () => ({ url: 'patient/my-doctors' }),
+      providesTags: ['Profile'],
+    }),
+    getMyCaregivers: build.query<IPatientCaregivers[], void>({
+      query: () => ({ url: 'patient/my-caregivers' }),
       providesTags: ['Profile'],
     }),
     getMyCaregiverProfile: build.query<ICaregiverProfile, void>({
@@ -74,6 +79,7 @@ export const {
   useGetMyPatientProfileQuery,
   usePatchMyPatientProfileMutation,
   useGetMyDoctorsQuery,
+  useGetMyCaregiversQuery,
   useGetMyCaregiverProfileQuery,
   useGetMyDoctorProfileQuery,
   usePatchMyDoctorProfileMutation,

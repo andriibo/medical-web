@@ -48,7 +48,7 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patien
 
   return (
     <div className={styles.patientAside}>
-      <UserAvatar avatarSrc={patientData.avatar} className={styles.userAvatar} fullName={fullName} readOnly />
+      <UserAvatar avatarSrc={patientData.avatar} className={styles.userAvatar} fullName={fullName} />
       <Typography textAlign="center" variant="body1">
         {fullName}
       </Typography>
