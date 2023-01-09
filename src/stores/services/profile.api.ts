@@ -72,6 +72,14 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ['Profile'],
     }),
+    patchDeleteMyAccount: build.mutation<null, void>({
+      query: () => ({ url: 'my-profile/delete', method: 'PATCH' }),
+      invalidatesTags: ['Profile'],
+    }),
+    patchRecoveryMyAccount: build.mutation<null, void>({
+      query: () => ({ url: 'my-profile/recovery', method: 'PATCH' }),
+      invalidatesTags: ['Profile'],
+    }),
   }),
 })
 
@@ -87,4 +95,6 @@ export const {
   useGetPatientProfileQuery,
   useGetMyPatientsQuery,
   usePostAvatarMutation,
+  usePatchDeleteMyAccountMutation,
+  usePatchRecoveryMyAccountMutation,
 } = profileApi

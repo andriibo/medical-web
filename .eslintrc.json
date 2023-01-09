@@ -140,7 +140,13 @@
     "no-var": "error",
     "object-shorthand": "warn",
     "prefer-object-spread": "warn",
-    "quotes": ["warn", "single"],
+    "quotes": [
+      "warn",
+      "single",
+      {
+        "avoidEscape": true
+      }
+    ],
     "template-curly-spacing": "warn",
     "no-useless-escape": "warn",
     "default-param-last": "error",

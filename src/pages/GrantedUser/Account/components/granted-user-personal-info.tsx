@@ -3,6 +3,7 @@ import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditCaregiverProfilePopup } from '~components/Modal/EditCaregiverProfilePopup/edit-caregiver-profile-popup'
@@ -136,9 +137,7 @@ export const GrantedUserPersonalInfo = () => {
               </span>
             </li>
           </ul>
-          <Button className={styles.deleteAccountBtn} color="inherit">
-            Delete my account
-          </Button>
+          <DeleteAccountButton />
         </div>
       </div>
       {isDoctor(userData) ? (
