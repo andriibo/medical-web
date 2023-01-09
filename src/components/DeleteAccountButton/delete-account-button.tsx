@@ -7,10 +7,12 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { usePatchDeleteMyAccountMutation } from '~stores/services/profile.api'
 
 import styles from './delete-account-button.module.scss'
+import { useSnackbar } from 'notistack'
 
 export const DeleteAccountButton = () => {
   const navigate = useNavigate()
   const confirm = useConfirm()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [deleteAccount, { isLoading: deleteAccountIsLoading }] = usePatchDeleteMyAccountMutation()
 
@@ -24,9 +26,9 @@ export const DeleteAccountButton = () => {
         confirmationText: 'Delete my account',
       })
 
-      const res = await deleteAccount().unwrap()
+      await deleteAccount().unwrap()
 
-      console.log(res)
+      enqueueSnackbar('Account deleted')
       navigate(PageUrls.AccountRecovery, { replace: true })
     } catch (err) {
       console.error(err)
