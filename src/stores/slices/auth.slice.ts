@@ -17,7 +17,13 @@ const initialState: AuthState = {
     user: {
       id: '',
       email: '',
-      roles: [UserRoles.caregiver],
+      role: UserRoles.caregiver,
+      userId: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      avatar: '',
+      deletedAt: 0,
     },
   },
 }
@@ -45,7 +51,7 @@ const authSlice = createSlice({
 })
 
 const selectIsAuth = (state: RootState) => Boolean(state.auth.data.token)
-const selectUserRole = (state: RootState) => state.auth.data.user.roles[0]
+const selectUserRole = (state: RootState) => state.auth.data.user.role
 const selectUserId = (state: RootState) => state.auth.data.user.id
 const selectToken = (state: RootState) => state.auth.data.token
 

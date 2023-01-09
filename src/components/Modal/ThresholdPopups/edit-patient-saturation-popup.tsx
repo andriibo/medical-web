@@ -9,7 +9,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsSaturation, ThresholdsSaturationKeys } from '~models/threshold.model'
-import { usePatchPatientSaturationMutation } from '~stores/services/patient-vital-threshold.api'
+import { usePostPatientSaturationMutation } from '~stores/services/patient-vital-threshold.api'
 
 interface EditPatientSaturationPopupProps {
   thresholds: IThresholdsSaturation
@@ -28,7 +28,7 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
 
-  const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePatchPatientSaturationMutation()
+  const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientSaturationMutation()
 
   const {
     handleSubmit,

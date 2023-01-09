@@ -8,7 +8,13 @@ export interface IAuthData {
   user: {
     id: string
     email: string
-    roles: UserRoles[]
+    role: UserRoles
+    userId: string
+    firstName: string
+    lastName: string
+    phone: string
+    avatar: string
+    deletedAt: number
   }
 }
 
