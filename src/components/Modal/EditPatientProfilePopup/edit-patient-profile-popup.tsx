@@ -26,7 +26,7 @@ import InputMask from 'react-input-mask'
 import { Gender } from '~/enums/gender.enum'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdatePatientProfile, UpdatePatientProfileKeys } from '~models/profie.model'
 import { usePatchMyPatientProfileMutation } from '~stores/services/profile.api'
@@ -191,7 +191,11 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 50, max: 250, step: 1 },
+                      inputProps: {
+                        min: minMaxValidationRules.height.min,
+                        max: minMaxValidationRules.height.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                     }}
                     fullWidth
@@ -211,7 +215,11 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: 10, max: 200, step: 1 },
+                      inputProps: {
+                        min: minMaxValidationRules.weight.min,
+                        max: minMaxValidationRules.weight.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                     }}
                     fullWidth

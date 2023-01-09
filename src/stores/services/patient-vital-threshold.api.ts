@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
-  IThresholdModel,
+  IThresholds,
   IThresholdsBloodPressure,
   IThresholdsCommon,
   IThresholdsSaturation,
@@ -61,13 +61,13 @@ export const patientVitalThresholdApi = createApi({
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    getMyVitalThresholds: build.query<IThresholdModel[], void>({
+    getMyVitalThresholds: build.query<IThresholds, void>({
       query: () => ({
         url: 'patient/my-vital-thresholds',
       }),
       providesTags: ['PatientVitalThreshold'],
     }),
-    getPatientVirtualThresholds: build.query<IThresholdModel[], { patientUserId: string }>({
+    getPatientVirtualThresholds: build.query<IThresholds, { patientUserId: string }>({
       query: ({ patientUserId }) => ({
         url: `patient-vital-thresholds/${patientUserId}`,
       }),

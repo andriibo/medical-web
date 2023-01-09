@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
 import { usePatchPatientHeartRateMutation } from '~stores/services/patient-vital-threshold.api'
@@ -102,7 +102,11 @@ export const EditPatientHeartRatePopup: FC<EditPatientHeartRatePopupProps> = ({
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.heartRate.min, max: validationRules.heartRate.max, step: 1 },
+                      inputProps: {
+                        min: minMaxValidationRules.heartRate.min,
+                        max: minMaxValidationRules.heartRate.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">bpm</InputAdornment>,
                     }}
                     fullWidth
@@ -122,7 +126,11 @@ export const EditPatientHeartRatePopup: FC<EditPatientHeartRatePopupProps> = ({
                     {...field}
                     {...fieldValidation(field.name)}
                     InputProps={{
-                      inputProps: { min: validationRules.heartRate.min, max: validationRules.heartRate.max, step: 1 },
+                      inputProps: {
+                        min: minMaxValidationRules.heartRate.min,
+                        max: minMaxValidationRules.heartRate.max,
+                        step: 1,
+                      },
                       endAdornment: <InputAdornment position="end">bpm</InputAdornment>,
                     }}
                     fullWidth

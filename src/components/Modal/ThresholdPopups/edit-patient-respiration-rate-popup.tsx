@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
 import { usePatchPatientRespirationRateMutation } from '~stores/services/patient-vital-threshold.api'
@@ -103,8 +103,8 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     {...fieldValidation(field.name)}
                     InputProps={{
                       inputProps: {
-                        min: validationRules.respirationRate.min,
-                        max: validationRules.respirationRate.max,
+                        min: minMaxValidationRules.respirationRate.min,
+                        max: minMaxValidationRules.respirationRate.max,
                         step: 1,
                       },
                       endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
@@ -127,8 +127,8 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     {...fieldValidation(field.name)}
                     InputProps={{
                       inputProps: {
-                        min: validationRules.respirationRate.min,
-                        max: validationRules.respirationRate.max,
+                        min: minMaxValidationRules.respirationRate.min,
+                        max: minMaxValidationRules.respirationRate.max,
                         step: 1,
                       },
                       endAdornment: <InputAdornment position="end">rpm</InputAdornment>,

@@ -15,7 +15,8 @@ import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
-import { IThresholdModel, IThresholdsObj } from '~models/threshold.model'
+import { IThresholds } from '~models/threshold.model'
+import { IUserModel } from '~models/user.model'
 import {
   useGetMyVitalThresholdsQuery,
   useGetPatientVirtualThresholdsQuery,
@@ -28,7 +29,7 @@ interface ThresholdsProps {
 }
 
 export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
-  const [thresholds, setThresholds] = useState<IThresholdsObj>()
+  const [thresholds, setThresholds] = useState<IThresholds>()
   const [isLoading, setIsLoading] = useState(false)
   const [heartRatePopupOpen, setHeartRatePopupOpen] = useState(false)
   const [temperaturePopupOpen, setTemperaturePopupOpen] = useState(false)
@@ -44,25 +45,15 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
     patientUserId ? { patientUserId } : skipToken,
   )
 
-  const convertThresholdsToObj = (thresholds: IThresholdModel[]) => {
-    const thresholdsObj = {} as IThresholdsObj
-
-    thresholds.map((threshold) => {
-      thresholdsObj[threshold.thresholdName] = threshold
-    })
-
-    return thresholdsObj
-  }
-
   useEffect(() => {
     if (patientThresholds && !patientThresholdsIsLoading) {
-      setThresholds(convertThresholdsToObj([...patientThresholds]))
+      setThresholds({ ...patientThresholds })
 
       return
     }
 
     if (myThresholds && !myThresholdsIsLoading) {
-      setThresholds(convertThresholdsToObj([...myThresholds]))
+      setThresholds({ ...myThresholds })
     }
   }, [myThresholds, myThresholdsIsLoading, patientThresholds, patientThresholdsIsLoading])
 
@@ -76,9 +67,9 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
     setIsLoading(false)
   }, [myThresholdsIsLoading, patientThresholdsIsLoading])
 
-  const getSetByName = (threshold: IThresholdModel) => {
-    if (threshold.setByUser) {
-      return `updated by ${threshold.setByUser.firstName} ${threshold.setByUser.lastName}`
+  const getSetByName = (setByUser: IUserModel | null) => {
+    if (setByUser) {
+      return `updated by ${setByUser.firstName} ${setByUser.lastName}`
     }
 
     return 'default'
@@ -99,7 +90,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Heart Rate</Typography>
-                <Typography variant="body2">{getSetByName(thresholds.MinHR)}</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.hrSetBy)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -112,11 +103,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             <ul className={styles.thresholdInfo}>
               <li>
                 <span className={styles.thresholdInfoLabel}>Min</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MinHR.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.minHr}</span>
               </li>
               <li>
                 <span className={styles.thresholdInfoLabel}>Max</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MaxHR.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.maxHr}</span>
               </li>
               <li className={styles.thresholdInfoMeasure}>bmp</li>
             </ul>
@@ -128,7 +119,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Temperature</Typography>
-                <Typography variant="body2">{getSetByName(thresholds.MinTemp)}</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.tempSetBy)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -141,11 +132,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             <ul className={styles.thresholdInfo}>
               <li>
                 <span className={styles.thresholdInfoLabel}>Min</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MinTemp?.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.minTemp}</span>
               </li>
               <li>
                 <span className={styles.thresholdInfoLabel}>Max</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MaxTemp?.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.maxTemp}</span>
               </li>
               <li className={styles.thresholdInfoMeasure}>°C</li>
             </ul>
@@ -157,7 +148,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Blood Pressure</Typography>
-                <Typography variant="body2">{getSetByName(thresholds.MinDBP)}</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.dbpSetBy)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -172,11 +163,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
                 <li>DPB:</li>
                 <li>
                   <span className={styles.thresholdInfoLabel}>Min</span>
-                  <span className={styles.thresholdInfoValue}>{thresholds.MinDBP?.value}</span>
+                  <span className={styles.thresholdInfoValue}>{thresholds.minDbp}</span>
                 </li>
                 <li>
                   <span className={styles.thresholdInfoLabel}>Max</span>
-                  <span className={styles.thresholdInfoValue}>{thresholds.MaxDBP?.value}</span>
+                  <span className={styles.thresholdInfoValue}>{thresholds.maxDbp}</span>
                 </li>
                 <li className={styles.thresholdInfoMeasure}>mmHg</li>
               </ul>
@@ -184,11 +175,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
                 <li>SBP:</li>
                 <li>
                   <span className={styles.thresholdInfoLabel}>Min</span>
-                  <span className={styles.thresholdInfoValue}>{thresholds.MinSBP?.value}</span>
+                  <span className={styles.thresholdInfoValue}>{thresholds.minSbp}</span>
                 </li>
                 <li>
                   <span className={styles.thresholdInfoLabel}>Max</span>
-                  <span className={styles.thresholdInfoValue}>{thresholds.MaxSBP?.value}</span>
+                  <span className={styles.thresholdInfoValue}>{thresholds.maxSbp}</span>
                 </li>
                 <li className={styles.thresholdInfoMeasure}>mmHg</li>
               </ul>
@@ -201,7 +192,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">O2 Saturation</Typography>
-                <Typography variant="body2">{getSetByName(thresholds.MinSpO2)}</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.spo2SetBy)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -214,7 +205,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             <ul className={styles.thresholdInfo}>
               <li>
                 <span className={styles.thresholdInfoLabel}>Min</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MinSpO2?.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.minSpo2}</span>
               </li>
               <li className={styles.thresholdInfoMeasure}>%</li>
             </ul>
@@ -226,7 +217,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               </div>
               <div className={styles.thresholdText}>
                 <Typography variant="body1">Respiration Rate</Typography>
-                <Typography variant="body2">{getSetByName(thresholds.MinRR)}</Typography>
+                <Typography variant="body2">{getSetByName(thresholds.rrSetBy)}</Typography>
               </div>
               {patientUserId && (
                 <div className={styles.thresholdActions}>
@@ -239,11 +230,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             <ul className={styles.thresholdInfo}>
               <li>
                 <span className={styles.thresholdInfoLabel}>Min</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MinRR?.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.minRr}</span>
               </li>
               <li>
                 <span className={styles.thresholdInfoLabel}>Max</span>
-                <span className={styles.thresholdInfoValue}>{thresholds.MaxRR?.value}</span>
+                <span className={styles.thresholdInfoValue}>{thresholds.maxRr}</span>
               </li>
               <li className={styles.thresholdInfoMeasure}>rpm</li>
             </ul>
@@ -257,8 +248,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={heartRatePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.MinHR.value,
-              max: thresholds.MaxHR.value,
+              min: thresholds.minHr,
+              max: thresholds.maxHr,
             }}
           />
           <EditPatientTemperaturePopup
@@ -266,8 +257,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={temperaturePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.MinTemp.value,
-              max: thresholds.MaxTemp.value,
+              min: thresholds.minTemp,
+              max: thresholds.maxTemp,
             }}
           />
           <EditPatientSaturationPopup
@@ -275,7 +266,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={saturationPopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.MinSpO2.value,
+              min: thresholds.minSpo2,
             }}
           />
           <EditPatientRespirationRatePopup
@@ -283,8 +274,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={respirationRatePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.MinRR.value,
-              max: thresholds.MaxRR.value,
+              min: thresholds.minRr,
+              max: thresholds.maxRr,
             }}
           />
           <EditPatientBloodPressurePopup
@@ -292,10 +283,10 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={bloodPressurePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              minSBP: thresholds.MinSBP.value,
-              maxSBP: thresholds.MaxSBP.value,
-              minDBP: thresholds.MinDBP.value,
-              maxDBP: thresholds.MaxDBP.value,
+              minSBP: thresholds.minSbp,
+              maxSBP: thresholds.maxSbp,
+              minDBP: thresholds.minDbp,
+              maxDBP: thresholds.maxDbp,
             }}
           />
         </>

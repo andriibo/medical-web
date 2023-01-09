@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
 import { usePatchPatientTemperatureMutation } from '~stores/services/patient-vital-threshold.api'
@@ -103,8 +103,8 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     {...fieldValidation(field.name)}
                     InputProps={{
                       inputProps: {
-                        min: validationRules.temperature.min,
-                        max: validationRules.temperature.max,
+                        min: minMaxValidationRules.temperature.min,
+                        max: minMaxValidationRules.temperature.max,
                         step: 1,
                       },
                       endAdornment: <InputAdornment position="end">°C</InputAdornment>,
@@ -127,8 +127,8 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     {...fieldValidation(field.name)}
                     InputProps={{
                       inputProps: {
-                        min: validationRules.temperature.min,
-                        max: validationRules.temperature.max,
+                        min: minMaxValidationRules.temperature.min,
+                        max: minMaxValidationRules.temperature.max,
                         step: 1,
                       },
                       endAdornment: <InputAdornment position="end">°C</InputAdornment>,

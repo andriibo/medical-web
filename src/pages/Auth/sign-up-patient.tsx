@@ -26,7 +26,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
@@ -186,7 +186,11 @@ export const SignUpPatient = () => {
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
-                    inputProps: { min: 50, max: 250, step: 1 },
+                    inputProps: {
+                      min: minMaxValidationRules.height.min,
+                      max: minMaxValidationRules.height.max,
+                      step: 1,
+                    },
                     endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                   }}
                   fullWidth
@@ -207,7 +211,11 @@ export const SignUpPatient = () => {
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
-                    inputProps: { min: 10, max: 200, step: 1 },
+                    inputProps: {
+                      min: minMaxValidationRules.weight.min,
+                      max: minMaxValidationRules.weight.max,
+                      step: 1,
+                    },
                     endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                   }}
                   fullWidth
