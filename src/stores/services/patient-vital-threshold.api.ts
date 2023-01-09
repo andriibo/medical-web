@@ -13,50 +13,50 @@ export const patientVitalThresholdApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['PatientVitalThreshold'],
   endpoints: (build) => ({
-    patchPatientBloodPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsBloodPressure }>({
+    postPatientBloodPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsBloodPressure }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/blood-pressure/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    patchPatientHeartRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+    postPatientHeartRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/heart-rate/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    patchPatientMeanArterialPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+    postPatientMeanArterialPressure: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/mean-arterial-pressure/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    patchPatientTemperature: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+    postPatientTemperature: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/temperature/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    patchPatientSaturation: build.mutation<null, { patientUserId: string; thresholds: IThresholdsSaturation }>({
+    postPatientSaturation: build.mutation<null, { patientUserId: string; thresholds: IThresholdsSaturation }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/oxygen-saturation/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    patchPatientRespirationRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
+    postPatientRespirationRate: build.mutation<null, { patientUserId: string; thresholds: IThresholdsCommon }>({
       query: ({ patientUserId, thresholds }) => ({
         url: `doctor/respiration-rate/${patientUserId}`,
-        method: 'PATCH',
+        method: 'POST',
         body: { ...thresholds },
       }),
       invalidatesTags: ['PatientVitalThreshold'],
@@ -77,12 +77,12 @@ export const patientVitalThresholdApi = createApi({
 })
 
 export const {
-  usePatchPatientBloodPressureMutation,
-  usePatchPatientHeartRateMutation,
-  usePatchPatientMeanArterialPressureMutation,
-  usePatchPatientTemperatureMutation,
-  usePatchPatientSaturationMutation,
-  usePatchPatientRespirationRateMutation,
+  usePostPatientBloodPressureMutation,
+  usePostPatientHeartRateMutation,
+  usePostPatientMeanArterialPressureMutation,
+  usePostPatientTemperatureMutation,
+  usePostPatientSaturationMutation,
+  usePostPatientRespirationRateMutation,
   useGetMyVitalThresholdsQuery,
   useGetPatientVirtualThresholdsQuery,
 } = patientVitalThresholdApi

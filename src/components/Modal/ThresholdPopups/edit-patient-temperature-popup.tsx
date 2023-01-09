@@ -9,7 +9,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
-import { usePatchPatientTemperatureMutation } from '~stores/services/patient-vital-threshold.api'
+import { usePostPatientTemperatureMutation } from '~stores/services/patient-vital-threshold.api'
 
 interface EditPatientTemperaturePopupProps {
   thresholds: IThresholdsCommon
@@ -28,7 +28,7 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
 
-  const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePatchPatientTemperatureMutation()
+  const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientTemperatureMutation()
 
   const {
     handleSubmit,
