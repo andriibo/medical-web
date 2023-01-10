@@ -1,0 +1,9 @@
+button.deleteAccountBtn {
+  margin-top: 1.5rem;
+  transition: all 0.25s ease;
+  color: #bbb;
+
+  &:hover {
+    color: #333;
+  }
+}

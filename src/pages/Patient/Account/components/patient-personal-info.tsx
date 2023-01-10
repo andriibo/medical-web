@@ -3,6 +3,7 @@ import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
 
+import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
@@ -109,9 +110,7 @@ export const PatientPersonalInfo = () => {
               </span>
             </li>
           </ul>
-          <Button className={styles.deleteAccountBtn} color="inherit">
-            Delete my account
-          </Button>
+          <DeleteAccountButton />
         </div>
       </div>
       <EditPatientProfilePopup

@@ -1,0 +1,18 @@
+.deletedContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.deletedBox {
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  padding: 1.5rem;
+  border: 1px solid rgb(0 0 0 / 23%);
+  border-radius: 0.625rem;
+  background: #fff;
+  text-align: center;
+}

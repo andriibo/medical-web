@@ -6,10 +6,9 @@ export interface IAuthData {
   token: string
   tokenExpireTime: string
   user: {
-    id: string
+    userId: string
     email: string
     role: UserRoles
-    userId: string
     firstName: string
     lastName: string
     phone: string
