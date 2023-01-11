@@ -21,9 +21,9 @@ import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 
 import { Gender } from '~/enums/gender.enum'
+import { PhoneField } from '~components/PhoneField/phone-field'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
@@ -234,22 +234,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
           <Controller
             control={control}
             name="phone"
-            render={({ field }) => (
-              <InputMask
-                mask="1-999-999-9999"
-                onChange={(event): void => {
-                  const value = event.target.value.split('-').join('')
-
-                  field.onChange(value)
-                }}
-                value={field.value}
-              >
-                {
-                  // @ts-ignore
-                  () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
-                }
-              </InputMask>
-            )}
+            render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.phone}
           />
           <Grid container spacing={2}>

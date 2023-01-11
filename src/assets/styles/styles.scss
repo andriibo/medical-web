@@ -32,6 +32,33 @@ form {
   .MuiFormControl-root {
     margin-bottom: 1.5rem;
   }
+
+  .react-tel-input {
+    .special-label {
+      left: 9px;
+      color: rgb(0 0 0 / 60%);
+    }
+
+    .form-control {
+      width: 100%;
+
+      &.invalid-number {
+        border-color: var(--danger);
+      }
+    }
+
+    &:has(.invalid-number) {
+      .special-label {
+        color: var(--danger);
+      }
+    }
+
+    &:has(.form-control:focus:not(.invalid-number)) {
+      .special-label {
+        color: var(--primary);
+      }
+    }
+  }
 }
 
 .verification-control {
@@ -132,6 +159,15 @@ form {
 
 .dialog-footer-text {
   opacity: 0.6;
+}
+
+.simple-link {
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .text-ellipsis {

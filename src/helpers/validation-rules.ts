@@ -1,5 +1,16 @@
 import { RegisterOptions } from 'react-hook-form/dist/types/validator'
 import validator from 'validator'
+import * as yup from 'yup'
+
+require('yup-phone')
+
+declare module 'yup' {
+  export interface StringSchema {
+    phone(countryCode?: string, strict?: boolean): StringSchema
+  }
+}
+
+const phoneSchema = yup.string().phone().required()
 
 type ValidationKeyType =
   | 'text'
@@ -84,13 +95,12 @@ export const validationRules: ValidationRulesType = {
   },
   phone: {
     required: true,
-    // pattern: {
-    //   value: /[1]\-[0-9]{3}\-[0-9]{3}\-[0-9]{4}/,
-    //   message: 'Enter a valid phone number',
-    // },
-    pattern: {
-      value: /[0-9]{11}/,
-      message: 'Enter a valid phone number',
+    validate: {
+      required: async (value: string) => {
+        const isValid = await phoneSchema.isValid(`+${value}`)
+
+        return isValid || 'Enter valid phone number.'
+      },
     },
   },
   email: {
@@ -108,8 +118,8 @@ export const validationRules: ValidationRulesType = {
     required: true,
     validate: {
       required: (value: string) =>
-        validator.isStrongPassword(value, { minUppercase: 0 }) ||
-        'At least 8 characters, at least one number and one symbol.',
+        validator.isStrongPassword(value) ||
+        'At least 8 characters, one number, one special symbol, one uppercase letter and one lowercase letter.',
     },
   },
   height: {

@@ -92,13 +92,21 @@ export const PatientDoctors = () => {
                     <ListItemIcon>
                       <Phone />
                     </ListItemIcon>
-                    <ListItemText>{phone}</ListItemText>
+                    <ListItemText>
+                      <a className="simple-link" href={`tel:+${phone}`}>
+                        +{phone}
+                      </a>
+                    </ListItemText>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemIcon>
                       <MailOutline />
                     </ListItemIcon>
-                    <ListItemText>{email}</ListItemText>
+                    <ListItemText>
+                      <a className="simple-link" href={`mailto:${email}`}>
+                        {email}
+                      </a>
+                    </ListItemText>
                   </ListItem>
                   <ListItem disableGutters>
                     <ListItemIcon>

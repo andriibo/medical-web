@@ -74,13 +74,16 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patien
       <Divider sx={{ my: 2 }} />
       <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
         <li>
-          <span className={styles.infoListLabel}>Phone</span>+{patientData.phone}
+          <span className={styles.infoListLabel}>Phone</span>
+          <a className="simple-link" href={`tel:+${patientData.phone}`}>
+            +{patientData.phone}
+          </a>
         </li>
         <li>
           <span className={styles.infoListLabel}>Email</span>
-          <span className="text-ellipsis" title={patientData.email}>
+          <a className="simple-link text-ellipsis" href={`mailto: ${patientData.email}`} title={patientData.email}>
             {patientData.email}
-          </span>
+          </a>
         </li>
       </ul>
       <Box sx={{ textAlign: 'center', mt: 3 }}>

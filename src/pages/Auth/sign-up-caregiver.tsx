@@ -1,15 +1,17 @@
-import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
+import { ArrowBack } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { PasswordField } from '~components/PasswordField/password-field'
+import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignUpCaregiverKeys, IAuthSignUpCaregiver } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -21,12 +23,7 @@ export const SignUpCaregiver = () => {
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const [authSignUpCaregiver, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpCaregiverMutation()
-  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
 
   const {
     handleSubmit,
@@ -38,7 +35,7 @@ export const SignUpCaregiver = () => {
 
   const onSubmit: SubmitHandler<IAuthSignUpCaregiver> = async (data) => {
     try {
-      await authSignUpCaregiver({ ...data, phone: data.phone.split('-').join('') }).unwrap()
+      await authSignUpCaregiver({ ...trimValues(data) }).unwrap()
 
       setFormErrors(null)
       navigate(PageUrls.EmailVerification, { state: { email: data.email } })
@@ -106,22 +103,7 @@ export const SignUpCaregiver = () => {
           control={control}
           defaultValue=""
           name="phone"
-          render={({ field }) => (
-            <InputMask
-              mask="1-999-999-9999"
-              onChange={(event): void => {
-                const value = event.target.value.split('-').join('')
-
-                field.onChange(value)
-              }}
-              value={field.value}
-            >
-              {
-                // @ts-ignore
-                () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
-              }
-            </InputMask>
-          )}
+          render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.phone}
         />
         <Controller
@@ -135,23 +117,7 @@ export const SignUpCaregiver = () => {
           control={control}
           defaultValue=""
           name="password"
-          render={({ field }) => (
-            <TextField
-              {...field}
-              {...fieldValidation(field.name)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword} size="small">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              autoComplete="new-password"
-              fullWidth
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-            />
-          )}
+          render={({ field }) => <PasswordField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.password}
         />
         <Typography sx={{ mb: '1.5rem' }} variant="body2">

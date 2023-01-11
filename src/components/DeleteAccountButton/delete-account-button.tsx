@@ -1,5 +1,6 @@
 import { LoadingButton } from '@mui/lab'
 import { useConfirm } from 'material-ui-confirm'
+import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,7 +8,6 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { usePatchDeleteMyAccountMutation } from '~stores/services/profile.api'
 
 import styles from './delete-account-button.module.scss'
-import { useSnackbar } from 'notistack'
 
 export const DeleteAccountButton = () => {
   const navigate = useNavigate()
