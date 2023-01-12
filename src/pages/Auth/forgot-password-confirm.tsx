@@ -4,7 +4,6 @@ import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } fro
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
