@@ -33,13 +33,21 @@ const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }
       <ListItemIcon>
         <Phone />
       </ListItemIcon>
-      <ListItemText>{emergencyContact.phone}</ListItemText>
+      <ListItemText>
+        <a className="simple-link" href={`tel:+${emergencyContact.phone}`}>
+          +{emergencyContact.phone}
+        </a>
+      </ListItemText>
     </ListItem>
     <ListItem disableGutters>
       <ListItemIcon>
         <MailOutline />
       </ListItemIcon>
-      <ListItemText>{emergencyContact.email}</ListItemText>
+      <ListItemText>
+        <a className="simple-link" href={`mailto:${emergencyContact.email}`}>
+          {emergencyContact.email}
+        </a>
+      </ListItemText>
     </ListItem>
   </>
 )

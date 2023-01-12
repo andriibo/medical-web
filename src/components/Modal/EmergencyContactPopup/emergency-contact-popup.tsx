@@ -17,9 +17,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 
 import { Relationship, RelationshipValues } from '~/enums/relationship.enum'
+import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { IEmergencyContact, IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
@@ -165,22 +165,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
             control={control}
             defaultValue=""
             name="phone"
-            render={({ field }) => (
-              <InputMask
-                mask="1-999-999-9999"
-                onChange={(event): void => {
-                  const value = event.target.value.split('-').join('')
-
-                  field.onChange(value)
-                }}
-                value={field.value}
-              >
-                {
-                  // @ts-ignore
-                  () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
-                }
-              </InputMask>
-            )}
+            render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.phone}
           />
           <Controller

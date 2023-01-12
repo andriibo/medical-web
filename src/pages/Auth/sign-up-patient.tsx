@@ -1,4 +1,4 @@
-import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
+import { ArrowBack } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
@@ -20,12 +20,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { PasswordField } from '~components/PasswordField/password-field'
+import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -36,12 +38,7 @@ import styles from './auth.module.scss'
 export const SignUpPatient = () => {
   const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
-  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
 
   const {
     handleSubmit,
@@ -54,7 +51,7 @@ export const SignUpPatient = () => {
   const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = async (data) => {
     try {
       await authSignUpPatient({
-        ...data,
+        ...trimValues(data),
         gender: data.gender as Gender,
         height: Number(data.height),
         weight: Number(data.weight),
@@ -231,22 +228,7 @@ export const SignUpPatient = () => {
           control={control}
           defaultValue=""
           name="phone"
-          render={({ field }) => (
-            <InputMask
-              mask="1-999-999-9999"
-              onChange={(event): void => {
-                const value = event.target.value.split('-').join('')
-
-                field.onChange(value)
-              }}
-              value={field.value}
-            >
-              {
-                // @ts-ignore
-                () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
-              }
-            </InputMask>
-          )}
+          render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.phone}
         />
         <Controller
@@ -260,23 +242,7 @@ export const SignUpPatient = () => {
           control={control}
           defaultValue=""
           name="password"
-          render={({ field }) => (
-            <TextField
-              {...field}
-              {...fieldValidation(field.name)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword}>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              autoComplete="new-password"
-              fullWidth
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-            />
-          )}
+          render={({ field }) => <PasswordField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.password}
         />
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
