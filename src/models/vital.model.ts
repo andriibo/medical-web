@@ -5,7 +5,6 @@ export interface IVitals {
 }
 
 export interface IVital {
-  vitalId: string
   timestamp: number
   temperature: number
   hr: number
