@@ -1,48 +1,4 @@
-.thresholdContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem 2rem;
-}
-
-.thresholdItem {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem 1rem 0.5rem;
-  border-radius: 0.25rem;
-  background: #fff;
-  box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px rgb(0 0 0 / 14%), 0 1px 3px rgb(0 0 0 / 12%);
-}
-
-.thresholdHeader {
-  display: flex;
-  align-items: center;
-}
-
-.thresholdIcon {
-  width: 40px;
-  aspect-ratio: 1 / 1;
-  margin: 0 1rem 0 0;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-}
-
-.thresholdText {
-  flex: 1;
-
-  :global {
-    .MuiTypography-body1 {
-      opacity: 0.87;
-    }
-
-    .MuiTypography-body2 {
-      opacity: 0.6;
-    }
-  }
-}
+@import 'src/components/Vitals/vitals.module';
 
 .thresholdInfo {
   display: flex;
@@ -72,10 +28,6 @@
 
 .thresholdInfoValue {
   font-size: 1.5rem;
-}
-
-.thresholdItemBlood {
-  grid-row: span 2;
 }
 
 .thresholdInfoGroup {
