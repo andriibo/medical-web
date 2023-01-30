@@ -19,7 +19,6 @@ import { GrantedUserAccount } from '~pages/GrantedUser/Account/granted-user-acco
 import { GrantedUserPatient } from '~pages/GrantedUser/Patient/granted-user-patient'
 import { GrantedUserPatients } from '~pages/GrantedUser/Patients/granted-user-patients'
 import { GrantedUserRequest } from '~pages/GrantedUser/Requests/granted-user-request'
-import { Home } from '~pages/Home/home'
 import { PatientAccount } from '~pages/Patient/Account/patient-account'
 import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patient-emergency-contacts'
 import { PatientGrantedUsers } from '~pages/Patient/GrantedUsers/patient-granted-users'
@@ -44,7 +43,6 @@ export const AppRouter = () => {
         <Route element={<EmailVerification />} path={PageUrls.EmailVerification} />
       </Route>
       <Route element={<DefaultLayout />}>
-        <Route element={<Home />} path="/" />
         {isUserRoleGrantable(userRole) ? (
           <>
             <Route element={<GrantedUserAccount />} path={PageUrls.MyAccount} />

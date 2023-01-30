@@ -1,3 +1,4 @@
+import { VitalType } from '~/enums/vital-type.enum'
 import { IUserModel } from '~models/user.model'
 
 export interface IThresholds {
@@ -28,6 +29,22 @@ export interface IThresholds {
   maxMap: number
   mapSetBy: IUserModel | null
   mapSetAt: number
+}
+
+export interface IThresholdList {
+  title: VitalType
+  icon: string
+  className?: string
+  values: IThresholdListValues | IThresholdListValues[]
+  setBy: IUserModel | null
+  units: string
+  onClick?: () => void
+}
+
+export interface IThresholdListValues {
+  min: number
+  max?: number
+  title?: string
 }
 
 export interface IThresholdsCommon {
