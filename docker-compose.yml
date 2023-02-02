@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Build.Dockerfile
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
     env_file:
       - .env
     ports:
