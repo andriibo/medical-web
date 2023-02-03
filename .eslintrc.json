@@ -67,6 +67,7 @@
       {
         "code": 120,
         "ignoreUrls": true,
+        "ignoreComments": true,
         "ignorePattern": "^import .*"
       }
     ],

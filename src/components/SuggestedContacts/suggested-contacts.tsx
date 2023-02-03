@@ -10,6 +10,7 @@ import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Relationship } from '~/enums/relationship.enum'
 import { CardBox } from '~components/Card/card-box'
 import { Spinner } from '~components/Spinner/spinner'
+import { sortByName } from '~helpers/sort-by-name'
 import { ISuggestedContact } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
@@ -45,28 +46,15 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
   const [suggestedContactApprove] = usePostSuggestedContactApproveMutation()
   const [suggestedContactReject] = useDeletePatientSuggestedContactMutation()
 
-  const getSortedContacts = (contacts: ISuggestedContact[]) =>
-    contacts.sort((a, b) => {
-      if (a.lastName < b.lastName || a.firstName < b.firstName) {
-        return -1
-      }
-
-      if (a.lastName > b.lastName || a.firstName > b.firstName) {
-        return 1
-      }
-
-      return 0
-    })
-
   useEffect(() => {
     if (patientSuggestedContacts && !mySuggestedContactsIsLoading) {
-      setSuggestedContacts(getSortedContacts([...patientSuggestedContacts]))
+      setSuggestedContacts(sortByName([...patientSuggestedContacts]))
 
       return
     }
 
     if (mySuggestedContacts && !patientSuggestedContactsIsLoading) {
-      setSuggestedContacts(getSortedContacts([...mySuggestedContacts]))
+      setSuggestedContacts(sortByName([...mySuggestedContacts]))
     }
   }, [patientSuggestedContacts, mySuggestedContactsIsLoading, mySuggestedContacts, patientSuggestedContactsIsLoading])
 

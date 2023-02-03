@@ -1,43 +1,39 @@
-import { Edit } from '@mui/icons-material'
-import { Avatar, IconButton } from '@mui/material'
-import React, { FC, useState } from 'react'
+import { Avatar, Theme } from '@mui/material'
+import { SxProps } from '@mui/system'
+import React, { FC, useMemo } from 'react'
 
-import { AvatarPopup } from '~components/Modal/AvatarPopup/avatar-popup'
+import { DEFAULT_AVATAR } from '~constants/constants'
 import { getAcronym } from '~helpers/get-acronym'
 
 import styles from './user-avatar.module.scss'
 
 interface AvatarProps {
   fullName: string
-  avatarSrc: string
-  editable?: boolean
+  avatar: string
   className?: string
+  sx?: SxProps<Theme>
 }
 
-export const UserAvatar: FC<AvatarProps> = ({ fullName, avatarSrc, editable, className }) => {
-  const [changeAvatarPopupOpen, setChangeAvatarPopupOpen] = useState(false)
+export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, className, sx }) => {
+  const avatarSrc = useMemo(() => (avatar.includes(DEFAULT_AVATAR) ? undefined : avatar), [avatar])
 
-  const handleChangeAvatarPopupOpen = () => {
-    setChangeAvatarPopupOpen(true)
-  }
-
-  const handleChangeAvatarPopupClose = () => {
-    setChangeAvatarPopupOpen(false)
+  const sxStyles = {
+    width: '40px',
+    height: 'auto',
+    backgroundColor: '#bbb',
+    margin: 0,
+    fontSize: '1.125rem',
+    aspectRatio: '1 / 1',
+    ...sx,
   }
 
   return (
-    <>
-      <div className={styles.userAvatarHolder}>
-        <Avatar className={`${styles.userAvatar} ${className}`} src={avatarSrc}>
-          {getAcronym(fullName)}
-        </Avatar>
-        {editable && (
-          <IconButton className={styles.userAvatarEdit} onClick={handleChangeAvatarPopupOpen} size="small">
-            <Edit fontSize="inherit" />
-          </IconButton>
-        )}
-      </div>
-      {editable && <AvatarPopup handleClose={handleChangeAvatarPopupClose} open={changeAvatarPopupOpen} />}
-    </>
+    <Avatar
+      className={`UserAvatar-root ${styles.userAvatar} ${className ? className : ''}`}
+      src={avatarSrc}
+      sx={sxStyles}
+    >
+      {getAcronym(fullName)}
+    </Avatar>
   )
 }

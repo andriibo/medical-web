@@ -10,7 +10,7 @@ import { EditCaregiverProfilePopup } from '~components/Modal/EditCaregiverProfil
 import { EditDoctorProfilePopup } from '~components/Modal/EditDoctorProfilePopup/edit-doctor-profile-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { Spinner } from '~components/Spinner/spinner'
-import { UserAvatar } from '~components/UserAvatar/user-avatar'
+import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { isUserRoleCaregiver, isUserRoleDoctor } from '~helpers/user-role'
 import { ICaregiverProfile, IDoctorProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -94,7 +94,7 @@ export const GrantedUserPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatar avatarSrc={userData.avatar} editable fullName={fullName} />
+          <UserAvatarEdit avatar={userData.avatar} fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>

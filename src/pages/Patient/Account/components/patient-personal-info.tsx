@@ -9,7 +9,7 @@ import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/chang
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
-import { UserAvatar } from '~components/UserAvatar/user-avatar'
+import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
@@ -57,7 +57,7 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatar avatarSrc={patientData.avatar} editable fullName={fullName} />
+          <UserAvatarEdit avatar={patientData.avatar} fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>

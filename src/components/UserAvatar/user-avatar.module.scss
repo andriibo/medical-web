@@ -1,7 +1,7 @@
-div.userAvatarHolder {
+.userAvatarHolder {
   position: relative;
 
-  .userAvatarEdit {
+  .userAvatarEditButton {
     visibility: hidden;
     position: absolute;
     transition: all 0.3s ease;
@@ -13,22 +13,21 @@ div.userAvatarHolder {
   }
 
   &:hover {
-    .userAvatarEdit {
+    .userAvatarEditButton {
       visibility: visible;
       opacity: 1;
+      background: rgb(0 0 0 / 50%);
     }
   }
 }
 
-div.userAvatar {
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-  background-color: #bbb;
-  font-size: 5em;
-  aspect-ratio: 1 / 1;
-
+.userAvatar {
   img {
     background: #fff;
   }
+}
+
+div.userAvatarEdit {
+  width: 100%;
+  font-size: 5em;
 }

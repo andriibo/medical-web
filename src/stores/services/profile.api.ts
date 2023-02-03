@@ -60,7 +60,7 @@ export const profileApi = createApi({
       query: () => ({ url: 'profile/my-patients' }),
       providesTags: ['Profile'],
     }),
-    getPatientProfile: build.query<IPatientProfile, { patientUserId: string }>({
+    getPatientProfile: build.query<IDoctorPatients, { patientUserId: string }>({
       query: ({ patientUserId }) => ({ url: `patient-profile/${patientUserId}` }),
       providesTags: ['Profile'],
     }),

@@ -1,25 +1,16 @@
-import { Clear, LocationCity, MailOutline, Phone } from '@mui/icons-material'
-import { IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { useConfirm } from 'material-ui-confirm'
-import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { CardBox } from '~components/Card/card-box'
 import { Spinner } from '~components/Spinner/spinner'
-import { UserAvatar } from '~components/UserAvatar/user-avatar'
+import { PatientGrantedUsersCardHeader } from '~pages/Patient/GrantedUsers/components/patient-granted-users-card-header'
+import { PatientGrantedUsersCardListItem } from '~pages/Patient/GrantedUsers/components/patient-granted-users-card-list-item'
 import { useAppDispatch } from '~stores/hooks'
-import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 import { useGetMyDoctorsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
-import styles from '../patient-granted-users.module.scss'
-
 export const PatientDoctors = () => {
   const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
-  const confirm = useConfirm()
-
   const dataAccessHasChanges = useDataAccessHasChanges()
 
   const {
@@ -28,33 +19,7 @@ export const PatientDoctors = () => {
     refetch: refetchPatientDoctors,
   } = useGetMyDoctorsQuery()
 
-  const [deleteDoctor] = useDeletePatientDataAccessMutation()
   const [deletingDoctorId, setDeletingDoctorId] = useState<string | null>(null)
-
-  const handleRemoveDoctor = useCallback(
-    async (accessId: string) => {
-      try {
-        await confirm({
-          title: 'Remove doctor?',
-          description: 'The doctor will lost access to your account information.',
-          confirmationText: 'Remove',
-        })
-
-        setDeletingDoctorId(accessId)
-
-        await deleteDoctor({ accessId }).unwrap()
-        refetchPatientDoctors()
-        enqueueSnackbar('Doctor removed')
-      } catch (err) {
-        console.error(err)
-        setDeletingDoctorId(null)
-        if (err) {
-          enqueueSnackbar('Doctor not removed', { variant: 'warning' })
-        }
-      }
-    },
-    [confirm, deleteDoctor, enqueueSnackbar, refetchPatientDoctors],
-  )
 
   useEffect(() => {
     if (dataAccessHasChanges) {
@@ -75,47 +40,17 @@ export const PatientDoctors = () => {
             <CardBox
               disable={deletingDoctorId === accessId}
               header={
-                <>
-                  <UserAvatar avatarSrc={avatar} className={styles.userAvatar} fullName={`${firstName} ${lastName}`} />
-                  <Typography variant="subtitle1">
-                    {firstName} {lastName}
-                  </Typography>
-                  <div style={{ marginLeft: 'auto' }} />
-                  <IconButton edge="end" onClick={() => handleRemoveDoctor(accessId)}>
-                    <Clear fontSize="inherit" />
-                  </IconButton>
-                </>
+                <PatientGrantedUsersCardHeader
+                  accessId={accessId}
+                  avatar={avatar}
+                  firstName={firstName}
+                  handleDeletingId={setDeletingDoctorId}
+                  handleRefetch={() => refetchPatientDoctors()}
+                  lastName={lastName}
+                  role="Doctor"
+                />
               }
-              infoListItems={
-                <>
-                  <ListItem disableGutters>
-                    <ListItemIcon>
-                      <Phone />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <a className="simple-link" href={`tel:+${phone}`}>
-                        +{phone}
-                      </a>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemIcon>
-                      <MailOutline />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <a className="simple-link" href={`mailto:${email}`}>
-                        {email}
-                      </a>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemIcon>
-                      <LocationCity />
-                    </ListItemIcon>
-                    <ListItemText>{institution ? institution : '-'}</ListItemText>
-                  </ListItem>
-                </>
-              }
+              infoListItems={<PatientGrantedUsersCardListItem email={email} institution={institution} phone={phone} />}
             />
           </Grid>
         ))

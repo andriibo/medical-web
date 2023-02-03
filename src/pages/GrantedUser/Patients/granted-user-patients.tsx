@@ -1,22 +1,25 @@
-import { ChevronRightOutlined, PersonAdd } from '@mui/icons-material'
-import { Button, IconButton, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
+import { PersonAdd } from '@mui/icons-material'
+import { Button, List, ListItem, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
 
-import { PageUrls } from '~/enums/page-urls.enum'
+import { PatientCategory } from '~/enums/patient-category'
 import { InvitePatientPopup } from '~components/Modal/InvitePatientPopup/invite-patient-popup'
 import { Spinner } from '~components/Spinner/spinner'
-import { getRequestedUserName } from '~helpers/get-requested-user-name'
+import { sortByName } from '~helpers/sort-by-name'
+import { IDoctorPatients } from '~models/profie.model'
+import { GrantedUserPatientItem } from '~pages/GrantedUser/Patients/components/granted-user-patient-item'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientsQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 export const GrantedUserPatients = () => {
   const dispatch = useAppDispatch()
-
-  const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const dataAccessHasChanges = useDataAccessHasChanges()
+
+  const [activeTab, setActiveTab] = useState<PatientCategory>(PatientCategory.Abnormal)
+  const [invitePopupOpen, setInvitePopupOpen] = useState(false)
+  const [filteredPatients, setFilteredPatients] = useState<IDoctorPatients[] | null>(null)
 
   const {
     data: grantedUserPatients,
@@ -39,6 +42,18 @@ export const GrantedUserPatients = () => {
     setInvitePopupOpen(false)
   }
 
+  const handleChangeTab = (event: React.SyntheticEvent, value: PatientCategory) => {
+    setActiveTab(value)
+  }
+
+  useEffect(() => {
+    if (grantedUserPatients) {
+      const filtered = grantedUserPatients.filter((data) => data.category === activeTab)
+
+      setFilteredPatients(sortByName(filtered))
+    }
+  }, [grantedUserPatients, activeTab])
+
   return (
     <>
       <div className="white-box content-md">
@@ -52,32 +67,20 @@ export const GrantedUserPatients = () => {
             </Button>
           </Grid>
         </Grid>
+        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={activeTab}>
+          <Tab label="Abnormal" value={PatientCategory.Abnormal} />
+          <Tab label="Borderline" value={PatientCategory.Borderline} />
+          <Tab label="Normal" value={PatientCategory.Normal} />
+        </Tabs>
         <List className="list-divided">
           {grantedUserPatientsIsLoading ? (
             <Spinner />
-          ) : grantedUserPatients?.length ? (
-            grantedUserPatients.map((patient) => (
-              <ListItem
-                disablePadding
-                key={patient.accessId}
-                secondaryAction={
-                  <IconButton edge="end">
-                    <ChevronRightOutlined />
-                  </IconButton>
-                }
-                sx={{
-                  '& .MuiListItemSecondaryAction-root': {
-                    pointerEvents: 'none',
-                  },
-                }}
-              >
-                <ListItemButton component={NavLink} dense to={`${PageUrls.Patient}/${patient.userId}`}>
-                  <ListItemText primary={getRequestedUserName(patient)} secondary="Connected" />
-                </ListItemButton>
-              </ListItem>
+          ) : filteredPatients?.length ? (
+            filteredPatients.map((patient) => (
+              <GrantedUserPatientItem activeCategory={activeTab} key={patient.userId} patient={patient} />
             ))
           ) : (
-            <ListItem className="empty-list-item">No patients</ListItem>
+            <ListItem className="empty-list-item">No patients in this category</ListItem>
           )}
         </List>
       </div>

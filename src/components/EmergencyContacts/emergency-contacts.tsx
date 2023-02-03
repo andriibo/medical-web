@@ -10,6 +10,7 @@ import { Relationship } from '~/enums/relationship.enum'
 import { CardBox } from '~components/Card/card-box'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { Spinner } from '~components/Spinner/spinner'
+import { sortByName } from '~helpers/sort-by-name'
 import { IEmergencyContact } from '~models/emergency-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
@@ -73,28 +74,15 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
 
   const [deleteEmergencyContact] = useDeletePatientEmergencyContactMutation()
 
-  const getSortedContacts = (contacts: IEmergencyContact[]) =>
-    contacts.sort((a, b) => {
-      if (a.lastName < b.lastName || a.firstName < b.firstName) {
-        return -1
-      }
-
-      if (a.lastName > b.lastName || a.firstName > b.firstName) {
-        return 1
-      }
-
-      return 0
-    })
-
   useEffect(() => {
     if (myEmergencyContacts && !myEmergencyContactsIsLoading) {
-      setEmergencyContacts(getSortedContacts([...myEmergencyContacts]))
+      setEmergencyContacts(sortByName([...myEmergencyContacts]))
 
       return
     }
 
     if (patientEmergencyContacts && !patientEmergencyContactsIsLoading) {
-      setEmergencyContacts(getSortedContacts([...patientEmergencyContacts]))
+      setEmergencyContacts(sortByName([...patientEmergencyContacts]))
     }
   }, [myEmergencyContacts, myEmergencyContactsIsLoading, patientEmergencyContacts, patientEmergencyContactsIsLoading])
 

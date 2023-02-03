@@ -58,7 +58,7 @@ export const DropdownMenu: FC<DropdownMenuProps> = ({
 
   const sx = {
     '& .MuiPaper-root': {
-      width: 150,
+      minWidth: 150,
     },
     ...menuStyles,
   }
