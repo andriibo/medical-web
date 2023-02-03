@@ -1,0 +1,69 @@
+@import 'src/components/Vitals/vitals.module';
+
+.vitalHistoryContainer {
+  margin: 0 0 1.25rem;
+}
+
+.vitalContainer {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+
+  :global(.MuiTypography-root) {
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+}
+
+.vitalHeader {
+  min-height: 2.25rem;
+}
+
+.vitalIcon {
+  width: 32px;
+  margin: 0 0.75rem 0 0;
+}
+
+.vitalItem {
+  padding: 0.5rem;
+}
+
+.vitalText {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0.75rem 0 0;
+
+  strong {
+    padding: 0 0.5rem 0 0;
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1;
+  }
+}
+
+.vitalFallText {
+  margin: auto;
+  font-size: 1.75rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.thresholdInfo {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  font-size: 0.875rem;
+  list-style: none;
+
+  span {
+    margin: 0 0.375rem 0 0;
+    opacity: 0.6;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  li + li {
+    margin: 0 0 0 0.5rem;
+  }
+}

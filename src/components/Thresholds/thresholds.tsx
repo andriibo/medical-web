@@ -78,7 +78,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           onClick: () => setBloodPressurePopupOpen(true),
         },
         {
-          title: VitalType.spo,
+          title: VitalType.spo2,
           icon: iconSaturation,
           values: {
             min: thresholds.minSpo2,

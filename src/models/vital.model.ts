@@ -1,16 +1,23 @@
 import { VitalType } from '~/enums/vital-type.enum'
+import { IThresholds } from '~models/threshold.model'
 
-export interface IVitals {
+export interface IVitalsData {
   vitals: IVital[]
+  thresholds: IThresholds[]
 }
 
 export interface IVital {
-  timestamp: number
-  temperature: number
+  temp: number
+  isTempNormal: boolean
   hr: number
-  spo: number
+  isHrNormal: boolean
+  spo2: number
+  isSpo2Normal: boolean
   rr: number
+  isRrNormal: boolean
   fall: boolean
+  timestamp: number
+  thresholdsId: string
 }
 
 export interface IVitalsCard {
@@ -23,4 +30,29 @@ export interface IVitalsCard {
   }
   icon: string
   units: string
+}
+
+export interface IVitalsHistoryCard {
+  title: VitalType
+  value: number | boolean
+  isNormal?: boolean
+  icon: string
+  units: string
+  thresholds?: {
+    min?: number
+    max?: number
+  }
+}
+
+export interface IVitalsHistory {
+  vitals: IVitalsHistoryCard[]
+}
+
+export interface IMyVitalsRequest {
+  startDate: string
+  endDate: string
+}
+
+export interface IPatientVitalsRequest extends IMyVitalsRequest {
+  patientUserId: string
 }

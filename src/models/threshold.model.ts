@@ -29,6 +29,8 @@ export interface IThresholds {
   maxMap: number
   mapSetBy: IUserModel | null
   mapSetAt: number
+  thresholdsId: string
+  isPending: boolean
 }
 
 export interface IThresholdList {
