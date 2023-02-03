@@ -1,20 +1,19 @@
 import { Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs from 'dayjs'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
-import iconBloodPressure from '~images/icon-blood-pressure.png'
 import iconFall from '~images/icon-fall.svg'
 import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
 import { IThresholds } from '~models/threshold.model'
-import { IVital, IVitalsCard, IVitalsData, IVitalsHistory, IVitalsHistoryCard } from '~models/vital.model'
+import { IVital, IVitalsData, IVitalsHistoryCard } from '~models/vital.model'
 import { useGetMyVitalsQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
 
 import styles from './vitals-history.module.scss'
@@ -30,9 +29,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
   const [vitalsData, setVitalsData] = useState<IVitalsData>()
   const [filteredVitals, setFilteredVitals] = useState<IVital[]>([])
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
-
-  // console.log(startDate.format('YYYY-MM-DD'))
-  // console.log(endDate.toISOString())
 
   const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetMyVitalsQuery(
     patientUserId ? skipToken : { startDate, endDate },
