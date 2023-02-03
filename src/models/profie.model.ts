@@ -1,4 +1,5 @@
 import { Gender } from '~/enums/gender.enum'
+import { PatientCategory } from '~/enums/patient-category'
 
 export interface IPatientProfile {
   userId: string
@@ -11,9 +12,18 @@ export interface IPatientProfile {
   gender: Gender
   height: number
   weight: number
+  deletedAt: number
 }
 
-export interface IUpdatePatientProfile extends Omit<IPatientProfile, 'email' | 'avatar'> {}
+export interface IUpdatePatientProfile {
+  firstName: string
+  lastName: string
+  phone: string
+  dob: string
+  gender: Gender
+  height: number
+  weight: number
+}
 
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
@@ -39,6 +49,8 @@ export interface IPatientCaregivers extends ICaregiverProfile {
 
 export interface IDoctorPatients extends IPatientProfile {
   accessId: string
+  lastConnected: number | null
+  category: PatientCategory
 }
 
 export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}

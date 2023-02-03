@@ -7,6 +7,7 @@ import { authApi } from '~stores/services/auth.api'
 import { diagnosesApi } from '~stores/services/diagnoses.api'
 import { emergencyContactApi } from '~stores/services/emergency-contact.api'
 import { medicationsApi } from '~stores/services/medications.api'
+import { patientCategoryApi } from '~stores/services/patient-category.api'
 import { patientDataAccessApi } from '~stores/services/patient-data-access.api'
 import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [profileApi.reducerPath]: profileApi.reducer,
   [diagnosesApi.reducerPath]: diagnosesApi.reducer,
+  [patientCategoryApi.reducerPath]: patientCategoryApi.reducer,
   [patientDiagnosisApi.reducerPath]: patientDiagnosisApi.reducer,
   [patientMedicationApi.reducerPath]: patientMedicationApi.reducer,
   [patientDataAccessApi.reducerPath]: patientDataAccessApi.reducer,
@@ -47,6 +49,7 @@ const middlewares = [
   authApi.middleware,
   profileApi.middleware,
   diagnosesApi.middleware,
+  patientCategoryApi.middleware,
   patientDiagnosisApi.middleware,
   patientMedicationApi.middleware,
   patientDataAccessApi.middleware,

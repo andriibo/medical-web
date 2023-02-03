@@ -1,24 +1,16 @@
-import { Clear, MailOutline, Phone } from '@mui/icons-material'
-import { IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { useConfirm } from 'material-ui-confirm'
-import { useSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { CardBox } from '~components/Card/card-box'
 import { Spinner } from '~components/Spinner/spinner'
-import { UserAvatar } from '~components/UserAvatar/user-avatar'
-import styles from '~pages/Patient/GrantedUsers/patient-granted-users.module.scss'
+import { PatientGrantedUsersCardHeader } from '~pages/Patient/GrantedUsers/components/patient-granted-users-card-header'
+import { PatientGrantedUsersCardListItem } from '~pages/Patient/GrantedUsers/components/patient-granted-users-card-list-item'
 import { useAppDispatch } from '~stores/hooks'
-import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 import { useGetMyCaregiversQuery } from '~stores/services/profile.api'
 import { setDataAccessHasChanges, useDataAccessHasChanges } from '~stores/slices/data-access.slice'
 
 export const PatientCaregivers = () => {
   const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
-  const confirm = useConfirm()
-
   const dataAccessHasChanges = useDataAccessHasChanges()
 
   const {
@@ -27,33 +19,7 @@ export const PatientCaregivers = () => {
     refetch: refetchPatientCaregivers,
   } = useGetMyCaregiversQuery()
 
-  const [deleteCaregiver] = useDeletePatientDataAccessMutation()
   const [deletingCaregiverId, setDeletingCaregiverId] = useState<string | null>(null)
-
-  const handleRemoveCaregiver = useCallback(
-    async (accessId: string) => {
-      try {
-        await confirm({
-          title: 'Remove caregiver?',
-          description: 'The caregiver will lost access to your account information.',
-          confirmationText: 'Remove',
-        })
-
-        setDeletingCaregiverId(accessId)
-
-        await deleteCaregiver({ accessId }).unwrap()
-        refetchPatientCaregivers()
-        enqueueSnackbar('Caregiver removed')
-      } catch (err) {
-        console.error(err)
-        setDeletingCaregiverId(null)
-        if (err) {
-          enqueueSnackbar('Caregiver not removed', { variant: 'warning' })
-        }
-      }
-    },
-    [confirm, deleteCaregiver, enqueueSnackbar, refetchPatientCaregivers],
-  )
 
   useEffect(() => {
     if (dataAccessHasChanges) {
@@ -74,41 +40,17 @@ export const PatientCaregivers = () => {
             <CardBox
               disable={deletingCaregiverId === accessId}
               header={
-                <>
-                  <UserAvatar avatarSrc={avatar} className={styles.userAvatar} fullName={`${firstName} ${lastName}`} />
-                  <Typography variant="subtitle1">
-                    {firstName} {lastName}
-                  </Typography>
-                  <div style={{ marginLeft: 'auto' }} />
-                  <IconButton edge="end" onClick={() => handleRemoveCaregiver(accessId)}>
-                    <Clear fontSize="inherit" />
-                  </IconButton>
-                </>
+                <PatientGrantedUsersCardHeader
+                  accessId={accessId}
+                  avatar={avatar}
+                  firstName={firstName}
+                  handleDeletingId={setDeletingCaregiverId}
+                  handleRefetch={() => refetchPatientCaregivers()}
+                  lastName={lastName}
+                  role="Caregiver"
+                />
               }
-              infoListItems={
-                <>
-                  <ListItem disableGutters>
-                    <ListItemIcon>
-                      <Phone />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <a className="simple-link" href={`tel:+${phone}`}>
-                        +{phone}
-                      </a>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem disableGutters>
-                    <ListItemIcon>
-                      <MailOutline />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <a className="simple-link" href={`mailto:${email}`}>
-                        {email}
-                      </a>
-                    </ListItemText>
-                  </ListItem>
-                </>
-              }
+              infoListItems={<PatientGrantedUsersCardListItem email={email} phone={phone} />}
             />
           </Grid>
         ))

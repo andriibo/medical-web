@@ -1,54 +1,28 @@
 import { Box, Button, Divider, Typography } from '@mui/material'
-import { useConfirm } from 'material-ui-confirm'
-import { useSnackbar } from 'notistack'
-import React, { FC, useCallback, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { FC } from 'react'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useDeletePatient } from '~/hooks/use-delete-patient'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { getAge } from '~helpers/get-age'
-import { IPatientProfile } from '~models/profie.model'
-import { useDeleteDataAccessMutation } from '~stores/services/patient-data-access.api'
+import { IDoctorPatients } from '~models/profie.model'
 
 import styles from '../granted-user-patient.module.scss'
 
 interface GrantedUserPatientInfoProps {
-  patientData: IPatientProfile
+  patientData: IDoctorPatients
 }
 
-export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patientData }) => {
-  const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
-  const confirm = useConfirm()
-  const [deletePatient] = useDeleteDataAccessMutation()
+export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
+  patientData: { firstName, lastName, email, avatar, gender, dob, weight, height, phone, accessId },
+}) => {
+  const [deletePatient] = useDeletePatient()
 
-  const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
-
-  const handleRemovePatient = useCallback(
-    async (accessId: string) => {
-      try {
-        await confirm({
-          title: 'Remove patient?',
-          description: 'You will lose access to patient data.',
-          confirmationText: 'Remove',
-        })
-
-        await deletePatient({ accessId }).unwrap()
-        enqueueSnackbar('Patient removed')
-        navigate(PageUrls.Patients, { replace: true })
-      } catch (err) {
-        console.error(err)
-        if (err) {
-          enqueueSnackbar('Patient not removed', { variant: 'warning' })
-        }
-      }
-    },
-    [confirm, deletePatient, enqueueSnackbar, navigate],
-  )
+  const fullName = `${firstName} ${lastName}`
 
   return (
     <div className={styles.patientAside}>
-      <UserAvatar avatarSrc={patientData.avatar} className={styles.userAvatar} fullName={fullName} />
+      <UserAvatar avatar={avatar} fullName={fullName} sx={{ width: '120px', m: '0 auto 1rem', fontSize: '3.5rem' }} />
       <Typography textAlign="center" variant="body1">
         {fullName}
       </Typography>
@@ -56,38 +30,42 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({ patien
       <ul className={styles.personalInfoList}>
         <li>
           <span className={styles.infoListLabel}>Gender</span>
-          {patientData.gender}
+          {gender}
         </li>
         <li>
           <span className={styles.infoListLabel}>Age</span>
-          {getAge(patientData.dob)}
+          {getAge(dob)}
         </li>
         <li>
           <span className={styles.infoListLabel}>Height</span>
-          {patientData.height} cm
+          {height} cm
         </li>
         <li>
           <span className={styles.infoListLabel}>Weight</span>
-          {patientData.weight} kg
+          {weight} kg
         </li>
       </ul>
       <Divider sx={{ my: 2 }} />
       <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
         <li>
           <span className={styles.infoListLabel}>Phone</span>
-          <a className="simple-link" href={`tel:+${patientData.phone}`}>
-            +{patientData.phone}
+          <a className="simple-link" href={`tel:+${phone}`}>
+            +{phone}
           </a>
         </li>
         <li>
           <span className={styles.infoListLabel}>Email</span>
-          <a className="simple-link text-ellipsis" href={`mailto: ${patientData.email}`} title={patientData.email}>
-            {patientData.email}
+          <a className="simple-link text-ellipsis" href={`mailto: ${email}`} title={email}>
+            {email}
           </a>
         </li>
       </ul>
       <Box sx={{ textAlign: 'center', mt: 3 }}>
-        <Button color="error" onClick={() => handleRemovePatient(patientData.userId)} variant="outlined">
+        <Button
+          color="error"
+          onClick={() => deletePatient({ accessId, navigateTo: PageUrls.Patients })}
+          variant="outlined"
+        >
           Remove
         </Button>
       </Box>
