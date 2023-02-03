@@ -12,39 +12,35 @@ export const PatientGrantedUsersCardListItem: FC<PatientGrantedUsersCardListItem
   email,
   institution,
   phone,
-}) => {
-  console.log('PatientGrantedUsersCardListItem')
-
-  return (
-    <>
+}) => (
+  <>
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <Phone />
+      </ListItemIcon>
+      <ListItemText>
+        <a className="simple-link" href={`tel:+${phone}`}>
+          +{phone}
+        </a>
+      </ListItemText>
+    </ListItem>
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <MailOutline />
+      </ListItemIcon>
+      <ListItemText>
+        <a className="simple-link" href={`mailto:${email}`}>
+          {email}
+        </a>
+      </ListItemText>
+    </ListItem>
+    {typeof institution !== 'undefined' && (
       <ListItem disableGutters>
         <ListItemIcon>
-          <Phone />
+          <LocationCity />
         </ListItemIcon>
-        <ListItemText>
-          <a className="simple-link" href={`tel:+${phone}`}>
-            +{phone}
-          </a>
-        </ListItemText>
+        <ListItemText>{institution ? institution : '-'}</ListItemText>
       </ListItem>
-      <ListItem disableGutters>
-        <ListItemIcon>
-          <MailOutline />
-        </ListItemIcon>
-        <ListItemText>
-          <a className="simple-link" href={`mailto:${email}`}>
-            {email}
-          </a>
-        </ListItemText>
-      </ListItem>
-      {typeof institution !== 'undefined' && (
-        <ListItem disableGutters>
-          <ListItemIcon>
-            <LocationCity />
-          </ListItemIcon>
-          <ListItemText>{institution ? institution : '-'}</ListItemText>
-        </ListItem>
-      )}
-    </>
-  )
-}
+    )}
+  </>
+)
