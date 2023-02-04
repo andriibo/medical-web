@@ -14,8 +14,8 @@ import { Spinner } from '~components/Spinner/spinner'
 import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
-import { Vitals } from '~components/Vitals/vitals'
 import { GrantedUserPatientInfo } from '~pages/GrantedUser/Patient/components/granted-user-patient-info'
+import { GrantedUserVitals } from '~pages/GrantedUser/Patient/components/granted-user-vitals'
 import { useGetPatientProfileQuery } from '~stores/services/profile.api'
 
 import styles from './granted-user-patient.module.scss'
@@ -60,7 +60,7 @@ export const GrantedUserPatient = () => {
             <Tab label="Emergency contacts" value={PatientTab.emergencyContacts} />
           </Tabs>
           <TabPanel activeTab={activeTab} value={PatientTab.vitals}>
-            <Vitals patientUserId={patientUserId} />
+            <GrantedUserVitals patientUserId={patientUserId} />
           </TabPanel>
           <TabPanel activeTab={activeTab} value={PatientTab.thresholds}>
             <Thresholds patientUserId={patientUserId} />

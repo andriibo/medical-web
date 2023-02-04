@@ -157,7 +157,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
       },
       {
         timestamp,
-        title: VitalType.spo,
+        title: VitalType.spo2,
         value: vitals.spo,
         thresholds: {
           min: thresholds?.minSpo2,

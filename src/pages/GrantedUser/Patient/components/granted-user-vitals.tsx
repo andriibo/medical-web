@@ -1,14 +1,16 @@
-import { Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material'
+import React, { FC, useState } from 'react'
 
-import { UserRoles } from '~/enums/user-roles.enum'
 import { VitalsTab } from '~/enums/vitals-tab'
 import { TabPanel } from '~components/TabPanel/tab-panel'
-import { Thresholds } from '~components/Thresholds/thresholds'
 import { Vitals } from '~components/Vitals/vitals'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
 
-export const PatientVitals = () => {
+interface GrantedUserVitalsProps {
+  patientUserId: string
+}
+
+export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId }) => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: VitalsTab) => {
@@ -18,7 +20,7 @@ export const PatientVitals = () => {
   }
 
   return (
-    <div className="white-box content-md">
+    <>
       <ToggleButtonGroup
         color="primary"
         exclusive
@@ -31,17 +33,11 @@ export const PatientVitals = () => {
         <ToggleButton value={VitalsTab.now}>{VitalsTab.now}</ToggleButton>
       </ToggleButtonGroup>
       <TabPanel activeTab={activeTab} value={VitalsTab.history}>
-        <VitalsHistory />
+        <VitalsHistory patientUserId={patientUserId} />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>
-        <Box sx={{ mb: 4 }}>
-          <Vitals />
-        </Box>
-        <Typography sx={{ mb: 1 }} variant="h5">
-          Thresholds
-        </Typography>
-        <Thresholds />
+        <Vitals patientUserId={patientUserId} />
       </TabPanel>
-    </div>
+    </>
   )
 }

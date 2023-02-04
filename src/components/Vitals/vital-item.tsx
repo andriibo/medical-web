@@ -16,7 +16,7 @@ export const VitalItem: FC<VitalItemProps> = ({ vital: { title, value, units, ic
   )
 
   return (
-    <div className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : 'xx'}`}>
+    <div className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : ''}`}>
       <div className={styles.vitalHeader}>
         <div className={styles.vitalIcon}>
           <img alt={title} src={icon} />
