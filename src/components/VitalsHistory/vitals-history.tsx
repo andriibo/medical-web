@@ -62,10 +62,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
   }, [vitalsData])
 
   const vitalsList = useCallback(
-    (vital: IVital) => {
+    (vital: IVital): IVitalsHistoryCard[] => {
       const currentThresholds = thresholds.find((item) => item.thresholdsId === vital.thresholdsId)
 
-      const res: IVitalsHistoryCard[] = [
+      return [
         {
           title: VitalType.hr,
           value: vital.hr,
@@ -116,8 +116,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           units: '',
         },
       ]
-
-      return res
     },
     [thresholds],
   )
@@ -131,9 +129,9 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
   }
 
   return (
-    <>
+    <div className={styles.vitalHistoryList}>
       {filteredVitals.map((vital) => (
-        <div className={styles.vitalHistoryContainer} key={vital.timestamp}>
+        <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
           <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
             {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
           </Typography>
@@ -144,6 +142,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   )
 }

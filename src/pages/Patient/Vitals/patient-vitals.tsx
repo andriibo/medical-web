@@ -1,6 +1,7 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import { Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
+import { UserRoles } from '~/enums/user-roles.enum'
 import { VitalsTab } from '~/enums/vitals-tab'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
@@ -10,12 +11,25 @@ import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
 export const PatientVitals = () => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
 
+  const handleChangeTab = (event: React.SyntheticEvent, value: VitalsTab) => {
+    if (value !== null) {
+      setActiveTab(value)
+    }
+  }
+
   return (
     <div className="white-box content-md">
-      <Tabs className="tabs" onChange={(e, value) => setActiveTab(value)} value={activeTab}>
-        <Tab label="History" value={VitalsTab.history} />
-        <Tab label="Now" value={VitalsTab.now} />
-      </Tabs>
+      <ToggleButtonGroup
+        color="primary"
+        exclusive
+        onChange={handleChangeTab}
+        size="small"
+        sx={{ mb: 2 }}
+        value={activeTab}
+      >
+        <ToggleButton value={VitalsTab.history}>{VitalsTab.history}</ToggleButton>
+        <ToggleButton value={VitalsTab.now}>{VitalsTab.now}</ToggleButton>
+      </ToggleButtonGroup>
       <TabPanel activeTab={activeTab} value={VitalsTab.history}>
         <VitalsHistory />
       </TabPanel>

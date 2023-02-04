@@ -1,3 +1,4 @@
+import { Alert, AlertTitle } from '@mui/material'
 import React, { FC, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
@@ -112,6 +113,11 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
 
   return (
     <>
+      {patientUserId && thresholds.isPending && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          The latest threshold changes will be applied when the patient establishes internet connection to the server
+        </Alert>
+      )}
       <div className={styles.vitalContainer}>
         {thresholdsList.map((threshold, index) => (
           <ThresholdItem key={index} patientUserId={patientUserId} threshold={threshold} />

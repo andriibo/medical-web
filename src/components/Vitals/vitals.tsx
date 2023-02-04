@@ -46,6 +46,8 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
 
   const updatingTimeout = useRef<any>()
 
+  console.log(patientUserId)
+
   const { thresholds } = useThresholds({ patientUserId })
 
   const [vitals, setVitals] = useState<SocketVitalsData>({

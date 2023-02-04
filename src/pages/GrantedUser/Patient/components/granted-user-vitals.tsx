@@ -13,12 +13,18 @@ interface GrantedUserVitalsProps {
 export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId }) => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
 
+  const handleChangeTab = (event: React.SyntheticEvent, value: VitalsTab) => {
+    if (value !== null) {
+      setActiveTab(value)
+    }
+  }
+
   return (
-    <div>
+    <>
       <ToggleButtonGroup
         color="primary"
         exclusive
-        onChange={(e, value) => setActiveTab(value)}
+        onChange={handleChangeTab}
         size="small"
         sx={{ mb: 2 }}
         value={activeTab}
@@ -31,9 +37,9 @@ export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId })
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>
         <Box sx={{ mb: 4 }}>
-          <Vitals />
+          <Vitals patientUserId={patientUserId} />
         </Box>
       </TabPanel>
-    </div>
+    </>
   )
 }
