@@ -36,9 +36,7 @@ export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId })
         <VitalsHistory patientUserId={patientUserId} />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>
-        <Box sx={{ mb: 4 }}>
-          <Vitals patientUserId={patientUserId} />
-        </Box>
+        <Vitals patientUserId={patientUserId} />
       </TabPanel>
     </>
   )

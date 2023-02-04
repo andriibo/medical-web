@@ -44,10 +44,6 @@ export interface IVitalsHistoryCard {
   }
 }
 
-export interface IVitalsHistory {
-  vitals: IVitalsHistoryCard[]
-}
-
 export interface IMyVitalsRequest {
   startDate: string
   endDate: string
