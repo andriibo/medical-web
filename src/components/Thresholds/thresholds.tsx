@@ -1,4 +1,4 @@
-import { Alert, AlertTitle } from '@mui/material'
+import { Alert } from '@mui/material'
 import React, { FC, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
