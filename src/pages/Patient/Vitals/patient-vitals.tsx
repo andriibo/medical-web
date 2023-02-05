@@ -1,7 +1,6 @@
-import { Box, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
+import { Box, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-import { UserRoles } from '~/enums/user-roles.enum'
 import { VitalsTab } from '~/enums/vitals-tab'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'

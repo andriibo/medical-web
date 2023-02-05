@@ -120,6 +120,11 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
     [thresholds],
   )
 
+  useEffect(() => {
+    setStartDate((prevState) => prevState)
+    setEndDate((prevState) => prevState)
+  }, [])
+
   if (myVitalsIsLoading || patientVitalsIsLoading) {
     return <Spinner />
   }

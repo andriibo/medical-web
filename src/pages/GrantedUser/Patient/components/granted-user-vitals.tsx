@@ -1,4 +1,4 @@
-import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material'
+import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 import React, { FC, useState } from 'react'
 
 import { VitalsTab } from '~/enums/vitals-tab'
