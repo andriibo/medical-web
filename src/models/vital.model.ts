@@ -44,6 +44,15 @@ export interface IVitalsHistoryCard {
   }
 }
 
+export interface IVitalChart {
+  temp: number
+  hr: number
+  spo2: number
+  rr: number
+  timestamp: number
+  thresholdsId: string
+}
+
 export interface IMyVitalsRequest {
   startDate: string
   endDate: string

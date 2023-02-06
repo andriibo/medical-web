@@ -6,6 +6,8 @@ import React, { FC, useCallback, useEffect, useState } from 'react'
 import { VitalType } from '~/enums/vital-type.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
+import { VitalChart } from '~components/VitalChart/vital-chart'
+import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
 import iconFall from '~images/icon-fall.svg'
 import iconHeartRate from '~images/icon-heart-rate.png'
@@ -23,7 +25,7 @@ interface VitalsHistoryProps {
 }
 
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
-  const [startDate, setStartDate] = useState(dayjs().subtract(30, 'days').toISOString())
+  const [startDate, setStartDate] = useState(dayjs().subtract(3, 'days').toISOString())
   const [endDate, setEndDate] = useState(dayjs().toISOString())
 
   const [vitalsData, setVitalsData] = useState<IVitalsData>()
@@ -129,24 +131,28 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
     return <Spinner />
   }
 
-  if (!filteredVitals.length) {
+  if (!filteredVitals.length || !vitalsData) {
     return <EmptyBox message="No abnormal vital signs" />
   }
 
   return (
-    <div className={styles.vitalHistoryList}>
-      {filteredVitals.map((vital) => (
-        <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
-          <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
-            {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
-          </Typography>
-          <div className={styles.vitalContainer}>
-            {vitalsList(vital).map((item, index) => (
-              <VitalHistoryItem key={index} vital={item} />
-            ))}
+    <>
+      <VitalChartPopup />
+      {/* {vitalsData && <VitalChart data={filteredVitals} />} */}
+      <div className={styles.vitalHistoryList}>
+        {filteredVitals.map((vital) => (
+          <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
+            <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
+              {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
+            </Typography>
+            <div className={styles.vitalContainer}>
+              {vitalsList(vital).map((item, index) => (
+                <VitalHistoryItem key={index} vital={item} />
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   )
 }
