@@ -45,12 +45,15 @@ export interface IVitalsHistoryCard {
 }
 
 export interface IVitalChart {
-  temp: number
-  hr: number
-  spo2: number
-  rr: number
+  temp: IVitalChartModel[]
+  hr: IVitalChartModel[]
+  spo2: IVitalChartModel[]
+  rr: IVitalChartModel[]
+}
+
+interface IVitalChartModel {
+  value: number | null
   timestamp: number
-  thresholdsId: string
 }
 
 export interface IMyVitalsRequest {

@@ -123,6 +123,10 @@ form {
   }
 }
 
+path {
+  transition: d 0.5s ease;
+}
+
 .tabs {
   margin: 0 0 1rem;
   border-bottom: 1px solid #ddd;

@@ -18,7 +18,7 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { Relationship, RelationshipValues } from '~/enums/relationship.enum'
+import { Relationship } from '~/enums/relationship.enum'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'

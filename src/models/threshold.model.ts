@@ -31,6 +31,7 @@ export interface IThresholds {
   mapSetAt: number
   thresholdsId: string
   isPending: boolean
+  createdAt: number
 }
 
 export interface IThresholdList {
@@ -65,6 +66,17 @@ export interface IThresholdsBloodPressure {
   maxSBP: number
 }
 
+export interface IThresholdsChart {
+  minHr: number
+  maxHr: number
+  minTemp: number
+  maxTemp: number
+  minSpo2: number
+  minRr: number
+  maxRr: number
+}
+
+export type IThresholdsChartKeys = keyof IThresholdsChart
 export type ThresholdsCommonKeys = keyof IThresholdsCommon
 export type ThresholdsSaturationKeys = keyof IThresholdsSaturation
 export type ThresholdsBloodPressureKeys = keyof IThresholdsBloodPressure

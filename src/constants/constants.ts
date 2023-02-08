@@ -1,6 +1,8 @@
 import { ManipulateType } from 'dayjs'
 
-import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period'
+import { VitalPeriodKeys } from '~/enums/vital-period'
+import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
+import { IThresholdsChartKeys } from '~models/threshold.model'
 
 export const BASE_API = process.env.REACT_APP_API_URL
 
@@ -8,27 +10,7 @@ export const ACCOUNT_DELETION_DELAY = 30
 
 export const DEFAULT_AVATAR = 'default-avatar.png'
 
-type ObjectValues<T> = T[keyof T]
-
-export type VitalTab = ObjectValues<typeof VITAL_TAB>
-
-export const VITAL_TAB = {
-  hr: 'HR',
-  spo2: 'SPO2',
-  rr: 'RR',
-  temp: 'TEMP',
-} as const
-
-export type Sdd = typeof VITAL_TAB
-
-const MES_TEX = {
-  id: '1',
-  text: 'Text',
-}
-
-type MessType = typeof MES_TEX
-
-type Time = {
+type TimePeriod = {
   [key in VitalPeriodKeys]: {
     label: string
     value: number
@@ -36,7 +18,7 @@ type Time = {
   }
 }
 
-export const TIME_PERIOD: Time = {
+export const TIME_PERIOD: TimePeriod = {
   oneHour: {
     label: '1H',
     value: 1,
@@ -61,5 +43,30 @@ export const TIME_PERIOD: Time = {
     label: '30D',
     value: 1,
     unit: 'month',
+  },
+}
+
+type VitalThresholdType = {
+  [key in VitalsChartTabKeys]: {
+    max?: IThresholdsChartKeys
+    min: IThresholdsChartKeys
+  }
+}
+
+export const VITAL_THRESHOLDS_TYPE: VitalThresholdType = {
+  hr: {
+    max: 'maxHr',
+    min: 'minHr',
+  },
+  rr: {
+    max: 'maxRr',
+    min: 'minRr',
+  },
+  spo2: {
+    min: 'minSpo2',
+  },
+  temp: {
+    max: 'maxTemp',
+    min: 'minTemp',
   },
 }

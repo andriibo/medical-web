@@ -1,70 +1,69 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material'
+import { FormControlLabel, FormGroup, Switch, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { FC, useEffect, useState } from 'react'
-import { VictoryArea } from 'victory-area'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { VictoryAxis } from 'victory-axis'
 import { VictoryChart } from 'victory-chart'
 import { VictoryContainer, VictoryLabel, VictoryTheme } from 'victory-core'
 import { VictoryLine } from 'victory-line'
 import { VictoryScatter } from 'victory-scatter'
-import { VictoryStack } from 'victory-stack'
 import { VictoryTooltip } from 'victory-tooltip'
 
+import { VitalPeriodKeys } from '~/enums/vital-period'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
+import { VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChart } from '~models/vital.model'
 
 interface VitalChartProps {
-  data: IVitalChart[]
+  activePeriod: VitalPeriodKeys
+  vitals: IVitalChart
   thresholds: IThresholds[]
   start: number
   end: number
 }
 
-const minMaxValueY = (data: IVitalChart[], selectedTab: VitalsChartTabKeys): [number, number] => {
-  // const offset = selectedTab === 'temp' ? 10 : 10
-  const offset = 10
+export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, thresholds, start, end }) => {
+  const [activeVitalsType, setActiveVitalsType] = useState<VitalsChartTabKeys>('hr')
 
-  const max = Math.max(...data.map((item) => item[selectedTab]))
-  const min = Math.min(...data.map((item) => item[selectedTab]))
-  const diff = max - min
-  const maxY = max + (diff / 100) * offset
-  const minY = min - (diff / 100) * offset
+  const [state, setState] = useState({
+    abnormalValues: true,
+    normalZone: true,
+    variance: false,
+  })
 
-  const max2 = Math.max(...data.map((item) => item[selectedTab])) + offset
-  const min2 = Math.min(...data.map((item) => item[selectedTab])) - offset
-
-  console.log({ max, maxY, min, minY })
-
-  // const max = Math.max(...data.map((item) => item[selectedTab])) + ((100 + offset) * 100%)
-  // const min = Math.min(...data.map((item) => item[selectedTab])) - offset
-
-  return [minY, maxY]
-  // return [min2, max2]
-}
-
-const CustomFlyout = () => {
-  console.log(1)
-
-  return (
-    <g>
-      <circle fill="#f00" r="20" stroke="tomato" />
-      <circle fill="none" r="25" stroke="orange" />
-      <circle fill="none" r="30" stroke="gold" />
-    </g>
+  const { min: minThreshold, max: maxThreshold } = useMemo(
+    () => VITAL_THRESHOLDS_TYPE[activeVitalsType],
+    [activeVitalsType],
   )
-}
-
-export const VitalChart: FC<VitalChartProps> = ({ data, thresholds, start, end }) => {
-  const [activeTab, setActiveTab] = useState<VitalsChartTabKeys>('hr')
-  const [filtered, setFiltered] = useState()
 
   const handleChangeTab = (event: React.SyntheticEvent, value: VitalsChartTabKeys) => {
     if (value !== null) {
-      setActiveTab(value)
+      setActiveVitalsType(value)
     }
   }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [event.target.name]: event.target.checked,
+    })
+  }
+
+  const isAbnormal = useCallback(
+    (time: number, value: number) => {
+      const filteredThresholds = thresholds.filter((item) => item.createdAt < time)
+
+      if (filteredThresholds.length > 0) {
+        const lastThreshold = filteredThresholds[filteredThresholds.length - 1]
+
+        return (maxThreshold && value > lastThreshold[maxThreshold]) || value < lastThreshold[minThreshold]
+      }
+
+      return false
+    },
+    [maxThreshold, minThreshold, thresholds],
+  )
 
   return (
     <>
@@ -74,7 +73,7 @@ export const VitalChart: FC<VitalChartProps> = ({ data, thresholds, start, end }
         onChange={handleChangeTab}
         size="small"
         sx={{ mb: 2 }}
-        value={activeTab}
+        value={activeVitalsType}
       >
         {getObjectKeys(VitalsChartTab).map((key) => (
           <ToggleButton key={key} value={key}>
@@ -82,81 +81,121 @@ export const VitalChart: FC<VitalChartProps> = ({ data, thresholds, start, end }
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
+      <FormGroup>
+        <FormControlLabel
+          control={<Switch checked={state.abnormalValues} name="abnormalValues" onChange={handleChange} />}
+          label="Abnormal values"
+        />
+        <FormControlLabel
+          control={<Switch checked={state.normalZone} name="normalZone" onChange={handleChange} />}
+          label="Normal zone"
+        />
+        <FormControlLabel
+          control={<Switch checked={state.variance} name="variance" onChange={handleChange} />}
+          disabled
+          label="Variance"
+        />
+      </FormGroup>
       <VictoryChart
-        containerComponent={<VictoryContainer responsive={false} style={{ width: '100%' }} />}
-        // domain={{ x: [start, end], y: minMaxValueY(data, activeTab) }}
+        containerComponent={<VictoryContainer responsive={false} />}
         domain={{ x: [start, end] }}
         domainPadding={{ y: [30, 30] }}
         height={500}
         theme={VictoryTheme.material}
         width={850}
       >
-        {/* <VictoryLine */}
-        {/*   data={thresh} */}
-        {/*   style={{ */}
-        {/*     parent: { border: '1px solid #ccc' }, */}
-        {/*     data: { stroke: '#f00', strokeWidth: '2px' }, */}
-        {/*   }} */}
-        {/*   // x={data.timespam} */}
-        {/*   x="time" */}
-        {/*   y={() => 170} */}
-        {/* /> */}
         <VictoryAxis
+          animate={{ duration: 500 }}
           style={{ tickLabels: { angle: 0, padding: 15, fontSize: 12 } }}
-          tickFormat={(t) => dayjs(t * 1000).format('MM-DD hh:mm a')}
+          tickCount={10}
+          tickFormat={(t) => {
+            if (activePeriod === 'week' || activePeriod === 'month') {
+              return dayjs(t * 1000).format('MM-DD')
+            }
+
+            return dayjs(t * 1000).format('hh:mm a')
+          }}
         />
-        <VictoryAxis dependentAxis />
-        <VictoryArea
-          samples={1}
-          style={{ data: { fill: '#44b70021', stroke: '#89db00', strokeWidth: 1 } }}
-          y={() => 150}
-          y0={() => 100}
-        />
-        <VictoryLine samples={1} style={{ data: { stroke: '#89db00', strokeWidth: 1 } }} y={() => 100} />
-        <VictoryLabel text={VitalsChartTab[activeTab]} x={40} y={25} />
+        <VictoryAxis animate={{ duration: 500 }} dependentAxis />
+        {state.normalZone && (
+          <VictoryLine
+            // animate={{ duration: 500 }}
+            data={thresholds}
+            domain={{ x: [start, end] }}
+            interpolation="stepAfter"
+            style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
+            x="createdAt"
+            y={minThreshold}
+          />
+        )}
+        {state.normalZone && maxThreshold && (
+          <VictoryLine
+            // animate={{ duration: 500 }}
+            data={thresholds}
+            domain={{ x: [start, end] }}
+            interpolation="stepAfter"
+            style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
+            x="createdAt"
+            y={maxThreshold}
+          />
+        )}
+        {/* {maxThreshold && ( */}
+        {/*   <VictoryScatter */}
+        {/*     animate={{ duration: 500 }} */}
+        {/*     data={thresholds} */}
+        {/*     labelComponent={ */}
+        {/*       <VictoryTooltip */}
+        {/*         flyoutStyle={{ */}
+        {/*           fill: '#000', */}
+        {/*           strokeWidth: 0, */}
+        {/*         }} */}
+        {/*         style={{ fontSize: '13px', lineHeight: '1', backgroundColor: '#42a5f5', fill: '#fff' }} */}
+        {/*       /> */}
+        {/*     } */}
+        {/*     labels={({ datum }) => `${datum._y} ${dayjs(datum._x * 1000).format('MM-DD hh:mm a')}`} */}
+        {/*     size={4} */}
+        {/*     style={{ */}
+        {/*       data: { */}
+        {/*         fill: '#ff1744', */}
+        {/*         stroke: '#fff', */}
+        {/*         strokeWidth: '2px', */}
+        {/*       }, */}
+        {/*     }} */}
+        {/*     x="createdAt" */}
+        {/*     y={maxThreshold} */}
+        {/*   /> */}
+        {/* )} */}
+        <VictoryLabel text={VitalsChartTab[activeVitalsType]} x={40} y={25} />
         <VictoryLine
-          data={data}
-          labelComponent={
-            <VictoryLabel
-              backgroundStyle={{ fill: '#f00' }}
-              renderInPortal
-              style={{
-                fontSize: '11px',
-                textShadow: '1px 1px 0 #fff, -1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff',
-              }}
-            />
-          }
-          samples={200}
+          data={vitals[activeVitalsType]}
           style={{
             data: { stroke: '#42a5f5' },
-            // parent: { border: '1px solid #000' },
           }}
           x="timestamp"
-          y={activeTab}
-          // labels={({ datum }) => datum._y}
+          y="value"
         />
         <VictoryScatter
-          data={data}
+          data={vitals[activeVitalsType]}
           labelComponent={
             <VictoryTooltip
               flyoutStyle={{
-                fill: ({ datum }) => (datum._y > 151 || datum._y < 99 ? '#f00' : '#42a5f5'),
+                fill: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5'),
                 strokeWidth: 0,
               }}
               style={{ fontSize: '13px', lineHeight: '1', backgroundColor: '42a5f5', fill: '#fff' }}
             />
           }
-          labels={({ datum }) => datum._y}
-          size={4}
+          labels={({ datum }) => `${datum._y} ${dayjs(datum._x * 1000).format('MM-DD hh:mm a')}`}
+          size={({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? 6 : 4)}
           style={{
             data: {
-              fill: ({ datum }) => (datum._y > 151 || datum._y < 99 ? '#f00' : '#42a5f5'),
+              fill: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5'),
               stroke: '#fff',
-              strokeWidth: '2px',
+              strokeWidth: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '3px' : '2px'),
             },
           }}
           x="timestamp"
-          y={activeTab}
+          y="value"
         />
       </VictoryChart>
     </>
