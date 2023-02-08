@@ -182,7 +182,6 @@ export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, threshol
                 fill: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5'),
                 strokeWidth: 0,
               }}
-              flyoutWidth={200}
               style={{ fontSize: '13px', lineHeight: '1', backgroundColor: '42a5f5', fill: '#fff' }}
             />
           }
