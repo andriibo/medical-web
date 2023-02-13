@@ -15,7 +15,7 @@ import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
 import { IThresholds } from '~models/threshold.model'
 import { IVital, IVitalsData, IVitalsHistoryCard } from '~models/vital.model'
-import { useGetMyVitalsQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQueryQuery } from '~stores/services/vitals.api'
 
 import styles from './vitals-history.module.scss'
 
@@ -31,10 +31,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
   const [filteredVitals, setFilteredVitals] = useState<IVital[]>([])
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
 
-  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetMyVitalsQuery(
+  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetPatientVitalsQueryQuery(
     patientUserId ? skipToken : { startDate, endDate },
   )
-  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsQuery(
+  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
     patientUserId ? { patientUserId, startDate, endDate } : skipToken,
   )
 

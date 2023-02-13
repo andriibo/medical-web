@@ -1,7 +1,8 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { useCallback, useMemo, useState } from 'react'
+import { mean, std } from 'mathjs'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
@@ -44,6 +45,13 @@ export const PatientPersonalInfo = () => {
   const handleChangePasswordPopupClose = () => {
     setChangePasswordPopupOpen(false)
   }
+
+  useEffect(() => {
+    const arr = [1, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 20]
+
+    console.log(mean(arr))
+    console.log(std(arr))
+  }, [])
 
   if (isLoading) {
     return <Spinner />

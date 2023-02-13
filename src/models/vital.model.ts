@@ -1,3 +1,4 @@
+import { VitalPeriodKeys } from '~/enums/vital-period'
 import { VitalType } from '~/enums/vital-type.enum'
 import { IThresholds } from '~models/threshold.model'
 
@@ -51,8 +52,16 @@ export interface IVitalChart {
   rr: IVitalChartModel[]
 }
 
-interface IVitalChartModel {
-  value: number | null
+export interface IVitalChartSettings {
+  abnormalValues: boolean
+  normalZone: boolean
+  variance: boolean
+}
+
+export interface IVitalChartModel {
+  value: number
+  minStd: number
+  maxStd: number
   timestamp: number
 }
 

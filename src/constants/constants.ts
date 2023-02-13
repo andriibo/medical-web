@@ -44,6 +44,11 @@ export const TIME_PERIOD: TimePeriod = {
     value: 1,
     unit: 'month',
   },
+  range: {
+    label: 'Range',
+    value: 0,
+    unit: 'month',
+  },
 }
 
 type VitalThresholdType = {

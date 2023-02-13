@@ -1,6 +1,7 @@
 import { FormControlLabel, FormGroup, Switch, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { VictoryArea } from 'victory-area'
 import { VictoryAxis } from 'victory-axis'
 import { VictoryChart } from 'victory-chart'
 import { VictoryContainer, VictoryLabel, VictoryTheme } from 'victory-core'
@@ -13,42 +14,33 @@ import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { IThresholds } from '~models/threshold.model'
-import { IVitalChart } from '~models/vital.model'
+import { IVitalChart, IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
 interface VitalChartProps {
   activePeriod: VitalPeriodKeys
-  vitals: IVitalChart
+  activeVitalsType: VitalsChartTabKeys
+  vitals: IVitalChartModel[]
   thresholds: IThresholds[]
-  start: number
-  end: number
+  startDate: number
+  endDate: number
+  settings: IVitalChartSettings
 }
 
-export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, thresholds, start, end }) => {
-  const [activeVitalsType, setActiveVitalsType] = useState<VitalsChartTabKeys>('hr')
-
-  const [state, setState] = useState({
-    abnormalValues: true,
-    normalZone: true,
-    variance: false,
-  })
-
+export const VitalChart: FC<VitalChartProps> = ({
+  activePeriod,
+  activeVitalsType,
+  vitals,
+  thresholds,
+  startDate,
+  endDate,
+  settings,
+}) => {
   const { min: minThreshold, max: maxThreshold } = useMemo(
     () => VITAL_THRESHOLDS_TYPE[activeVitalsType],
     [activeVitalsType],
   )
 
-  const handleChangeTab = (event: React.SyntheticEvent, value: VitalsChartTabKeys) => {
-    if (value !== null) {
-      setActiveVitalsType(value)
-    }
-  }
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [event.target.name]: event.target.checked,
-    })
-  }
+  const isLongPeriod = useMemo(() => endDate - startDate > 594700, [endDate, startDate])
 
   const isAbnormal = useCallback(
     (time: number, value: number) => {
@@ -57,7 +49,7 @@ export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, threshol
       if (filteredThresholds.length > 0) {
         const lastThreshold = filteredThresholds[filteredThresholds.length - 1]
 
-        return (maxThreshold && value > lastThreshold[maxThreshold]) || value < lastThreshold[minThreshold]
+        return (maxThreshold && value >= lastThreshold[maxThreshold]) || value <= lastThreshold[minThreshold]
       }
 
       return false
@@ -67,72 +59,55 @@ export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, threshol
 
   return (
     <>
-      <ToggleButtonGroup
-        color="primary"
-        exclusive
-        onChange={handleChangeTab}
-        size="small"
-        sx={{ mb: 2 }}
-        value={activeVitalsType}
-      >
-        {getObjectKeys(VitalsChartTab).map((key) => (
-          <ToggleButton key={key} value={key}>
-            {VitalsChartTab[key]}
-          </ToggleButton>
-        ))}
-      </ToggleButtonGroup>
-      <FormGroup>
-        <FormControlLabel
-          control={<Switch checked={state.abnormalValues} name="abnormalValues" onChange={handleChange} />}
-          label="Abnormal values"
-        />
-        <FormControlLabel
-          control={<Switch checked={state.normalZone} name="normalZone" onChange={handleChange} />}
-          label="Normal zone"
-        />
-        <FormControlLabel
-          control={<Switch checked={state.variance} name="variance" onChange={handleChange} />}
-          disabled
-          label="Variance"
-        />
-      </FormGroup>
       <VictoryChart
         containerComponent={<VictoryContainer responsive={false} />}
-        domain={{ x: [start, end] }}
+        domain={{ x: [startDate, endDate] }}
         domainPadding={{ y: [30, 30] }}
         height={500}
         theme={VictoryTheme.material}
         width={850}
       >
+        {settings.variance && (
+          <VictoryArea
+            data={vitals}
+            interpolation="catmullRom"
+            style={{ data: { stroke: '#dfdfdf', strokeWidth: '2', fill: 'rgb(209 209 209 / 20%)' } }}
+            x="timestamp"
+            y="maxStd"
+            y0="minStd"
+          />
+        )}
+        {settings.variance && (
+          <VictoryLine
+            data={vitals}
+            interpolation="catmullRom"
+            style={{
+              data: { stroke: '#dfdfdf' },
+            }}
+            x="timestamp"
+            y="minStd"
+          />
+        )}
         <VictoryAxis
-          animate={{ duration: 500 }}
           style={{ tickLabels: { angle: 0, padding: 15, fontSize: 12 } }}
           tickCount={10}
-          tickFormat={(t) => {
-            if (activePeriod === 'week' || activePeriod === 'month') {
-              return dayjs(t * 1000).format('MM-DD')
-            }
-
-            return dayjs(t * 1000).format('hh:mm a')
-          }}
+          tickFormat={(t) => dayjs(t * 1000).format(isLongPeriod ? 'MM-DD' : 'hh:mm a')}
         />
-        <VictoryAxis animate={{ duration: 500 }} dependentAxis />
-        {state.normalZone && (
+        <VictoryAxis dependentAxis />
+        {settings.normalZone && (
           <VictoryLine
-            // animate={{ duration: 500 }}
             data={thresholds}
-            domain={{ x: [start, end] }}
+            // domain={{ x: [startDate, endDate] }}
             interpolation="stepAfter"
             style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
             x="createdAt"
             y={minThreshold}
           />
         )}
-        {state.normalZone && maxThreshold && (
+        {settings.normalZone && maxThreshold && (
           <VictoryLine
-            // animate={{ duration: 500 }}
             data={thresholds}
-            domain={{ x: [start, end] }}
+            // domain={{ x: [startDate, endDate] }}
             interpolation="stepAfter"
             style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
             x="createdAt"
@@ -167,7 +142,8 @@ export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, threshol
         {/* )} */}
         <VictoryLabel text={VitalsChartTab[activeVitalsType]} x={40} y={25} />
         <VictoryLine
-          data={vitals[activeVitalsType]}
+          data={vitals}
+          standalone={false}
           style={{
             data: { stroke: '#42a5f5' },
           }}
@@ -175,23 +151,25 @@ export const VitalChart: FC<VitalChartProps> = ({ activePeriod, vitals, threshol
           y="value"
         />
         <VictoryScatter
-          data={vitals[activeVitalsType]}
+          data={vitals}
           labelComponent={
             <VictoryTooltip
               flyoutStyle={{
-                fill: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5'),
+                fill: ({ datum }) =>
+                  settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5',
                 strokeWidth: 0,
               }}
               style={{ fontSize: '13px', lineHeight: '1', backgroundColor: '42a5f5', fill: '#fff' }}
             />
           }
           labels={({ datum }) => `${datum._y} - ${dayjs(datum._x * 1000).format('MM-DD hh:mm a')}`}
-          size={({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? 6 : 4)}
+          size={({ datum }) => (settings.abnormalValues && isAbnormal(datum._x, datum._y) ? 6 : 4)}
+          standalone={false}
           style={{
             data: {
-              fill: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5'),
+              fill: ({ datum }) => (settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#1976D2'),
               stroke: '#fff',
-              strokeWidth: ({ datum }) => (state.abnormalValues && isAbnormal(datum._x, datum._y) ? '3px' : '2px'),
+              strokeWidth: ({ datum }) => (settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '3px' : '2px'),
             },
           }}
           x="timestamp"

@@ -4,6 +4,7 @@ export enum VitalPeriod {
   day = '24H',
   week = '7D',
   month = '30D',
+  range = 'Range',
 }
 
 export type VitalPeriodKeys = keyof typeof VitalPeriod
