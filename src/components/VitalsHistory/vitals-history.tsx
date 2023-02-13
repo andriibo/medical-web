@@ -24,7 +24,7 @@ interface VitalsHistoryProps {
 }
 
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
-  const [startDate, setStartDate] = useState(dayjs().subtract(3, 'days').toISOString())
+  const [startDate, setStartDate] = useState(dayjs().subtract(30, 'days').toISOString())
   const [endDate, setEndDate] = useState(dayjs().toISOString())
 
   const [vitalsData, setVitalsData] = useState<IVitalsData>()
@@ -136,8 +136,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
 
   return (
     <>
-      <VitalChartPopup />
-      {/* {vitalsData && <VitalChart data={filteredVitals} />} */}
       <div className={styles.vitalHistoryList}>
         {filteredVitals.map((vital) => (
           <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
