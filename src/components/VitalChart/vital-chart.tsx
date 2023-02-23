@@ -1,6 +1,6 @@
-import { FormControlLabel, FormGroup, Switch, ToggleButton, ToggleButtonGroup } from '@mui/material'
+import { Button } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 import { VictoryArea } from 'victory-area'
 import { VictoryAxis } from 'victory-axis'
 import { VictoryChart } from 'victory-chart'
@@ -12,9 +12,8 @@ import { VictoryTooltip } from 'victory-tooltip'
 import { VitalPeriodKeys } from '~/enums/vital-period'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VITAL_THRESHOLDS_TYPE } from '~constants/constants'
-import { getObjectKeys } from '~helpers/get-object-keys'
 import { IThresholds } from '~models/threshold.model'
-import { IVitalChart, IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
+import { IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
 interface VitalChartProps {
   activePeriod: VitalPeriodKeys
@@ -40,7 +39,9 @@ export const VitalChart: FC<VitalChartProps> = ({
     [activeVitalsType],
   )
 
-  const isLongPeriod = useMemo(() => endDate - startDate > 594700, [endDate, startDate])
+  const [inter, setInter] = useState(false)
+
+  const isLongPeriod = useMemo(() => endDate - startDate > 200000, [endDate, startDate])
 
   const isAbnormal = useCallback(
     (time: number, value: number) => {
@@ -59,6 +60,7 @@ export const VitalChart: FC<VitalChartProps> = ({
 
   return (
     <>
+      <Button onClick={() => setInter(!inter)}>toggle</Button>
       <VictoryChart
         containerComponent={<VictoryContainer responsive={false} />}
         domain={{ x: [startDate, endDate] }}
@@ -70,7 +72,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryArea
             data={vitals}
-            interpolation="catmullRom"
+            interpolation={inter ? 'catmullRom' : 'linear'}
             style={{ data: { stroke: '#dfdfdf', strokeWidth: '2', fill: 'rgb(209 209 209 / 20%)' } }}
             x="timestamp"
             y="maxStd"
@@ -80,7 +82,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryLine
             data={vitals}
-            interpolation="catmullRom"
+            interpolation={inter ? 'catmullRom' : 'linear'}
             style={{
               data: { stroke: '#dfdfdf' },
             }}
@@ -143,6 +145,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         <VictoryLabel text={VitalsChartTab[activeVitalsType]} x={40} y={25} />
         <VictoryLine
           data={vitals}
+          interpolation={inter ? 'catmullRom' : 'linear'}
           standalone={false}
           style={{
             data: { stroke: '#42a5f5' },
