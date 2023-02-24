@@ -1,7 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useState } from 'react'
 
-import { IThresholds } from '~models/threshold.model'
+import { IThresholdsData } from '~models/threshold.model'
 import {
   useGetMyVitalThresholdsQuery,
   useGetPatientVirtualThresholdsQuery,
@@ -12,7 +12,10 @@ interface ThresholdsProps {
 }
 
 export const useThresholds = ({ patientUserId }: ThresholdsProps) => {
-  const [thresholds, setThresholds] = useState<IThresholds>()
+  const [thresholdsData, setThresholdsData] = useState<IThresholdsData | { threshold: null; users: null }>({
+    threshold: null,
+    users: null,
+  })
   const [isLoading, setIsLoading] = useState(false)
 
   const { data: myThresholds, isLoading: myThresholdsIsLoading } = useGetMyVitalThresholdsQuery(
@@ -25,13 +28,13 @@ export const useThresholds = ({ patientUserId }: ThresholdsProps) => {
 
   useEffect(() => {
     if (patientThresholds && !patientThresholdsIsLoading) {
-      setThresholds({ ...patientThresholds })
+      setThresholdsData({ ...patientThresholds })
 
       return
     }
 
     if (myThresholds && !myThresholdsIsLoading) {
-      setThresholds({ ...myThresholds })
+      setThresholdsData({ ...myThresholds })
     }
   }, [myThresholds, myThresholdsIsLoading, patientThresholds, patientThresholdsIsLoading])
 
@@ -46,7 +49,8 @@ export const useThresholds = ({ patientUserId }: ThresholdsProps) => {
   }, [myThresholdsIsLoading, patientThresholdsIsLoading])
 
   return {
-    thresholds,
+    threshold: thresholdsData.threshold,
+    users: thresholdsData.users,
     isLoading,
   }
 }

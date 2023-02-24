@@ -11,7 +11,7 @@ interface VitalItemProps {
 }
 
 export const VitalHistoryItem: FC<VitalItemProps> = ({ vital }) => {
-  const { isNormal, title, value, thresholds, units, icon } = vital
+  const { isNormal, title, value, threshold, units, icon } = vital
 
   const isFall = useMemo(() => title === VitalType.fall, [title])
 
@@ -41,16 +41,16 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital }) => {
         </div>
       )}
       <ul className={styles.thresholdInfo}>
-        {thresholds?.min && (
+        {threshold?.min && (
           <li>
             <span className={styles.thresholdInfoLabel}>Min</span>
-            {thresholds.min}
+            {threshold.min}
           </li>
         )}
-        {thresholds?.max && (
+        {threshold?.max && (
           <li>
             <span className={styles.thresholdInfoLabel}>Max</span>
-            {thresholds.max}
+            {threshold.max}
           </li>
         )}
       </ul>

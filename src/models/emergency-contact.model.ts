@@ -10,7 +10,7 @@ export interface IEmergencyContactModel {
 
 export interface IEmergencyContact extends IEmergencyContactModel {
   contactId: string
-  createdAt: string
+  createdAt: number
 }
 
 export type IEmergencyContactModelKeys = keyof IEmergencyContactModel
