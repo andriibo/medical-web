@@ -16,7 +16,7 @@ import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
-import { IThresholdData } from '~models/threshold.model'
+import { IThresholdList } from '~models/threshold.model'
 
 import styles from './thresholds.module.scss'
 
@@ -35,7 +35,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
 
   const getSetByUser = useCallback((id: string | null) => users?.find((user) => user.userId === id) || null, [users])
 
-  const thresholdsList: IThresholdData[] | undefined = useMemo(() => {
+  const thresholdsList: IThresholdList[] | undefined = useMemo(() => {
     if (threshold) {
       return [
         {

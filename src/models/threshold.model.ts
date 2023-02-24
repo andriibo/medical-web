@@ -1,7 +1,7 @@
 import { VitalType } from '~/enums/vital-type.enum'
 import { IUserModel } from '~models/user.model'
 
-export interface IThresholdsResponse {
+export interface IThresholdsData {
   threshold: IThresholds
   users: IUserModel[]
 }
@@ -38,7 +38,7 @@ export interface IThresholds {
   isPending: boolean
 }
 
-export interface IThresholdData {
+export interface IThresholdList {
   title: VitalType
   icon: string
   className?: string

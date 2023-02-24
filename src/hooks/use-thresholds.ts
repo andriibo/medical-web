@@ -1,7 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useEffect, useState } from 'react'
 
-import { IThresholdsResponse } from '~models/threshold.model'
+import { IThresholdsData } from '~models/threshold.model'
 import {
   useGetMyVitalThresholdsQuery,
   useGetPatientVirtualThresholdsQuery,
@@ -12,7 +12,7 @@ interface ThresholdsProps {
 }
 
 export const useThresholds = ({ patientUserId }: ThresholdsProps) => {
-  const [thresholdsData, setThresholdsData] = useState<IThresholdsResponse | { threshold: null; users: null }>({
+  const [thresholdsData, setThresholdsData] = useState<IThresholdsData | { threshold: null; users: null }>({
     threshold: null,
     users: null,
   })
