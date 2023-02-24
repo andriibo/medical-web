@@ -14,7 +14,7 @@ export interface ISuggestedContactRequest extends ISuggestedContactModel {
 
 export interface ISuggestedContact extends ISuggestedContactModel {
   contactId: string
-  suggestedAt: string
+  suggestedAt: number
   suggestedByUser: {
     userId: string
     email: string

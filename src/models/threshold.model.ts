@@ -1,39 +1,44 @@
 import { VitalType } from '~/enums/vital-type.enum'
 import { IUserModel } from '~models/user.model'
 
+export interface IThresholdsResponse {
+  threshold: IThresholds
+  users: IUserModel[]
+}
+
 export interface IThresholds {
   minHr: number
   maxHr: number
-  hrSetBy: IUserModel | null
+  hrSetBy: string | null
   hrSetAt: number
   minTemp: number
   maxTemp: number
-  tempSetBy: IUserModel | null
+  tempSetBy: string | null
   tempSetAt: number
   minSpo2: number
-  spo2SetBy: IUserModel | null
+  spo2SetBy: string | null
   spo2SetAt: number
   minRr: number
   maxRr: number
-  rrSetBy: IUserModel | null
+  rrSetBy: string | null
   rrSetAt: number
   minDbp: number
   maxDbp: number
-  dbpSetBy: IUserModel | null
+  dbpSetBy: string | null
   dbpSetAt: number
   minSbp: number
   maxSbp: number
-  sbpSetBy: IUserModel | null
+  sbpSetBy: string | null
   sbpSetAt: number
   minMap: number
   maxMap: number
-  mapSetBy: IUserModel | null
+  mapSetBy: string | null
   mapSetAt: number
   thresholdsId: string
   isPending: boolean
 }
 
-export interface IThresholdList {
+export interface IThresholdData {
   title: VitalType
   icon: string
   className?: string

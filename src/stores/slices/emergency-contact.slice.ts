@@ -18,7 +18,7 @@ const initialState: IEmergencyContactData = {
     phone: '',
     relationship: Object.keys(Relationship)[0] as RelationshipValues,
     contactId: '',
-    createdAt: '',
+    createdAt: 0,
   },
   emergencyContactHasChanges: false,
 }

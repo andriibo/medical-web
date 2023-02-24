@@ -2,7 +2,7 @@ import { Edit } from '@mui/icons-material'
 import { IconButton, Typography } from '@mui/material'
 import React, { FC } from 'react'
 
-import { IThresholdList, IThresholdListValues } from '~models/threshold.model'
+import { IThresholdData, IThresholdListValues } from '~models/threshold.model'
 import { IUserModel } from '~models/user.model'
 
 import styles from './thresholds.module.scss'
@@ -29,7 +29,7 @@ const ThresholdInfo: FC<ThresholdInfoProps> = ({ title, min, max, units }) => (
 )
 
 interface ThresholdItemProps {
-  threshold: IThresholdList
+  threshold: IThresholdData
   patientUserId?: string
 }
 

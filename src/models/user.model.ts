@@ -8,4 +8,5 @@ export interface IUserModel {
   avatar: string
   role: UserRoles
   phone: string
+  deletedAt: number | null
 }

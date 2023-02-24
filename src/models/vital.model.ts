@@ -1,9 +1,11 @@
 import { VitalType } from '~/enums/vital-type.enum'
 import { IThresholds } from '~models/threshold.model'
+import { IUserModel } from '~models/user.model'
 
 export interface IVitalsData {
   vitals: IVital[]
   thresholds: IThresholds[]
+  users: IUserModel[]
 }
 
 export interface IVital {
@@ -38,7 +40,7 @@ export interface IVitalsHistoryCard {
   isNormal?: boolean
   icon: string
   units: string
-  thresholds?: {
+  threshold?: {
     min?: number
     max?: number
   }
