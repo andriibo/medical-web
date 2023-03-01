@@ -46,7 +46,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
 
   const updatingTimeout = useRef<any>()
 
-  const { thresholds } = useThresholds({ patientUserId })
+  const { threshold } = useThresholds({ patientUserId })
 
   const [vitals, setVitals] = useState<SocketVitalsData>({
     hr: null,
@@ -137,9 +137,9 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         timestamp,
         title: VitalType.hr,
         value: vitals.hr,
-        thresholds: {
-          min: thresholds?.minHr,
-          max: thresholds?.maxHr,
+        threshold: {
+          min: threshold?.minHr,
+          max: threshold?.maxHr,
         },
         icon: iconHeartRate,
         units: 'bpm',
@@ -148,9 +148,9 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         timestamp,
         title: VitalType.temp,
         value: vitals.temp,
-        thresholds: {
-          min: thresholds?.minTemp,
-          max: thresholds?.maxTemp,
+        threshold: {
+          min: threshold?.minTemp,
+          max: threshold?.maxTemp,
         },
         icon: iconTemperature,
         units: '°C',
@@ -159,8 +159,8 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         timestamp,
         title: VitalType.spo2,
         value: vitals.spo,
-        thresholds: {
-          min: thresholds?.minSpo2,
+        threshold: {
+          min: threshold?.minSpo2,
         },
         icon: iconSaturation,
         units: '%',
@@ -169,9 +169,9 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         timestamp,
         title: VitalType.rr,
         value: vitals.rr,
-        thresholds: {
-          min: thresholds?.minRr,
-          max: thresholds?.maxRr,
+        threshold: {
+          min: threshold?.minRr,
+          max: threshold?.maxRr,
         },
         icon: iconRespiration,
         units: 'rpm',
@@ -191,7 +191,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         units: '',
       },
     ]
-  }, [vitals, thresholds])
+  }, [vitals, threshold])
 
   return (
     <>

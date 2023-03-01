@@ -1,20 +1,11 @@
-import { UserRoles } from '~/enums/user-roles.enum'
 import { Modify } from '~/types/modify.type'
 import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
+import { IUserModel } from '~models/user.model'
 
 export interface IAuthData {
   token: string
   tokenExpireTime: string
-  user: {
-    userId: string
-    email: string
-    role: UserRoles
-    firstName: string
-    lastName: string
-    phone: string
-    avatar: string
-    deletedAt: number
-  }
+  user: IUserModel
 }
 
 export interface IAuthSignIn {

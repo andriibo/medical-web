@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material'
-import React, { FC, useMemo, useState } from 'react'
+import React, { FC, useCallback, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
 import { useThresholds } from '~/hooks/use-thresholds'
@@ -25,25 +25,27 @@ interface ThresholdsProps {
 }
 
 export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
+  const { threshold, users, isLoading } = useThresholds({ patientUserId })
+
   const [heartRatePopupOpen, setHeartRatePopupOpen] = useState(false)
   const [temperaturePopupOpen, setTemperaturePopupOpen] = useState(false)
   const [saturationPopupOpen, setSaturationPopupOpen] = useState(false)
   const [respirationRatePopupOpen, setRespirationRatePopupOpen] = useState(false)
   const [bloodPressurePopupOpen, setBloodPressurePopupOpen] = useState(false)
 
-  const { thresholds, isLoading } = useThresholds({ patientUserId })
+  const getSetByUser = useCallback((id: string | null) => users?.find((user) => user.userId === id) || null, [users])
 
   const thresholdsList: IThresholdList[] | undefined = useMemo(() => {
-    if (thresholds) {
+    if (threshold) {
       return [
         {
           title: VitalType.hr,
           icon: iconHeartRate,
           values: {
-            min: thresholds.minHr,
-            max: thresholds.maxHr,
+            min: threshold.minHr,
+            max: threshold.maxHr,
           },
-          setBy: thresholds.hrSetBy,
+          setBy: getSetByUser(threshold.hrSetBy),
           units: 'bpm',
           onClick: () => setHeartRatePopupOpen(true),
         },
@@ -51,10 +53,10 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           title: VitalType.temp,
           icon: iconTemperature,
           values: {
-            min: thresholds.minTemp,
-            max: thresholds.maxTemp,
+            min: threshold.minTemp,
+            max: threshold.maxTemp,
           },
-          setBy: thresholds.tempSetBy,
+          setBy: getSetByUser(threshold.tempSetBy),
           units: '°C',
           onClick: () => setTemperaturePopupOpen(true),
         },
@@ -65,16 +67,16 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           values: [
             {
               title: 'DPB',
-              min: thresholds.minDbp,
-              max: thresholds.maxDbp,
+              min: threshold.minDbp,
+              max: threshold.maxDbp,
             },
             {
               title: 'SPB',
-              min: thresholds.minSbp,
-              max: thresholds.maxSbp,
+              min: threshold.minSbp,
+              max: threshold.maxSbp,
             },
           ],
-          setBy: thresholds.spo2SetBy,
+          setBy: getSetByUser(threshold.spo2SetBy),
           units: 'mmHg',
           onClick: () => setBloodPressurePopupOpen(true),
         },
@@ -82,9 +84,9 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           title: VitalType.spo2,
           icon: iconSaturation,
           values: {
-            min: thresholds.minSpo2,
+            min: threshold.minSpo2,
           },
-          setBy: thresholds.spo2SetBy,
+          setBy: getSetByUser(threshold.spo2SetBy),
           units: '%',
           onClick: () => setSaturationPopupOpen(true),
         },
@@ -92,28 +94,28 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           title: VitalType.rr,
           icon: iconRespiration,
           values: {
-            min: thresholds.minRr,
-            max: thresholds.maxRr,
+            min: threshold.minRr,
+            max: threshold.maxRr,
           },
-          setBy: thresholds.rrSetBy,
+          setBy: getSetByUser(threshold.rrSetBy),
           units: 'rpm',
           onClick: () => setRespirationRatePopupOpen(true),
         },
       ]
     }
-  }, [thresholds])
+  }, [getSetByUser, threshold])
 
   if (isLoading) {
     return <Spinner />
   }
 
-  if (!thresholds || !thresholdsList) {
+  if (!threshold || !thresholdsList) {
     return <EmptyBox />
   }
 
   return (
     <>
-      {patientUserId && thresholds.isPending && (
+      {patientUserId && threshold.isPending && (
         <Alert severity="warning" sx={{ mb: 2 }}>
           The latest threshold changes will be applied when the patient establishes internet connection to the server
         </Alert>
@@ -130,8 +132,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={heartRatePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.minHr,
-              max: thresholds.maxHr,
+              min: threshold.minHr,
+              max: threshold.maxHr,
             }}
           />
           <EditPatientTemperaturePopup
@@ -139,8 +141,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={temperaturePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.minTemp,
-              max: thresholds.maxTemp,
+              min: threshold.minTemp,
+              max: threshold.maxTemp,
             }}
           />
           <EditPatientSaturationPopup
@@ -148,7 +150,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={saturationPopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.minSpo2,
+              min: threshold.minSpo2,
             }}
           />
           <EditPatientRespirationRatePopup
@@ -156,8 +158,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={respirationRatePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              min: thresholds.minRr,
-              max: thresholds.maxRr,
+              min: threshold.minRr,
+              max: threshold.maxRr,
             }}
           />
           <EditPatientBloodPressurePopup
@@ -165,10 +167,10 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={bloodPressurePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              minSBP: thresholds.minSbp,
-              maxSBP: thresholds.maxSbp,
-              minDBP: thresholds.minDbp,
-              maxDBP: thresholds.maxDbp,
+              minSBP: threshold.minSbp,
+              maxSBP: threshold.maxSbp,
+              minDBP: threshold.minDbp,
+              maxDBP: threshold.maxDbp,
             }}
           />
         </>

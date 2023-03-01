@@ -71,7 +71,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           title: VitalType.hr,
           value: vital.hr,
           isNormal: vital.isHrNormal,
-          thresholds: {
+          threshold: {
             min: currentThresholds?.minHr,
             max: currentThresholds?.maxHr,
           },
@@ -82,7 +82,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           title: VitalType.temp,
           value: vital.temp,
           isNormal: vital.isTempNormal,
-          thresholds: {
+          threshold: {
             min: currentThresholds?.minTemp,
             max: currentThresholds?.maxTemp,
           },
@@ -93,7 +93,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           title: VitalType.spo2,
           value: vital.spo2,
           isNormal: vital.isSpo2Normal,
-          thresholds: {
+          threshold: {
             min: currentThresholds?.minSpo2,
           },
           icon: iconSaturation,
@@ -103,7 +103,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
           title: VitalType.rr,
           value: vital.rr,
           isNormal: vital.isRrNormal,
-          thresholds: {
+          threshold: {
             min: currentThresholds?.minRr,
             max: currentThresholds?.maxRr,
           },

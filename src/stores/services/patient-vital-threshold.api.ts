@@ -1,9 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import {
-  IThresholds,
   IThresholdsBloodPressure,
   IThresholdsCommon,
+  IThresholdsData,
   IThresholdsSaturation,
 } from '~models/threshold.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
@@ -61,13 +61,13 @@ export const patientVitalThresholdApi = createApi({
       }),
       invalidatesTags: ['PatientVitalThreshold'],
     }),
-    getMyVitalThresholds: build.query<IThresholds, void>({
+    getMyVitalThresholds: build.query<IThresholdsData, void>({
       query: () => ({
         url: 'patient/my-vital-thresholds',
       }),
       providesTags: ['PatientVitalThreshold'],
     }),
-    getPatientVirtualThresholds: build.query<IThresholds, { patientUserId: string }>({
+    getPatientVirtualThresholds: build.query<IThresholdsData, { patientUserId: string }>({
       query: ({ patientUserId }) => ({
         url: `patient-vital-thresholds/${patientUserId}`,
       }),
