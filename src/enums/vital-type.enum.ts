@@ -7,6 +7,15 @@ export enum VitalType {
   bp = 'Blood Pressure',
 }
 
+export enum VitalUnits {
+  hr = 'bpm',
+  spo2 = '%',
+  rr = 'rpm',
+  temp = '°C',
+  fall = '',
+  bp = '',
+}
+
 export enum VitalsChartTab {
   hr = 'HR',
   spo2 = 'SPO2',
@@ -14,4 +23,5 @@ export enum VitalsChartTab {
   temp = 'TEMP',
 }
 
+export type VitalTypeKeys = keyof typeof VitalType
 export type VitalsChartTabKeys = keyof typeof VitalsChartTab

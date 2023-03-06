@@ -1,5 +1,4 @@
-import { VitalPeriodKeys } from '~/enums/vital-period'
-import { VitalType } from '~/enums/vital-type.enum'
+import { VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
 import { IThresholds } from '~models/threshold.model'
 import { IUserModel } from '~models/user.model'
 
@@ -32,7 +31,15 @@ export interface IVitalsCard {
     max?: number
   }
   icon: string
-  units: string
+  units: VitalUnits
+  type: VitalTypeKeys
+}
+
+export interface IVitalsSettings {
+  title: VitalType
+  icon: string
+  units: VitalUnits
+  type: VitalTypeKeys
 }
 
 export interface IVitalsHistoryCard {
@@ -40,7 +47,8 @@ export interface IVitalsHistoryCard {
   value: number | boolean
   isNormal?: boolean
   icon: string
-  units: string
+  units: VitalUnits
+  type: VitalTypeKeys
   threshold?: {
     min?: number
     max?: number
@@ -56,7 +64,6 @@ export interface IVitalChart {
 
 export interface IVitalChartSettings {
   abnormalValues: boolean
-  normalZone: boolean
   variance: boolean
 }
 

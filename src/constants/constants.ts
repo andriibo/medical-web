@@ -1,7 +1,13 @@
 import { ManipulateType } from 'dayjs'
 
 import { VitalPeriodKeys } from '~/enums/vital-period'
-import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
+import { VitalsChartTabKeys, VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
+import iconBloodPressure from '~images/icon-blood-pressure.png'
+import iconFall from '~images/icon-fall.svg'
+import iconHeartRate from '~images/icon-heart-rate.png'
+import iconRespiration from '~images/icon-respiration.png'
+import iconSaturation from '~images/icon-saturation.png'
+import iconTemperature from '~images/icon-temperature.png'
 import { IThresholdsChartKeys } from '~models/threshold.model'
 
 export const BASE_API = process.env.REACT_APP_API_URL
@@ -73,5 +79,46 @@ export const VITAL_THRESHOLDS_TYPE: VitalThresholdType = {
   temp: {
     max: 'maxTemp',
     min: 'minTemp',
+  },
+}
+
+type VitalSettingsType = {
+  [key in VitalTypeKeys]: {
+    title: VitalType
+    icon: string
+    units: VitalUnits
+  }
+}
+
+export const VITAL_SETTINGS: VitalSettingsType = {
+  hr: {
+    title: VitalType.hr,
+    icon: iconHeartRate,
+    units: VitalUnits.hr,
+  },
+  temp: {
+    title: VitalType.temp,
+    icon: iconTemperature,
+    units: VitalUnits.temp,
+  },
+  spo2: {
+    title: VitalType.spo2,
+    icon: iconSaturation,
+    units: VitalUnits.spo2,
+  },
+  rr: {
+    title: VitalType.rr,
+    icon: iconRespiration,
+    units: VitalUnits.rr,
+  },
+  fall: {
+    title: VitalType.fall,
+    icon: iconFall,
+    units: VitalUnits.fall,
+  },
+  bp: {
+    title: VitalType.bp,
+    icon: iconBloodPressure,
+    units: VitalUnits.bp,
   },
 }

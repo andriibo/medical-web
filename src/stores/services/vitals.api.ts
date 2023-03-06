@@ -39,5 +39,6 @@ export const {
   usePostPatientVitalsMutation,
   useGetPatientVitalsQueryQuery,
   useLazyGetPatientVitalsQueryQuery,
+  useLazyGetPatientVitalsByDoctorQuery,
   useGetPatientVitalsByDoctorQuery,
 } = vitalsApi

@@ -1,8 +1,48 @@
 .emptyChart {
-  height: 500px;
-  border: 1px solid rgb(0 0 0 / 23%);
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 470px;
+  margin-bottom: 30px;
+  border: 1px solid rgb(0 0 0 / 23%);
+  border-radius: 10px;
+}
+
+.chartHolder {
+  position: relative;
+  transition: all 0.3s ease 0.5s;
+
+  &:global {
+    &.loading > div {
+      filter: blur(4px);
+      transition: all 0.3s ease;
+    }
+
+    &:not(.loading) {
+      path {
+        transition: d 0.5s ease;
+      }
+    }
+  }
+}
+
+.loadingIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  filter: blur(0);
+}
+
+.rangeHolder {
+  display: flex;
+  align-items: center;
+
+  :global(.MuiFormControl-root) {
+    width: 150px;
+  }
+}
+
+.rangeHolderSeparator {
+  margin: 0 0.75rem;
 }

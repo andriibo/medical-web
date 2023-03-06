@@ -123,21 +123,6 @@ form {
   }
 }
 
-.has {
-  transition: all 0.3s ease 0.5s;
-}
-
-.loading {
-  filter: blur(4px);
-  transition: all 0.3s ease;
-}
-
-.has:not(.loading) {
-  path {
-    transition: d 0.5s ease;
-  }
-}
-
 .tabs {
   margin: 0 0 1rem;
   border-bottom: 1px solid #ddd;

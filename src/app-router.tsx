@@ -4,7 +4,6 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
-import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountRecovery } from '~pages/AccountRecovery/account-recovery'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
@@ -55,7 +54,6 @@ export const AppRouter = () => {
           <>
             <Route element={<PatientAccount />} path={PageUrls.MyAccount} />
             <Route element={<PatientVitals />} path={PageUrls.Vitals} />
-            <Route element={<VitalChartPopup />} path={PageUrls.VitalsPopup} />
             <Route element={<PatientEmergencyContacts />} path={PageUrls.EmergencyContacts} />
             <Route element={<PatientGrantedUsers />} path={PageUrls.GrantedUsers} />
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
