@@ -18,9 +18,9 @@ export enum VitalUnits {
 
 export enum VitalsChartTab {
   hr = 'HR',
+  temp = 'TEMP',
   spo2 = 'SPO2',
   rr = 'RR',
-  temp = 'TEMP',
 }
 
 export type VitalTypeKeys = keyof typeof VitalType

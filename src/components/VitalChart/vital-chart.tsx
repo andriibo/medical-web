@@ -52,10 +52,10 @@ export const VitalChart: FC<VitalChartProps> = ({
     }
 
     if (endDate - startDate < 345000) {
-      return 'MM-DD hh:mm a'
+      return 'MM/DD hh:mm a'
     }
 
-    return 'MM-DD'
+    return 'MM/DD'
   }, [endDate, startDate])
 
   const isAbnormal = useCallback(

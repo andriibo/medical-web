@@ -54,21 +54,14 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
         rrArr.push(vital.rr)
         tempArr.push(vital.temp)
         spo2Arr.push(vital.spo2)
-
-        if (index === 0) {
-          timestampArr.push(start)
-        } else if (index === temporaryArray.length - 1) {
-          timestampArr.push(end)
-        } else {
-          timestampArr.push(vital.timestamp)
-        }
+        timestampArr.push(vital.timestamp)
       })
 
       const hrIndications = getIndications(hrArr)
       const rrIndications = getIndications(rrArr)
       const tempIndications = getIndications(tempArr, 1)
       const spo2Indications = getIndications(spo2Arr)
-      const averageTime = mean(timestampArr)
+      const averageTime: number = mean(timestampArr)
 
       if (averageTime !== null) {
         if (hrIndications) result.hr.push({ ...hrIndications, timestamp: averageTime })
