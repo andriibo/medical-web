@@ -42,7 +42,7 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
   }
 
   if (temporaryArray) {
-    temporaryArray.forEach((periodVitals, index) => {
+    temporaryArray.forEach((periodVitals) => {
       const hrArr: (number | null)[] = []
       const rrArr: (number | null)[] = []
       const tempArr: (number | null)[] = []

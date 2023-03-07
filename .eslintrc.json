@@ -71,7 +71,7 @@
         "ignorePattern": "^import .*"
       }
     ],
-    "max-lines": ["warn", 350],
+    "max-lines": ["warn", 500],
     "prefer-const": [
       "warn",
       {
