@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React, { FC, useMemo } from 'react'
 
 import { IVitalsCard } from '~models/vital.model'
@@ -7,16 +7,35 @@ import styles from './vitals.module.scss'
 
 interface VitalItemProps {
   vital: IVitalsCard
+  onClick?: () => void
+  tag?: 'div' | 'button'
 }
 
-export const VitalItem: FC<VitalItemProps> = ({ vital: { title, value, units, icon, thresholds } }) => {
+export const VitalItem: FC<VitalItemProps> = ({
+  vital: { title, value, units, icon, thresholds },
+  onClick,
+  tag = 'div',
+}) => {
   const isAbnormal = useMemo(
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
   )
 
+  const isButton = useMemo(() => {
+    if (tag === 'button') {
+      return {
+        type: 'button',
+      }
+    }
+  }, [tag])
+
   return (
-    <div className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : ''}`}>
+    <Box
+      className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : ''}`}
+      component={tag}
+      onClick={onClick}
+      {...isButton}
+    >
       <div className={styles.vitalHeader}>
         <div className={styles.vitalIcon}>
           <img alt={title} src={icon} />
@@ -28,6 +47,6 @@ export const VitalItem: FC<VitalItemProps> = ({ vital: { title, value, units, ic
       <div className={styles.vitalValue}>
         <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
       </div>
-    </div>
+    </Box>
   )
 }

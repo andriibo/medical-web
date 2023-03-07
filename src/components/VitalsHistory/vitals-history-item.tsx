@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React, { FC, useMemo } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
@@ -8,9 +8,11 @@ import styles from './vitals-history.module.scss'
 
 interface VitalItemProps {
   vital: IVitalsHistoryCard
+  onClick?: () => void
+  tag?: 'div' | 'button'
 }
 
-export const VitalHistoryItem: FC<VitalItemProps> = ({ vital }) => {
+export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'div' }) => {
   const { isNormal, title, value, threshold, units, icon } = vital
 
   const isFall = useMemo(() => title === VitalType.fall, [title])
@@ -23,8 +25,16 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital }) => {
     return !isNormal && styles.vitalItemAbnormal
   }, [isFall, isNormal, value])
 
+  const isButton = useMemo(() => {
+    if (tag === 'button') {
+      return {
+        type: 'button',
+      }
+    }
+  }, [tag])
+
   return (
-    <div className={`${styles.vitalItem} ${abnormalClass}`}>
+    <Box className={`${styles.vitalItem} ${abnormalClass}`} component={tag} onClick={onClick} {...isButton}>
       <div className={styles.vitalHeader}>
         <div className={styles.vitalIcon}>
           <img alt={title} src={icon} />
@@ -54,6 +64,6 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital }) => {
           </li>
         )}
       </ul>
-    </div>
+    </Box>
   )
 }

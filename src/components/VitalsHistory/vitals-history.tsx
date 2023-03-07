@@ -1,20 +1,17 @@
 import { Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
-import { VitalType } from '~/enums/vital-type.enum'
+import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
+import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
-import iconFall from '~images/icon-fall.svg'
-import iconHeartRate from '~images/icon-heart-rate.png'
-import iconRespiration from '~images/icon-respiration.png'
-import iconSaturation from '~images/icon-saturation.png'
-import iconTemperature from '~images/icon-temperature.png'
+import { getVitalSettings } from '~helpers/get-vital-settings'
 import { IThresholds } from '~models/threshold.model'
 import { IVital, IVitalsData, IVitalsHistoryCard } from '~models/vital.model'
-import { useGetMyVitalsQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQueryQuery } from '~stores/services/vitals.api'
 
 import styles from './vitals-history.module.scss'
 
@@ -27,13 +24,19 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
   const [endDate, setEndDate] = useState(dayjs().toISOString())
 
   const [vitalsData, setVitalsData] = useState<IVitalsData>()
+  const [isLoading, setIsLoading] = useState(false)
   const [filteredVitals, setFilteredVitals] = useState<IVital[]>([])
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
 
-  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetMyVitalsQuery(
+  const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
+  const [initialEndDate, setInitialEndDate] = useState<Dayjs>()
+  const [vitalsType, setVitalsType] = useState<VitalsChartTabKeys | null>(null)
+  const [vitalChartPopupOpen, setVitalChartPopupOpen] = useState(false)
+
+  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetPatientVitalsQueryQuery(
     patientUserId ? skipToken : { startDate, endDate },
   )
-  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsQuery(
+  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
     patientUserId ? { patientUserId, startDate, endDate } : skipToken,
   )
 
@@ -46,6 +49,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
       setVitalsData({ ...patientVitalsData })
     }
   }, [myVitalsData, patientVitalsData])
+
+  useEffect(() => {
+    setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
+  }, [myVitalsIsLoading, patientVitalsIsLoading])
 
   useEffect(() => {
     if (vitalsData) {
@@ -67,53 +74,43 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
 
       return [
         {
-          title: VitalType.hr,
+          ...getVitalSettings('hr'),
           value: vital.hr,
           isNormal: vital.isHrNormal,
           threshold: {
             min: currentThresholds?.minHr,
             max: currentThresholds?.maxHr,
           },
-          icon: iconHeartRate,
-          units: 'bpm',
         },
         {
-          title: VitalType.temp,
+          ...getVitalSettings('temp'),
           value: vital.temp,
           isNormal: vital.isTempNormal,
           threshold: {
             min: currentThresholds?.minTemp,
             max: currentThresholds?.maxTemp,
           },
-          icon: iconTemperature,
-          units: '°C',
         },
         {
-          title: VitalType.spo2,
+          ...getVitalSettings('spo2'),
           value: vital.spo2,
           isNormal: vital.isSpo2Normal,
           threshold: {
             min: currentThresholds?.minSpo2,
           },
-          icon: iconSaturation,
-          units: '%',
         },
         {
-          title: VitalType.rr,
+          ...getVitalSettings('rr'),
           value: vital.rr,
           isNormal: vital.isRrNormal,
           threshold: {
             min: currentThresholds?.minRr,
             max: currentThresholds?.maxRr,
           },
-          icon: iconRespiration,
-          units: 'rpm',
         },
         {
-          title: VitalType.fall,
+          ...getVitalSettings('fall'),
           value: vital.fall,
-          icon: iconFall,
-          units: '',
         },
       ]
     },
@@ -125,28 +122,62 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
     setEndDate((prevState) => prevState)
   }, [])
 
-  if (myVitalsIsLoading || patientVitalsIsLoading) {
+  const handleOpenPopup = (timestamp: number, type: VitalTypeKeys) => {
+    setInitialStartDate(dayjs(timestamp * 1000).subtract(1, 'hour'))
+    setInitialEndDate(dayjs(timestamp * 1000).add(1, 'hour'))
+
+    if (type in VitalsChartTab) {
+      const typeAsChartTab = type as VitalsChartTabKeys
+
+      setVitalsType(typeAsChartTab)
+    }
+
+    setVitalChartPopupOpen(true)
+  }
+
+  if (isLoading) {
     return <Spinner />
   }
 
-  if (!filteredVitals.length) {
+  if (!filteredVitals.length || !vitalsData) {
     return <EmptyBox message="No abnormal vital signs" />
   }
 
   return (
-    <div className={styles.vitalHistoryList}>
-      {filteredVitals.map((vital) => (
-        <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
-          <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
-            {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
-          </Typography>
-          <div className={styles.vitalContainer}>
-            {vitalsList(vital).map((item, index) => (
-              <VitalHistoryItem key={index} vital={item} />
-            ))}
+    <>
+      <div className={styles.vitalHistoryList}>
+        {filteredVitals.map((vital) => (
+          <div className={styles.vitalHistoryGroup} key={vital.timestamp}>
+            <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
+              {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
+            </Typography>
+            <div className={styles.vitalContainer}>
+              {vitalsList(vital).map((item, index) =>
+                item.title === VitalType.fall ? (
+                  <VitalHistoryItem key={index} vital={item} />
+                ) : (
+                  <VitalHistoryItem
+                    key={index}
+                    onClick={() => handleOpenPopup(vital.timestamp, item.type)}
+                    tag="button"
+                    vital={item}
+                  />
+                ),
+              )}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      {initialStartDate && initialEndDate && (
+        <VitalChartPopup
+          handleClose={() => setVitalChartPopupOpen(false)}
+          initialEndDate={initialEndDate}
+          initialStartDate={initialStartDate}
+          open={vitalChartPopupOpen}
+          patientUserId={patientUserId}
+          vitalsType={vitalsType}
+        />
+      )}
+    </>
   )
 }

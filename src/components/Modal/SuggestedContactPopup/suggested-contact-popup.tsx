@@ -18,9 +18,10 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { Relationship, RelationshipValues } from '~/enums/relationship.enum'
+import { Relationship } from '~/enums/relationship.enum'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { getObjectKeys } from '~helpers/get-object-keys'
 import { validationRules } from '~helpers/validation-rules'
 import { IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -153,15 +154,11 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
               <FormControl error={Boolean(errors[field.name])} fullWidth>
                 <InputLabel id="relationship-select">Relationship</InputLabel>
                 <Select {...field} label="Relationship" labelId="relationship-select">
-                  {Object.keys(Relationship).map((key) => {
-                    const value = key as RelationshipValues
-
-                    return (
-                      <MenuItem key={value} value={value}>
-                        {Relationship[value]}
-                      </MenuItem>
-                    )
-                  })}
+                  {getObjectKeys(Relationship).map((key) => (
+                    <MenuItem key={key} value={key}>
+                      {Relationship[key]}
+                    </MenuItem>
+                  ))}
                 </Select>
                 <FormHelperText>{getErrorMessage(errors, field.name)}</FormHelperText>
               </FormControl>

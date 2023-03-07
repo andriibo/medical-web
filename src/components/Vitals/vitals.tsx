@@ -1,17 +1,13 @@
 import { Alert, AlertTitle, Box, CircularProgress, Typography } from '@mui/material'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
 
-import { VitalType } from '~/enums/vital-type.enum'
+import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { useThresholds } from '~/hooks/use-thresholds'
 import styles from '~components/Thresholds/thresholds.module.scss'
+import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalItem } from '~components/Vitals/vital-item'
-import iconBloodPressure from '~images/icon-blood-pressure.png'
-import iconFall from '~images/icon-fall.svg'
-import iconHeartRate from '~images/icon-heart-rate.png'
-import iconRespiration from '~images/icon-respiration.png'
-import iconSaturation from '~images/icon-saturation.png'
-import iconTemperature from '~images/icon-temperature.png'
+import { getVitalSettings } from '~helpers/get-vital-settings'
 import { IVitalsCard } from '~models/vital.model'
 import { useSocket } from '~stores/hooks'
 import { useUserId } from '~stores/slices/auth.slice'
@@ -41,6 +37,11 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
   const [isUpdatingEnd, setIsUpdatingEnd] = useState(false)
 
   const [lastUpdate, setLastUpdate] = useState('')
+
+  const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
+  const [initialEndDate, setInitialEndDate] = useState<Dayjs>()
+  const [vitalsType, setVitalsType] = useState<VitalsChartTabKeys | null>(null)
+  const [vitalChartPopupOpen, setVitalChartPopupOpen] = useState(false)
 
   const socketPatientUserId = useMemo(() => patientUserId || userId, [patientUserId, userId])
 
@@ -134,64 +135,65 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
 
     return [
       {
+        ...getVitalSettings('hr'),
         timestamp,
-        title: VitalType.hr,
         value: vitals.hr,
         threshold: {
           min: threshold?.minHr,
           max: threshold?.maxHr,
         },
-        icon: iconHeartRate,
-        units: 'bpm',
       },
       {
+        ...getVitalSettings('temp'),
         timestamp,
-        title: VitalType.temp,
         value: vitals.temp,
         threshold: {
           min: threshold?.minTemp,
           max: threshold?.maxTemp,
         },
-        icon: iconTemperature,
-        units: '°C',
       },
       {
+        ...getVitalSettings('spo2'),
         timestamp,
-        title: VitalType.spo2,
         value: vitals.spo,
         threshold: {
           min: threshold?.minSpo2,
         },
-        icon: iconSaturation,
-        units: '%',
       },
       {
+        ...getVitalSettings('rr'),
         timestamp,
-        title: VitalType.rr,
         value: vitals.rr,
         threshold: {
           min: threshold?.minRr,
           max: threshold?.maxRr,
         },
-        icon: iconRespiration,
-        units: 'rpm',
       },
       {
+        ...getVitalSettings('bp'),
         timestamp,
-        title: VitalType.bp,
         value: vitals.bp,
-        icon: iconBloodPressure,
-        units: 'mmHg',
       },
       {
+        ...getVitalSettings('fall'),
         timestamp,
-        title: VitalType.fall,
         value: vitals.fall,
-        icon: iconFall,
-        units: '',
       },
     ]
   }, [vitals, threshold])
+
+  const handleOpenPopup = (type: VitalTypeKeys) => {
+    setInitialStartDate(dayjs().subtract(2, 'hours'))
+    setInitialEndDate(dayjs())
+
+    if (type in VitalsChartTab) {
+      const typeAsChartTab = type as VitalsChartTabKeys
+
+      setVitalsType(typeAsChartTab)
+    }
+
+    setVitalChartPopupOpen(true)
+  }
 
   return (
     <>
@@ -221,10 +223,24 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         </Typography>
       )}
       <div className={styles.vitalContainer}>
-        {vitalsList.map((vital, index) => (
-          <VitalItem key={index} vital={vital} />
-        ))}
+        {vitalsList.map((vital, index) =>
+          vital.title === VitalType.fall || vital.title === VitalType.bp ? (
+            <VitalItem key={index} vital={vital} />
+          ) : (
+            <VitalItem key={index} onClick={() => handleOpenPopup(vital.type)} tag="button" vital={vital} />
+          ),
+        )}
       </div>
+      {initialStartDate && initialEndDate && (
+        <VitalChartPopup
+          handleClose={() => setVitalChartPopupOpen(false)}
+          initialEndDate={initialEndDate}
+          initialStartDate={initialStartDate}
+          open={vitalChartPopupOpen}
+          patientUserId={patientUserId}
+          vitalsType={vitalsType}
+        />
+      )}
     </>
   )
 }

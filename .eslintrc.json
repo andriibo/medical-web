@@ -71,7 +71,7 @@
         "ignorePattern": "^import .*"
       }
     ],
-    "max-lines": ["warn", 350],
+    "max-lines": ["warn", 500],
     "prefer-const": [
       "warn",
       {
@@ -236,6 +236,7 @@
         "beforeColon": false,
         "afterColon": true
       }
-    ]
+    ],
+    "no-underscore-dangle": ["error", { "allow": ["_x", "_y"] }]
   }
 }
