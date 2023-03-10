@@ -1,12 +1,12 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { PasswordField } from '~components/PasswordField/password-field'
 import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
@@ -24,7 +24,6 @@ export const ForgotPasswordConfirm = () => {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const location = useLocation()
-  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [forgotPasswordConfirm, { isLoading: forgotPasswordConfirmIsLoading }] =
@@ -32,10 +31,6 @@ export const ForgotPasswordConfirm = () => {
   const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthForgotPasswordMutation()
 
   const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
 
   const handleResendCode = useCallback(async () => {
     try {
@@ -128,24 +123,7 @@ export const ForgotPasswordConfirm = () => {
           defaultValue=""
           name="newPassword"
           render={({ field }) => (
-            <TextField
-              {...field}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword} size="small">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              autoComplete="new-password"
-              error={Boolean(errors[field.name])}
-              fullWidth
-              helperText={
-                getErrorMessage(errors, field.name) || 'At least 8 characters, at least one number and one symbol.'
-              }
-              label="New Password"
-              type={showPassword ? 'text' : 'password'}
-            />
+            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="New password" showRules />
           )}
           rules={validationRules.password}
         />

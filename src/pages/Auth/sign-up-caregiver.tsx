@@ -117,7 +117,9 @@ export const SignUpCaregiver = () => {
           control={control}
           defaultValue=""
           name="password"
-          render={({ field }) => <PasswordField field={field} fieldValidation={fieldValidation(field.name)} />}
+          render={({ field }) => (
+            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} showRules />
+          )}
           rules={validationRules.password}
         />
         <Typography sx={{ mb: '1.5rem' }} variant="body2">

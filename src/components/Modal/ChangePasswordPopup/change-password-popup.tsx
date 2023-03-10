@@ -99,7 +99,12 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
               defaultValue=""
               name="newPassword"
               render={({ field }) => (
-                <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="New password" />
+                <PasswordField
+                  field={field}
+                  fieldValidation={fieldValidation(field.name)}
+                  label="New password"
+                  showRules
+                />
               )}
               rules={validationRules.password}
             />
