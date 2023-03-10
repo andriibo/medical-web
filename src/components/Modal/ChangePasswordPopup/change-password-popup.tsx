@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { PasswordField } from '~components/PasswordField/password-field'
-import { PasswordRules } from '~components/PasswordRules/password-rules'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
@@ -100,13 +99,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
               defaultValue=""
               name="newPassword"
               render={({ field }) => (
-                <>
-                  <PasswordField
-                    field={field}
-                    fieldValidation={{ error: Boolean(errors[field.name]), helperText: false }}
-                  />
-                  <PasswordRules error={Boolean(errors[field.name])} value={field.value} />
-                </>
+                <PasswordField field={field} fieldValidation={fieldValidation(field.name)} showRules />
               )}
               rules={validationRules.password}
             />

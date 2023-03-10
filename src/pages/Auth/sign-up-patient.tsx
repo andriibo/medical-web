@@ -25,7 +25,6 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { PasswordField } from '~components/PasswordField/password-field'
-import { PasswordRules } from '~components/PasswordRules/password-rules'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
@@ -244,13 +243,7 @@ export const SignUpPatient = () => {
           defaultValue=""
           name="password"
           render={({ field }) => (
-            <>
-              <PasswordField
-                field={field}
-                fieldValidation={{ error: Boolean(errors[field.name]), helperText: false }}
-              />
-              <PasswordRules error={Boolean(errors[field.name])} value={field.value} />
-            </>
+            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} showRules />
           )}
           rules={validationRules.password}
         />
