@@ -14,16 +14,16 @@ export const AuthLayout = () => {
   const userEmail = useUserEmail()
   const [searchParams] = useSearchParams()
 
-  const emailParam = useMemo(() => searchParams.get('email')?.replace(' ', '+'), [searchParams])
-  const theSameUser = useMemo(() => userEmail === emailParam, [emailParam, userEmail])
+  const emailParam = useMemo(() => searchParams.get('email'), [searchParams])
+  const theSameEmail = useMemo(() => userEmail === emailParam?.replace(' ', '+'), [emailParam, userEmail])
 
   useEffect(() => {
-    if (emailParam && !theSameUser) {
+    if (emailParam && !theSameEmail) {
       dispatch(clearPersist())
     }
-  }, [dispatch, emailParam, theSameUser])
+  }, [dispatch, emailParam, theSameEmail])
 
-  if (isAuth && (!emailParam || theSameUser)) {
+  if (isAuth && (!emailParam || theSameEmail)) {
     return <Navigate replace to="/" />
   }
 
