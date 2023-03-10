@@ -21,9 +21,6 @@ export const PasswordField: FC<PasswordFieldProps> = ({ label = 'Password', fiel
 
   return (
     <TextField
-      helperText="
-                At least 8 characters, one number, one special symbol, one uppercase letter and one lowercase letter.
-              "
       {...field}
       InputProps={{
         endAdornment: (
@@ -35,6 +32,7 @@ export const PasswordField: FC<PasswordFieldProps> = ({ label = 'Password', fiel
       autoComplete="new-password"
       error={fieldValidation.error}
       fullWidth
+      helperText={fieldValidation.helperText}
       label={label}
       placeholder="P@S5worD"
       type={showPassword ? 'text' : 'password'}
