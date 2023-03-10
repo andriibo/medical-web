@@ -123,7 +123,7 @@ export const ForgotPasswordConfirm = () => {
           defaultValue=""
           name="newPassword"
           render={({ field }) => (
-            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} showRules />
+            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="New password" showRules />
           )}
           rules={validationRules.password}
         />
