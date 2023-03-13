@@ -6,6 +6,7 @@ import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
 import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountRecovery } from '~pages/AccountRecovery/account-recovery'
+import { AddEmergencyContact } from '~pages/AddEmergencyContact/add-emergency-contact'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
 import { EmailVerification } from '~pages/Auth/email-verification'
 import { ForgotPassword } from '~pages/Auth/forgot-password'
@@ -61,6 +62,7 @@ export const AppRouter = () => {
         )}
       </Route>
       <Route element={<AccountRecovery />} path={PageUrls.AccountRecovery} />
+      <Route element={<AddEmergencyContact />} path={PageUrls.AddEmergencyContact} />
       <Route element={<Navigate to="/" />} path="*" />
     </Routes>
   )

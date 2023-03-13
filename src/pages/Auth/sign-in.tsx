@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { UserRoles } from '~/enums/user-roles.enum'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignInKeys, IAuthSignIn } from '~models/auth.model'
@@ -14,7 +15,8 @@ import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
-import { signInSuccess } from '~stores/slices/auth.slice'
+import { useLazyGetMyEmergencyContactsQuery } from '~stores/services/emergency-contact.api'
+import { setHasEmergencyContacts, signInSuccess } from '~stores/slices/auth.slice'
 
 export const SignIn = () => {
   const dispatch = useAppDispatch()
@@ -36,12 +38,27 @@ export const SignIn = () => {
     mode: 'onBlur',
   })
 
+  const [myEmergencyContacts] = useLazyGetMyEmergencyContactsQuery()
+
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
       const response = await authSignIn(data).unwrap()
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
+
+      if (response.user.role === UserRoles.patient) {
+        const emergencyContact = await myEmergencyContacts().unwrap()
+
+        if (!emergencyContact.length) {
+          dispatch(setHasEmergencyContacts(false))
+
+          return
+        }
+      }
+
+      dispatch(setHasEmergencyContacts(true))
+
       navigate('/', { replace: true })
     } catch (err) {
       const {

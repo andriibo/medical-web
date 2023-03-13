@@ -8,6 +8,7 @@ import { RootState } from '~stores/store'
 
 export interface AuthState {
   data: IAuthData
+  hasEmergencyContacts: boolean
 }
 
 const initialState: AuthState = {
@@ -25,6 +26,7 @@ const initialState: AuthState = {
       deletedAt: 0,
     },
   },
+  hasEmergencyContacts: false,
 }
 
 const authSlice = createSlice({
@@ -33,6 +35,9 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.token = payload.token
+    },
+    setHasEmergencyContacts: (state, { payload }: PayloadAction<boolean>) => {
+      state.hasEmergencyContacts = payload
     },
     signInSuccess: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data = payload
@@ -54,14 +59,16 @@ const selectUserRole = (state: RootState) => state.auth.data.user.role
 const selectUserId = (state: RootState) => state.auth.data.user.userId
 const selectToken = (state: RootState) => state.auth.data.token
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
+const selectHasEmergencyContacts = (state: RootState) => state.auth.hasEmergencyContacts
 
 export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
 export const useUserId = () => useAppSelector(selectUserId)
 export const useToken = () => useAppSelector(selectToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
+export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyContacts)
 
 export const {
   reducer: authReducer,
-  actions: { setToken, signInSuccess, clearPersist },
+  actions: { setToken, setHasEmergencyContacts, signInSuccess, clearPersist },
 } = authSlice
