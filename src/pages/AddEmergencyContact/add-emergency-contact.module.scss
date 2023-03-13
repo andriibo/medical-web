@@ -1,5 +1,3 @@
-// @value authContainer from "./src/pages/Auth/auth.module.scss";
-
 .container {
   composes: authContainer from '/src/pages/Auth/auth.module.scss';
 }
