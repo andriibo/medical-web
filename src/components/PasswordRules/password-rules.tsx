@@ -15,7 +15,7 @@ export const PasswordRules: FC<PasswordRulesProps> = ({ value, error }) => {
       { title: 'Contains uppercase letters', isValid: value.match(/[A-Z]/) },
       { title: 'Contains lowercase letters', isValid: value.match(/[a-z]/) },
       { title: 'Contains numbers', isValid: value.match(/[0-9]/) },
-      { title: 'Contains special characters', isValid: value.match(/[~`!@#$%^&*()\-_+={}[\]|/\\:;"'<>,.?]/) },
+      { title: 'Contains special characters', isValid: value.match(/[ ~`!@#$%^&*()\-_+={}[\]|/\\:;"'<>,.?]/) },
     ],
     [value],
   )
