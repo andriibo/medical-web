@@ -3,11 +3,14 @@ import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useAppDispatch } from '~stores/hooks'
 import { useIsAuth, useUserDeletedAt } from '~stores/slices/auth.slice'
+import { combineApi } from '~stores/store'
 
 import { Header } from '../Header/header'
 
 export const DefaultLayout = () => {
+  const dispatch = useAppDispatch()
   const isAuth = useIsAuth()
   const userDeletedAt = useUserDeletedAt()
   const location = useLocation()
@@ -17,6 +20,10 @@ export const DefaultLayout = () => {
   }
 
   if (!isAuth) {
+    combineApi.map((api) => {
+      dispatch(api.util.resetApiState())
+    })
+
     return <Navigate replace to={PageUrls.SignIn} />
   }
 
