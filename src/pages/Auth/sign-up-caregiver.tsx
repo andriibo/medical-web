@@ -3,11 +3,12 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useEmailParam } from '~/hooks/use-email-param'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
@@ -25,9 +26,7 @@ export const SignUpCaregiver = () => {
   const navigate = useNavigate()
   const [authSignUpCaregiver, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpCaregiverMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const [searchParams] = useSearchParams()
-
-  const emailParam = useMemo(() => searchParams.get('email')?.replace(' ', '+'), [searchParams])
+  const emailParam = useEmailParam()
 
   const {
     handleSubmit,

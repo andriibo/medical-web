@@ -18,12 +18,13 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useEmailParam } from '~/hooks/use-email-param'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
@@ -40,9 +41,7 @@ export const SignUpPatient = () => {
   const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const [searchParams] = useSearchParams()
-
-  const emailParam = useMemo(() => searchParams.get('email')?.replace(' ', '+'), [searchParams])
+  const emailParam = useEmailParam()
 
   const {
     handleSubmit,
