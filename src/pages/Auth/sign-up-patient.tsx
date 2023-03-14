@@ -24,9 +24,11 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useEmailParam } from '~/hooks/use-email-param'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
@@ -39,6 +41,7 @@ export const SignUpPatient = () => {
   const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const emailParam = useEmailParam()
 
   const {
     handleSubmit,
@@ -52,13 +55,14 @@ export const SignUpPatient = () => {
     try {
       await authSignUpPatient({
         ...trimValues(data),
+        email: emailParam || data.email,
         gender: data.gender as Gender,
         height: Number(data.height),
         weight: Number(data.weight),
       }).unwrap()
 
       setFormErrors(null)
-      navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+      navigate(PageUrls.EmailVerification, { state: { email: emailParam || data.email } })
     } catch (err) {
       const {
         data: { message },
@@ -78,7 +82,7 @@ export const SignUpPatient = () => {
   return (
     <>
       <div className={styles.authHeader}>
-        <IconButton component={NavLink} to={PageUrls.AccountType}>
+        <IconButton component={NavLink} to={getUrlWithParams(PageUrls.AccountType)}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h6">Create a patient account</Typography>
@@ -233,9 +237,17 @@ export const SignUpPatient = () => {
         />
         <Controller
           control={control}
-          defaultValue=""
+          defaultValue={emailParam}
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              {...fieldValidation(field.name)}
+              disabled={Boolean(emailParam)}
+              fullWidth
+              label="Email"
+            />
+          )}
           rules={validationRules.email}
         />
         <Controller

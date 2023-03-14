@@ -52,12 +52,14 @@ const authSlice = createSlice({
 const selectIsAuth = (state: RootState) => Boolean(state.auth.data.token)
 const selectUserRole = (state: RootState) => state.auth.data.user.role
 const selectUserId = (state: RootState) => state.auth.data.user.userId
+const selectUserEmail = (state: RootState) => state.auth.data.user.email
 const selectToken = (state: RootState) => state.auth.data.token
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
 
 export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
 export const useUserId = () => useAppSelector(selectUserId)
+export const useUserEmail = () => useAppSelector(selectUserEmail)
 export const useToken = () => useAppSelector(selectToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
 

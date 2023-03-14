@@ -1,16 +1,29 @@
 import '~/assets/styles/styles.scss'
 
 import { Container } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 
+import { useEmailParam } from '~/hooks/use-email-param'
 import styles from '~pages/Auth/auth.module.scss'
-import { useIsAuth } from '~stores/slices/auth.slice'
+import { useAppDispatch } from '~stores/hooks'
+import { clearPersist, useIsAuth, useUserEmail } from '~stores/slices/auth.slice'
 
 export const AuthLayout = () => {
+  const dispatch = useAppDispatch()
   const isAuth = useIsAuth()
+  const userEmail = useUserEmail()
+  const emailParam = useEmailParam()
 
-  if (isAuth) {
+  const theSameEmail = useMemo(() => userEmail === emailParam, [emailParam, userEmail])
+
+  useEffect(() => {
+    if (emailParam && !theSameEmail) {
+      dispatch(clearPersist())
+    }
+  }, [dispatch, emailParam, theSameEmail])
+
+  if (isAuth && (!emailParam || theSameEmail)) {
     return <Navigate replace to="/" />
   }
 
