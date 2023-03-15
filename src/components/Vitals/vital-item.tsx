@@ -18,7 +18,7 @@ export const VitalItem: FC<VitalItemProps> = ({
   onClick,
   tag = 'div',
 }) => {
-  const [changeClass, setChangeClass] = useState('')
+  const [changedClass, setChangedClass] = useState('')
   const [blinkClass, setBlinkClass] = useState('')
 
   const isAbnormal = useMemo(
@@ -35,7 +35,7 @@ export const VitalItem: FC<VitalItemProps> = ({
   }, [tag])
 
   useEffect(() => {
-    setChangeClass(styles.changed)
+    setChangedClass(styles.changed)
   }, [toggleVitals])
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export const VitalItem: FC<VitalItemProps> = ({
   }, [value])
 
   const onAnimationEnd = () => {
-    setChangeClass('')
+    setChangedClass('')
     setBlinkClass('')
   }
 
@@ -65,7 +65,7 @@ export const VitalItem: FC<VitalItemProps> = ({
         </div>
       </div>
       <div className={styles.vitalValue}>
-        <strong className={`${blinkClass} ${changeClass}`} onAnimationEnd={onAnimationEnd}>
+        <strong className={`${blinkClass} ${changedClass}`} onAnimationEnd={onAnimationEnd}>
           {value ? value : '-'}
         </strong>
         <span>{units && units}</span>
