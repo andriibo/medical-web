@@ -69,26 +69,43 @@ button.vitalItem {
 }
 
 .vitalValue {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
   margin-top: auto;
   padding: 1.125rem 0 0;
+  font-size: 1rem;
+  line-height: 1.3rem;
 
   strong {
-    min-width: 40px;
+    display: block;
+    color: var(--primary);
     font-size: 2.125rem;
     font-weight: 400;
     line-height: 1;
     text-align: center;
-
-    &:first-child:last-child {
-      margin: 0 auto;
-    }
   }
 
   span {
-    min-width: 3.75rem;
-    margin: 0 0 0 1.125rem;
+    display: block;
+    min-height: 1.3rem;
+    margin-top: 0.5rem;
+    opacity: 0.6;
+    text-align: right;
+  }
+}
+
+.changed {
+  opacity: 0.5;
+}
+
+.blink {
+  animation: blink-animation 0.8s 2 forwards;
+}
+
+@keyframes blink-animation {
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
