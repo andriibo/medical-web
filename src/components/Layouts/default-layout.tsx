@@ -1,5 +1,5 @@
 import { Container } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
@@ -15,15 +15,19 @@ export const DefaultLayout = () => {
   const userDeletedAt = useUserDeletedAt()
   const location = useLocation()
 
+  useEffect(() => {
+    if (!isAuth) {
+      combineApi.map((api) => {
+        dispatch(api.util.resetApiState())
+      })
+    }
+  }, [dispatch, isAuth])
+
   if (userDeletedAt && location.pathname !== PageUrls.AccountRecovery) {
     return <Navigate replace to={PageUrls.AccountRecovery} />
   }
 
   if (!isAuth) {
-    combineApi.map((api) => {
-      dispatch(api.util.resetApiState())
-    })
-
     return <Navigate replace to={PageUrls.SignIn} />
   }
 
