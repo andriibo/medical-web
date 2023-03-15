@@ -20,8 +20,9 @@ export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, f
     }}
     value={field.value}
   >
-    <>
-      {() => (
+    {
+      // @ts-ignore
+      () => (
         <TextField
           {...fieldValidation}
           autoComplete="off"
@@ -30,7 +31,7 @@ export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, f
           fullWidth
           label="Verification code"
         />
-      )}
-    </>
+      )
+    }
   </InputMask>
 )
