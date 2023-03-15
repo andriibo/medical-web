@@ -84,6 +84,7 @@ export const VitalChart: FC<VitalChartProps> = ({
           left: 60,
           bottom: 50,
           right: 5,
+          top: 10,
         }}
         theme={VictoryTheme.material}
         width={852}

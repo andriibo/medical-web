@@ -1,6 +1,6 @@
 import { AccountCircle, Notifications } from '@mui/icons-material'
 import { Avatar, Badge, Button, IconButton, ListItemIcon, MenuItem } from '@mui/material'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
@@ -45,6 +45,10 @@ const doctorNav: IMainNav[] = [
 export const Header = () => {
   const [dropClose, setDropClose] = useState(false)
   const userRole = useUserRole()
+
+  useEffect(() => {
+    console.log('sss')
+  }, [])
 
   const handleDrop = useCallback((val: boolean) => {
     setDropClose(val)
