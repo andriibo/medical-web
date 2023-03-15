@@ -1,6 +1,16 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -113,6 +123,14 @@ export const SignIn = () => {
           rules={validationRules.password}
         />
         <div className={styles.authHelperBox}>
+          <Controller
+            control={control}
+            defaultValue={false}
+            name="rememberMe"
+            render={({ field }) => (
+              <FormControlLabel control={<Checkbox {...field} size="small" />} label="Remember me" />
+            )}
+          />
           <Button component={NavLink} size="small" to={PageUrls.ForgotPassword}>
             Forgot password?
           </Button>
