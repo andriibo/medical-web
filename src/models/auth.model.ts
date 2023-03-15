@@ -3,14 +3,16 @@ import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/prof
 import { IUserModel } from '~models/user.model'
 
 export interface IAuthData {
-  token: string
-  tokenExpireTime: string
+  accessToken: string
+  accessTokenExpireTime: string
+  refreshToken: string
   user: IUserModel
 }
 
 export interface IAuthSignIn {
   email: string
   password: string
+  rememberMe: boolean
 }
 
 export interface IAuthSignUpPatient extends IPatientProfile {
