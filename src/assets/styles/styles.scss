@@ -179,3 +179,17 @@ form {
   vertical-align: top;
   white-space: nowrap;
 }
+
+.blink {
+  animation: blink-animation 0.8s 2 forwards;
+}
+
+@keyframes blink-animation {
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

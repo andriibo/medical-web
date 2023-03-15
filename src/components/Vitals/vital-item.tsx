@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { IVitalsCard } from '~models/vital.model'
 
@@ -20,6 +20,12 @@ export const VitalItem: FC<VitalItemProps> = ({
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
   )
+
+  const [blinkClass, setBlinkClass] = useState('')
+
+  useEffect(() => {
+    setBlinkClass('blink')
+  }, [value])
 
   const isButton = useMemo(() => {
     if (tag === 'button') {
@@ -45,7 +51,10 @@ export const VitalItem: FC<VitalItemProps> = ({
         </div>
       </div>
       <div className={styles.vitalValue}>
-        <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
+        <strong className={blinkClass} onAnimationEnd={() => setBlinkClass('')}>
+          {value ? value : '-'}
+        </strong>
+        {units && <span>{units}</span>}
       </div>
     </Box>
   )

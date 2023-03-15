@@ -87,7 +87,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
     })
 
     socket.on('messageToClient', (response: any) => {
-      setVitals((prev) => ({ ...prev, ...response.data }))
+      setVitals((prev) => ({ ...prev, spo: 91, ...response.data }))
       setIsUpdatingEnd(false)
       setLastUpdate(new Date().toISOString())
       if (isLoading) {
@@ -181,6 +181,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
       },
     ]
   }, [vitals, threshold])
+
+  useEffect(() => {
+    console.log('ddd')
+  }, [vitals])
 
   const handleOpenPopup = (type: VitalTypeKeys) => {
     setInitialStartDate(dayjs().subtract(2, 'hours'))
