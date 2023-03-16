@@ -23,11 +23,13 @@ import { setEmergencyContactIsLoading, useEmergencyContactIsLoading } from '~sto
 export const SignIn = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
+  const emergencyContactIsLoading = useEmergencyContactIsLoading()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [currentEmail, setCurrentEmail] = useState<string | null>(null)
 
-  const emergencyContactIsLoading = useEmergencyContactIsLoading()
+  const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
+  const [myEmergencyContacts] = useLazyGetMyEmergencyContactsQuery()
 
   const {
     handleSubmit,
@@ -36,8 +38,6 @@ export const SignIn = () => {
   } = useForm<IAuthSignIn>({
     mode: 'onBlur',
   })
-
-  const [myEmergencyContacts] = useLazyGetMyEmergencyContactsQuery()
 
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {

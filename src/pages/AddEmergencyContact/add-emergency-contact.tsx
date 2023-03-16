@@ -13,9 +13,9 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import { Relationship } from '~/enums/relationship.enum'
 import { EmailField } from '~components/EmailField/email-field'
@@ -23,7 +23,7 @@ import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { validationRules } from '~helpers/validation-rules'
-import { IEmergencyContact, IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostMyEmergencyContactMutation } from '~stores/services/emergency-contact.api'
@@ -31,15 +31,10 @@ import { setHasEmergencyContacts, useHasEmergencyContacts } from '~stores/slices
 
 import styles from './add-emergency-contact.module.scss'
 
-interface EmergencyContactFormProps {
-  contactData?: IEmergencyContact
-}
-
-export const AddEmergencyContact: FC<EmergencyContactFormProps> = ({ contactData }) => {
+export const AddEmergencyContact = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const navigate = useNavigate()
   const hasEmergencyContacts = useHasEmergencyContacts()
 
   const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
