@@ -7,6 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
@@ -84,7 +85,7 @@ export const InviteDoctorPopup: FC<InviteDoctorPopupProps> = ({ open, handleClos
             control={control}
             defaultValue=""
             name="email"
-            render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+            render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.email}
           />
           <Grid container spacing={2}>
