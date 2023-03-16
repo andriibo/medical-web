@@ -1,16 +1,5 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -32,13 +21,8 @@ export const SignIn = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
-  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [currentEmail, setCurrentEmail] = useState<string | null>(null)
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
 
   const {
     handleSubmit,
