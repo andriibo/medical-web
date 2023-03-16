@@ -1,14 +1,16 @@
 import { AccountCircle, Notifications } from '@mui/icons-material'
-import { Avatar, Badge, Button, IconButton, ListItemIcon, MenuItem } from '@mui/material'
+import { Badge, IconButton, ListItemIcon, MenuItem } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
+import { UserAvatar } from '~components/UserAvatar/user-avatar'
+import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { isUserRoleGrantable } from '~helpers/user-role'
 import { IMainNav } from '~models/main-nav.model'
-import { useUserRole } from '~stores/slices/auth.slice'
+import { useUser, useUserRole } from '~stores/slices/auth.slice'
 
 import styles from './header.module.scss'
 
@@ -45,6 +47,7 @@ const doctorNav: IMainNav[] = [
 export const Header = () => {
   const [dropClose, setDropClose] = useState(false)
   const userRole = useUserRole()
+  const user = useUser()
 
   const handleDrop = useCallback((val: boolean) => {
     setDropClose(val)
@@ -68,13 +71,13 @@ export const Header = () => {
               </NavLink>
             ))}
       </nav>
-      <IconButton aria-label="cart">
+      <IconButton aria-label="cart" sx={{ mr: '1rem' }}>
         <Badge badgeContent={3} color="primary">
           <Notifications />
         </Badge>
       </IconButton>
       <DropdownMenu
-        button={<Avatar className={styles.avatar} component={Button} />}
+        button={<UserAvatar avatar={user.avatar} fullName={getRequestedUserName(user)} />}
         dropClose={dropClose}
         handleDrop={handleDrop}
         menuStyles={{

@@ -26,6 +26,12 @@
       background: #bbb;
     }
   }
+
+  :global(.UserAvatar-root) {
+    &:hover {
+      opacity: 0.7;
+    }
+  }
 }
 
 .logo {

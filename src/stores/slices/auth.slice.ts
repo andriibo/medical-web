@@ -56,6 +56,7 @@ const selectUserId = (state: RootState) => state.auth.data.user.userId
 const selectUserEmail = (state: RootState) => state.auth.data.user.email
 const selectToken = (state: RootState) => state.auth.data.accessToken
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
+const selectUser = (state: RootState) => state.auth.data.user
 
 export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
@@ -63,6 +64,7 @@ export const useUserId = () => useAppSelector(selectUserId)
 export const useUserEmail = () => useAppSelector(selectUserEmail)
 export const useToken = () => useAppSelector(selectToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
+export const useUser = () => useAppSelector(selectUser)
 
 export const {
   reducer: authReducer,

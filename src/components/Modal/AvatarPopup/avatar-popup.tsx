@@ -194,6 +194,15 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
         )}
       </DialogContent>
       <DialogActions sx={{ padding: '0 1.5rem 1rem' }}>
+        <LoadingButton
+          color="error"
+          loading={updateAvatarIsLoading}
+          onClick={() => handleChangeAvatar()}
+          sx={{ mr: 'auto' }}
+          type="button"
+        >
+          Remove avatar
+        </LoadingButton>
         <Button onClick={closeAndClear}>Cancel</Button>
         {files.length > 0 && (
           <LoadingButton

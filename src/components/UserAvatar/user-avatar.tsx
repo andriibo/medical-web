@@ -24,6 +24,7 @@ export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, className, sx })
     margin: 0,
     fontSize: '1.125rem',
     aspectRatio: '1 / 1',
+    transition: 'opacity 0.3s ease',
     ...sx,
   }
 
