@@ -6,6 +6,7 @@ import React, { useCallback, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { UpdateEmailStep } from '~/enums/update-email-step.enum'
+import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
@@ -79,7 +80,7 @@ export const NewEmailForm = () => {
             defaultValue=""
             name="email"
             render={({ field }) => (
-              <TextField {...field} {...fieldValidation(field.name)} fullWidth label="New email" />
+              <EmailField field={field} fieldValidation={fieldValidation(field.name)} label="New email" />
             )}
             rules={validationRules.email}
           />

@@ -25,6 +25,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
+import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
@@ -242,13 +243,7 @@ export const SignUpPatient = () => {
           defaultValue={emailParam}
           name="email"
           render={({ field }) => (
-            <TextField
-              {...field}
-              {...fieldValidation(field.name)}
-              disabled={Boolean(emailParam)}
-              fullWidth
-              label="Email"
-            />
+            <EmailField disabled={Boolean(emailParam)} field={field} fieldValidation={fieldValidation(field.name)} />
           )}
           rules={validationRules.email}
         />

@@ -19,6 +19,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Relationship } from '~/enums/relationship.enum'
+import { EmailField } from '~components/EmailField/email-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
@@ -143,7 +144,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
             control={control}
             defaultValue=""
             name="email"
-            render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+            render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.email}
           />
           <Controller

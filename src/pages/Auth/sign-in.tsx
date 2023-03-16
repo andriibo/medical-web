@@ -17,6 +17,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { EmailField } from '~components/EmailField/email-field'
+import { PasswordField } from '~components/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignInKeys, IAuthSignIn } from '~models/auth.model'
@@ -97,7 +99,7 @@ export const SignIn = () => {
           control={control}
           defaultValue=""
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.email}
         />
         <Controller
@@ -105,20 +107,7 @@ export const SignIn = () => {
           defaultValue=""
           name="password"
           render={({ field }) => (
-            <TextField
-              type={showPassword ? 'text' : 'password'}
-              {...field}
-              {...fieldValidation(field.name)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword} size="small">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              fullWidth
-              label="Password"
-            />
+            <PasswordField autoComplete field={field} fieldValidation={fieldValidation(field.name)} />
           )}
           rules={validationRules.password}
         />
