@@ -1,10 +1,11 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Button, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
@@ -69,7 +70,7 @@ export const ForgotPassword = () => {
           control={control}
           defaultValue=""
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.email}
         />
         <LoadingButton fullWidth loading={forgotPasswordIsLoading} size="large" type="submit" variant="contained">

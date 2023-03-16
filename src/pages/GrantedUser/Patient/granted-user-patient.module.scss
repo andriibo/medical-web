@@ -1,0 +1,19 @@
+@import 'src/assets/styles/personal-info.module';
+
+.patientContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
+.patientAside {
+  width: 220px;
+  margin: 0 3rem 0 0;
+  padding: 1rem;
+  border: 1px solid rgb(0 0 0 / 22%);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.patientContent {
+  flex: 1;
+}

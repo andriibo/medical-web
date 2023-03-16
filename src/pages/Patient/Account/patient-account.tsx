@@ -2,12 +2,14 @@ import { Tab, Tabs, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
 import { AccountTab } from '~/enums/account-tab.enum'
+import { PatientTreatment } from '~components/PatientTreatment/patient-treatment'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { PatientPersonalInfo } from '~pages/Patient/Account/components/patient-personal-info'
 import { PatientSettings } from '~pages/Patient/Account/components/patient-settings'
-import { PatientTreatment } from '~pages/Patient/Account/components/patient-treatment'
+import { useUserId } from '~stores/slices/auth.slice'
 
 export const PatientAccount = () => {
+  const patientUserId = useUserId()
   const [activeTab, setActiveTab] = useState<AccountTab>(AccountTab.personalInfo)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: AccountTab) => {
@@ -26,7 +28,7 @@ export const PatientAccount = () => {
         <PatientPersonalInfo />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={AccountTab.treatment}>
-        <PatientTreatment />
+        <PatientTreatment patientUserId={patientUserId} />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={AccountTab.settings}>
         <PatientSettings />

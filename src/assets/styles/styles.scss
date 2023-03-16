@@ -14,6 +14,10 @@ body {
   box-sizing: border-box;
 }
 
+button {
+  font-size: 100%;
+}
+
 .form-alert {
   margin: 0 0 2rem;
 
@@ -31,6 +35,33 @@ body {
 form {
   .MuiFormControl-root {
     margin-bottom: 1.5rem;
+  }
+
+  .react-tel-input {
+    .special-label {
+      left: 9px;
+      color: rgb(0 0 0 / 60%);
+    }
+
+    .form-control {
+      width: 100%;
+
+      &.invalid-number {
+        border-color: var(--danger);
+      }
+    }
+
+    &:has(.invalid-number) {
+      .special-label {
+        color: var(--danger);
+      }
+    }
+
+    &:has(.form-control:focus:not(.invalid-number)) {
+      .special-label {
+        color: var(--primary);
+      }
+    }
   }
 }
 
@@ -79,6 +110,7 @@ form {
 
   &.empty-list-item {
     justify-content: center;
+    min-height: 73px;
     border: 0;
   }
 }
@@ -96,12 +128,22 @@ form {
 }
 
 .tabs {
-  margin: 0 0 2rem;
+  margin: 0 0 1rem;
   border-bottom: 1px solid #ddd;
 }
 
 .content-md {
   max-width: 900px;
+  margin: 0 auto;
+}
+
+.content-lh {
+  max-width: 1220px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -122,4 +164,22 @@ form {
 
 .dialog-footer-text {
   opacity: 0.6;
+}
+
+.simple-link {
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.text-ellipsis {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+  white-space: nowrap;
 }

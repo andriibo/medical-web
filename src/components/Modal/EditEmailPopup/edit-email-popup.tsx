@@ -19,14 +19,12 @@ export const EditEmailPopup = () => {
   }, [dispatch, editEmailPopupOpen])
 
   return (
-    <>
-      <Dialog disableEscapeKeyDown fullWidth maxWidth="xs" open={editEmailPopupOpen} scroll="body">
-        {emailStep === UpdateEmailStep.email ? (
-          <NewEmailForm />
-        ) : emailStep === UpdateEmailStep.code ? (
-          <VerificationCodeForm />
-        ) : null}
-      </Dialog>
-    </>
+    <Dialog fullWidth maxWidth="xs" open={editEmailPopupOpen} scroll="body">
+      {emailStep === UpdateEmailStep.email ? (
+        <NewEmailForm />
+      ) : emailStep === UpdateEmailStep.code ? (
+        <VerificationCodeForm />
+      ) : null}
+    </Dialog>
   )
 }

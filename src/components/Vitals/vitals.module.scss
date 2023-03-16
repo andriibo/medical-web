@@ -1,0 +1,111 @@
+.vitalContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem 2rem;
+}
+
+.vitalItem {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1rem 0.75rem 0.5rem;
+  transition: all 0.2s ease;
+  border: solid transparent;
+  border-width: 0 3px;
+  border-radius: 0.25rem;
+  background: #fff;
+  box-shadow: 0 2px 1px -1px rgb(0 0 0 / 20%), 0 1px 1px rgb(0 0 0 / 14%), 0 1px 3px rgb(0 0 0 / 12%);
+  text-align: left;
+}
+
+button.vitalItem {
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.vitalItemAbnormal {
+  border-left-color: var(--danger);
+  background: rgb(var(--danger-rgb) / 10%);
+}
+
+.vitalItemBlood {
+  grid-row: span 2;
+}
+
+.vitalHeader {
+  display: flex;
+  align-items: center;
+}
+
+.vitalIcon {
+  width: 40px;
+  aspect-ratio: 1 / 1;
+  margin: 0 1rem 0 0;
+
+  img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    vertical-align: top;
+  }
+}
+
+.vitalHeaderText {
+  flex: 1;
+
+  :global {
+    .MuiTypography-body1 {
+      opacity: 0.87;
+    }
+
+    .MuiTypography-body2 {
+      opacity: 0.6;
+    }
+  }
+}
+
+.vitalValue {
+  margin-top: auto;
+  padding: 1.125rem 0 0;
+  font-size: 1rem;
+  line-height: 1.3rem;
+
+  strong {
+    display: block;
+    color: var(--primary);
+    font-size: 2.125rem;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+  }
+
+  span {
+    display: block;
+    min-height: 1.3rem;
+    margin-top: 0.5rem;
+    opacity: 0.6;
+    text-align: right;
+  }
+}
+
+.changed {
+  opacity: 0.5;
+}
+
+.blink {
+  animation: blink-animation 0.8s 2 forwards;
+}
+
+@keyframes blink-animation {
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

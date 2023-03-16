@@ -8,8 +8,20 @@ export const patientDataAccessApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['PatientDataAccess'],
   endpoints: (build) => ({
-    postPatientDataAccessInitiate: build.mutation<null, IDataAccessEmail>({
-      query: (queryArg) => ({ url: 'patient/data-access/initiate', method: 'POST', body: { ...queryArg } }),
+    postPatientDataAccessInitiateForDoctor: build.mutation<null, IDataAccessEmail>({
+      query: (queryArg) => ({
+        url: 'patient/data-access/initiate-for-doctor',
+        method: 'POST',
+        body: { ...queryArg },
+      }),
+      invalidatesTags: ['PatientDataAccess'],
+    }),
+    postPatientDataAccessInitiateForCaregiver: build.mutation<null, IDataAccessEmail>({
+      query: (queryArg) => ({
+        url: 'patient/data-access/initiate-for-caregiver',
+        method: 'POST',
+        body: { ...queryArg },
+      }),
       invalidatesTags: ['PatientDataAccess'],
     }),
     patchPatientDataAccessRefuse: build.mutation<null, { accessId: string }>({
@@ -75,7 +87,8 @@ export const patientDataAccessApi = createApi({
 })
 
 export const {
-  usePostPatientDataAccessInitiateMutation,
+  usePostPatientDataAccessInitiateForDoctorMutation,
+  usePostPatientDataAccessInitiateForCaregiverMutation,
   usePatchPatientDataAccessRefuseMutation,
   usePatchPatientDataAccessApproveMutation,
   useDeletePatientDataAccessMutation,

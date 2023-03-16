@@ -1,16 +1,17 @@
 import { Edit } from '@mui/icons-material'
-import { Avatar, Button, Chip, Divider, IconButton, Typography } from '@mui/material'
+import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
 
+import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { EditPatientProfilePopup } from '~components/Modal/EditPatientProfilePopup/edit-patient-profile-popup'
 import { Spinner } from '~components/Spinner/spinner'
-import { getAcronym } from '~helpers/get-acronym'
+import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { useAppDispatch } from '~stores/hooks'
-import { useGetPatientProfileQuery } from '~stores/services/profile.api'
+import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
@@ -20,7 +21,7 @@ export const PatientPersonalInfo = () => {
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
-  const { data: patientData, isLoading } = useGetPatientProfileQuery()
+  const { data: patientData, isLoading } = useGetMyPatientProfileQuery()
 
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
 
@@ -56,7 +57,7 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <Avatar className={styles.userAvatar}>{getAcronym(fullName)}</Avatar>
+          <UserAvatarEdit avatar={patientData.avatar} fullName={fullName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
@@ -109,9 +110,7 @@ export const PatientPersonalInfo = () => {
               </span>
             </li>
           </ul>
-          <Button className={styles.deleteAccountBtn} color="inherit">
-            Delete my account
-          </Button>
+          <DeleteAccountButton />
         </div>
       </div>
       <EditPatientProfilePopup

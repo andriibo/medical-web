@@ -1,6 +1,5 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -8,6 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { PasswordField } from '~components/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
@@ -25,19 +25,9 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [changePassword, { isLoading: changePasswordIsLoading }] = usePostAuthChangePasswordMutation()
-
-  const handleShowCurrentPassword = () => {
-    setShowCurrentPassword(!showCurrentPassword)
-  }
-
-  const handleShowNewPassword = () => {
-    setShowNewPassword(!showNewPassword)
-  }
 
   const {
     handleSubmit,
@@ -100,20 +90,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
               defaultValue=""
               name="currentPassword"
               render={({ field }) => (
-                <TextField
-                  type={showCurrentPassword ? 'text' : 'password'}
-                  {...field}
-                  {...fieldValidation(field.name)}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton onClick={handleShowCurrentPassword} size="small">
-                        {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    ),
-                  }}
-                  fullWidth
-                  label="Current password"
-                />
+                <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="Current password" />
               )}
               rules={validationRules.password}
             />
@@ -122,19 +99,11 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
               defaultValue=""
               name="newPassword"
               render={({ field }) => (
-                <TextField
-                  type={showNewPassword ? 'text' : 'password'}
-                  {...field}
-                  {...fieldValidation(field.name)}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton onClick={handleShowNewPassword} size="small">
-                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    ),
-                  }}
-                  fullWidth
+                <PasswordField
+                  field={field}
+                  fieldValidation={fieldValidation(field.name)}
                   label="New password"
+                  showRules
                 />
               )}
               rules={validationRules.password}

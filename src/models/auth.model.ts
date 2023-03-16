@@ -1,19 +1,18 @@
 import { Modify } from '~/types/modify.type'
-import { IDoctorProfile, IPatientProfile } from '~models/profie.model'
+import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
+import { IUserModel } from '~models/user.model'
 
 export interface IAuthData {
-  token: string
-  tokenExpireTime: string
-  user: {
-    id: string
-    email: string
-    roles: string[]
-  }
+  accessToken: string
+  accessTokenExpireTime: string
+  refreshToken: string
+  user: IUserModel
 }
 
 export interface IAuthSignIn {
   email: string
   password: string
+  rememberMe: boolean
 }
 
 export interface IAuthSignUpPatient extends IPatientProfile {
@@ -31,6 +30,10 @@ export interface IAuthSignUpPatientForm
   > {}
 
 export interface IAuthSignUpDoctor extends IDoctorProfile {
+  password: string
+}
+
+export interface IAuthSignUpCaregiver extends ICaregiverProfile {
   password: string
 }
 
@@ -69,6 +72,7 @@ export interface IAuthChangeEmailConfirm {
 export type AuthSignInKeys = keyof IAuthSignIn
 export type AuthSignUpPatientKeys = keyof IAuthSignUpPatient
 export type AuthSignUpDoctorKeys = keyof IAuthSignUpDoctor
+export type AuthSignUpCaregiverKeys = keyof IAuthSignUpCaregiver
 export type AuthSignUpConfirmKeys = keyof IAuthSignUpConfirm
 export type AuthEmailKeys = keyof IAuthEmail
 export type AuthForgotPasswordConfirmFormKeys = keyof IAuthForgotPasswordConfirmForm

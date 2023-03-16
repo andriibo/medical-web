@@ -1,12 +1,14 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Box, Button, IconButton, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { UserRoles } from '~/enums/user-roles.enum'
+import { EmailField } from '~components/EmailField/email-field'
+import { PasswordField } from '~components/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignInKeys, IAuthSignIn } from '~models/auth.model'
@@ -14,19 +16,20 @@ import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
-import { signInSuccess } from '~stores/slices/auth.slice'
+import { useLazyGetMyEmergencyContactsQuery } from '~stores/services/emergency-contact.api'
+import { setHasEmergencyContacts, signInSuccess } from '~stores/slices/auth.slice'
+import { setEmergencyContactIsLoading, useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
 
 export const SignIn = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
-  const [showPassword, setShowPassword] = useState(false)
+  const emergencyContactIsLoading = useEmergencyContactIsLoading()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [currentEmail, setCurrentEmail] = useState<string | null>(null)
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
+  const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
+  const [myEmergencyContacts] = useLazyGetMyEmergencyContactsQuery()
 
   const {
     handleSubmit,
@@ -38,10 +41,26 @@ export const SignIn = () => {
 
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
+      dispatch(setEmergencyContactIsLoading(true))
       const response = await authSignIn(data).unwrap()
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
+
+      if (response.user.role === UserRoles.patient) {
+        const emergencyContact = await myEmergencyContacts().unwrap()
+
+        if (!emergencyContact.length) {
+          dispatch(setHasEmergencyContacts(false))
+
+          navigate(PageUrls.AddEmergencyContact, { replace: true })
+
+          return
+        }
+      }
+
+      dispatch(setHasEmergencyContacts(true))
+
       navigate('/', { replace: true })
     } catch (err) {
       const {
@@ -52,6 +71,8 @@ export const SignIn = () => {
       setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
+    } finally {
+      dispatch(setEmergencyContactIsLoading(false))
     }
   }
 
@@ -87,7 +108,7 @@ export const SignIn = () => {
           control={control}
           defaultValue=""
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.email}
         />
         <Controller
@@ -95,29 +116,30 @@ export const SignIn = () => {
           defaultValue=""
           name="password"
           render={({ field }) => (
-            <TextField
-              type={showPassword ? 'text' : 'password'}
-              {...field}
-              {...fieldValidation(field.name)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword} size="small">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              fullWidth
-              label="Password"
-            />
+            <PasswordField autoComplete field={field} fieldValidation={fieldValidation(field.name)} />
           )}
           rules={validationRules.password}
         />
         <div className={styles.authHelperBox}>
+          <Controller
+            control={control}
+            defaultValue={false}
+            name="rememberMe"
+            render={({ field }) => (
+              <FormControlLabel control={<Checkbox {...field} size="small" />} label="Remember me" />
+            )}
+          />
           <Button component={NavLink} size="small" to={PageUrls.ForgotPassword}>
             Forgot password?
           </Button>
         </div>
-        <LoadingButton fullWidth loading={authSignInIsLoading} size="large" type="submit" variant="contained">
+        <LoadingButton
+          fullWidth
+          loading={authSignInIsLoading || emergencyContactIsLoading}
+          size="large"
+          type="submit"
+          variant="contained"
+        >
           Sign In
         </LoadingButton>
       </form>

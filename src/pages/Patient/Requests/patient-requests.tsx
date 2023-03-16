@@ -21,7 +21,7 @@ export const PatientRequests = () => {
   return (
     <div className="white-box content-md">
       <Typography variant="h5">Requests</Typography>
-      <Tabs className="tabs" onChange={handleChangeTab} value={activeTab}>
+      <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={activeTab}>
         <Tab label="Pending" value={RequestsPatientTab.pending} />
         <Tab label="Incoming" value={RequestsPatientTab.incoming} />
       </Tabs>

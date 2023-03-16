@@ -1,4 +1,4 @@
-import { ArrowBack, Visibility, VisibilityOff } from '@mui/icons-material'
+import { ArrowBack } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
@@ -20,13 +20,18 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useEmailParam } from '~/hooks/use-email-param'
+import { EmailField } from '~components/EmailField/email-field'
+import { PasswordField } from '~components/PasswordField/password-field'
+import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
+import { getUrlWithParams } from '~helpers/get-url-with-params'
+import { trimValues } from '~helpers/trim-values'
+import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
@@ -36,12 +41,8 @@ import styles from './auth.module.scss'
 export const SignUpPatient = () => {
   const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
-  const [showPassword, setShowPassword] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
+  const emailParam = useEmailParam()
 
   const {
     handleSubmit,
@@ -54,14 +55,15 @@ export const SignUpPatient = () => {
   const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = async (data) => {
     try {
       await authSignUpPatient({
-        ...data,
+        ...trimValues(data),
+        email: emailParam || data.email,
         gender: data.gender as Gender,
         height: Number(data.height),
         weight: Number(data.weight),
       }).unwrap()
 
       setFormErrors(null)
-      navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+      navigate(PageUrls.EmailVerification, { state: { email: emailParam || data.email } })
     } catch (err) {
       const {
         data: { message },
@@ -81,7 +83,7 @@ export const SignUpPatient = () => {
   return (
     <>
       <div className={styles.authHeader}>
-        <IconButton component={NavLink} to={PageUrls.AccountType}>
+        <IconButton component={NavLink} to={getUrlWithParams(PageUrls.AccountType)}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h6">Create a patient account</Typography>
@@ -186,10 +188,15 @@ export const SignUpPatient = () => {
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
-                    inputProps: { min: 50, max: 250, step: 1 },
+                    inputProps: {
+                      min: minMaxValidationRules.height.min,
+                      max: minMaxValidationRules.height.max,
+                      step: 1,
+                    },
                     endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                   }}
                   fullWidth
+                  helperText={`from ${minMaxValidationRules.height.min} to ${minMaxValidationRules.height.max} cm`}
                   label="Height"
                   type="number"
                 />
@@ -207,10 +214,15 @@ export const SignUpPatient = () => {
                   {...field}
                   {...fieldValidation(field.name)}
                   InputProps={{
-                    inputProps: { min: 10, max: 200, step: 1 },
+                    inputProps: {
+                      min: minMaxValidationRules.weight.min,
+                      max: minMaxValidationRules.weight.max,
+                      step: 1,
+                    },
                     endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                   }}
                   fullWidth
+                  helperText={`from ${minMaxValidationRules.weight.min} to ${minMaxValidationRules.weight.max} kg`}
                   label="Weight"
                   type="number"
                 />
@@ -223,29 +235,16 @@ export const SignUpPatient = () => {
           control={control}
           defaultValue=""
           name="phone"
-          render={({ field }) => (
-            <InputMask
-              mask="1-999-999-9999"
-              onChange={(event): void => {
-                const value = event.target.value.split('-').join('')
-
-                field.onChange(value)
-              }}
-              value={field.value}
-            >
-              {
-                // @ts-ignore
-                () => <TextField {...fieldValidation(field.name)} fullWidth label="Phone number" />
-              }
-            </InputMask>
-          )}
+          render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.phone}
         />
         <Controller
           control={control}
-          defaultValue=""
+          defaultValue={emailParam}
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => (
+            <EmailField disabled={Boolean(emailParam)} field={field} fieldValidation={fieldValidation(field.name)} />
+          )}
           rules={validationRules.email}
         />
         <Controller
@@ -253,21 +252,7 @@ export const SignUpPatient = () => {
           defaultValue=""
           name="password"
           render={({ field }) => (
-            <TextField
-              {...field}
-              {...fieldValidation(field.name)}
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={handleShowPassword}>
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                ),
-              }}
-              autoComplete="new-password"
-              fullWidth
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-            />
+            <PasswordField field={field} fieldValidation={fieldValidation(field.name)} showRules />
           )}
           rules={validationRules.password}
         />

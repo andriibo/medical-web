@@ -37,7 +37,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
       } catch (err) {
         console.error(err)
         setDeletingRequestId(null)
-        enqueueSnackbar('Request was not deleted', { variant: 'warning' })
+        enqueueSnackbar('Invitation not withdrawn', { variant: 'warning' })
       }
     },
     [deleteRequest, enqueueSnackbar],
@@ -50,7 +50,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
       {pendingRequests.length ? (
         pendingRequests.map(({ accessId, createdAt, requestedUser, status }) => (
           <ListItem className={deletingRequestId === accessId ? 'disabled' : ''} key={accessId}>
-            <ListItemText secondary={`${dayjs(createdAt).format('MMMM M, YYYY')}`}>
+            <ListItemText secondary={`${dayjs(createdAt).format('MMMM D, YYYY')}`}>
               {getRequestedUserName(requestedUser)} {isRefuse(status) && <>(Rejected)</>}
             </ListItemText>
             <Button onClick={() => handleDeleteRequest(accessId)}>{isRefuse(status) ? 'Delete' : 'Withdraw'}</Button>

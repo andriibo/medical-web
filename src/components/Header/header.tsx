@@ -4,9 +4,9 @@ import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { UserRoles } from '~/enums/user-roles.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
+import { isUserRoleGrantable } from '~helpers/user-role'
 import { IMainNav } from '~models/main-nav.model'
 import { useUserRole } from '~stores/slices/auth.slice'
 
@@ -15,17 +15,15 @@ import styles from './header.module.scss'
 const patientNav: IMainNav[] = [
   {
     label: 'Vitals',
-    to: '/vitals',
-    disabled: true,
+    to: PageUrls.Vitals,
   },
   {
     label: 'Emergency Contacts',
-    to: '/emergency-contacts',
-    disabled: true,
+    to: PageUrls.EmergencyContacts,
   },
   {
-    label: 'Medical Doctors',
-    to: PageUrls.MedicalDoctors,
+    label: 'MD & Caregivers',
+    to: PageUrls.GrantedUsers,
   },
   {
     label: 'Requests',
@@ -58,7 +56,7 @@ export const Header = () => {
         LIFE ZENZERS
       </NavLink>
       <nav className={styles.nav}>
-        {userRole === UserRoles.doctor
+        {isUserRoleGrantable(userRole)
           ? doctorNav.map(({ label, to, disabled }) => (
               <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
                 {label}

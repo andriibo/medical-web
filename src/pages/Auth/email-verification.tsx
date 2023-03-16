@@ -1,12 +1,12 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Button, TextField, Typography } from '@mui/material'
+import { Alert, AlertTitle, Button, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import InputMask from 'react-input-mask'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignUpConfirmKeys, IAuthSignUpConfirm } from '~models/auth.model'
@@ -109,30 +109,7 @@ export const EmailVerification = () => {
           control={control}
           defaultValue=""
           name="code"
-          render={({ field }) => (
-            <InputMask
-              mask="999999"
-              maskChar=""
-              onChange={(value): void => {
-                field.onChange(value)
-              }}
-              value={field.value}
-            >
-              {
-                // @ts-ignore
-                () => (
-                  <TextField
-                    {...fieldValidation(field.name)}
-                    autoComplete="off"
-                    className="verification-control"
-                    data-mask="______"
-                    fullWidth
-                    label="Verification code"
-                  />
-                )
-              }
-            </InputMask>
-          )}
+          render={({ field }) => <VerificationCodeField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.code}
         />
         <LoadingButton fullWidth loading={authConfirmSignUpIsLoading} size="large" type="submit" variant="contained">
