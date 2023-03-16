@@ -8,9 +8,12 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useEmailParam } from '~/hooks/use-email-param'
+import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthSignUpDoctorKeys, IAuthSignUpDoctor } from '~models/auth.model'
@@ -24,6 +27,7 @@ export const SignUpDoctor = () => {
   const navigate = useNavigate()
   const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const emailParam = useEmailParam()
 
   const {
     handleSubmit,
@@ -35,10 +39,10 @@ export const SignUpDoctor = () => {
 
   const onSubmit: SubmitHandler<IAuthSignUpDoctor> = async (data) => {
     try {
-      await authSignUpDoctor({ ...trimValues(data) }).unwrap()
+      await authSignUpDoctor({ ...trimValues(data), email: emailParam || data.email }).unwrap()
 
       setFormErrors(null)
-      navigate(PageUrls.EmailVerification, { state: { email: data.email } })
+      navigate(PageUrls.EmailVerification, { state: { email: emailParam || data.email } })
       enqueueSnackbar('Account created')
     } catch (err) {
       const {
@@ -59,7 +63,7 @@ export const SignUpDoctor = () => {
   return (
     <>
       <div className={styles.authHeader}>
-        <IconButton component={NavLink} to={PageUrls.AccountType}>
+        <IconButton component={NavLink} to={getUrlWithParams(PageUrls.AccountType)}>
           <ArrowBack />
         </IconButton>
         <Typography variant="h6">Create an MD account</Typography>
@@ -117,9 +121,11 @@ export const SignUpDoctor = () => {
         />
         <Controller
           control={control}
-          defaultValue=""
+          defaultValue={emailParam}
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => (
+            <EmailField disabled={Boolean(emailParam)} field={field} fieldValidation={fieldValidation(field.name)} />
+          )}
           rules={validationRules.email}
         />
         <Controller

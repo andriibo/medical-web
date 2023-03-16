@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore, Middleware, Reducer } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
@@ -25,40 +25,34 @@ const persistConfig = {
   storage,
 }
 
+export const combineApi = [
+  authApi,
+  profileApi,
+  diagnosesApi,
+  patientCategoryApi,
+  patientDiagnosisApi,
+  patientMedicationApi,
+  patientDataAccessApi,
+  medicationsApi,
+  patientVitalThresholdApi,
+  emergencyContactApi,
+  suggestedContactApi,
+  vitalsApi,
+]
+
+const apiReducers: { [key: string]: Reducer } = {}
+
+combineApi.map((api) => (apiReducers[api.reducerPath] = api.reducer))
+
 const reducer = combineReducers({
   auth: persistReducer(persistConfig, authReducer),
   editEmail: editEmailReducer,
   dataAccess: dataAccessReducer,
   emergencyContact: emergencyContactReducer,
-
-  [authApi.reducerPath]: authApi.reducer,
-  [profileApi.reducerPath]: profileApi.reducer,
-  [diagnosesApi.reducerPath]: diagnosesApi.reducer,
-  [patientCategoryApi.reducerPath]: patientCategoryApi.reducer,
-  [patientDiagnosisApi.reducerPath]: patientDiagnosisApi.reducer,
-  [patientMedicationApi.reducerPath]: patientMedicationApi.reducer,
-  [patientDataAccessApi.reducerPath]: patientDataAccessApi.reducer,
-  [medicationsApi.reducerPath]: medicationsApi.reducer,
-  [patientVitalThresholdApi.reducerPath]: patientVitalThresholdApi.reducer,
-  [emergencyContactApi.reducerPath]: emergencyContactApi.reducer,
-  [suggestedContactApi.reducerPath]: suggestedContactApi.reducer,
-  [vitalsApi.reducerPath]: vitalsApi.reducer,
+  ...apiReducers,
 })
 
-const middlewares = [
-  authApi.middleware,
-  profileApi.middleware,
-  diagnosesApi.middleware,
-  patientCategoryApi.middleware,
-  patientDiagnosisApi.middleware,
-  patientMedicationApi.middleware,
-  patientDataAccessApi.middleware,
-  medicationsApi.middleware,
-  patientVitalThresholdApi.middleware,
-  emergencyContactApi.middleware,
-  suggestedContactApi.middleware,
-  vitalsApi.middleware,
-]
+const middlewares: Middleware[] = combineApi.map((api) => api.middleware)
 
 export const store = configureStore({
   reducer,

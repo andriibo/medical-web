@@ -37,6 +37,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
   const [isUpdatingEnd, setIsUpdatingEnd] = useState(false)
 
   const [lastUpdate, setLastUpdate] = useState('')
+  const [toggleVitals, setToggleVitals] = useState(false)
 
   const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
   const [initialEndDate, setInitialEndDate] = useState<Dayjs>()
@@ -182,6 +183,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
     ]
   }, [vitals, threshold])
 
+  useEffect(() => {
+    setToggleVitals((prev) => !prev)
+  }, [vitals])
+
   const handleOpenPopup = (type: VitalTypeKeys) => {
     setInitialStartDate(dayjs().subtract(2, 'hours'))
     setInitialEndDate(dayjs())
@@ -225,9 +230,15 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
       <div className={styles.vitalContainer}>
         {vitalsList.map((vital, index) =>
           vital.title === VitalType.fall || vital.title === VitalType.bp ? (
-            <VitalItem key={index} vital={vital} />
+            <VitalItem key={index} toggleVitals={toggleVitals} vital={vital} />
           ) : (
-            <VitalItem key={index} onClick={() => handleOpenPopup(vital.type)} tag="button" vital={vital} />
+            <VitalItem
+              key={index}
+              onClick={() => handleOpenPopup(vital.type)}
+              tag="button"
+              toggleVitals={toggleVitals}
+              vital={vital}
+            />
           ),
         )}
       </div>

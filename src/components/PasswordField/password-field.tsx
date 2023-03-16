@@ -13,9 +13,16 @@ interface PasswordFieldProps {
     helperText: string | boolean
   }
   showRules?: boolean
+  autoComplete?: boolean
 }
 
-export const PasswordField: FC<PasswordFieldProps> = ({ label = 'Password', fieldValidation, field, showRules }) => {
+export const PasswordField: FC<PasswordFieldProps> = ({
+  label = 'Password',
+  fieldValidation,
+  field,
+  showRules,
+  autoComplete,
+}) => {
   const [showPassword, setShowPassword] = useState(false)
 
   const handleShowPassword = () => {
@@ -33,12 +40,12 @@ export const PasswordField: FC<PasswordFieldProps> = ({ label = 'Password', fiel
             </IconButton>
           ),
         }}
-        autoComplete="new-password"
+        autoComplete={autoComplete ? '' : 'new-password'}
         error={fieldValidation.error}
         fullWidth
         helperText={!showRules && fieldValidation.helperText}
         label={label}
-        placeholder="P@S5worD"
+        placeholder="e.g. P@S5worD"
         type={showPassword ? 'text' : 'password'}
       />
       {showRules && <PasswordRules error={fieldValidation.error} value={field.value} />}

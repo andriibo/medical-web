@@ -11,31 +11,27 @@ interface VerificationCodeFieldProps {
   }
 }
 
-export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, fieldValidation }) => {
-  console.log('VerificationCodeField')
-
-  return (
-    <InputMask
-      mask="999999"
-      maskChar=""
-      onChange={(value): void => {
-        field.onChange(value)
-      }}
-      value={field.value}
-    >
-      {
-        // @ts-ignore
-        () => (
-          <TextField
-            {...fieldValidation}
-            autoComplete="off"
-            className="verification-control"
-            data-mask="______"
-            fullWidth
-            label="Verification code"
-          />
-        )
-      }
-    </InputMask>
-  )
-}
+export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, fieldValidation }) => (
+  <InputMask
+    mask="999999"
+    maskChar=""
+    onChange={(value): void => {
+      field.onChange(value)
+    }}
+    value={field.value}
+  >
+    {
+      // @ts-ignore
+      () => (
+        <TextField
+          {...fieldValidation}
+          autoComplete="off"
+          className="verification-control"
+          data-mask="______"
+          fullWidth
+          label="Verification code"
+        />
+      )
+    }
+  </InputMask>
+)

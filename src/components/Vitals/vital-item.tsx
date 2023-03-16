@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { IVitalsCard } from '~models/vital.model'
 
@@ -7,15 +7,20 @@ import styles from './vitals.module.scss'
 
 interface VitalItemProps {
   vital: IVitalsCard
+  toggleVitals?: boolean
   onClick?: () => void
   tag?: 'div' | 'button'
 }
 
 export const VitalItem: FC<VitalItemProps> = ({
   vital: { title, value, units, icon, thresholds },
+  toggleVitals,
   onClick,
   tag = 'div',
 }) => {
+  const [changedClass, setChangedClass] = useState('')
+  const [blinkClass, setBlinkClass] = useState('')
+
   const isAbnormal = useMemo(
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
@@ -28,6 +33,21 @@ export const VitalItem: FC<VitalItemProps> = ({
       }
     }
   }, [tag])
+
+  useEffect(() => {
+    setChangedClass(styles.changed)
+  }, [toggleVitals])
+
+  useEffect(() => {
+    if (value) {
+      setBlinkClass(styles.blink)
+    }
+  }, [value])
+
+  const onAnimationEnd = () => {
+    setChangedClass('')
+    setBlinkClass('')
+  }
 
   return (
     <Box
@@ -45,7 +65,10 @@ export const VitalItem: FC<VitalItemProps> = ({
         </div>
       </div>
       <div className={styles.vitalValue}>
-        <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
+        <strong className={`${blinkClass} ${changedClass}`} onAnimationEnd={onAnimationEnd}>
+          {value ? value : '-'}
+        </strong>
+        <span>{units && units}</span>
       </div>
     </Box>
   )
