@@ -18,6 +18,7 @@ import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
 import { useLazyGetMyEmergencyContactsQuery } from '~stores/services/emergency-contact.api'
 import { setHasEmergencyContacts, signInSuccess } from '~stores/slices/auth.slice'
+import { setEmergencyContactIsLoading, useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
 
 export const SignIn = () => {
   const dispatch = useAppDispatch()
@@ -25,6 +26,8 @@ export const SignIn = () => {
   const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [currentEmail, setCurrentEmail] = useState<string | null>(null)
+
+  const emergencyContactIsLoading = useEmergencyContactIsLoading()
 
   const {
     handleSubmit,
@@ -38,6 +41,7 @@ export const SignIn = () => {
 
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
+      dispatch(setEmergencyContactIsLoading(true))
       const response = await authSignIn(data).unwrap()
 
       dispatch(signInSuccess(response))
@@ -48,6 +52,8 @@ export const SignIn = () => {
 
         if (!emergencyContact.length) {
           dispatch(setHasEmergencyContacts(false))
+
+          navigate(PageUrls.AddEmergencyContact, { replace: true })
 
           return
         }
@@ -65,6 +71,8 @@ export const SignIn = () => {
       setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
+    } finally {
+      dispatch(setEmergencyContactIsLoading(false))
     }
   }
 
@@ -125,7 +133,13 @@ export const SignIn = () => {
             Forgot password?
           </Button>
         </div>
-        <LoadingButton fullWidth loading={authSignInIsLoading} size="large" type="submit" variant="contained">
+        <LoadingButton
+          fullWidth
+          loading={authSignInIsLoading || emergencyContactIsLoading}
+          size="large"
+          type="submit"
+          variant="contained"
+        >
           Sign In
         </LoadingButton>
       </form>

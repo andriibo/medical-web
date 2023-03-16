@@ -8,7 +8,7 @@ import { RootState } from '~stores/store'
 
 export interface AuthState {
   data: IAuthData
-  hasEmergencyContacts: boolean
+  hasEmergencyContacts: boolean | null
 }
 
 const initialState: AuthState = {
@@ -27,7 +27,7 @@ const initialState: AuthState = {
       deletedAt: 0,
     },
   },
-  hasEmergencyContacts: false,
+  hasEmergencyContacts: null,
 }
 
 const authSlice = createSlice({
@@ -49,6 +49,7 @@ const authSlice = createSlice({
       sessionStorage.clear()
 
       state.data = initialState.data
+      state.hasEmergencyContacts = null
 
       return state
     },

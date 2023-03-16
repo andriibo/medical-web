@@ -7,6 +7,7 @@ import { RootState } from '~stores/store'
 
 interface IEmergencyContactData {
   data: IEmergencyContact
+  emergencyContactIsLoading: boolean
   emergencyContactHasChanges: boolean
 }
 
@@ -20,6 +21,7 @@ const initialState: IEmergencyContactData = {
     contactId: '',
     createdAt: 0,
   },
+  emergencyContactIsLoading: false,
   emergencyContactHasChanges: false,
 }
 
@@ -33,6 +35,9 @@ const emergencyContactSlice = createSlice({
     clearEmergencyContact: (state) => {
       state.data = initialState.data
     },
+    setEmergencyContactIsLoading: (state, { payload }: PayloadAction<boolean>) => {
+      state.emergencyContactIsLoading = payload
+    },
     setEmergencyContactHasChanges: (state, { payload }: PayloadAction<boolean>) => {
       state.emergencyContactHasChanges = payload
     },
@@ -41,11 +46,13 @@ const emergencyContactSlice = createSlice({
 
 export const getEmergencyContact = (state: RootState) => state.emergencyContact.data
 export const getEmergencyContactHasChanges = (state: RootState) => state.emergencyContact.emergencyContactHasChanges
+export const getEmergencyContactIsLoading = (state: RootState) => state.emergencyContact.emergencyContactIsLoading
 
 export const useEmergencyContact = () => useAppSelector(getEmergencyContact)
 export const useEmergencyContactHasChanges = () => useAppSelector(getEmergencyContactHasChanges)
+export const useEmergencyContactIsLoading = () => useAppSelector(getEmergencyContactIsLoading)
 
 export const {
   reducer: emergencyContactReducer,
-  actions: { setEmergencyContact, clearEmergencyContact, setEmergencyContactHasChanges },
+  actions: { setEmergencyContact, clearEmergencyContact, setEmergencyContactIsLoading, setEmergencyContactHasChanges },
 } = emergencyContactSlice

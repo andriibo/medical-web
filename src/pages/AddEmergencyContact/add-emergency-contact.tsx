@@ -18,6 +18,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { Relationship } from '~/enums/relationship.enum'
+import { EmailField } from '~components/EmailField/email-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
@@ -52,13 +53,6 @@ export const AddEmergencyContact: FC<EmergencyContactFormProps> = ({ contactData
     mode: 'onBlur',
   })
 
-  // useEffect(() => {
-  //   if (open) {
-  //     setFormErrors(null)
-  //     reset(contactData)
-  //   }
-  // }, [contactData, dispatch, open, reset])
-
   const onSubmit: SubmitHandler<IEmergencyContactModel> = async (data) => {
     try {
       await addEmergencyContact({
@@ -69,6 +63,7 @@ export const AddEmergencyContact: FC<EmergencyContactFormProps> = ({ contactData
       setFormErrors(null)
       enqueueSnackbar('Emergency contact added')
       dispatch(setHasEmergencyContacts(true))
+      reset()
     } catch (err) {
       const {
         data: { message },
@@ -139,7 +134,7 @@ export const AddEmergencyContact: FC<EmergencyContactFormProps> = ({ contactData
           control={control}
           defaultValue=""
           name="email"
-          render={({ field }) => <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Email" />}
+          render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.email}
         />
         <Controller

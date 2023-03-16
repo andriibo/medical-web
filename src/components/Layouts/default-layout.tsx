@@ -5,6 +5,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useAppDispatch } from '~stores/hooks'
 import { useHasEmergencyContacts, useIsAuth, useUserDeletedAt } from '~stores/slices/auth.slice'
+import { useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
 import { combineApi } from '~stores/store'
 
 import { Header } from '../Header/header'
@@ -15,6 +16,7 @@ export const DefaultLayout = () => {
   const userDeletedAt = useUserDeletedAt()
   const location = useLocation()
   const hasEmergencyContacts = useHasEmergencyContacts()
+  const emergencyContactIsLoading = useEmergencyContactIsLoading()
 
   useEffect(() => {
     if (!isAuth) {
@@ -28,7 +30,7 @@ export const DefaultLayout = () => {
     return <Navigate replace to={PageUrls.AccountRecovery} />
   }
 
-  if (isAuth && !hasEmergencyContacts) {
+  if (isAuth && !emergencyContactIsLoading && !hasEmergencyContacts) {
     return <Navigate replace to={PageUrls.AddEmergencyContact} />
   }
 
