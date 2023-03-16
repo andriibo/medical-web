@@ -199,6 +199,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                       endAdornment: <InputAdornment position="end">cm</InputAdornment>,
                     }}
                     fullWidth
+                    helperText={`from ${minMaxValidationRules.height.min} to ${minMaxValidationRules.height.max} cm`}
                     label="Height"
                     type="number"
                   />
@@ -223,6 +224,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                       endAdornment: <InputAdornment position="end">kg</InputAdornment>,
                     }}
                     fullWidth
+                    helperText={`from ${minMaxValidationRules.weight.min} to ${minMaxValidationRules.weight.max} kg`}
                     label="Weight"
                     type="number"
                   />
