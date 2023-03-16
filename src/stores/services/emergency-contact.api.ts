@@ -42,6 +42,7 @@ export const emergencyContactApi = createApi({
 export const {
   useGetPatientEmergencyContactsQuery,
   useGetMyEmergencyContactsQuery,
+  useLazyGetMyEmergencyContactsQuery,
   usePostMyEmergencyContactMutation,
   usePatchPatientEmergencyContactMutation,
   useDeletePatientEmergencyContactMutation,
