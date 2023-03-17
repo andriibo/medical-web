@@ -135,8 +135,8 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
     handleDrop(true)
 
     await confirm({
-      title: 'Emergency contact removing declined',
-      description: 'You should have at least one emergency contact.',
+      title: 'Failed to delete',
+      description: 'You must have at least one emergency contact.',
       hideCancelButton: true,
     })
   }
