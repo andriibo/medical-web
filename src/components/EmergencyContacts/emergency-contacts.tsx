@@ -154,43 +154,37 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
 
   return (
     <Grid container spacing={3} sx={{ mb: 1 }}>
-      {emergencyContacts?.length ? (
-        emergencyContacts.map((emergencyContact) => {
-          const { lastName, firstName, relationship, contactId } = emergencyContact
+      {emergencyContacts?.map((emergencyContact) => {
+        const { lastName, firstName, relationship, contactId } = emergencyContact
 
-          return (
-            <Grid key={contactId} xs={6}>
-              <CardBox
-                disable={setDeletingContactId === contactId}
-                header={
-                  <>
-                    <Typography variant="subtitle1">
-                      {firstName} {lastName}
-                    </Typography>
-                    <div style={{ marginLeft: 'auto' }} />
-                    <Chip label={Relationship[relationship]} size="small" />
-                    {!patientUserId && (
-                      <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
-                        <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
-                        {emergencyContacts?.length === 1 ? (
-                          <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>
-                        ) : (
-                          <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
-                        )}
-                      </DropdownMenu>
-                    )}
-                  </>
-                }
-                infoListItems={<ListItems emergencyContact={emergencyContact} />}
-              />
-            </Grid>
-          )
-        })
-      ) : (
-        <Grid textAlign="center" xs>
-          No emergency contacts added
-        </Grid>
-      )}
+        return (
+          <Grid key={contactId} xs={6}>
+            <CardBox
+              disable={setDeletingContactId === contactId}
+              header={
+                <>
+                  <Typography variant="subtitle1">
+                    {firstName} {lastName}
+                  </Typography>
+                  <div style={{ marginLeft: 'auto' }} />
+                  <Chip label={Relationship[relationship]} size="small" />
+                  {!patientUserId && (
+                    <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                      <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
+                      {emergencyContacts?.length === 1 ? (
+                        <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>
+                      ) : (
+                        <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
+                      )}
+                    </DropdownMenu>
+                  )}
+                </>
+              }
+              infoListItems={<ListItems emergencyContact={emergencyContact} />}
+            />
+          </Grid>
+        )
+      })}
     </Grid>
   )
 }
