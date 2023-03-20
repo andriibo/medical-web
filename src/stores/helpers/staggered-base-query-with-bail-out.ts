@@ -25,7 +25,7 @@ export const staggeredBaseQueryWithBailOut = (path: string) =>
           }
 
           if (Date.now() > accessTokenExpireTime * 1000) {
-            throw new Error('The access token has been expired')
+            throw new Error('The access token has expired')
           }
 
           const response = await axios.post(`${BASE_API}/refresh-token`, { refreshToken })
