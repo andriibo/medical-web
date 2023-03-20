@@ -4,17 +4,14 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
-import { PageUrls } from '~/enums/page-urls.enum'
 import { PasswordField } from '~components/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangePasswordMutation } from '~stores/services/auth.api'
-import { clearPersist } from '~stores/slices/auth.slice'
+import { callLogOut } from '~stores/store'
 
 interface ChangePasswordPopupProps {
   open: boolean
@@ -22,12 +19,11 @@ interface ChangePasswordPopupProps {
 }
 
 export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handleClose }) => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const [submitIsLoading, setSubmitIsLoading] = useState(false)
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const [changePassword, { isLoading: changePasswordIsLoading }] = usePostAuthChangePasswordMutation()
+  const [changePassword] = usePostAuthChangePasswordMutation()
 
   const {
     handleSubmit,
@@ -46,13 +42,12 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
 
   const onSubmit: SubmitHandler<IAuthChangePassword> = async (data) => {
     try {
+      setSubmitIsLoading(true)
       await changePassword(data).unwrap()
 
       enqueueSnackbar('Password changed')
 
-      await dispatch(clearPersist())
-
-      navigate(PageUrls.SignIn, { replace: true, state: undefined })
+      await callLogOut()
     } catch (err) {
       const {
         data: { message },
@@ -61,6 +56,8 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
       setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
+    } finally {
+      setSubmitIsLoading(false)
     }
   }
 
@@ -115,13 +112,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
                 </Button>
               </Grid>
               <Grid xs={6}>
-                <LoadingButton
-                  fullWidth
-                  loading={changePasswordIsLoading}
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
+                <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
                   Update
                 </LoadingButton>
               </Grid>

@@ -13,17 +13,18 @@ import { AuthChangeEmailConfirmKeys, IAuthChangeEmailConfirm } from '~models/aut
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangeEmailConfirmMutation, usePostAuthChangeEmailMutation } from '~stores/services/auth.api'
-import { clearPersist } from '~stores/slices/auth.slice'
 import { closeEditEmailPopup, setEditEmailStep, useNewEmail } from '~stores/slices/edit-email.slice'
+import { callLogOut } from '~stores/store'
 
 export const VerificationCodeForm = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const newEmail = useNewEmail()
+  const [submitIsLoading, setSubmitIsLoading] = useState(false)
 
   const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthChangeEmailMutation()
-  const [changeEmailConfirm, { isLoading: changeEmailConfirmIsLoading }] = usePostAuthChangeEmailConfirmMutation()
+  const [changeEmailConfirm] = usePostAuthChangeEmailConfirmMutation()
 
   const {
     handleSubmit,
@@ -40,9 +41,10 @@ export const VerificationCodeForm = () => {
 
   const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async ({ code }) => {
     try {
+      setSubmitIsLoading(true)
       await changeEmailConfirm({ code }).unwrap()
 
-      await dispatch(clearPersist())
+      await callLogOut()
 
       enqueueSnackbar('Email updated')
       dispatch(closeEditEmailPopup())
@@ -56,6 +58,8 @@ export const VerificationCodeForm = () => {
 
       enqueueSnackbar('Verification code was sent to your email')
       console.error(err)
+    } finally {
+      setSubmitIsLoading(false)
     }
   }
 
@@ -122,13 +126,7 @@ export const VerificationCodeForm = () => {
               </Button>
             </Grid>
             <Grid xs={6}>
-              <LoadingButton
-                fullWidth
-                loading={changeEmailConfirmIsLoading}
-                size="large"
-                type="submit"
-                variant="contained"
-              >
+              <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
                 Verify
               </LoadingButton>
             </Grid>

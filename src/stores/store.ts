@@ -1,8 +1,10 @@
 import { combineReducers, configureStore, Middleware, Reducer } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
+import axios from 'axios'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+import { BASE_API } from '~constants/constants'
 import { authApi } from '~stores/services/auth.api'
 import { diagnosesApi } from '~stores/services/diagnoses.api'
 import { emergencyContactApi } from '~stores/services/emergency-contact.api'
@@ -15,7 +17,7 @@ import { patientVitalThresholdApi } from '~stores/services/patient-vital-thresho
 import { profileApi } from '~stores/services/profile.api'
 import { suggestedContactApi } from '~stores/services/suggested-contact.api'
 import { vitalsApi } from '~stores/services/vitals.api'
-import { authReducer } from '~stores/slices/auth.slice'
+import { authReducer, clearPersist } from '~stores/slices/auth.slice'
 import { dataAccessReducer } from '~stores/slices/data-access.slice'
 import { editEmailReducer } from '~stores/slices/edit-email.slice'
 import { emergencyContactReducer } from '~stores/slices/emergency-contact.slice'
@@ -62,6 +64,29 @@ export const store = configureStore({
 export const persistor = persistStore(store)
 
 setupListeners(store.dispatch)
+
+export const callLogOut = async () => {
+  const state = store.getState()
+  const { refreshToken, accessToken } = state.auth.data
+
+  try {
+    if (refreshToken) {
+      await axios.post(
+        `${BASE_API}/sign-out`,
+        { refreshToken },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+    }
+  } catch (err) {
+    console.error(err)
+  } finally {
+    store.dispatch(clearPersist())
+  }
+}
 
 export type AppDispatch = typeof store.dispatch
 export type RootState = ReturnType<typeof store.getState>
