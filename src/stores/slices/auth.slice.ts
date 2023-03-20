@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 
 import { UserRoles } from '~/enums/user-roles.enum'
-import { IAuthData } from '~models/auth.model'
+import { IAccessToken, IAuthData } from '~models/auth.model'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
 
@@ -14,7 +14,7 @@ export interface AuthState {
 const initialState: AuthState = {
   data: {
     accessToken: '',
-    accessTokenExpireTime: '',
+    accessTokenExpireTime: 0,
     refreshToken: '',
     user: {
       userId: '',
@@ -24,7 +24,7 @@ const initialState: AuthState = {
       lastName: '',
       phone: '',
       avatar: '',
-      deletedAt: 0,
+      deletedAt: null,
     },
   },
   hasEmergencyContacts: null,
@@ -34,8 +34,9 @@ const authSlice = createSlice({
   name: 'Auth',
   initialState,
   reducers: {
-    setToken: (state, { payload }: PayloadAction<IAuthData>) => {
+    setAccessToken: (state, { payload }: PayloadAction<IAccessToken>) => {
       state.data.accessToken = payload.accessToken
+      state.data.accessTokenExpireTime = payload.accessTokenExpireTime
     },
     setHasEmergencyContacts: (state, { payload }: PayloadAction<boolean>) => {
       state.hasEmergencyContacts = payload
@@ -60,7 +61,7 @@ const selectIsAuth = (state: RootState) => Boolean(state.auth.data.accessToken)
 const selectUserRole = (state: RootState) => state.auth.data.user.role
 const selectUserId = (state: RootState) => state.auth.data.user.userId
 const selectUserEmail = (state: RootState) => state.auth.data.user.email
-const selectToken = (state: RootState) => state.auth.data.accessToken
+const selectAccessToken = (state: RootState) => state.auth.data.accessToken
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
 const selectHasEmergencyContacts = (state: RootState) => state.auth.hasEmergencyContacts
 
@@ -68,11 +69,11 @@ export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
 export const useUserId = () => useAppSelector(selectUserId)
 export const useUserEmail = () => useAppSelector(selectUserEmail)
-export const useToken = () => useAppSelector(selectToken)
+export const useAccessToken = () => useAppSelector(selectAccessToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
 export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyContacts)
 
 export const {
   reducer: authReducer,
-  actions: { setToken, setHasEmergencyContacts, signInSuccess, clearPersist },
+  actions: { setAccessToken, setHasEmergencyContacts, signInSuccess, clearPersist },
 } = authSlice
