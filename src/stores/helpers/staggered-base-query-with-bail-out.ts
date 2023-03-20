@@ -28,11 +28,11 @@ export const staggeredBaseQueryWithBailOut = (path: string) =>
             throw new Error('The access token has expired')
           }
 
-          const response = await axios.post(`${BASE_API}/refresh-token`, { refreshToken })
+          const refreshResponse = await axios.post(`${BASE_API}/refresh-token`, { refreshToken })
 
-          const data = response.data as IAccessToken
+          const refreshData = refreshResponse.data as IAccessToken
 
-          api.dispatch(setAccessToken(data))
+          api.dispatch(setAccessToken(refreshData))
 
           result = await handleFetchBaseQuery()
         } catch (e) {
