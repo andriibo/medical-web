@@ -1,6 +1,5 @@
 import { combineReducers, configureStore, Middleware, Reducer } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
-import axios from 'axios'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
@@ -71,15 +70,20 @@ export const callLogOut = async () => {
 
   try {
     if (refreshToken) {
-      await axios.post(
-        `${BASE_API}/sign-out`,
-        { refreshToken },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+      const response = await fetch(`${BASE_API}/sign-out`, {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
-      )
+      })
+
+      if (!response.ok) {
+        const errorMessage = await response.text()
+
+        throw new Error(errorMessage)
+      }
     }
   } catch (err) {
     console.error(err)
