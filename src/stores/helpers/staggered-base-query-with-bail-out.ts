@@ -1,8 +1,6 @@
 import { FetchArgs, fetchBaseQuery, retry } from '@reduxjs/toolkit/dist/query/react'
-import axios from 'axios'
 
 import { BASE_API } from '~constants/constants'
-import { IAccessToken } from '~models/auth.model'
 import { prepareHeaders } from '~stores/helpers/prepare-headers'
 import { clearPersist, setAccessToken } from '~stores/slices/auth.slice'
 import { RootState } from '~stores/store'
@@ -18,7 +16,7 @@ export const staggeredBaseQueryWithBailOut = (path: string) =>
 
       let result = await handleFetchBaseQuery()
 
-      if (result.error?.status === 401 && path !== 'auth/') {
+      if (result.error?.status === 401) {
         try {
           if (!refreshToken) {
             throw new Error('No refresh token')
@@ -28,15 +26,27 @@ export const staggeredBaseQueryWithBailOut = (path: string) =>
             throw new Error('The access token has expired')
           }
 
-          const refreshResponse = await axios.post(`${BASE_API}/refresh-token`, { refreshToken })
+          const refreshResponse = await fetch(`${BASE_API}/refresh-token`, {
+            method: 'POST',
+            body: JSON.stringify({ refreshToken }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
 
-          const refreshData = refreshResponse.data as IAccessToken
+          if (!refreshResponse.ok) {
+            const errorMessage = await refreshResponse.text()
+
+            throw new Error(errorMessage)
+          }
+
+          const refreshData = await refreshResponse.json()
 
           api.dispatch(setAccessToken(refreshData))
 
           result = await handleFetchBaseQuery()
-        } catch (e) {
-          console.error(e)
+        } catch (err) {
+          console.error(err)
 
           api.dispatch(clearPersist())
 
