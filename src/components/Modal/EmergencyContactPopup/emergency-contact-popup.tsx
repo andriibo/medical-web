@@ -23,8 +23,13 @@ import { EmailField } from '~components/EmailField/email-field'
 import { PhoneField } from '~components/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
+import { isRelationshipValue } from '~helpers/is-relationship-value'
 import { validationRules } from '~helpers/validation-rules'
-import { IEmergencyContact, IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import {
+  IEmergencyContact,
+  IEmergencyContactFormModel,
+  IEmergencyContactModelKeys,
+} from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
@@ -53,17 +58,21 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactModel>({
+  } = useForm<IEmergencyContactFormModel>({
     mode: 'onBlur',
-    defaultValues: contactData,
   })
 
   useEffect(() => {
     if (open) {
       setFormErrors(null)
-      reset(contactData)
+
+      if (contactId) {
+        reset(contactData)
+      } else {
+        reset({})
+      }
     }
-  }, [contactData, dispatch, open, reset])
+  }, [contactData, contactId, dispatch, open, reset])
 
   const initiateClosePopup = () => {
     handleClose()
@@ -72,13 +81,16 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     }, 300)
   }
 
-  const onSubmit: SubmitHandler<IEmergencyContactModel> = async (data) => {
+  const onSubmit: SubmitHandler<IEmergencyContactFormModel> = async (data) => {
+    if (!isRelationshipValue(data.relationship)) return
+
     if (contactId) {
       try {
         await editEmergencyContact({
           contactId,
           contact: {
             ...data,
+            relationship: data.relationship,
             phone: data.phone.split('-').join(''),
           },
         }).unwrap()
@@ -102,6 +114,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     try {
       await addEmergencyContact({
         ...data,
+        relationship: data.relationship,
         phone: data.phone.split('-').join(''),
       }).unwrap()
 
@@ -179,7 +192,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
           />
           <Controller
             control={control}
-            defaultValue="Friends&Family"
+            defaultValue=""
             name="relationship"
             render={({ field }) => (
               <FormControl error={Boolean(errors[field.name])} fullWidth>
