@@ -8,6 +8,7 @@ import { RootState } from '~stores/store'
 
 export interface AuthState {
   data: IAuthData
+  hasEmergencyContacts: boolean | null
 }
 
 const initialState: AuthState = {
@@ -26,6 +27,7 @@ const initialState: AuthState = {
       deletedAt: 0,
     },
   },
+  hasEmergencyContacts: null,
 }
 
 const authSlice = createSlice({
@@ -34,6 +36,9 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.accessToken = payload.accessToken
+    },
+    setHasEmergencyContacts: (state, { payload }: PayloadAction<boolean>) => {
+      state.hasEmergencyContacts = payload
     },
     signInSuccess: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data = payload
@@ -44,6 +49,7 @@ const authSlice = createSlice({
       sessionStorage.clear()
 
       state.data = initialState.data
+      state.hasEmergencyContacts = null
 
       return state
     },
@@ -57,6 +63,7 @@ const selectUserEmail = (state: RootState) => state.auth.data.user.email
 const selectToken = (state: RootState) => state.auth.data.accessToken
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
 const selectUser = (state: RootState) => state.auth.data.user
+const selectHasEmergencyContacts = (state: RootState) => state.auth.hasEmergencyContacts
 
 export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
@@ -65,8 +72,9 @@ export const useUserEmail = () => useAppSelector(selectUserEmail)
 export const useToken = () => useAppSelector(selectToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
 export const useUser = () => useAppSelector(selectUser)
+export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyContacts)
 
 export const {
   reducer: authReducer,
-  actions: { setToken, signInSuccess, clearPersist },
+  actions: { setToken, setHasEmergencyContacts, signInSuccess, clearPersist },
 } = authSlice

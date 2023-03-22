@@ -8,12 +8,14 @@ import { useEmailParam } from '~/hooks/use-email-param'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
 import { clearPersist, useIsAuth, useUserEmail } from '~stores/slices/auth.slice'
+import { useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
 
 export const AuthLayout = () => {
   const dispatch = useAppDispatch()
   const isAuth = useIsAuth()
   const userEmail = useUserEmail()
   const emailParam = useEmailParam()
+  const emergencyContactIsLoading = useEmergencyContactIsLoading()
 
   const theSameEmail = useMemo(() => userEmail === emailParam, [emailParam, userEmail])
 
@@ -23,7 +25,7 @@ export const AuthLayout = () => {
     }
   }, [dispatch, emailParam, theSameEmail])
 
-  if (isAuth && (!emailParam || theSameEmail)) {
+  if (isAuth && (!emailParam || theSameEmail) && !emergencyContactIsLoading) {
     return <Navigate replace to="/" />
   }
 

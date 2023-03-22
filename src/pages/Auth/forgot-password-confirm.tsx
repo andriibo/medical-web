@@ -103,14 +103,23 @@ export const ForgotPasswordConfirm = () => {
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
           Enter the confirmation that we sent to your email.
         </Typography>
+        <Typography sx={{ mb: '1.5rem' }} variant="body2">
+          Didn’t receive the confirmation code? Try RESEND or make sure you entered the correct email address.
+        </Typography>
         <Controller
           control={control}
           defaultValue=""
           name="code"
-          render={({ field }) => <VerificationCodeField field={field} fieldValidation={fieldValidation(field.name)} />}
+          render={({ field }) => (
+            <VerificationCodeField
+              field={field}
+              fieldValidation={fieldValidation(field.name)}
+              label="Confirmation code"
+            />
+          )}
           rules={validationRules.code}
         />
-        <Box className={styles.authHelperBox} sx={{ textAlign: 'right' }}>
+        <Box className={styles.authHelperBox} sx={{ justifyContent: 'flex-end' }}>
           <Typography component="span" variant="body2">
             Need a new verification code?
           </Typography>

@@ -1,0 +1,11 @@
+.container {
+  composes: authContainer from '/src/pages/Auth/auth.module.scss';
+}
+
+.footer {
+  composes: authFooter from '/src/pages/Auth/auth.module.scss';
+}
+
+.footerText {
+  composes: authFooterText from '/src/pages/Auth/auth.module.scss';
+}

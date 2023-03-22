@@ -4,6 +4,7 @@ import { ControllerRenderProps } from 'react-hook-form/dist/types/controller'
 import InputMask from 'react-input-mask'
 
 interface VerificationCodeFieldProps {
+  label?: string
   field: ControllerRenderProps<any, any>
   fieldValidation: {
     error: boolean
@@ -11,7 +12,11 @@ interface VerificationCodeFieldProps {
   }
 }
 
-export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, fieldValidation }) => (
+export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({
+  label = 'Verification code',
+  field,
+  fieldValidation,
+}) => (
   <InputMask
     mask="999999"
     maskChar=""
@@ -29,7 +34,7 @@ export const VerificationCodeField: FC<VerificationCodeFieldProps> = ({ field, f
           className="verification-control"
           data-mask="______"
           fullWidth
-          label="Verification code"
+          label={label}
         />
       )
     }
