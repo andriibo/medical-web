@@ -9,10 +9,11 @@ import styles from './user-avatar.module.scss'
 
 interface AvatarProps {
   avatar: string
-  fullName: string
+  firstName: string
+  lastName: string
 }
 
-export const UserAvatarEdit: FC<AvatarProps> = ({ fullName, avatar }) => {
+export const UserAvatarEdit: FC<AvatarProps> = ({ firstName, lastName, avatar }) => {
   const [changeAvatarPopupOpen, setChangeAvatarPopupOpen] = useState(false)
 
   const handleChangeAvatarPopupOpen = () => {
@@ -26,7 +27,7 @@ export const UserAvatarEdit: FC<AvatarProps> = ({ fullName, avatar }) => {
   return (
     <>
       <div className={styles.userAvatarHolder}>
-        <UserAvatar avatar={avatar} className={styles.userAvatarEdit} fullName={fullName} />
+        <UserAvatar avatar={avatar} className={styles.userAvatarEdit} firstName={firstName} lastName={lastName} />
         <IconButton className={styles.userAvatarEditButton} onClick={handleChangeAvatarPopupOpen} size="small">
           <Edit fontSize="inherit" />
         </IconButton>

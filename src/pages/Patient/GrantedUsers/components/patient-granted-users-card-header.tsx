@@ -58,7 +58,7 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
 
   return (
     <>
-      <UserAvatar avatar={avatar} fullName={`${firstName} ${lastName}`} sx={{ mr: '0.75rem' }} />
+      <UserAvatar avatar={avatar} firstName={firstName} lastName={lastName} sx={{ mr: '0.75rem' }} />
       <Typography variant="subtitle1">
         {firstName} {lastName}
       </Typography>

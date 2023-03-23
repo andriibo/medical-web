@@ -7,7 +7,6 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
-import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { isUserRoleGrantable } from '~helpers/user-role'
 import { IMainNav } from '~models/main-nav.model'
 import { useUser, useUserRole } from '~stores/slices/auth.slice'
@@ -77,7 +76,9 @@ export const Header = () => {
         </Badge>
       </IconButton>
       <DropdownMenu
-        button={<UserAvatar avatar={user.avatar} component={Button} fullName={getRequestedUserName(user)} />}
+        button={
+          <UserAvatar avatar={user.avatar} component={Button} firstName={user.firstName} lastName={user.lastName} />
+        }
         dropClose={dropClose}
         handleDrop={handleDrop}
         menuStyles={{

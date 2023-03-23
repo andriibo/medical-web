@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
@@ -29,8 +29,6 @@ export const PatientPersonalInfo = () => {
       dispatch(setUserAvatar(patientData.avatar))
     }
   }, [dispatch, patientData?.avatar])
-
-  const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
@@ -64,11 +62,17 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatarEdit avatar={patientData.avatar} fullName={fullName} />
+          <UserAvatarEdit
+            avatar={patientData.avatar}
+            firstName={patientData.firstName}
+            lastName={patientData.lastName}
+          />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
-            <strong className={styles.userName}>{fullName}</strong>
+            <strong className={styles.userName}>
+              {patientData.firstName} {patientData.lastName}
+            </strong>
             <Chip label="Patient" size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit

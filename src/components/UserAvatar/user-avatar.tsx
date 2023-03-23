@@ -8,14 +8,15 @@ import { getAcronym } from '~helpers/get-acronym'
 import styles from './user-avatar.module.scss'
 
 interface AvatarProps {
-  fullName: string
+  firstName: string
+  lastName: string
   avatar: string
   component?: ElementType
   className?: string
   sx?: SxProps<Theme>
 }
 
-export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, component = 'div', className, sx }) => {
+export const UserAvatar: FC<AvatarProps> = ({ firstName, lastName, avatar, component = 'div', className, sx }) => {
   const avatarSrc = useMemo(() => (avatar.includes(DEFAULT_AVATAR) ? undefined : avatar), [avatar])
 
   const sxStyles = {
@@ -38,7 +39,7 @@ export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, component = 'div
       src={avatarSrc}
       sx={sxStyles}
     >
-      {getAcronym(fullName)}
+      {getAcronym(firstName, lastName)}
     </Avatar>
   )
 }

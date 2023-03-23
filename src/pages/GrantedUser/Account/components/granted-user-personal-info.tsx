@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
@@ -66,8 +66,6 @@ export const GrantedUserPersonalInfo = () => {
     }
   }, [dispatch, userData?.avatar])
 
-  const fullName = useMemo(() => `${userData?.firstName} ${userData?.lastName}`, [userData])
-
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
   }
@@ -100,11 +98,13 @@ export const GrantedUserPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatarEdit avatar={userData.avatar} fullName={fullName} />
+          <UserAvatarEdit avatar={userData.avatar} firstName={userData.firstName} lastName={userData.lastName} />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
-            <strong className={styles.userName}>{fullName}</strong>
+            <strong className={styles.userName}>
+              {userData.firstName} {userData.lastName}
+            </strong>
             <Chip label={userRole} size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit
