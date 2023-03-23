@@ -1,5 +1,5 @@
 import { AccountCircle, Notifications } from '@mui/icons-material'
-import { Badge, IconButton, ListItemIcon, MenuItem } from '@mui/material'
+import { Badge, Button, IconButton, ListItemIcon, MenuItem } from '@mui/material'
 import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -77,7 +77,7 @@ export const Header = () => {
         </Badge>
       </IconButton>
       <DropdownMenu
-        button={<UserAvatar avatar={user.avatar} fullName={getRequestedUserName(user)} />}
+        button={<UserAvatar avatar={user.avatar} component={Button} fullName={getRequestedUserName(user)} />}
         dropClose={dropClose}
         handleDrop={handleDrop}
         menuStyles={{

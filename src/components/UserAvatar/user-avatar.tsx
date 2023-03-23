@@ -1,6 +1,6 @@
 import { Avatar, Theme } from '@mui/material'
 import { SxProps } from '@mui/system'
-import React, { FC, useMemo } from 'react'
+import React, { ElementType, FC, useMemo } from 'react'
 
 import { DEFAULT_AVATAR } from '~constants/constants'
 import { getAcronym } from '~helpers/get-acronym'
@@ -10,11 +10,12 @@ import styles from './user-avatar.module.scss'
 interface AvatarProps {
   fullName: string
   avatar: string
+  component?: ElementType
   className?: string
   sx?: SxProps<Theme>
 }
 
-export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, className, sx }) => {
+export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, component = 'div', className, sx }) => {
   const avatarSrc = useMemo(() => (avatar.includes(DEFAULT_AVATAR) ? undefined : avatar), [avatar])
 
   const sxStyles = {
@@ -22,6 +23,8 @@ export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, className, sx })
     height: 'auto',
     backgroundColor: '#bbb',
     margin: 0,
+    padding: 0,
+    minWidth: 0,
     fontSize: '1.125rem',
     aspectRatio: '1 / 1',
     transition: 'opacity 0.3s ease',
@@ -31,6 +34,7 @@ export const UserAvatar: FC<AvatarProps> = ({ fullName, avatar, className, sx })
   return (
     <Avatar
       className={`UserAvatar-root ${styles.userAvatar} ${className ? className : ''}`}
+      component={component}
       src={avatarSrc}
       sx={sxStyles}
     >
