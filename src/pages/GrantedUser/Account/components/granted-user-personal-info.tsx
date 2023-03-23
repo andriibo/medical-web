@@ -15,7 +15,7 @@ import { isUserRoleCaregiver, isUserRoleDoctor } from '~helpers/user-role'
 import { ICaregiverProfile, IDoctorProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyCaregiverProfileQuery, useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
-import { useUserRole } from '~stores/slices/auth.slice'
+import { setUserAvatar, useUserRole } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../granted-user-account.module.scss'
@@ -59,6 +59,12 @@ export const GrantedUserPersonalInfo = () => {
 
     setIsLoading(false)
   }, [doctorDataIsLoading, caregiverDataIsLoading])
+
+  useEffect(() => {
+    if (userData?.avatar) {
+      dispatch(setUserAvatar(userData.avatar))
+    }
+  }, [dispatch, userData?.avatar])
 
   const fullName = useMemo(() => `${userData?.firstName} ${userData?.lastName}`, [userData])
 

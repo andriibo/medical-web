@@ -31,7 +31,7 @@ export const UserAvatarEdit: FC<AvatarProps> = ({ fullName, avatar }) => {
           <Edit fontSize="inherit" />
         </IconButton>
       </div>
-      <AvatarPopup handleClose={handleChangeAvatarPopupClose} open={changeAvatarPopupOpen} />
+      <AvatarPopup avatar={avatar} handleClose={handleChangeAvatarPopupClose} open={changeAvatarPopupOpen} />
     </>
   )
 }

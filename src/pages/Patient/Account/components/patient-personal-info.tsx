@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
@@ -12,6 +12,7 @@ import { Spinner } from '~components/Spinner/spinner'
 import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
+import { setUserAvatar } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
@@ -22,6 +23,12 @@ export const PatientPersonalInfo = () => {
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
 
   const { data: patientData, isLoading } = useGetMyPatientProfileQuery()
+
+  useEffect(() => {
+    if (patientData?.avatar) {
+      dispatch(setUserAvatar(patientData.avatar))
+    }
+  }, [dispatch, patientData?.avatar])
 
   const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
 
