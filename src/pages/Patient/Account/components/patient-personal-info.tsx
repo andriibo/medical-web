@@ -25,7 +25,7 @@ export const PatientPersonalInfo = () => {
   const { data: patientData, isLoading } = useGetMyPatientProfileQuery()
 
   useEffect(() => {
-    if (patientData?.avatar) {
+    if (patientData?.avatar !== undefined) {
       dispatch(setUserAvatar(patientData.avatar))
     }
   }, [dispatch, patientData?.avatar])

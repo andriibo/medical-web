@@ -5,7 +5,7 @@ export interface IUserModel {
   email: string
   firstName: string
   lastName: string
-  avatar: string
+  avatar: string | null
   role: UserRoles
   phone: string
   deletedAt: number | null

@@ -23,7 +23,7 @@ const initialState: AuthState = {
       firstName: '',
       lastName: '',
       phone: '',
-      avatar: '',
+      avatar: null,
       deletedAt: 0,
     },
   },
@@ -37,7 +37,7 @@ const authSlice = createSlice({
     setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.accessToken = payload.accessToken
     },
-    setUserAvatar: (state, { payload }: PayloadAction<string>) => {
+    setUserAvatar: (state, { payload }: PayloadAction<string | null>) => {
       state.data.user.avatar = payload
     },
     setHasEmergencyContacts: (state, { payload }: PayloadAction<boolean>) => {

@@ -10,14 +10,14 @@ import styles from './user-avatar.module.scss'
 interface AvatarProps {
   firstName: string
   lastName: string
-  avatar: string
+  avatar: string | null
   component?: ElementType
   className?: string
   sx?: SxProps<Theme>
 }
 
 export const UserAvatar: FC<AvatarProps> = ({ firstName, lastName, avatar, component = 'div', className, sx }) => {
-  const avatarSrc = useMemo(() => (avatar.includes(DEFAULT_AVATAR) ? undefined : avatar), [avatar])
+  const avatarSrc = useMemo(() => avatar || undefined, [avatar])
 
   const sxStyles = {
     width: '40px',

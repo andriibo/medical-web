@@ -8,7 +8,7 @@ import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import styles from './user-avatar.module.scss'
 
 interface AvatarProps {
-  avatar: string
+  avatar: string | null
   firstName: string
   lastName: string
 }

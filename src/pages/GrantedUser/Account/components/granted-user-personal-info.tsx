@@ -61,7 +61,7 @@ export const GrantedUserPersonalInfo = () => {
   }, [doctorDataIsLoading, caregiverDataIsLoading])
 
   useEffect(() => {
-    if (userData?.avatar) {
+    if (userData?.avatar !== undefined) {
       dispatch(setUserAvatar(userData.avatar))
     }
   }, [dispatch, userData?.avatar])

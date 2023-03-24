@@ -9,7 +9,7 @@ import { useDeletePatientDataAccessMutation } from '~stores/services/patient-dat
 
 interface PatientCardHeaderProps {
   accessId: string
-  avatar: string
+  avatar: string | null
   firstName: string
   lastName: string
   role: 'Doctor' | 'Caregiver'

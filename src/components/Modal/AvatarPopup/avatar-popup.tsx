@@ -36,7 +36,7 @@ const avatarInitialSettings: IAvatarInitialSettings = {
 }
 
 interface AvatarPopupProps {
-  avatar: string
+  avatar: string | null
   open: boolean
   handleClose: () => void
 }
@@ -49,8 +49,6 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ avatar, open, handleClose })
 
   const [updateAvatar, { isLoading: updateAvatarIsLoading }] = usePostAvatarMutation()
   const [deleteAvatar, { isLoading: deleteAvatarIsLoading }] = useDeleteAvatarMutation()
-
-  const isAvatar = !avatar.includes(DEFAULT_AVATAR)
 
   const handleDrop = (dropped: File[]) => {
     setAvatarSettings({ ...avatarSettings, image: dropped[0] })
@@ -207,7 +205,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ avatar, open, handleClose })
         )}
       </DialogContent>
       <DialogActions sx={{ padding: '0 1.5rem 1rem' }}>
-        {isAvatar && (
+        {avatar && (
           <LoadingButton
             color="error"
             disabled={updateAvatarIsLoading}
