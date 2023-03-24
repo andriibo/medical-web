@@ -3,7 +3,7 @@ import { PatientCategory } from '~/enums/patient-category'
 
 export interface IPatientProfile {
   userId: string
-  avatar: string
+  avatar: string | null
   email: string
   firstName: string
   lastName: string
@@ -28,7 +28,7 @@ export interface IUpdatePatientProfile {
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
 export interface ICaregiverProfile {
-  avatar: string
+  avatar: string | null
   email: string
   firstName: string
   lastName: string

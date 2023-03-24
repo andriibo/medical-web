@@ -1,7 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
@@ -12,6 +12,7 @@ import { Spinner } from '~components/Spinner/spinner'
 import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
+import { setUserAvatar } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
@@ -23,7 +24,11 @@ export const PatientPersonalInfo = () => {
 
   const { data: patientData, isLoading } = useGetMyPatientProfileQuery()
 
-  const fullName = useMemo(() => `${patientData?.firstName} ${patientData?.lastName}`, [patientData])
+  useEffect(() => {
+    if (patientData?.avatar !== undefined) {
+      dispatch(setUserAvatar(patientData.avatar))
+    }
+  }, [dispatch, patientData?.avatar])
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
@@ -57,11 +62,17 @@ export const PatientPersonalInfo = () => {
     <>
       <div className={styles.personal}>
         <div className={styles.personalAside}>
-          <UserAvatarEdit avatar={patientData.avatar} fullName={fullName} />
+          <UserAvatarEdit
+            avatar={patientData.avatar}
+            firstName={patientData.firstName}
+            lastName={patientData.lastName}
+          />
         </div>
         <div className={styles.personalContent}>
           <div className={styles.personalHeading}>
-            <strong className={styles.userName}>{fullName}</strong>
+            <strong className={styles.userName}>
+              {patientData.firstName} {patientData.lastName}
+            </strong>
             <Chip label="Patient" size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit
