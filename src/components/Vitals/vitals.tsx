@@ -131,15 +131,15 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
     }
   }, [socket, isConnected, socketPatientUserId])
 
-  const vitalsList: IVitalsCard[] = useMemo(() => {
+  const vitalsList = useMemo(() => {
     const timestamp = 0
 
-    return [
+    const result: IVitalsCard[] = [
       {
         ...getVitalSettings('hr'),
         timestamp,
         value: vitals.hr,
-        threshold: {
+        thresholds: {
           min: threshold?.minHr,
           max: threshold?.maxHr,
         },
@@ -148,7 +148,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         ...getVitalSettings('temp'),
         timestamp,
         value: vitals.temp,
-        threshold: {
+        thresholds: {
           min: threshold?.minTemp,
           max: threshold?.maxTemp,
         },
@@ -157,7 +157,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         ...getVitalSettings('spo2'),
         timestamp,
         value: vitals.spo,
-        threshold: {
+        thresholds: {
           min: threshold?.minSpo2,
         },
       },
@@ -165,7 +165,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         ...getVitalSettings('rr'),
         timestamp,
         value: vitals.rr,
-        threshold: {
+        thresholds: {
           min: threshold?.minRr,
           max: threshold?.maxRr,
         },
@@ -181,6 +181,8 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         value: vitals.fall,
       },
     ]
+
+    return result
   }, [vitals, threshold])
 
   useEffect(() => {

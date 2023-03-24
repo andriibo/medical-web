@@ -32,6 +32,12 @@ export const vitalsApi = createApi({
       }),
       providesTags: ['Vitals'],
     }),
+    getVitalsAbsolute: build.query<null, void>({
+      query: () => ({
+        url: 'vitals/absolute',
+      }),
+      providesTags: ['Vitals'],
+    }),
   }),
 })
 
@@ -41,4 +47,5 @@ export const {
   useLazyGetPatientVitalsQueryQuery,
   useLazyGetPatientVitalsByDoctorQuery,
   useGetPatientVitalsByDoctorQuery,
+  useGetVitalsAbsoluteQuery,
 } = vitalsApi
