@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -10,9 +10,10 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { RequestsGrantedUserTab } from '~/enums/requests-tab.enum'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
-import { IDataAccessEmail } from '~models/data-access.model'
+import { IDataAccessEmail, IDataAccessEmailKeys } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostDataAccessInitiateMutation } from '~stores/services/patient-data-access.api'
 
@@ -43,9 +44,9 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
     }
   }, [open, reset])
 
-  const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
+  const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await initiatePatient({ email }).unwrap()
+      await initiatePatient({ ...trimValues(data) }).unwrap()
 
       handleClose()
       navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })
@@ -61,13 +62,13 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
     }
   }
 
-  const fieldValidation = (name: AuthEmailKeys) => ({
+  const fieldValidation = (name: IDataAccessEmailKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
 
   return (
-    <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
+    <Dialog fullWidth maxWidth="xs" open={open} scroll="body">
       <DialogTitle>Invite a new Patient</DialogTitle>
       <DialogContent>
         {formErrors && (
@@ -87,6 +88,22 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
             name="email"
             render={({ field }) => <EmailField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.email}
+          />
+          <Controller
+            control={control}
+            defaultValue=""
+            name="message"
+            render={({ field }) => (
+              <TextField
+                {...field}
+                {...fieldValidation(field.name)}
+                fullWidth
+                label="Add custom message (optional)"
+                multiline
+                rows={6}
+              />
+            )}
+            rules={validationRules.message}
           />
           <Grid container spacing={2}>
             <Grid xs={6}>
