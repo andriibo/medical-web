@@ -6,7 +6,6 @@ import React, { FC, useCallback, useMemo, useRef, useState } from 'react'
 import AvatarEditor, { AvatarEditorProps } from 'react-avatar-editor'
 import { FileError, useDropzone } from 'react-dropzone'
 
-import { DEFAULT_AVATAR } from '~constants/constants'
 import { useDeleteAvatarMutation, usePostAvatarMutation } from '~stores/services/profile.api'
 
 import styles from './avatar-popup.module.scss'

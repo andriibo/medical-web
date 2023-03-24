@@ -2,7 +2,6 @@ import { Avatar, Theme } from '@mui/material'
 import { SxProps } from '@mui/system'
 import React, { ElementType, FC, useMemo } from 'react'
 
-import { DEFAULT_AVATAR } from '~constants/constants'
 import { getAcronym } from '~helpers/get-acronym'
 
 import styles from './user-avatar.module.scss'
