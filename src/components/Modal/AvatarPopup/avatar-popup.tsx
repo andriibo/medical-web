@@ -6,7 +6,7 @@ import React, { FC, useCallback, useMemo, useRef, useState } from 'react'
 import AvatarEditor, { AvatarEditorProps } from 'react-avatar-editor'
 import { FileError, useDropzone } from 'react-dropzone'
 
-import { usePostAvatarMutation } from '~stores/services/profile.api'
+import { useDeleteAvatarMutation, usePostAvatarMutation } from '~stores/services/profile.api'
 
 import styles from './avatar-popup.module.scss'
 
@@ -35,17 +35,19 @@ const avatarInitialSettings: IAvatarInitialSettings = {
 }
 
 interface AvatarPopupProps {
+  avatar: string | null
   open: boolean
   handleClose: () => void
 }
 
-export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
+export const AvatarPopup: FC<AvatarPopupProps> = ({ avatar, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const avatarEditor = useRef<AvatarEditor | null>(null)
   const [avatarSettings, setAvatarSettings] = useState(avatarInitialSettings)
   const [files, setFiles] = useState<File[]>([])
 
   const [updateAvatar, { isLoading: updateAvatarIsLoading }] = usePostAvatarMutation()
+  const [deleteAvatar, { isLoading: deleteAvatarIsLoading }] = useDeleteAvatarMutation()
 
   const handleDrop = (dropped: File[]) => {
     setAvatarSettings({ ...avatarSettings, image: dropped[0] })
@@ -67,6 +69,14 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
       removeAvatar()
     }, 300)
   }, [handleClose, removeAvatar])
+
+  const handleDeleteAvatar = async () => {
+    await deleteAvatar()
+
+    closeAndClear()
+
+    enqueueSnackbar('Avatar removed')
+  }
 
   const handleChangeAvatar = useCallback(async () => {
     if (avatarEditor.current && files.length) {
@@ -194,9 +204,22 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ open, handleClose }) => {
         )}
       </DialogContent>
       <DialogActions sx={{ padding: '0 1.5rem 1rem' }}>
+        {avatar && (
+          <LoadingButton
+            color="error"
+            disabled={updateAvatarIsLoading}
+            loading={deleteAvatarIsLoading}
+            onClick={() => handleDeleteAvatar()}
+            sx={{ mr: 'auto' }}
+            type="button"
+          >
+            Remove avatar
+          </LoadingButton>
+        )}
         <Button onClick={closeAndClear}>Cancel</Button>
         {files.length > 0 && (
           <LoadingButton
+            disabled={deleteAvatarIsLoading}
             loading={updateAvatarIsLoading}
             onClick={() => handleChangeAvatar()}
             type="submit"

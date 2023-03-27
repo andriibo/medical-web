@@ -18,13 +18,16 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
 }) => {
   const [deletePatient] = useDeletePatient()
 
-  const fullName = `${firstName} ${lastName}`
-
   return (
     <div className={styles.patientAside}>
-      <UserAvatar avatar={avatar} fullName={fullName} sx={{ width: '120px', m: '0 auto 1rem', fontSize: '3.5rem' }} />
+      <UserAvatar
+        avatar={avatar}
+        firstName={firstName}
+        lastName={lastName}
+        sx={{ width: '120px', m: '0 auto 1rem', fontSize: '3.5rem' }}
+      />
       <Typography textAlign="center" variant="body1">
-        {fullName}
+        {firstName} {lastName}
       </Typography>
       <Divider sx={{ my: 2 }} />
       <ul className={styles.personalInfoList}>
