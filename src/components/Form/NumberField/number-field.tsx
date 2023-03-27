@@ -33,7 +33,7 @@ export const NumberField: FC<NumberFieldProps> = ({
     }
   }
 
-  const inputPropsSetting: Partial<StandardInputProps> = {
+  const inputPropsSettings: Partial<StandardInputProps> = {
     ...inputProps,
     inputProps: {
       ...(validationProps && {
@@ -49,7 +49,7 @@ export const NumberField: FC<NumberFieldProps> = ({
   return (
     <TextField
       {...field}
-      InputProps={inputPropsSetting}
+      InputProps={inputPropsSettings}
       error={fieldValidation.error}
       fullWidth
       helperText={helperText || fieldValidation.helperText}
