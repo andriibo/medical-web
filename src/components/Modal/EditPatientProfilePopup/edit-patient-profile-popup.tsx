@@ -8,7 +8,6 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -23,10 +22,11 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Gender } from '~/enums/gender.enum'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { NumberField } from '~components/Form/NumberField/number-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdatePatientProfile, UpdatePatientProfileKeys } from '~models/profie.model'
 import { usePatchMyPatientProfileMutation } from '~stores/services/profile.api'
@@ -41,6 +41,8 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
   const { enqueueSnackbar } = useSnackbar()
   const [updatePatientProfile, { isLoading: updatePatientProfileIsLoading }] = usePatchMyPatientProfileMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const { validationRules, validationProps } = useValidationRules()
 
   const patientDefaultValues = useMemo(
     () => deleteKeysFormObject({ ...patientData }, ['email', 'avatar']),
@@ -187,21 +189,14 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                 control={control}
                 name="height"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.height.min,
-                        max: minMaxValidationRules.height.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">cm</InputAdornment>,
-                    }}
-                    fullWidth
-                    helperText={`from ${minMaxValidationRules.height.min} to ${minMaxValidationRules.height.max} cm`}
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
+                    helperText={`
+                    from ${validationProps.height.min} to ${validationProps.height.max} ${validationProps.height.unit}
+                  `}
                     label="Height"
-                    type="number"
+                    validationProps={validationProps.height}
                   />
                 )}
                 rules={validationRules.height}
@@ -212,21 +207,14 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
                 control={control}
                 name="weight"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.weight.min,
-                        max: minMaxValidationRules.weight.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">kg</InputAdornment>,
-                    }}
-                    fullWidth
-                    helperText={`from ${minMaxValidationRules.weight.min} to ${minMaxValidationRules.weight.max} kg`}
-                    label="Weight"
-                    type="number"
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
+                    helperText={`
+                    from ${validationProps.weight.min} to ${validationProps.weight.max} ${validationProps.weight.unit}
+                  `}
+                    label="Height"
+                    validationProps={validationProps.weight}
                   />
                 )}
                 rules={validationRules.weight}

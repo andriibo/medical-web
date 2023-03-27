@@ -8,9 +8,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { RequestsGrantedUserTab } from '~/enums/requests-tab.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -23,8 +23,11 @@ interface InvitePatientPopupProps {
 
 export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const navigate = useNavigate()
+  const { validationRules } = useValidationRules()
+
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
   const [initiatePatient, { isLoading: initiatePatientIsLoading }] = usePostDataAccessInitiateMutation()
 
   const {

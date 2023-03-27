@@ -1,12 +1,13 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { IValidationRules } from '~/hooks/use-validation-rules'
+import { NumberField } from '~components/Form/NumberField/number-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsBloodPressure, ThresholdsBloodPressureKeys } from '~models/threshold.model'
 import { usePostPatientBloodPressureMutation } from '~stores/services/patient-vital-threshold.api'
@@ -14,6 +15,7 @@ import { usePostPatientBloodPressureMutation } from '~stores/services/patient-vi
 interface EditPatientBloodPressurePopupProps {
   thresholds: IThresholdsBloodPressure
   patientUserId: string
+  validationRulesData: IValidationRules
   open: boolean
   handleClose: () => void
 }
@@ -21,12 +23,15 @@ interface EditPatientBloodPressurePopupProps {
 export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProps> = ({
   thresholds,
   patientUserId,
+  validationRulesData,
   open,
   handleClose,
 }) => {
   const [mounted, setMounted] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
+
+  const { validationRules, validationProps } = validationRulesData
 
   const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientBloodPressureMutation()
 
@@ -45,6 +50,10 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
       reset(thresholds)
       setFormErrors(null)
       setMounted(true)
+    }
+
+    if (!open && mounted) {
+      setMounted(false)
     }
   }, [open, mounted, reset, thresholds])
 
@@ -100,16 +109,11 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                 control={control}
                 name="minDBP"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: { min: minMaxValidationRules.dbp.min, max: minMaxValidationRules.dbp.max, step: 1 },
-                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Min DBP"
-                    type="number"
+                    validationProps={validationProps.dbp}
                   />
                 )}
                 rules={validationRules.dbp}
@@ -120,16 +124,11 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                 control={control}
                 name="maxDBP"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: { min: minMaxValidationRules.dbp.min, max: minMaxValidationRules.dbp.max, step: 1 },
-                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Max DBP"
-                    type="number"
+                    validationProps={validationProps.dbp}
                   />
                 )}
                 rules={validationRules.dbp}
@@ -142,16 +141,11 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                 control={control}
                 name="minSBP"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: { min: minMaxValidationRules.sbp.min, max: minMaxValidationRules.sbp.max, step: 1 },
-                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Min SBP"
-                    type="number"
+                    validationProps={validationProps.sbp}
                   />
                 )}
                 rules={validationRules.sbp}
@@ -162,16 +156,11 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
                 control={control}
                 name="maxSBP"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: { min: minMaxValidationRules.sbp.min, max: minMaxValidationRules.sbp.max, step: 1 },
-                      endAdornment: <InputAdornment position="end">mmHg</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Max SBP"
-                    type="number"
+                    validationProps={validationProps.sbp}
                   />
                 )}
                 rules={validationRules.sbp}

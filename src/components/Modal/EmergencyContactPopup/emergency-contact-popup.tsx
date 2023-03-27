@@ -19,12 +19,12 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Relationship } from '~/enums/relationship.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { isRelationshipValue } from '~helpers/is-relationship-value'
-import { validationRules } from '~helpers/validation-rules'
 import {
   IEmergencyContact,
   IEmergencyContactFormModel,
@@ -47,6 +47,8 @@ interface EmergencyContactPopupProps {
 export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, handleClose, contactData }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const contactId = useMemo(() => contactData?.contactId, [contactData])
 

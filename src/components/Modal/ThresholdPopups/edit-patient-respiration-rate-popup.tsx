@@ -1,12 +1,13 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { IValidationRules } from '~/hooks/use-validation-rules'
+import { NumberField } from '~components/Form/NumberField/number-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
 import { usePostPatientRespirationRateMutation } from '~stores/services/patient-vital-threshold.api'
@@ -14,6 +15,7 @@ import { usePostPatientRespirationRateMutation } from '~stores/services/patient-
 interface EditRespirationHeartRatePopupProps {
   thresholds: IThresholdsCommon
   patientUserId: string
+  validationRulesData: IValidationRules
   open: boolean
   handleClose: () => void
 }
@@ -21,13 +23,16 @@ interface EditRespirationHeartRatePopupProps {
 export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupProps> = ({
   thresholds,
   patientUserId,
+  validationRulesData,
   open,
   handleClose,
 }) => {
   const [mounted, setMounted] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
   const { enqueueSnackbar } = useSnackbar()
+
+  const { validationRules, validationProps } = validationRulesData
+
   const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientRespirationRateMutation()
 
   const {
@@ -45,6 +50,10 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
       reset(thresholds)
       setFormErrors(null)
       setMounted(true)
+    }
+
+    if (!open && mounted) {
+      setMounted(false)
     }
   }, [open, mounted, reset, thresholds])
 
@@ -98,20 +107,11 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                 control={control}
                 name="min"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.respirationRate.min,
-                        max: minMaxValidationRules.respirationRate.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Min"
-                    type="number"
+                    validationProps={validationProps.respirationRate}
                   />
                 )}
                 rules={validationRules.respirationRate}
@@ -122,20 +122,11 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                 control={control}
                 name="max"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.respirationRate.min,
-                        max: minMaxValidationRules.respirationRate.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">rpm</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Max"
-                    type="number"
+                    validationProps={validationProps.respirationRate}
                   />
                 )}
                 rules={validationRules.respirationRate}

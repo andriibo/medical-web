@@ -5,10 +5,10 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdateCaregiverProfile, UpdateCaregiverProfileKeys } from '~models/profie.model'
 import { usePatchMyCaregiverProfileMutation } from '~stores/services/profile.api'
@@ -21,8 +21,11 @@ interface EditCaregiverProfilePopupProps {
 
 export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ caregiverData, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchMyCaregiverProfileMutation()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const [updateCaregiverProfile, { isLoading: updateCaregiverProfileIsLoading }] = usePatchMyCaregiverProfileMutation()
 
   const caregiverDefaultValues = useMemo(
     () => deleteKeysFormObject({ ...caregiverData }, ['email', 'avatar']),

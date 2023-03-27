@@ -15,11 +15,11 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
 import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-list-box'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { CreateMedicationFormKeys, ICreateMedicationForm } from '~models/medications.model'
 import { useGetMedicationsQuery } from '~stores/services/medications.api'
@@ -34,6 +34,7 @@ interface NewMedicationPopupProps {
 export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({ patientUserId, open, handleClose }) => {
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
 
   const { data: medicationsData, isLoading: medicationsDataIsLoading } = useGetMedicationsQuery()
   const [createPatientMedication, { isLoading: createPatientMedicationIsLoading }] = usePostPatientMedicationMutation()
