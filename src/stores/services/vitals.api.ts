@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IMyVitalsRequest, IPatientVitalsRequest, IVitalsData } from '~models/vital.model'
+import { IMyVitalsRequest, IPatientVitalsRequest, IVitalsAbsolute, IVitalsData } from '~models/vital.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const vitalsApi = createApi({
@@ -32,7 +32,7 @@ export const vitalsApi = createApi({
       }),
       providesTags: ['Vitals'],
     }),
-    getVitalsAbsolute: build.query<null, void>({
+    getVitalsAbsolute: build.query<IVitalsAbsolute, void>({
       query: () => ({
         url: 'vitals/absolute',
       }),
