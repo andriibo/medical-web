@@ -49,7 +49,7 @@ type ValidationKeyType =
   | 'relationship'
   | 'role'
 
-export type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
+type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
 export type ValidationPropsItemType = {
   min: number
@@ -57,7 +57,7 @@ export type ValidationPropsItemType = {
   unit: string
 }
 
-export type ValidationPropsType = {
+type ValidationPropsType = {
   [key in ValidationPropsKeyType]: ValidationPropsItemType
 }
 
