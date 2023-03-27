@@ -3,7 +3,7 @@ import { IconButton, TextField } from '@mui/material'
 import React, { FC, useState } from 'react'
 import { ControllerRenderProps } from 'react-hook-form/dist/types/controller'
 
-import { PasswordRules } from '~components/PasswordRules/password-rules'
+import { PasswordRules } from '~components/Form/PasswordRules/password-rules'
 
 interface PasswordFieldProps {
   label?: string

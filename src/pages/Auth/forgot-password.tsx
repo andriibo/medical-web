@@ -5,9 +5,9 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
@@ -17,6 +17,8 @@ import styles from './auth.module.scss'
 export const ForgotPassword = () => {
   const navigate = useNavigate()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const { validationRules } = useValidationRules()
 
   const [forgotPassword, { isLoading: forgotPasswordIsLoading }] = usePostAuthForgotPasswordMutation()
 

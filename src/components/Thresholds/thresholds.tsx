@@ -3,6 +3,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
 import { useThresholds } from '~/hooks/use-thresholds'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { EditPatientBloodPressurePopup } from '~components/Modal/ThresholdPopups/edit-patient-blood-pressure-popup'
 import { EditPatientHeartRatePopup } from '~components/Modal/ThresholdPopups/edit-patient-heart-rate-popup'
@@ -32,6 +33,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
   const [saturationPopupOpen, setSaturationPopupOpen] = useState(false)
   const [respirationRatePopupOpen, setRespirationRatePopupOpen] = useState(false)
   const [bloodPressurePopupOpen, setBloodPressurePopupOpen] = useState(false)
+
+  const validationRulesData = useValidationRules({ getAbsoluteVitals: true })
 
   const getSetByUser = useCallback((id: string | null) => users?.find((user) => user.userId === id) || null, [users])
 
@@ -135,6 +138,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               min: threshold.minHr,
               max: threshold.maxHr,
             }}
+            validationRulesData={validationRulesData}
           />
           <EditPatientTemperaturePopup
             handleClose={() => setTemperaturePopupOpen(false)}
@@ -144,6 +148,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               min: threshold.minTemp,
               max: threshold.maxTemp,
             }}
+            validationRulesData={validationRulesData}
           />
           <EditPatientSaturationPopup
             handleClose={() => setSaturationPopupOpen(false)}
@@ -152,6 +157,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             thresholds={{
               min: threshold.minSpo2,
             }}
+            validationRulesData={validationRulesData}
           />
           <EditPatientRespirationRatePopup
             handleClose={() => setRespirationRatePopupOpen(false)}
@@ -161,6 +167,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               min: threshold.minRr,
               max: threshold.maxRr,
             }}
+            validationRulesData={validationRulesData}
           />
           <EditPatientBloodPressurePopup
             handleClose={() => setBloodPressurePopupOpen(false)}
@@ -172,6 +179,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               minDBP: threshold.minDbp,
               maxDBP: threshold.maxDbp,
             }}
+            validationRulesData={validationRulesData}
           />
         </>
       )}

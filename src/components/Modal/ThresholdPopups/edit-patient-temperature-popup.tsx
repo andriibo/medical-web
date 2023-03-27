@@ -1,12 +1,13 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { IValidationRules } from '~/hooks/use-validation-rules'
+import { NumberField } from '~components/Form/NumberField/number-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsCommon, ThresholdsCommonKeys } from '~models/threshold.model'
 import { usePostPatientTemperatureMutation } from '~stores/services/patient-vital-threshold.api'
@@ -14,6 +15,7 @@ import { usePostPatientTemperatureMutation } from '~stores/services/patient-vita
 interface EditPatientTemperaturePopupProps {
   thresholds: IThresholdsCommon
   patientUserId: string
+  validationRulesData: IValidationRules
   open: boolean
   handleClose: () => void
 }
@@ -21,12 +23,15 @@ interface EditPatientTemperaturePopupProps {
 export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> = ({
   thresholds,
   patientUserId,
+  validationRulesData,
   open,
   handleClose,
 }) => {
   const [mounted, setMounted] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
+
+  const { validationRules, validationProps } = validationRulesData
 
   const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientTemperatureMutation()
 
@@ -45,6 +50,10 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
       reset(thresholds)
       setFormErrors(null)
       setMounted(true)
+    }
+
+    if (!open && mounted) {
+      setMounted(false)
     }
   }, [open, mounted, reset, thresholds])
 
@@ -98,20 +107,11 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                 control={control}
                 name="min"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.temperature.min,
-                        max: minMaxValidationRules.temperature.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">°C</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Min"
-                    type="number"
+                    validationProps={validationProps.temperature}
                   />
                 )}
                 rules={validationRules.temperature}
@@ -122,20 +122,11 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                 control={control}
                 name="max"
                 render={({ field }) => (
-                  <TextField
-                    {...field}
-                    {...fieldValidation(field.name)}
-                    InputProps={{
-                      inputProps: {
-                        min: minMaxValidationRules.temperature.min,
-                        max: minMaxValidationRules.temperature.max,
-                        step: 1,
-                      },
-                      endAdornment: <InputAdornment position="end">°C</InputAdornment>,
-                    }}
-                    fullWidth
+                  <NumberField
+                    field={field}
+                    fieldValidation={fieldValidation(field.name)}
                     label="Max"
-                    type="number"
+                    validationProps={validationProps.temperature}
                   />
                 )}
                 rules={validationRules.temperature}

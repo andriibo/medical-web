@@ -6,9 +6,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { UpdateEmailStep } from '~/enums/update-email-step.enum'
-import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { VerificationCodeField } from '~components/Form/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthChangeEmailConfirmKeys, IAuthChangeEmailConfirm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -17,10 +17,12 @@ import { clearPersist } from '~stores/slices/auth.slice'
 import { closeEditEmailPopup, setEditEmailStep, useNewEmail } from '~stores/slices/edit-email.slice'
 
 export const VerificationCodeForm = () => {
-  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const dispatch = useAppDispatch()
   const newEmail = useNewEmail()
+  const { validationRules } = useValidationRules()
+
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthChangeEmailMutation()
   const [changeEmailConfirm, { isLoading: changeEmailConfirmIsLoading }] = usePostAuthChangeEmailConfirmMutation()

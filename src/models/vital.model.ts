@@ -82,3 +82,18 @@ export interface IMyVitalsRequest {
 export interface IPatientVitalsRequest extends IMyVitalsRequest {
   patientUserId: string
 }
+
+export interface IVitalsAbsolute {
+  minHr: number
+  maxHr: number
+  minTemp: number
+  maxTemp: number
+  minSpo2: number
+  maxSpo2: number
+  minRr: number
+  maxRr: number
+  minDbp: number
+  maxDbp: number
+  minSbp: number
+  maxSbp: number
+}

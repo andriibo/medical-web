@@ -7,9 +7,9 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { PasswordField } from '~components/PasswordField/password-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -22,9 +22,10 @@ interface ChangePasswordPopupProps {
 }
 
 export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handleClose }) => {
+  const { enqueueSnackbar } = useSnackbar()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [changePassword, { isLoading: changePasswordIsLoading }] = usePostAuthChangePasswordMutation()
