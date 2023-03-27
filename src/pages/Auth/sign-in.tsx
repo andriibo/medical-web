@@ -1,5 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Box, Button, Checkbox, FormControlLabel, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -42,7 +42,7 @@ export const SignIn = () => {
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
       dispatch(setEmergencyContactIsLoading(true))
-      const response = await authSignIn(data).unwrap()
+      const response = await authSignIn({ ...data, rememberMe: false }).unwrap()
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
@@ -121,14 +121,6 @@ export const SignIn = () => {
           rules={validationRules.password}
         />
         <div className={styles.authHelperBox}>
-          <Controller
-            control={control}
-            defaultValue={false}
-            name="rememberMe"
-            render={({ field }) => (
-              <FormControlLabel control={<Checkbox {...field} size="small" />} label="Remember me" />
-            )}
-          />
           <Button component={NavLink} size="small" to={PageUrls.ForgotPassword}>
             Forgot password?
           </Button>
