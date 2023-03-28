@@ -1,12 +1,13 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, InputAdornment, TextField } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { IValidationRules } from '~/hooks/use-validation-rules'
+import { NumberField } from '~components/Form/NumberField/number-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { IErrorRequest } from '~models/error-request.model'
 import { IThresholdsSaturation, ThresholdsSaturationKeys } from '~models/threshold.model'
 import { usePostPatientSaturationMutation } from '~stores/services/patient-vital-threshold.api'
@@ -14,6 +15,7 @@ import { usePostPatientSaturationMutation } from '~stores/services/patient-vital
 interface EditPatientSaturationPopupProps {
   thresholds: IThresholdsSaturation
   patientUserId: string
+  validationRulesData: IValidationRules
   open: boolean
   handleClose: () => void
 }
@@ -21,12 +23,15 @@ interface EditPatientSaturationPopupProps {
 export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = ({
   thresholds,
   patientUserId,
+  validationRulesData,
   open,
   handleClose,
 }) => {
   const [mounted, setMounted] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
+
+  const { validationRules, validationProps } = validationRulesData
 
   const [updateThresholds, { isLoading: updateThresholdsIsLoading }] = usePostPatientSaturationMutation()
 
@@ -45,6 +50,10 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
       reset(thresholds)
       setFormErrors(null)
       setMounted(true)
+    }
+
+    if (!open && mounted) {
+      setMounted(false)
     }
   }, [open, mounted, reset, thresholds])
 
@@ -95,20 +104,11 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
             control={control}
             name="min"
             render={({ field }) => (
-              <TextField
-                {...field}
-                {...fieldValidation(field.name)}
-                InputProps={{
-                  inputProps: {
-                    min: minMaxValidationRules.saturation.min,
-                    max: minMaxValidationRules.saturation.max,
-                    step: 1,
-                  },
-                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                }}
-                fullWidth
+              <NumberField
+                field={field}
+                fieldValidation={fieldValidation(field.name)}
                 label="Min"
-                type="number"
+                validationProps={validationProps.saturation}
               />
             )}
             rules={validationRules.saturation}

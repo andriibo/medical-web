@@ -7,7 +7,6 @@ import {
   FormControl,
   FormHelperText,
   IconButton,
-  InputAdornment,
   InputLabel,
   MenuItem,
   Select,
@@ -25,13 +24,14 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { Gender } from '~/enums/gender.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
-import { PasswordField } from '~components/PasswordField/password-field'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { NumberField } from '~components/Form/NumberField/number-field'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
-import { minMaxValidationRules, validationRules } from '~helpers/validation-rules'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
@@ -42,7 +42,9 @@ export const SignUpPatient = () => {
   const navigate = useNavigate()
   const [authSignUpPatient, { isLoading: authSignUpPatientIsLoading }] = usePostAuthSignUpPatientMutation()
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
   const emailParam = useEmailParam()
+  const { validationRules, validationProps } = useValidationRules()
 
   const {
     handleSubmit,
@@ -184,21 +186,14 @@ export const SignUpPatient = () => {
               defaultValue=""
               name="height"
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  {...fieldValidation(field.name)}
-                  InputProps={{
-                    inputProps: {
-                      min: minMaxValidationRules.height.min,
-                      max: minMaxValidationRules.height.max,
-                      step: 1,
-                    },
-                    endAdornment: <InputAdornment position="end">cm</InputAdornment>,
-                  }}
-                  fullWidth
-                  helperText={`from ${minMaxValidationRules.height.min} to ${minMaxValidationRules.height.max} cm`}
+                <NumberField
+                  field={field}
+                  fieldValidation={fieldValidation(field.name)}
+                  helperText={`
+                    from ${validationProps.height.min} to ${validationProps.height.max} ${validationProps.height.unit}
+                  `}
                   label="Height"
-                  type="number"
+                  validationProps={validationProps.height}
                 />
               )}
               rules={validationRules.height}
@@ -210,21 +205,14 @@ export const SignUpPatient = () => {
               defaultValue=""
               name="weight"
               render={({ field }) => (
-                <TextField
-                  {...field}
-                  {...fieldValidation(field.name)}
-                  InputProps={{
-                    inputProps: {
-                      min: minMaxValidationRules.weight.min,
-                      max: minMaxValidationRules.weight.max,
-                      step: 1,
-                    },
-                    endAdornment: <InputAdornment position="end">kg</InputAdornment>,
-                  }}
-                  fullWidth
-                  helperText={`from ${minMaxValidationRules.weight.min} to ${minMaxValidationRules.weight.max} kg`}
+                <NumberField
+                  field={field}
+                  fieldValidation={fieldValidation(field.name)}
+                  helperText={`
+                    from ${validationProps.weight.min} to ${validationProps.weight.max}  ${validationProps.weight.unit}
+                  `}
                   label="Weight"
-                  type="number"
+                  validationProps={validationProps.weight}
                 />
               )}
               rules={validationRules.weight}

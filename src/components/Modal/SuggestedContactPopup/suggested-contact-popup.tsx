@@ -19,11 +19,11 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Relationship } from '~/enums/relationship.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
-import { validationRules } from '~helpers/validation-rules'
 import { IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { ISuggestedContactModel } from '~models/suggested-contact.model'
@@ -40,6 +40,8 @@ interface SuggestedContactPopupProps {
 export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, handleClose, patientUserId }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [suggestedContact, { isLoading: suggestedContactIsLoading }] = usePostSuggestedContactMutation()

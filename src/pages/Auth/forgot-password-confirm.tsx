@@ -6,10 +6,10 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { PasswordField } from '~components/PasswordField/password-field'
-import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
+import { VerificationCodeField } from '~components/Form/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthForgotPasswordConfirmFormKeys, IAuthForgotPasswordConfirmForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthForgotPasswordConfirmMutation, usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
@@ -21,9 +21,11 @@ interface LocationState {
 }
 
 export const ForgotPasswordConfirm = () => {
-  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
   const location = useLocation()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [forgotPasswordConfirm, { isLoading: forgotPasswordConfirmIsLoading }] =

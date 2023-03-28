@@ -6,9 +6,9 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { VerificationCodeField } from '~components/Form/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthSignUpConfirmKeys, IAuthSignUpConfirm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpConfirmMutation, usePostAuthSignUpResendCodeMutation } from '~stores/services/auth.api'
@@ -20,14 +20,17 @@ interface LocationState {
 }
 
 export const EmailVerification = () => {
-  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
   const location = useLocation()
-  const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthSignUpConfirmMutation()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
+  const { validationRules } = useValidationRules()
 
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const [authConfirmSignUp, { isLoading: authConfirmSignUpIsLoading }] = usePostAuthSignUpConfirmMutation()
   const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthSignUpResendCodeMutation()
+
+  const email = useMemo(() => (location.state as LocationState)?.email || '', [location])
 
   const handleResendCode = useCallback(async () => {
     try {

@@ -5,9 +5,9 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { PasswordField } from '~components/PasswordField/password-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthChangePasswordMutation } from '~stores/services/auth.api'
@@ -20,8 +20,9 @@ interface ChangePasswordPopupProps {
 
 export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const [submitIsLoading, setSubmitIsLoading] = useState(false)
+  const { validationRules } = useValidationRules()
 
+  const [submitIsLoading, setSubmitIsLoading] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const [changePassword] = usePostAuthChangePasswordMutation()
 
