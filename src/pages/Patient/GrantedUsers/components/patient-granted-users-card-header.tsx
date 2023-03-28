@@ -62,7 +62,6 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
       <Typography variant="subtitle1">
         {firstName} {lastName}
       </Typography>
-      <div style={{ marginLeft: 'auto' }} />
       <IconButton edge="end" onClick={() => handleRemoveGrantedUser(accessId)}>
         <Clear fontSize="inherit" />
       </IconButton>

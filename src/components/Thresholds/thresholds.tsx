@@ -123,7 +123,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           The latest threshold changes will be applied when the patient establishes internet connection to the server
         </Alert>
       )}
-      <div className={styles.vitalContainer}>
+      <div className={`${styles.vitalContainer} ${patientUserId ? styles.vitalContainerAlt : ''}`}>
         {thresholdsList.map((threshold, index) => (
           <ThresholdItem key={index} patientUserId={patientUserId} threshold={threshold} />
         ))}
