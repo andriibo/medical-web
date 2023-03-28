@@ -48,6 +48,7 @@ type ValidationKeyType =
   | 'dbp'
   | 'relationship'
   | 'role'
+  | 'message'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -136,6 +137,11 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       maxLength: {
         value: 100,
         message: 'Max length is 100',
+      },
+    },
+    message: {
+      validate: {
+        maxLength: (value: string) => value.trim().length <= 500 || 'Max length is 500',
       },
     },
     phone: {
