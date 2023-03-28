@@ -92,7 +92,7 @@ export const GrantedUserPatientItem: FC<GrantedUserPatientItemProps> = ({ patien
           sx={{ mr: 2 }}
           variant="dot"
         >
-          <UserAvatar avatar={patient.avatar} fullName={getRequestedUserName(patient)} />
+          <UserAvatar avatar={patient.avatar} firstName={patient.firstName} lastName={patient.lastName} />
         </StyledBadge>
         <ListItemText
           primary={getRequestedUserName(patient)}

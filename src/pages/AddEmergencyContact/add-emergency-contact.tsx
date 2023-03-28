@@ -18,12 +18,13 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink } from 'react-router-dom'
 
 import { Relationship } from '~/enums/relationship.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
-import { validationRules } from '~helpers/validation-rules'
-import { IEmergencyContactModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { isRelationshipValue } from '~helpers/is-relationship-value'
+import { IEmergencyContactFormModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostMyEmergencyContactMutation } from '~stores/services/emergency-contact.api'
@@ -32,10 +33,12 @@ import { setHasEmergencyContacts, useHasEmergencyContacts } from '~stores/slices
 import styles from './add-emergency-contact.module.scss'
 
 export const AddEmergencyContact = () => {
-  const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const dispatch = useAppDispatch()
   const hasEmergencyContacts = useHasEmergencyContacts()
+  const { validationRules } = useValidationRules()
+
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
 
@@ -44,14 +47,17 @@ export const AddEmergencyContact = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactModel>({
+  } = useForm<IEmergencyContactFormModel>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IEmergencyContactModel> = async (data) => {
+  const onSubmit: SubmitHandler<IEmergencyContactFormModel> = async (data) => {
+    if (!isRelationshipValue(data.relationship)) return
+
     try {
       await addEmergencyContact({
         ...data,
+        relationship: data.relationship,
         phone: data.phone.split('-').join(''),
       }).unwrap()
 
@@ -78,10 +84,12 @@ export const AddEmergencyContact = () => {
   return (
     <div className={styles.container}>
       <Typography sx={{ mb: 1 }} textAlign="center" variant="h6">
-        Add your emergency contacts
+        Add emergency contacts
       </Typography>
       <Typography sx={{ mb: 3 }} textAlign="center" variant="body1">
-        Add at least one of your emergency contacts to continue
+        {hasEmergencyContacts
+          ? 'Want to add one more emergency contact?'
+          : 'Add at least one of your emergency contacts to continue'}
       </Typography>
       {formErrors && (
         <Alert className="form-alert" severity="error">
@@ -134,7 +142,7 @@ export const AddEmergencyContact = () => {
         />
         <Controller
           control={control}
-          defaultValue="Friends&Family"
+          defaultValue=""
           name="relationship"
           render={({ field }) => (
             <FormControl error={Boolean(errors[field.name])} fullWidth>
@@ -156,12 +164,9 @@ export const AddEmergencyContact = () => {
         </LoadingButton>
       </form>
       {hasEmergencyContacts && (
-        <div className={styles.footer}>
-          <span className={styles.footerText}>Want to add later?</span>
-          <Button component={NavLink} size="small" sx={{ ml: 1 }} to="/">
-            Skip
-          </Button>
-        </div>
+        <Button component={NavLink} fullWidth size="large" sx={{ mt: 2 }} to="/" variant="outlined">
+          Skip
+        </Button>
       )}
     </div>
   )

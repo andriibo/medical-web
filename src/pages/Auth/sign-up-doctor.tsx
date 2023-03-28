@@ -9,13 +9,13 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
-import { PasswordField } from '~components/PasswordField/password-field'
-import { PhoneField } from '~components/PhoneField/phone-field'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
+import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthSignUpDoctorKeys, IAuthSignUpDoctor } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
@@ -25,9 +25,12 @@ import styles from './auth.module.scss'
 export const SignUpDoctor = () => {
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
-  const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const emailParam = useEmailParam()
+  const { validationRules } = useValidationRules()
+
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+
+  const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
 
   const {
     handleSubmit,

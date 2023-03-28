@@ -25,10 +25,14 @@ export interface IVital {
 export interface IVitalsCard {
   timestamp: number
   title: VitalType
-  value: string | number | null | undefined | boolean
+  value?: number | boolean | null
   thresholds?: {
     min?: number
     max?: number
+  }
+  limits?: {
+    floor?: number
+    ceiling?: number
   }
   icon: string
   units: VitalUnits
@@ -81,4 +85,19 @@ export interface IMyVitalsRequest {
 
 export interface IPatientVitalsRequest extends IMyVitalsRequest {
   patientUserId: string
+}
+
+export interface IVitalsAbsolute {
+  minHr: number
+  maxHr: number
+  minTemp: number
+  maxTemp: number
+  minSpo2: number
+  maxSpo2: number
+  minRr: number
+  maxRr: number
+  minDbp: number
+  maxDbp: number
+  minSbp: number
+  maxSbp: number
 }

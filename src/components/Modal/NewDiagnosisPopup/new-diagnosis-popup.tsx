@@ -15,10 +15,10 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { ICreateDiagnosesFormKeys, ICreateDiagnosisForm } from '~models/diagnoses.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useGetDiagnosesQuery } from '~stores/services/diagnoses.api'
@@ -33,6 +33,7 @@ interface NewDiagnosisPopupProps {
 export const NewDiagnosisPopup: FC<NewDiagnosisPopupProps> = ({ patientUserId, open, handleClose }) => {
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
 
   const { data: diagnosesData, isLoading: diagnosesDataIsLoading } = useGetDiagnosesQuery()
   const [createPatientDiagnosis, { isLoading: createPatientDiagnosisIsLoading }] = usePostPatientDiagnosisMutation()

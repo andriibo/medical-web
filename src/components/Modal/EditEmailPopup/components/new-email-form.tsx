@@ -6,9 +6,9 @@ import React, { useCallback, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { UpdateEmailStep } from '~/enums/update-email-step.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -18,6 +18,8 @@ import { closeEditEmailPopup, setEditEmailStep, setNewEmail } from '~stores/slic
 export const NewEmailForm = () => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [changeEmail, { isLoading: changeEmailIsLoading }] = usePostAuthChangeEmailMutation()

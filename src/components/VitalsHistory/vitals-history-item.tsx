@@ -19,10 +19,10 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
 
   const abnormalClass = useMemo(() => {
     if (isFall) {
-      return value && styles.vitalItemAbnormal
+      return value && styles.vitalItemDanger
     }
 
-    return !isNormal && styles.vitalItemAbnormal
+    return !isNormal && styles.vitalItemDanger
   }, [isFall, isNormal, value])
 
   const isButton = useMemo(() => {

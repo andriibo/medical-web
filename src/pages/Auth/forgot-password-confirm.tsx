@@ -6,10 +6,10 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { Navigate, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { PasswordField } from '~components/PasswordField/password-field'
-import { VerificationCodeField } from '~components/VerificationCodeField/verification-code-field'
+import { useValidationRules } from '~/hooks/use-validation-rules'
+import { PasswordField } from '~components/Form/PasswordField/password-field'
+import { VerificationCodeField } from '~components/Form/VerificationCodeField/verification-code-field'
 import { getErrorMessage } from '~helpers/get-error-message'
-import { validationRules } from '~helpers/validation-rules'
 import { AuthForgotPasswordConfirmFormKeys, IAuthForgotPasswordConfirmForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthForgotPasswordConfirmMutation, usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
@@ -21,9 +21,11 @@ interface LocationState {
 }
 
 export const ForgotPasswordConfirm = () => {
-  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
   const location = useLocation()
+  const { validationRules } = useValidationRules()
+
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [forgotPasswordConfirm, { isLoading: forgotPasswordConfirmIsLoading }] =
@@ -103,14 +105,23 @@ export const ForgotPasswordConfirm = () => {
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
           Enter the confirmation that we sent to your email.
         </Typography>
+        <Typography sx={{ mb: '1.5rem' }} variant="body2">
+          Didn’t receive the confirmation code? Try RESEND or make sure you entered the correct email address.
+        </Typography>
         <Controller
           control={control}
           defaultValue=""
           name="code"
-          render={({ field }) => <VerificationCodeField field={field} fieldValidation={fieldValidation(field.name)} />}
+          render={({ field }) => (
+            <VerificationCodeField
+              field={field}
+              fieldValidation={fieldValidation(field.name)}
+              label="Confirmation code"
+            />
+          )}
           rules={validationRules.code}
         />
-        <Box className={styles.authHelperBox} sx={{ textAlign: 'right' }}>
+        <Box className={styles.authHelperBox} sx={{ justifyContent: 'flex-end' }}>
           <Typography component="span" variant="body2">
             Need a new verification code?
           </Typography>

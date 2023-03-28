@@ -1,4 +1,5 @@
 import { RelationshipValues } from '~/enums/relationship.enum'
+import { Modify } from '~/types/modify.type'
 
 export interface IEmergencyContactModel {
   firstName: string
@@ -7,6 +8,14 @@ export interface IEmergencyContactModel {
   phone: string
   relationship: RelationshipValues
 }
+
+export interface IEmergencyContactFormModel
+  extends Modify<
+    IEmergencyContactModel,
+    {
+      relationship: RelationshipValues | ''
+    }
+  > {}
 
 export interface IEmergencyContact extends IEmergencyContactModel {
   contactId: string
