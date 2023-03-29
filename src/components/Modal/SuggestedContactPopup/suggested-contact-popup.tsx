@@ -24,6 +24,7 @@ import { EmailField } from '~components/EmailField/email-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
+import { trimValues } from '~helpers/trim-values'
 import { IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { ISuggestedContactModel } from '~models/suggested-contact.model'
@@ -72,7 +73,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
   const onSubmit: SubmitHandler<ISuggestedContactModel> = async (data) => {
     try {
       await suggestedContact({
-        ...data,
+        ...trimValues(data),
         phone: data.phone.split('-').join(''),
         patientUserId,
       }).unwrap()

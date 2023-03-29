@@ -32,6 +32,7 @@ type ValidationKeyType =
   | 'phone'
   | 'email'
   | 'password'
+  | 'signInPassword'
   | 'height'
   | 'weight'
   | 'dob'
@@ -163,9 +164,12 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
       validate: {
         required: (value: string) =>
-          validator.isStrongPassword(value) ||
+          (validator.isStrongPassword(value) && value.length === value.trim().length) ||
           'At least 8 characters, one number, one special symbol, one uppercase letter and one lowercase letter.',
       },
+    },
+    signInPassword: {
+      required: true,
     },
     gender: {
       required: true,

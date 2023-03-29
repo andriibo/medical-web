@@ -1,5 +1,6 @@
 import { Gender } from '~/enums/gender.enum'
 import { PatientCategory } from '~/enums/patient-category'
+import { Modify } from '~/types/modify.type'
 
 export interface IPatientProfile {
   userId: string
@@ -24,6 +25,15 @@ export interface IUpdatePatientProfile {
   height: number
   weight: number
 }
+
+export interface IUpdatePatientProfileForm
+  extends Modify<
+    IUpdatePatientProfile,
+    {
+      height: number | string
+      weight: number | string
+    }
+  > {}
 
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
