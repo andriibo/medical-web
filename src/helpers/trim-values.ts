@@ -2,7 +2,7 @@ export function trimValues<K extends string>(values: Record<K, any>): Record<K, 
   const result: Partial<Record<K, any>> = values
 
   for (const key in values) {
-    if (typeof values[key] === 'string') result[key] = values[key].trim()
+    if (Boolean(values[key]) && typeof values[key] === 'string') result[key] = values[key].trim()
   }
 
   return result as Record<K, any>

@@ -68,59 +68,57 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
   })
 
   return (
-    <>
-      <Dialog disableEscapeKeyDown fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle>Update password </DialogTitle>
-        <DialogContent>
-          {formErrors && (
-            <Alert className="form-alert" severity="error">
-              <AlertTitle>Error</AlertTitle>
-              <ul>
-                {formErrors.map((error) => (
-                  <li key={error}>{error}</li>
-                ))}
-              </ul>
-            </Alert>
-          )}
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-              control={control}
-              defaultValue=""
-              name="currentPassword"
-              render={({ field }) => (
-                <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="Current password" />
-              )}
-              rules={validationRules.password}
-            />
-            <Controller
-              control={control}
-              defaultValue=""
-              name="newPassword"
-              render={({ field }) => (
-                <PasswordField
-                  field={field}
-                  fieldValidation={fieldValidation(field.name)}
-                  label="New password"
-                  showRules
-                />
-              )}
-              rules={validationRules.password}
-            />
-            <Grid container spacing={2}>
-              <Grid xs={6}>
-                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
-                  Cancel
-                </Button>
-              </Grid>
-              <Grid xs={6}>
-                <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
-                  Update
-                </LoadingButton>
-              </Grid>
+    <Dialog fullWidth maxWidth="xs" open={open} scroll="body">
+      <DialogTitle>Update password </DialogTitle>
+      <DialogContent>
+        {formErrors && (
+          <Alert className="form-alert" severity="error">
+            <AlertTitle>Error</AlertTitle>
+            <ul>
+              {formErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </Alert>
+        )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            control={control}
+            defaultValue=""
+            name="currentPassword"
+            render={({ field }) => (
+              <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="Current password" />
+            )}
+            rules={validationRules.password}
+          />
+          <Controller
+            control={control}
+            defaultValue=""
+            name="newPassword"
+            render={({ field }) => (
+              <PasswordField
+                field={field}
+                fieldValidation={fieldValidation(field.name)}
+                label="New password"
+                showRules
+              />
+            )}
+            rules={validationRules.password}
+          />
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                Cancel
+              </Button>
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+            <Grid xs={6}>
+              <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
+                Update
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }
