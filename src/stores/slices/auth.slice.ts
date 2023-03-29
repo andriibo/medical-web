@@ -40,6 +40,10 @@ const authSlice = createSlice({
     setUserAvatar: (state, { payload }: PayloadAction<string | null>) => {
       state.data.user.avatar = payload
     },
+    setUserName: (state, { payload }: PayloadAction<{ firstName: string; lastName: string }>) => {
+      state.data.user.firstName = payload.firstName
+      state.data.user.lastName = payload.lastName
+    },
     setHasEmergencyContacts: (state, { payload }: PayloadAction<boolean>) => {
       state.hasEmergencyContacts = payload
     },
@@ -79,5 +83,5 @@ export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyCo
 
 export const {
   reducer: authReducer,
-  actions: { setToken, setUserAvatar, setHasEmergencyContacts, signInSuccess, clearPersist },
+  actions: { setToken, setUserAvatar, setUserName, setHasEmergencyContacts, signInSuccess, clearPersist },
 } = authSlice

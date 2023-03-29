@@ -15,7 +15,7 @@ import { isUserRoleCaregiver, isUserRoleDoctor } from '~helpers/user-role'
 import { ICaregiverProfile, IDoctorProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyCaregiverProfileQuery, useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
-import { setUserAvatar, useUserRole } from '~stores/slices/auth.slice'
+import { setUserAvatar, setUserName, useUserRole } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../granted-user-account.module.scss'
@@ -65,6 +65,12 @@ export const GrantedUserPersonalInfo = () => {
       dispatch(setUserAvatar(userData.avatar))
     }
   }, [dispatch, userData?.avatar])
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(setUserName({ firstName: userData.firstName, lastName: userData.lastName }))
+    }
+  }, [dispatch, userData])
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)
