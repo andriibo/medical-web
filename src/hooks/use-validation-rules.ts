@@ -151,9 +151,8 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
     email: {
       required: true,
-      pattern: {
-        value: /\S+@\S+\.\S+/,
-        message: 'Entered value does not match email format',
+      validate: {
+        required: (value: string) => validator.isEmail(value.trim()) || 'Entered value does not match email format',
       },
       maxLength: {
         value: 100,
