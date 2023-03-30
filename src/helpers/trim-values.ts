@@ -1,9 +1,9 @@
-export function trimValues<K extends string>(values: Record<K, any>): Record<K, any> {
-  const result: Partial<Record<K, any>> = values
+export function trimValues<U extends object, T extends Record<keyof U, any>>(values: T): T {
+  const result: T = values
 
   for (const key in values) {
     if (typeof values[key] === 'string') result[key] = values[key].trim()
   }
 
-  return result as Record<K, any>
+  return result
 }

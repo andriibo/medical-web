@@ -40,9 +40,9 @@ export const VerificationCodeForm = () => {
     reset()
   }, [reset])
 
-  const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async ({ code }) => {
+  const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async (data) => {
     try {
-      await changeEmailConfirm({ code }).unwrap()
+      await changeEmailConfirm(data).unwrap()
 
       await dispatch(clearPersist())
 

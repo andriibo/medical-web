@@ -11,6 +11,7 @@ import { RequestsGrantedUserTab } from '~/enums/requests-tab.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -46,9 +47,9 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
     }
   }, [open, reset])
 
-  const onSubmit: SubmitHandler<IDataAccessEmail> = async ({ email }) => {
+  const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await initiatePatient({ email }).unwrap()
+      await initiatePatient(trimValues(data)).unwrap()
 
       handleClose()
       navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })

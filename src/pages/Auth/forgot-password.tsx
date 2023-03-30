@@ -8,6 +8,7 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { usePostAuthForgotPasswordMutation } from '~stores/services/auth.api'
@@ -28,8 +29,10 @@ export const ForgotPassword = () => {
     formState: { errors },
   } = useForm<IAuthEmail>()
 
-  const onSubmit: SubmitHandler<IAuthEmail> = async ({ email }) => {
+  const onSubmit: SubmitHandler<IAuthEmail> = async (data) => {
     try {
+      const { email } = trimValues(data)
+
       await forgotPassword({ email }).unwrap()
 
       navigate(PageUrls.ForgotPasswordConfirm, { state: { email } })
