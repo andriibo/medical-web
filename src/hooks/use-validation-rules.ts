@@ -184,8 +184,13 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     dob: {
       required: true,
       validate: {
-        isDate: (value: string) =>
-          validator.isDate(dayjs(value).format(DATE_FORMAT)) || 'Entered value does not match date format',
+        isDate: (value: string) => {
+          if (dayjs(value).unix() > dayjs().unix()) {
+            return 'Entered a valid date of birthday'
+          }
+
+          return validator.isDate(dayjs(value).format(DATE_FORMAT)) || 'Entered value does not match date format'
+        },
       },
     },
     code: {
