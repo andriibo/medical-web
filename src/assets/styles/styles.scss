@@ -184,3 +184,12 @@ form {
   vertical-align: top;
   white-space: nowrap;
 }
+
+.loading-icon {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  filter: blur(0);
+}
