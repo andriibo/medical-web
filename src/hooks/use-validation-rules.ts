@@ -1,8 +1,10 @@
 import { skipToken } from '@reduxjs/toolkit/query'
+import dayjs from 'dayjs'
 import { RegisterOptions } from 'react-hook-form/dist/types/validator'
 import validator from 'validator'
 import * as yup from 'yup'
 
+import { DATE_FORMAT } from '~constants/constants'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
 
 require('yup-phone')
@@ -181,6 +183,10 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
     dob: {
       required: true,
+      validate: {
+        isDate: (value: string) =>
+          validator.isDate(dayjs(value).format(DATE_FORMAT)) || 'Entered value does not match date format',
+      },
     },
     code: {
       required: true,

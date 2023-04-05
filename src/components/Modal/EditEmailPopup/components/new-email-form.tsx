@@ -78,7 +78,7 @@ export const NewEmailForm = () => {
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography sx={{ mb: '1.5rem' }} variant="body2">
-            Enter your email and we’ll send you a confirmation code to reset your password.
+            Enter a new email address that will be associated with your account.
           </Typography>
           <Controller
             control={control}
