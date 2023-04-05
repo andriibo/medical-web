@@ -42,6 +42,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
   useEffect(() => {
     if (open) {
       reset()
+      setFormErrors(null)
     }
   }, [open, reset])
 
@@ -73,7 +74,7 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
   return (
     <>
       <Dialog disableEscapeKeyDown fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-        <DialogTitle>Update password </DialogTitle>
+        <DialogTitle>Update password</DialogTitle>
         <DialogContent>
           {formErrors && (
             <Alert className="form-alert" severity="error">
