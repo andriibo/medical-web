@@ -23,5 +23,15 @@ export enum VitalsChartTab {
   rr = 'RR',
 }
 
+export enum VitalsFilterTypes {
+  all = 'ALL',
+  hr = 'HR',
+  temp = 'TEMP',
+  spo2 = 'SPO2',
+  rr = 'RR',
+  bp = 'BP',
+}
+
 export type VitalTypeKeys = keyof typeof VitalType
 export type VitalsChartTabKeys = keyof typeof VitalsChartTab
+export type VitalsTypeFilterKeys = keyof typeof VitalsFilterTypes

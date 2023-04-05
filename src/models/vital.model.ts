@@ -1,4 +1,4 @@
-import { VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
+import { VitalsTypeFilterKeys, VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
 import { IThresholds } from '~models/threshold.model'
 import { IUserModel } from '~models/user.model'
 
@@ -43,6 +43,15 @@ export interface IVitalsSettings {
 }
 
 export interface IVitalsHistoryCard {
+  timestamp: number
+  isTempNormal: boolean
+  isHrNormal: boolean
+  isSpo2Normal: boolean
+  isRrNormal: boolean
+  items: IVitalsHistoryCardItems[]
+}
+
+export interface IVitalsHistoryCardItems {
   title: VitalType
   value: number | boolean
   isNormal?: boolean
@@ -97,3 +106,5 @@ export interface IVitalsAbsolute {
   minSbp: number
   maxSbp: number
 }
+
+export type IVitalsFilterTypes = Record<VitalsTypeFilterKeys, boolean>

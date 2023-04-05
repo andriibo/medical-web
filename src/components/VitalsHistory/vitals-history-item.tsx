@@ -2,12 +2,12 @@ import { Box, Typography } from '@mui/material'
 import React, { FC, useMemo } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
-import { IVitalsHistoryCard } from '~models/vital.model'
+import { IVitalsHistoryCardItems } from '~models/vital.model'
 
 import styles from './vitals-history.module.scss'
 
 interface VitalItemProps {
-  vital: IVitalsHistoryCard
+  vital: IVitalsHistoryCardItems
   onClick?: () => void
   tag?: 'div' | 'button'
 }

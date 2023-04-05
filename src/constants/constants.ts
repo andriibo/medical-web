@@ -9,6 +9,7 @@ import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
 import { IThresholdsChartKeys } from '~models/threshold.model'
+import { IVitalsFilterTypes } from '~models/vital.model'
 
 export const BASE_API = process.env.REACT_APP_API_URL
 
@@ -121,4 +122,13 @@ export const VITAL_SETTINGS: VitalSettingsType = {
     icon: iconBloodPressure,
     units: VitalUnits.bp,
   },
+}
+
+export const DEFAULT_FILTER_TYPES: IVitalsFilterTypes = {
+  all: true,
+  hr: false,
+  temp: false,
+  spo2: false,
+  rr: false,
+  bp: false,
 }
