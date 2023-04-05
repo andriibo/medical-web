@@ -19,13 +19,36 @@ button {
   font-size: 100%;
 }
 
-.form-alert {
+div.form-alert {
+  display: block;
   margin: 0 0 2rem;
+
+  .MuiAlert-icon {
+    padding-top: 6px;
+    float: left;
+  }
 
   ul {
     margin: 0;
-    padding: 0;
-    list-style-position: inside;
+    padding: 0 0 0 0.25rem;
+    list-style: none;
+
+    li {
+      position: relative;
+      margin: 0.25rem 0 0;
+      padding: 0 0 0 0.75rem;
+    }
+
+    li::before {
+      content: '';
+      position: absolute;
+      top: 0.5em;
+      left: 0;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
   }
 }
 

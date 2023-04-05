@@ -56,7 +56,6 @@ export const VerificationCodeForm = () => {
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
-      enqueueSnackbar('Verification code was sent to your email')
       console.error(err)
     }
   }
