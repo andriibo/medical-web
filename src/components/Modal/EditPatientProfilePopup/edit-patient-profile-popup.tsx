@@ -14,17 +14,16 @@ import {
   TextField,
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Gender } from '~/enums/gender.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
+import { DobField } from '~components/Form/DobField/dob-field'
 import { NumberField } from '~components/Form/NumberField/number-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
+import { convertToUtc } from '~helpers/date-helper'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
@@ -70,6 +69,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
     try {
       await updatePatientProfile({
         ...trimValues(data),
+        dob: convertToUtc(data.dob),
         height: Number(data.height),
         weight: Number(data.weight),
       }).unwrap()
@@ -136,34 +136,7 @@ export const EditPatientProfilePopup: FC<EditPatientProfilePopupProps> = ({ pati
             control={control}
             defaultValue=""
             name="dob"
-            render={({ field }) => {
-              const currentDate = new Date()
-              const yearOffset = 0
-              const maxDate = currentDate.setFullYear(currentDate.getFullYear() - yearOffset)
-
-              return (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DesktopDatePicker
-                    {...field}
-                    disableFuture
-                    inputFormat="YYYY/MM/DD"
-                    maxDate={dayjs(maxDate)}
-                    minDate={dayjs('1930-01-01')}
-                    openTo="year"
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        {...fieldValidation(field.name)}
-                        autoComplete="off"
-                        fullWidth
-                        label="Date of birth"
-                      />
-                    )}
-                    views={['year', 'month', 'day']}
-                  />
-                </LocalizationProvider>
-              )
-            }}
+            render={({ field }) => <DobField field={field} fieldValidation={fieldValidation(field.name)} />}
             rules={validationRules.dob}
           />
           <Controller
