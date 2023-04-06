@@ -5,11 +5,14 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useAppDispatch } from '~stores/hooks'
 import { usePatchDeleteMyAccountMutation } from '~stores/services/profile.api'
+import { setUser } from '~stores/slices/auth.slice'
 
 import styles from './delete-account-button.module.scss'
 
 export const DeleteAccountButton = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const confirm = useConfirm()
   const { enqueueSnackbar } = useSnackbar()
@@ -26,7 +29,9 @@ export const DeleteAccountButton = () => {
         confirmationText: 'Delete my account',
       })
 
-      await deleteAccount().unwrap()
+      const response = await deleteAccount().unwrap()
+
+      dispatch(setUser(response))
 
       enqueueSnackbar('Account deleted')
       navigate(PageUrls.AccountRecovery, { replace: true })
