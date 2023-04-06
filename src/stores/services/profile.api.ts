@@ -11,6 +11,7 @@ import {
   IUpdateDoctorProfile,
   IUpdatePatientProfile,
 } from '~models/profie.model'
+import { IUserModel } from '~models/user.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const profileApi = createApi({
@@ -76,7 +77,7 @@ export const profileApi = createApi({
       query: () => ({ url: 'avatar', method: 'DELETE' }),
       invalidatesTags: ['Profile'],
     }),
-    patchDeleteMyAccount: build.mutation<null, void>({
+    patchDeleteMyAccount: build.mutation<IUserModel, void>({
       query: () => ({ url: 'my-profile/delete', method: 'PATCH' }),
       invalidatesTags: ['Profile'],
     }),
