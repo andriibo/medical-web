@@ -136,7 +136,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           {patientMedicationsDataIsLoading ? (
             <Spinner />
           ) : patientMedicationsData?.length ? (
-            patientMedicationsData.map(({ medicationId, genericName, createdByUser }) => (
+            patientMedicationsData.map(({ medicationId, genericName, brandNames, createdByUser }) => (
               <ListItem
                 className={deletingMedicationId === medicationId ? 'disabled' : ''}
                 key={medicationId}
@@ -147,7 +147,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                 }
               >
                 <ListItemText
-                  primary={genericName}
+                  primary={`${brandNames.join(', ')} (${genericName})`}
                   secondary={`added by ${createdByUser.firstName} ${createdByUser.lastName}`}
                 />
               </ListItem>
