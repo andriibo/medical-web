@@ -1,7 +1,9 @@
 import React from 'react'
 
+import styles from './static-pages.module.scss'
+
 export const TermsOfService = () => (
-  <>
+  <div className={styles.staticContainer}>
     <h1>Terms and Conditions</h1>
     <p>Last updated: April 06, 2023</p>
     <p>Please read these terms and conditions carefully before using Our Service.</p>
@@ -245,5 +247,5 @@ export const TermsOfService = () => (
     <ul>
       <li>By phone number: 514-603-6058</li>
     </ul>
-  </>
+  </div>
 )

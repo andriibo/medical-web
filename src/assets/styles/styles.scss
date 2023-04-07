@@ -216,3 +216,12 @@ form {
   translate: -50% -50%;
   filter: blur(0);
 }
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
+}

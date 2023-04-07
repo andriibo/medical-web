@@ -1,7 +1,8 @@
 import React from 'react'
 
+import styles from './static-pages.module.scss'
 export const CookiesPolicy = () => (
-  <>
+  <div className={styles.staticContainer}>
     <h1>Cookies Policy</h1>
     <p>Last updated: April 06, 2023</p>
     <p>
@@ -162,5 +163,5 @@ export const CookiesPolicy = () => (
     <ul>
       <li>By phone number: 514-603-6058</li>
     </ul>
-  </>
+  </div>
 )

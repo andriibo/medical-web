@@ -33,6 +33,7 @@ import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { SignUpLegal } from '~pages/Auth/sign-up-legal'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
@@ -216,12 +217,7 @@ export const SignUpPatient = () => {
           )}
           rules={validationRules.password}
         />
-        <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          By selecting <strong>Sign Up</strong>, I agree to Zenzers Medical’s{' '}
-          <NavLink to={PageUrls.TermsOfService}>Terms and Conditions</NavLink>,{' '}
-          <NavLink to={PageUrls.PrivacyPolicy}>Privacy Policy</NavLink> and{' '}
-          <NavLink to={PageUrls.CookiesPolicy}>Cookies Policy</NavLink>.
-        </Typography>
+        <SignUpLegal />
         <LoadingButton fullWidth loading={authSignUpPatientIsLoading} size="large" type="submit" variant="contained">
           Sign Up
         </LoadingButton>

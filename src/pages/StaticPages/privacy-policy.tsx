@@ -1,7 +1,8 @@
 import React from 'react'
 
+import styles from './static-pages.module.scss'
 export const PrivacyPolicy = () => (
-  <>
+  <div className={styles.staticContainer}>
     <h1>Privacy Policy</h1>
     <p>Last updated: April 05, 2023</p>
     <p>
@@ -347,5 +348,5 @@ export const PrivacyPolicy = () => (
     <ul>
       <li>By phone number: 514-603-6058</li>
     </ul>
-  </>
+  </div>
 )
