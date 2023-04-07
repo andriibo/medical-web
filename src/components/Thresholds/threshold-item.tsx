@@ -2,6 +2,7 @@ import { Edit } from '@mui/icons-material'
 import { IconButton, Typography } from '@mui/material'
 import React, { FC } from 'react'
 
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { IThresholdList, IThresholdListValues } from '~models/threshold.model'
 import { IUserModel } from '~models/user.model'
 
@@ -37,6 +38,8 @@ export const ThresholdItem: FC<ThresholdItemProps> = ({
   patientUserId,
   threshold: { title, icon, className, values, units, setBy, onClick },
 }) => {
+  const { isUserRoleDoctor } = useUserRoles()
+
   const getSetByName = (setByUser: IUserModel | null) => {
     if (setByUser) {
       return `updated by ${setByUser.firstName} ${setByUser.lastName}`
@@ -55,7 +58,7 @@ export const ThresholdItem: FC<ThresholdItemProps> = ({
           <Typography variant="body1">{title}</Typography>
           <Typography variant="body2">{getSetByName(setBy)}</Typography>
         </div>
-        {patientUserId && onClick && (
+        {patientUserId && isUserRoleDoctor && onClick && (
           <div className={styles.vitalActions}>
             <IconButton edge="end" onClick={onClick}>
               <Edit />

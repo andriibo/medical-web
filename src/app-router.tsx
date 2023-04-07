@@ -2,10 +2,10 @@ import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
 import { StaticLayout } from '~components/Layouts/static-layout'
-import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountRecovery } from '~pages/AccountRecovery/account-recovery'
 import { AddEmergencyContact } from '~pages/AddEmergencyContact/add-emergency-contact'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
@@ -29,10 +29,9 @@ import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
 import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
 import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
 import { TermsAndConditions } from '~pages/StaticPages/terms-and-conditions'
-import { useUserRole } from '~stores/slices/auth.slice'
 
 export const AppRouter = () => {
-  const userRole = useUserRole()
+  const { isUserRoleGrantable } = useUserRoles()
 
   return (
     <Routes>
@@ -48,7 +47,7 @@ export const AppRouter = () => {
         <Route element={<EmailVerification />} path={PageUrls.EmailVerification} />
       </Route>
       <Route element={<DefaultLayout />}>
-        {isUserRoleGrantable(userRole) ? (
+        {isUserRoleGrantable ? (
           <>
             <Route element={<GrantedUserAccount />} path={PageUrls.MyAccount} />
             <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
