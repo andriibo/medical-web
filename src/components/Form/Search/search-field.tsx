@@ -1,37 +1,28 @@
-import { Clear, Search } from '@mui/icons-material'
-import { Button, IconButton, InputAdornment, TextField } from '@mui/material'
-import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react'
+import { Clear } from '@mui/icons-material'
+import { IconButton, TextField } from '@mui/material'
+import React, { ChangeEvent, FC } from 'react'
 
 interface SearchFieldProps {
   placeholder?: string
+  searchValue: string
   onSearch: (value: string) => void
 }
 
-export const SearchField: FC<SearchFieldProps> = ({ placeholder = 'Search', onSearch }) => {
-  const [searchValue, setSearchValue] = useState('')
-
+export const SearchField: FC<SearchFieldProps> = ({ placeholder = 'Search', searchValue, onSearch }) => {
   const handleClearSearchField = () => {
-    setSearchValue('')
+    // setSearchValue('')
     onSearch('')
   }
 
   const onChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setSearchValue(event.currentTarget.value)
+    onSearch(event.currentTarget.value)
   }
-
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      onSearch(searchValue)
-    }, 300)
-
-    return () => clearTimeout(delayDebounceFn)
-  }, [onSearch, searchValue])
 
   return (
     <>
-      <IconButton>
-        <Search />
-      </IconButton>
+      {/* <IconButton> */}
+      {/*   <Search /> */}
+      {/* </IconButton> */}
       <TextField
         InputProps={{
           endAdornment: (
@@ -43,9 +34,16 @@ export const SearchField: FC<SearchFieldProps> = ({ placeholder = 'Search', onSe
         onChange={onChange}
         placeholder={placeholder}
         sx={{
-          margin: 'auto 0',
-          background: 'rgb(0 0 0 / 4%)',
+          margin: 'auto 0 auto auto',
+          background: 'rgb(0 0 0 / 3%)',
           boxShadow: 'none',
+          borderRadius: '4px',
+          '&:hover': {
+            background: 'rgb(0 0 0 / 5%)',
+          },
+          '&:has(:focus)': {
+            background: 'rgb(0 0 0 / 8%)',
+          },
           '.MuiInputBase-root': {
             '&:after, &:before': {
               display: 'none',

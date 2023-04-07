@@ -57,24 +57,27 @@ export const GrantedUserPatients = () => {
     }
   }, [grantedUserPatients, activeTab])
 
-  const [isSearching, setIsSearching] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
 
   const onSearch = useCallback(
     (searchText: string) => {
-      if (grantedUserPatients) {
-        setIsSearching(Boolean(searchText))
-        const sss = searchText.split(' ')
+      setSearchValue(searchText)
 
-        console.log(sss)
-        console.log(sss.includes('test'))
-        const filtered = grantedUserPatients.filter(({ firstName, lastName }) => {
-          const fullName = `${firstName} ${lastName}`
-
-          return fullName.toLowerCase().includes(searchText.toLowerCase())
-        })
-
-        setSearchPatients(sortByName(filtered))
+      if (!grantedUserPatients || !searchText) {
+        return setSearchPatients(null)
       }
+
+      const sss = searchText.split(' ')
+
+      console.log(sss)
+      console.log(sss.includes('test'))
+      const filtered = grantedUserPatients.filter(({ firstName, lastName }) => {
+        const fullName = `${firstName} ${lastName}`
+
+        return fullName.toLowerCase().includes(searchText.toLowerCase())
+      })
+
+      setSearchPatients(sortByName(filtered))
     },
     [grantedUserPatients],
   )
@@ -87,40 +90,47 @@ export const GrantedUserPatients = () => {
             <Typography variant="h5">Patients</Typography>
           </Grid>
           <Grid>
-            <SearchField onSearch={onSearch} />
-          </Grid>
-          <Grid>
             <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">
               Invite
             </Button>
           </Grid>
         </Grid>
-        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={isSearching ? null : activeTab}>
+        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={searchValue ? null : activeTab}>
           {getObjectKeys(PatientCategory).map((key) => (
-            <Tab disabled={isSearching} key={key} label={PatientCategory[key]} value={key} />
+            <Tab disabled={Boolean(searchValue)} key={key} label={PatientCategory[key]} value={key} />
           ))}
-          <SearchField onSearch={onSearch} placeholder="Search patients" />
+          <SearchField onSearch={onSearch} placeholder="Search patients" searchValue={searchValue} />
         </Tabs>
-        <Typography>Found patients (3)</Typography>
-        <List className="list-divided">
-          {isSearching ? (
-            searchPatients?.length ? (
-              searchPatients?.map((patient) => (
+        {grantedUserPatientsIsLoading ? (
+          <Spinner />
+        ) : searchPatients ? (
+          <>
+            {searchPatients.length ? (
+              <>
+                <Typography sx={{ mt: 2 }} variant="subtitle2">
+                  Found patients ({searchPatients.length})
+                </Typography>
+                <List className="list-divided">
+                  {searchPatients.map((patient) => (
+                    <GrantedUserPatientItem activeCategory={activeTab} key={patient.userId} patient={patient} />
+                  ))}
+                </List>
+              </>
+            ) : (
+              <ListItem className="empty-list-item">No results found</ListItem>
+            )}
+          </>
+        ) : (
+          <List className="list-divided">
+            {filteredPatients?.length ? (
+              filteredPatients.map((patient) => (
                 <GrantedUserPatientItem activeCategory={activeTab} key={patient.userId} patient={patient} />
               ))
             ) : (
-              <ListItem className="empty-list-item">No results found</ListItem>
-            )
-          ) : grantedUserPatientsIsLoading ? (
-            <Spinner />
-          ) : filteredPatients?.length ? (
-            filteredPatients.map((patient) => (
-              <GrantedUserPatientItem activeCategory={activeTab} key={patient.userId} patient={patient} />
-            ))
-          ) : (
-            <ListItem className="empty-list-item">No patients in this category</ListItem>
-          )}
-        </List>
+              <ListItem className="empty-list-item">No patients in this category</ListItem>
+            )}
+          </List>
+        )}
       </div>
       <InvitePatientPopup handleClose={handleInvitePopupClose} open={invitePopupOpen} />
     </>
