@@ -21,7 +21,7 @@ interface PatientTreatmentProps {
 }
 
 export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) => {
-  const { isUserRoleDoctor } = useUserRoles()
+  const { isUserRoleCaregiver } = useUserRoles()
   const { enqueueSnackbar } = useSnackbar()
 
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
@@ -97,7 +97,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           </ToggleButtonGroup>
         </Grid>
         <Grid mdOffset="auto">
-          {isUserRoleDoctor &&
+          {!isUserRoleCaregiver &&
             (activeTab === Treatment.diagnoses ? (
               <Button onClick={handleNewDiagnosisOpen} startIcon={<Add />} variant="contained">
                 Add New
@@ -119,7 +119,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                 className={deletingDiagnosisId === diagnosisId ? 'disabled' : ''}
                 key={diagnosisId}
                 secondaryAction={
-                  isUserRoleDoctor && (
+                  !isUserRoleCaregiver && (
                     <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteDiagnosis(diagnosisId)}>
                       <Close />
                     </IconButton>
@@ -147,7 +147,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                 className={deletingMedicationId === medicationId ? 'disabled' : ''}
                 key={medicationId}
                 secondaryAction={
-                  isUserRoleDoctor && (
+                  !isUserRoleCaregiver && (
                     <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteMedication(medicationId)}>
                       <Close />
                     </IconButton>
