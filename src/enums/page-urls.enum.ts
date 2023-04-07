@@ -17,4 +17,7 @@ export enum PageUrls {
   EmergencyContacts = '/emergency-contacts',
   AddEmergencyContact = '/add-emergency-contact',
   AccountRecovery = '/account-recovery',
+  PrivacyPolicy = '/privacy-policy',
+  TermsOfService = '/terms-of-service',
+  CookiesPolicy = '/cookies-policy',
 }

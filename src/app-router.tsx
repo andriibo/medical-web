@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
+import { StaticLayout } from '~components/Layouts/static-layout'
 import { isUserRoleGrantable } from '~helpers/user-role'
 import { AccountRecovery } from '~pages/AccountRecovery/account-recovery'
 import { AddEmergencyContact } from '~pages/AddEmergencyContact/add-emergency-contact'
@@ -25,6 +26,9 @@ import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patie
 import { PatientGrantedUsers } from '~pages/Patient/GrantedUsers/patient-granted-users'
 import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
+import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
+import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
+import { TermsOfService } from '~pages/StaticPages/terms-of-service'
 import { useUserRole } from '~stores/slices/auth.slice'
 
 export const AppRouter = () => {
@@ -60,6 +64,11 @@ export const AppRouter = () => {
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
           </>
         )}
+      </Route>
+      <Route element={<StaticLayout />}>
+        <Route element={<PrivacyPolicy />} path={PageUrls.PrivacyPolicy} />
+        <Route element={<TermsOfService />} path={PageUrls.TermsOfService} />
+        <Route element={<CookiesPolicy />} path={PageUrls.CookiesPolicy} />
       </Route>
       <Route element={<AccountRecovery />} path={PageUrls.AccountRecovery} />
       <Route element={<AddEmergencyContact />} path={PageUrls.AddEmergencyContact} />

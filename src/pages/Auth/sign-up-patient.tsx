@@ -217,7 +217,10 @@ export const SignUpPatient = () => {
           rules={validationRules.password}
         />
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
+          By selecting <strong>Sign Up</strong>, I agree to Zenzers Medical’s{' '}
+          <NavLink to={PageUrls.TermsOfService}>Terms and Conditions</NavLink>,{' '}
+          <NavLink to={PageUrls.PrivacyPolicy}>Privacy Policy</NavLink> and{' '}
+          <NavLink to={PageUrls.CookiesPolicy}>Cookies Policy</NavLink>.
         </Typography>
         <LoadingButton fullWidth loading={authSignUpPatientIsLoading} size="large" type="submit" variant="contained">
           Sign Up
