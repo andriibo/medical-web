@@ -28,7 +28,7 @@ import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
 import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
 import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
-import { TermsOfService } from '~pages/StaticPages/terms-of-service'
+import { TermsAndConditions } from '~pages/StaticPages/terms-and-conditions'
 import { useUserRole } from '~stores/slices/auth.slice'
 
 export const AppRouter = () => {
@@ -67,7 +67,7 @@ export const AppRouter = () => {
       </Route>
       <Route element={<StaticLayout />}>
         <Route element={<PrivacyPolicy />} path={PageUrls.PrivacyPolicy} />
-        <Route element={<TermsOfService />} path={PageUrls.TermsOfService} />
+        <Route element={<TermsAndConditions />} path={PageUrls.TermsAndConditions} />
         <Route element={<CookiesPolicy />} path={PageUrls.CookiesPolicy} />
       </Route>
       <Route element={<AccountRecovery />} path={PageUrls.AccountRecovery} />

@@ -18,6 +18,6 @@ export enum PageUrls {
   AddEmergencyContact = '/add-emergency-contact',
   AccountRecovery = '/account-recovery',
   PrivacyPolicy = '/privacy-policy',
-  TermsOfService = '/terms-of-service',
+  TermsAndConditions = '/terms-and-conditions',
   CookiesPolicy = '/cookies-policy',
 }

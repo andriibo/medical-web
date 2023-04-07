@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './static-pages.module.scss'
 
-export const TermsOfService = () => (
+export const TermsAndConditions = () => (
   <div className={styles.staticContainer}>
     <h1>Terms and Conditions</h1>
     <p>Last updated: April 06, 2023</p>

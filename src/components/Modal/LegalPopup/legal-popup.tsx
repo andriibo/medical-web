@@ -4,7 +4,7 @@ import React, { FC } from 'react'
 import { LegalPages } from '~/enums/legal-pages'
 import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
 import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
-import { TermsOfService } from '~pages/StaticPages/terms-of-service'
+import { TermsAndConditions } from '~pages/StaticPages/terms-and-conditions'
 
 interface LegalPopupProps {
   page: LegalPages | null
@@ -23,7 +23,7 @@ export const LegalPopup: FC<LegalPopupProps> = ({ page, open, handleClose, ...ot
         {page === LegalPages.PrivacyPolicy ? (
           <PrivacyPolicy />
         ) : page === LegalPages.TermsAndConditions ? (
-          <TermsOfService />
+          <TermsAndConditions />
         ) : page === LegalPages.CookiesPolicy ? (
           <CookiesPolicy />
         ) : null}
