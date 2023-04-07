@@ -41,10 +41,10 @@ export const VerificationCodeForm = () => {
     reset()
   }, [reset])
 
-  const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async ({ code }) => {
+  const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async (data) => {
     try {
       setSubmitIsLoading(true)
-      await changeEmailConfirm({ code }).unwrap()
+      await changeEmailConfirm(data).unwrap()
 
       await callLogOut()
 
@@ -58,7 +58,6 @@ export const VerificationCodeForm = () => {
 
       setFormErrors(Array.isArray(message) ? message : [message])
 
-      enqueueSnackbar('Verification code was sent to your email')
       console.error(err)
     } finally {
       setSubmitIsLoading(false)

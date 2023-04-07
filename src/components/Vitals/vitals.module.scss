@@ -4,11 +4,16 @@
   gap: 1.5rem 2rem;
 }
 
+.vitalContainerAlt {
+  gap: 1.5rem;
+}
+
 .vitalItem {
   display: flex;
   position: relative;
   flex-direction: column;
   align-items: stretch;
+  min-width: 0;
   padding: 1rem 0.75rem 0.5rem;
   transition: all 0.2s ease;
   border: solid transparent;
@@ -38,7 +43,6 @@ button.vitalItem {
 
 .vitalHeader {
   display: flex;
-  align-items: center;
 }
 
 .vitalIcon {
@@ -56,6 +60,7 @@ button.vitalItem {
 
 .vitalHeaderText {
   flex: 1;
+  min-width: 0;
 
   :global {
     .MuiTypography-body1 {
@@ -64,6 +69,7 @@ button.vitalItem {
 
     .MuiTypography-body2 {
       opacity: 0.6;
+      line-height: 1.142;
     }
   }
 }

@@ -160,7 +160,6 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
                     <Typography variant="subtitle1">
                       {firstName} {lastName}
                     </Typography>
-                    <div style={{ marginLeft: 'auto' }} />
                     <Chip label={Relationship[relationship]} size="small" />
                     {patientUserId && (
                       <IconButton edge="end" onClick={() => handleDeleteSuggestedContact(contactId)}>
@@ -191,7 +190,7 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
                         </a>
                       </ListItemText>
                       {!patientUserId && (
-                        <Box sx={{ my: '-0.5rem' }}>
+                        <Box sx={{ my: '-0.5rem', whiteSpace: 'nowrap' }}>
                           <IconButton
                             color="error"
                             onClick={() => handleRejectContact(contactId)}

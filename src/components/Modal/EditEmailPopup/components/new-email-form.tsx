@@ -9,6 +9,7 @@ import { UpdateEmailStep } from '~/enums/update-email-step.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -32,8 +33,10 @@ export const NewEmailForm = () => {
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IAuthEmail> = async ({ email }) => {
+  const onSubmit: SubmitHandler<IAuthEmail> = async (data) => {
     try {
+      const { email } = trimValues(data)
+
       await changeEmail({ email }).unwrap()
 
       dispatch(setEditEmailStep(UpdateEmailStep.code))
@@ -75,7 +78,7 @@ export const NewEmailForm = () => {
         )}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography sx={{ mb: '1.5rem' }} variant="body2">
-            Enter your email and we’ll send you a confirmation code to reset your password.
+            Enter a new email address that will be associated with your account.
           </Typography>
           <Controller
             control={control}

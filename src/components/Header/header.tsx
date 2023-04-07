@@ -4,12 +4,12 @@ import React, { useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LogoutButton } from '~components/Header/logout-button'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
-import { isUserRoleGrantable } from '~helpers/user-role'
 import { IMainNav } from '~models/main-nav.model'
-import { useUser, useUserRole } from '~stores/slices/auth.slice'
+import { useUser } from '~stores/slices/auth.slice'
 
 import styles from './header.module.scss'
 
@@ -44,9 +44,9 @@ const doctorNav: IMainNav[] = [
 ]
 
 export const Header = () => {
-  const [dropClose, setDropClose] = useState(false)
-  const userRole = useUserRole()
   const user = useUser()
+  const { isUserRoleGrantable } = useUserRoles()
+  const [dropClose, setDropClose] = useState(false)
 
   const handleDrop = useCallback((val: boolean) => {
     setDropClose(val)
@@ -58,7 +58,7 @@ export const Header = () => {
         LIFE ZENZERS
       </NavLink>
       <nav className={styles.nav}>
-        {isUserRoleGrantable(userRole)
+        {isUserRoleGrantable
           ? doctorNav.map(({ label, to, disabled }) => (
               <NavLink data-disabled={disabled} key={`link-${label}`} to={to}>
                 {label}

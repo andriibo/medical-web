@@ -8,8 +8,12 @@
   list-style: none;
 
   li {
-    min-width: 60px;
-    padding: 0 0 0 0.5rem;
+    min-width: 3.5rem;
+    padding: 0 0.5rem 0 0;
+
+    &:last-child {
+      padding: 0;
+    }
   }
 
   .thresholdInfoMeasure {

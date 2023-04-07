@@ -1,9 +1,10 @@
 @import 'src/components/Vitals/vitals.module';
 
 .vitalHistoryList {
-  max-height: calc(100vh - 240px);
+  min-height: 300px;
+  max-height: calc(100vh - 276px);
   margin: 0 -0.5rem;
-  padding: 0.25rem 0.5rem;
+  overflow-x: hidden;
   overflow-y: auto;
 
   /* width */
@@ -30,12 +31,13 @@
   }
 }
 
-.vitalHistoryGroup {
-  margin: 0 0 1.25rem;
+.blur {
+  filter: blur(4px);
+}
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+.vitalHistoryGroup {
+  margin: 0 0 1rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .vitalContainer {

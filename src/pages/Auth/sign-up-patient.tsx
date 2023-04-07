@@ -14,9 +14,6 @@ import {
   Typography,
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
@@ -26,14 +23,17 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
+import { DobField } from '~components/Form/DobField/dob-field'
 import { NumberField } from '~components/Form/NumberField/number-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
+import { convertToUtc } from '~helpers/date-helper'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { SignUpLegal } from '~pages/Auth/sign-up-legal'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
@@ -58,6 +58,7 @@ export const SignUpPatient = () => {
     try {
       await authSignUpPatient({
         ...trimValues(data),
+        dob: convertToUtc(data.dob),
         email: emailParam || data.email,
         gender: data.gender as Gender,
         height: Number(data.height),
@@ -129,35 +130,7 @@ export const SignUpPatient = () => {
           control={control}
           defaultValue=""
           name="dob"
-          render={({ field }) => {
-            const currentDate = new Date()
-            const yearOffset = 0
-            const maxDate = currentDate.setFullYear(currentDate.getFullYear() - yearOffset)
-
-            return (
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker
-                  {...field}
-                  className="calendar-field"
-                  disableFuture
-                  inputFormat="YYYY/MM/DD"
-                  maxDate={dayjs(maxDate)}
-                  minDate={dayjs('1930-01-01')}
-                  openTo="year"
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      {...fieldValidation(field.name)}
-                      autoComplete="off"
-                      fullWidth
-                      label="Date of birth"
-                    />
-                  )}
-                  views={['year', 'month', 'day']}
-                />
-              </LocalizationProvider>
-            )
-          }}
+          render={({ field }) => <DobField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.dob}
         />
         <Controller
@@ -244,9 +217,7 @@ export const SignUpPatient = () => {
           )}
           rules={validationRules.password}
         />
-        <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
-        </Typography>
+        <SignUpLegal />
         <LoadingButton fullWidth loading={authSignUpPatientIsLoading} size="large" type="submit" variant="contained">
           Sign Up
         </LoadingButton>

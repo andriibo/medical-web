@@ -9,6 +9,7 @@ import { useValidationRules } from '~/hooks/use-validation-rules'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdateCaregiverProfile, UpdateCaregiverProfileKeys } from '~models/profie.model'
 import { usePatchMyCaregiverProfileMutation } from '~stores/services/profile.api'
@@ -50,9 +51,7 @@ export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ 
 
   const onSubmit: SubmitHandler<IUpdateCaregiverProfile> = async (data) => {
     try {
-      await updateCaregiverProfile({
-        ...data,
-      }).unwrap()
+      await updateCaregiverProfile(trimValues(data)).unwrap()
 
       setFormErrors(null)
       handleClose()

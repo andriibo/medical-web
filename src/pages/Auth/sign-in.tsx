@@ -11,6 +11,7 @@ import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { AuthSignInKeys, IAuthSignIn } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
@@ -43,7 +44,7 @@ export const SignIn = () => {
   const onSubmit: SubmitHandler<IAuthSignIn> = async (data) => {
     try {
       dispatch(setEmergencyContactIsLoading(true))
-      const response = await authSignIn({ ...data, rememberMe: false }).unwrap()
+      const response = await authSignIn({ ...trimValues(data), rememberMe: false }).unwrap()
 
       dispatch(signInSuccess(response))
       setFormErrors(null)
@@ -119,7 +120,7 @@ export const SignIn = () => {
           render={({ field }) => (
             <PasswordField autoComplete field={field} fieldValidation={fieldValidation(field.name)} />
           )}
-          rules={validationRules.password}
+          rules={validationRules.signInPassword}
         />
         <div className={styles.authHelperBox}>
           <Button component={NavLink} size="small" to={PageUrls.ForgotPassword}>

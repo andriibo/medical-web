@@ -24,6 +24,7 @@ import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { isRelationshipValue } from '~helpers/is-relationship-value'
+import { trimValues } from '~helpers/trim-values'
 import { IEmergencyContactFormModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -56,7 +57,7 @@ export const AddEmergencyContact = () => {
 
     try {
       await addEmergencyContact({
-        ...data,
+        ...trimValues(data),
         relationship: data.relationship,
         phone: data.phone.split('-').join(''),
       }).unwrap()

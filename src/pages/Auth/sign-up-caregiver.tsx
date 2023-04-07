@@ -18,6 +18,7 @@ import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { AuthSignUpCaregiverKeys, IAuthSignUpCaregiver } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { SignUpLegal } from '~pages/Auth/sign-up-legal'
 import { usePostAuthSignUpCaregiverMutation } from '~stores/services/auth.api'
 
 import styles from './auth.module.scss'
@@ -131,9 +132,7 @@ export const SignUpCaregiver = () => {
           )}
           rules={validationRules.password}
         />
-        <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
-        </Typography>
+        <SignUpLegal />
         <LoadingButton fullWidth loading={authSignUpDoctorIsLoading} size="large" type="submit" variant="contained">
           Sign Up
         </LoadingButton>

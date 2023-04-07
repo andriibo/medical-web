@@ -12,7 +12,7 @@ export const vitalsApi = createApi({
       query: (queryArg) => ({ url: '', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Vitals'],
     }),
-    getPatientVitalsQuery: build.query<IVitalsData, IMyVitalsRequest>({
+    getPatientVitals: build.query<IVitalsData, IMyVitalsRequest>({
       query: ({ startDate, endDate }) => ({
         url: 'patient/my-vitals',
         params: {
@@ -43,8 +43,8 @@ export const vitalsApi = createApi({
 
 export const {
   usePostPatientVitalsMutation,
-  useGetPatientVitalsQueryQuery,
-  useLazyGetPatientVitalsQueryQuery,
+  useGetPatientVitalsQuery,
+  useLazyGetPatientVitalsQuery,
   useLazyGetPatientVitalsByDoctorQuery,
   useGetPatientVitalsByDoctorQuery,
   useGetVitalsAbsoluteQuery,

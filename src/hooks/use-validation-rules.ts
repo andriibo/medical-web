@@ -1,8 +1,10 @@
 import { skipToken } from '@reduxjs/toolkit/query'
+import dayjs from 'dayjs'
 import { RegisterOptions } from 'react-hook-form/dist/types/validator'
 import validator from 'validator'
 import * as yup from 'yup'
 
+import { DATE_FORMAT } from '~constants/constants'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
 
 require('yup-phone')
@@ -32,6 +34,7 @@ type ValidationKeyType =
   | 'phone'
   | 'email'
   | 'password'
+  | 'signInPassword'
   | 'height'
   | 'weight'
   | 'dob'
@@ -128,15 +131,14 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
   const validationRules: ValidationRulesType = {
     text: {
       required: true,
-      maxLength: {
-        value: 30,
-        message: 'Max length is 30',
+      validate: {
+        isEmpty: (value: string) => value.trim().length > 0,
+        maxLength: (value: string) => !(value.trim().length > 30) || 'Max length is 30',
       },
     },
     institution: {
-      maxLength: {
-        value: 100,
-        message: 'Max length is 100',
+      validate: {
+        maxLength: (value: string) => !(value.trim().length > 100) || 'Max length is 100',
       },
     },
     message: {
@@ -147,7 +149,7 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     phone: {
       required: true,
       validate: {
-        required: async (value: string) => {
+        isPhone: async (value: string) => {
           const isValid = await phoneSchema.isValid(`+${value}`)
 
           return isValid || 'Enter valid phone number.'
@@ -156,9 +158,8 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
     email: {
       required: true,
-      pattern: {
-        value: /\S+@\S+\.\S+/,
-        message: 'Entered value does not match email format',
+      validate: {
+        isEmail: (value: string) => validator.isEmail(value.trim()) || 'Entered value does not match email format',
       },
       maxLength: {
         value: 100,
@@ -169,9 +170,13 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
       validate: {
         required: (value: string) =>
-          validator.isStrongPassword(value) ||
-          'At least 8 characters, one number, one special symbol, one uppercase letter and one lowercase letter.',
+          (validator.isStrongPassword(value) && value.length === value.trim().length) ||
+          'At least 8 characters, one number, one special symbol, one uppercase letter, one lowercase letter ' +
+            'and no leading or trailing spaces',
       },
+    },
+    signInPassword: {
+      required: true,
     },
     gender: {
       required: true,
@@ -184,6 +189,15 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
     dob: {
       required: true,
+      validate: {
+        isDate: (value: string) => {
+          if (dayjs(value).unix() > dayjs().unix()) {
+            return 'Entered a valid date of birthday'
+          }
+
+          return validator.isDate(dayjs(value).format(DATE_FORMAT)) || 'Entered value does not match date format'
+        },
+      },
     },
     code: {
       required: true,

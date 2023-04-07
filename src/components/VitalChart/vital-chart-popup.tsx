@@ -27,7 +27,7 @@ import { getObjectKeys } from '~helpers/get-object-keys'
 import { getVitalsByPeriod } from '~helpers/get-vitals-by-period'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChart, IVitalChartSettings, IVitalsData } from '~models/vital.model'
-import { useLazyGetPatientVitalsByDoctorQuery, useLazyGetPatientVitalsQueryQuery } from '~stores/services/vitals.api'
+import { useLazyGetPatientVitalsByDoctorQuery, useLazyGetPatientVitalsQuery } from '~stores/services/vitals.api'
 
 import styles from './vital-chart.module.scss'
 
@@ -86,7 +86,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
     })
   }
 
-  const [lazyPatientVitals, { isFetching: lazyPatientVitalsIsFetching }] = useLazyGetPatientVitalsQueryQuery()
+  const [lazyPatientVitals, { isFetching: lazyPatientVitalsIsFetching }] = useLazyGetPatientVitalsQuery()
   const [lazyPatientVitalsByDoctor, { isFetching: lazyPatientVitalsByDoctorIsFetching }] =
     useLazyGetPatientVitalsByDoctorQuery()
 
@@ -334,7 +334,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
           </Grid>
         </Grid>
         <div className={`${styles.chartHolder} ${isLoading ? 'loading' : ''}`}>
-          {isLoading && <CircularProgress className={styles.loadingIcon} />}
+          {isLoading && <CircularProgress className="loading-icon" />}
           {vitalResponse && Boolean(vitalResponse.vitals[activeVitalsType].length) ? (
             <VitalChart
               activeVitalsType={activeVitalsType}

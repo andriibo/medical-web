@@ -12,7 +12,7 @@ import { Spinner } from '~components/Spinner/spinner'
 import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyPatientProfileQuery } from '~stores/services/profile.api'
-import { setUserAvatar } from '~stores/slices/auth.slice'
+import { setUserAvatar, setUserName } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../patient-account.module.scss'
@@ -29,6 +29,12 @@ export const PatientPersonalInfo = () => {
       dispatch(setUserAvatar(patientData.avatar))
     }
   }, [dispatch, patientData?.avatar])
+
+  useEffect(() => {
+    if (patientData) {
+      dispatch(setUserName({ firstName: patientData.firstName, lastName: patientData.lastName }))
+    }
+  }, [dispatch, patientData])
 
   const handleProfilePopupOpen = () => {
     setProfilePopupOpen(true)

@@ -24,10 +24,11 @@
 
 .personalContent {
   flex: 1;
+  min-width: 0;
 }
 
 .userName {
-  display: block;
+  min-width: 0;
   margin: 0 0.5rem 0 0;
   font-size: 1.25rem;
   font-weight: 500;

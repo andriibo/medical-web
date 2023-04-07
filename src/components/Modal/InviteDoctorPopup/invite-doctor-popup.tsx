@@ -47,7 +47,7 @@ export const InviteDoctorPopup: FC<InviteDoctorPopupProps> = ({ open, handleClos
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await initiateDoctor({ ...trimValues(data) }).unwrap()
+      await initiateDoctor(trimValues(data)).unwrap()
 
       handleClose()
       navigate(PageUrls.Requests)

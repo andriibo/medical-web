@@ -9,6 +9,7 @@ import { useValidationRules } from '~/hooks/use-validation-rules'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { IErrorRequest } from '~models/error-request.model'
 import { IUpdateDoctorProfile, UpdateDoctorProfileKeys } from '~models/profie.model'
 import { usePatchMyDoctorProfileMutation } from '~stores/services/profile.api'
@@ -46,9 +47,7 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
 
   const onSubmit: SubmitHandler<IUpdateDoctorProfile> = async (data) => {
     try {
-      await updateDoctorProfile({
-        ...data,
-      }).unwrap()
+      await updateDoctorProfile(trimValues(data)).unwrap()
 
       setFormErrors(null)
       handleClose()
@@ -119,7 +118,10 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
               control={control}
               defaultValue=""
               name="institution"
-              render={({ field }) => <TextField {...field} fullWidth label="Institution (optional)" />}
+              render={({ field }) => (
+                <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Institution (optional)" />
+              )}
+              rules={validationRules.institution}
             />
             <Grid container spacing={2}>
               <Grid xs={6}>

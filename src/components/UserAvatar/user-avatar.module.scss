@@ -4,6 +4,7 @@
   .userAvatarEditButton {
     visibility: hidden;
     position: absolute;
+    width: 100%;
     transition: all 0.3s ease;
     opacity: 0;
     background: rgb(0 0 0 / 50%);

@@ -48,7 +48,7 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await initiatePatient({ ...trimValues(data) }).unwrap()
+      await initiatePatient(trimValues(data)).unwrap()
 
       handleClose()
       navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })

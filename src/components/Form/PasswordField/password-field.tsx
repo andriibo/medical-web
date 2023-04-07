@@ -35,7 +35,7 @@ export const PasswordField: FC<PasswordFieldProps> = ({
         {...field}
         InputProps={{
           endAdornment: (
-            <IconButton onClick={handleShowPassword} size="small">
+            <IconButton onClick={handleShowPassword} sx={{ mr: '-0.75rem' }}>
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           ),

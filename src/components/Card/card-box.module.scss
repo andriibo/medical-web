@@ -1,4 +1,5 @@
 .card {
+  height: 100%;
   padding: 1rem;
   border: 1px solid var(--gray);
   border-radius: 4px;
@@ -15,6 +16,15 @@
   margin: 0 0 0.75rem;
   padding: 0 0 0.5rem;
   border-bottom: 1px solid var(--gray);
+
+  :global {
+    .MuiTypography-subtitle1 {
+      flex: 1;
+      min-width: 0;
+      padding: 0 0.75rem 0 0;
+      line-height: 1.25;
+    }
+  }
 }
 
 ul.cardInfoList {

@@ -166,7 +166,6 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
                   <Typography variant="subtitle1">
                     {firstName} {lastName}
                   </Typography>
-                  <div style={{ marginLeft: 'auto' }} />
                   <Chip label={Relationship[relationship]} size="small" />
                   {!patientUserId && (
                     <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>

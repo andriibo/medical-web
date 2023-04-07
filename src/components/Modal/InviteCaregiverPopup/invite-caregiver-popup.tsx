@@ -10,6 +10,7 @@ import { PageUrls } from '~/enums/page-urls.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys } from '~models/auth.model'
 import { IDataAccessEmail } from '~models/data-access.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -48,7 +49,7 @@ export const InviteCaregiverPopup: FC<InviteCaregiverPopupProps> = ({ open, hand
 
   const onSubmit: SubmitHandler<IDataAccessEmail> = async (data) => {
     try {
-      await initiateCaregiver(data).unwrap()
+      await initiateCaregiver(trimValues(data)).unwrap()
 
       handleClose()
       navigate(PageUrls.Requests)
