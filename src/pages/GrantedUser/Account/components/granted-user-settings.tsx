@@ -1,6 +1,8 @@
 import { FormControlLabel, FormGroup, Switch, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
+import { AccountLegal } from '~components/AccountLegal/account-legal'
+
 export const GrantedUserSettings = () => {
   const [settings, setSettings] = useState({
     inApp: true,
@@ -29,6 +31,7 @@ export const GrantedUserSettings = () => {
           label="Email"
         />
       </FormGroup>
+      <AccountLegal />
     </>
   )
 }
