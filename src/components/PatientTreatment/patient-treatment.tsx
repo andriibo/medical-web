@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useState } from 'react'
 
 import { Treatment } from '~/enums/treatment.enum'
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { NewDiagnosisPopup } from '~components/Modal/NewDiagnosisPopup/new-diagnosis-popup'
 import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
 import { Spinner } from '~components/Spinner/spinner'
@@ -20,12 +21,14 @@ interface PatientTreatmentProps {
 }
 
 export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) => {
+  const { isUserRoleCaregiver } = useUserRoles()
+  const { enqueueSnackbar } = useSnackbar()
+
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
   const [deletingDiagnosisId, setDeletingDiagnosisId] = useState<string | null>(null)
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(null)
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Treatment>(Treatment.diagnoses)
-  const { enqueueSnackbar } = useSnackbar()
 
   const { data: patientDiagnosesData, isLoading: patientDiagnosesDataIsLoading } = useGetPatientDiagnosesQuery({
     patientUserId,
@@ -86,7 +89,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
 
   return (
     <>
-      <Grid container spacing={3} sx={{ mb: 1 }}>
+      <Grid container spacing={3} sx={{ mb: 0 }}>
         <Grid>
           <ToggleButtonGroup color="primary" exclusive onChange={handleChange} size="small" value={activeTab}>
             <ToggleButton value={Treatment.diagnoses}>Diagnoses</ToggleButton>
@@ -94,15 +97,16 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           </ToggleButtonGroup>
         </Grid>
         <Grid mdOffset="auto">
-          {activeTab === Treatment.diagnoses ? (
-            <Button onClick={handleNewDiagnosisOpen} startIcon={<Add />} variant="contained">
-              Add New
-            </Button>
-          ) : activeTab === Treatment.medications ? (
-            <Button onClick={handleNewMedicationOpen} startIcon={<Add />} variant="contained">
-              Add New
-            </Button>
-          ) : null}
+          {!isUserRoleCaregiver &&
+            (activeTab === Treatment.diagnoses ? (
+              <Button onClick={handleNewDiagnosisOpen} startIcon={<Add />} variant="contained">
+                Add New
+              </Button>
+            ) : activeTab === Treatment.medications ? (
+              <Button onClick={handleNewMedicationOpen} startIcon={<Add />} variant="contained">
+                Add New
+              </Button>
+            ) : null)}
         </Grid>
       </Grid>
       <TabPanel activeTab={activeTab} value={Treatment.diagnoses}>
@@ -115,9 +119,11 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                 className={deletingDiagnosisId === diagnosisId ? 'disabled' : ''}
                 key={diagnosisId}
                 secondaryAction={
-                  <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteDiagnosis(diagnosisId)}>
-                    <Close />
-                  </IconButton>
+                  !isUserRoleCaregiver && (
+                    <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteDiagnosis(diagnosisId)}>
+                      <Close />
+                    </IconButton>
+                  )
                 }
               >
                 <ListItemText
@@ -141,9 +147,11 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                 className={deletingMedicationId === medicationId ? 'disabled' : ''}
                 key={medicationId}
                 secondaryAction={
-                  <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteMedication(medicationId)}>
-                    <Close />
-                  </IconButton>
+                  !isUserRoleCaregiver && (
+                    <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteMedication(medicationId)}>
+                      <Close />
+                    </IconButton>
+                  )
                 }
               >
                 <ListItemText
