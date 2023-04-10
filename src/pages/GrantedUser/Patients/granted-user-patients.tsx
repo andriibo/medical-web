@@ -59,17 +59,17 @@ export const GrantedUserPatients = () => {
   }, [grantedUserPatients, activeTab])
 
   const onSearch = useCallback(
-    (searchValue: string) => {
-      setSearchValue(searchValue)
+    (value: string) => {
+      setSearchValue(value)
 
-      if (!grantedUserPatients || !searchValue) {
+      if (!grantedUserPatients || !value) {
         return setFoundPatients(null)
       }
 
       const filtered = grantedUserPatients.filter(({ firstName, lastName }) => {
         const fullName = `${firstName} ${lastName}`
 
-        return fullName.toLowerCase().includes(searchValue.toLowerCase())
+        return fullName.toLowerCase().includes(value.toLowerCase())
       })
 
       setFoundPatients(sortByName(filtered))
