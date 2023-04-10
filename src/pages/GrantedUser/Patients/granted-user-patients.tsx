@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { PatientCategory, PatientCategoryKeys } from '~/enums/patient-category'
-import { SearchField } from '~components/Form/Search/search-field'
+import { SearchField } from '~components/Form/SearchField/search-field'
 import { InvitePatientPopup } from '~components/Modal/InvitePatientPopup/invite-patient-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { getObjectKeys } from '~helpers/get-object-keys'
@@ -22,7 +22,7 @@ export const GrantedUserPatients = () => {
   const [activeTab, setActiveTab] = useState<PatientCategoryKeys>('Abnormal')
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const [filteredPatients, setFilteredPatients] = useState<IDoctorPatients[] | null>(null)
-  const [searchPatients, setSearchPatients] = useState<IDoctorPatients[] | null>(null)
+  const [foundPatients, setFoundPatients] = useState<IDoctorPatients[] | null>(null)
 
   const {
     data: grantedUserPatients,
@@ -64,20 +64,16 @@ export const GrantedUserPatients = () => {
       setSearchValue(searchText)
 
       if (!grantedUserPatients || !searchText) {
-        return setSearchPatients(null)
+        return setFoundPatients(null)
       }
 
-      const sss = searchText.split(' ')
-
-      console.log(sss)
-      console.log(sss.includes('test'))
       const filtered = grantedUserPatients.filter(({ firstName, lastName }) => {
         const fullName = `${firstName} ${lastName}`
 
         return fullName.toLowerCase().includes(searchText.toLowerCase())
       })
 
-      setSearchPatients(sortByName(filtered))
+      setFoundPatients(sortByName(filtered))
     },
     [grantedUserPatients],
   )
@@ -95,23 +91,23 @@ export const GrantedUserPatients = () => {
             </Button>
           </Grid>
         </Grid>
-        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={searchValue ? null : activeTab}>
+        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={searchValue ? false : activeTab}>
           {getObjectKeys(PatientCategory).map((key) => (
             <Tab disabled={Boolean(searchValue)} key={key} label={PatientCategory[key]} value={key} />
           ))}
-          <SearchField onSearch={onSearch} placeholder="Search patients" searchValue={searchValue} />
+          <SearchField onSearch={onSearch} placeholder="Search patients" value={searchValue} />
         </Tabs>
         {grantedUserPatientsIsLoading ? (
           <Spinner />
-        ) : searchPatients ? (
+        ) : foundPatients ? (
           <>
-            {searchPatients.length ? (
+            {foundPatients.length ? (
               <>
                 <Typography sx={{ mt: 2 }} variant="subtitle2">
-                  Found patients ({searchPatients.length})
+                  Found patients ({foundPatients.length})
                 </Typography>
                 <List className="list-divided">
-                  {searchPatients.map((patient) => (
+                  {foundPatients.map((patient) => (
                     <GrantedUserPatientItem activeCategory={activeTab} key={patient.userId} patient={patient} />
                   ))}
                 </List>
