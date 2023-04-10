@@ -231,7 +231,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
       <div className={`${historyIsLoading ? styles.blur : ''}`}>
         {filteredVitals?.length ? (
           <Virtuoso
-            className={`${styles.vitalHistoryList}`}
+            className={styles.vitalHistoryList}
             data={filteredVitals}
             itemContent={(index, vital) => vitalGroup(vital)}
             style={{ height: '100vh' }}
