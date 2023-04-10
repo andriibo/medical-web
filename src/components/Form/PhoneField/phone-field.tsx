@@ -22,7 +22,7 @@ export const PhoneField: FC<PhoneFieldProps> = ({ field, fieldValidation: { erro
         name: field.name,
       }}
       isValid={!error}
-      onChange={(phone) => field.onChange(phone)}
+      onChange={(phone) => field.onChange(`+${phone}`)}
       specialLabel="Phone number"
       value={field.value}
     />

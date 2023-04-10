@@ -35,8 +35,8 @@ const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }
         <Phone />
       </ListItemIcon>
       <ListItemText>
-        <a className="simple-link" href={`tel:+${emergencyContact.phone}`}>
-          +{emergencyContact.phone}
+        <a className="simple-link" href={`tel:${emergencyContact.phone}`}>
+          {emergencyContact.phone}
         </a>
       </ListItemText>
     </ListItem>
