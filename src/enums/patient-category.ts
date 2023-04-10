@@ -3,5 +3,3 @@ export enum PatientCategory {
   Borderline = 'Borderline',
   Normal = 'Normal',
 }
-
-export type PatientCategoryKeys = keyof typeof PatientCategory
