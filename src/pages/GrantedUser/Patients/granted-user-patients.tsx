@@ -23,6 +23,7 @@ export const GrantedUserPatients = () => {
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const [filteredPatients, setFilteredPatients] = useState<IDoctorPatients[] | null>(null)
   const [foundPatients, setFoundPatients] = useState<IDoctorPatients[] | null>(null)
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     data: grantedUserPatients,
@@ -57,20 +58,18 @@ export const GrantedUserPatients = () => {
     }
   }, [grantedUserPatients, activeTab])
 
-  const [searchValue, setSearchValue] = useState('')
-
   const onSearch = useCallback(
-    (searchText: string) => {
-      setSearchValue(searchText)
+    (searchValue: string) => {
+      setSearchValue(searchValue)
 
-      if (!grantedUserPatients || !searchText) {
+      if (!grantedUserPatients || !searchValue) {
         return setFoundPatients(null)
       }
 
       const filtered = grantedUserPatients.filter(({ firstName, lastName }) => {
         const fullName = `${firstName} ${lastName}`
 
-        return fullName.toLowerCase().includes(searchText.toLowerCase())
+        return fullName.toLowerCase().includes(searchValue.toLowerCase())
       })
 
       setFoundPatients(sortByName(filtered))
