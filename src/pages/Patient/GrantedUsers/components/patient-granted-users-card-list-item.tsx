@@ -19,8 +19,8 @@ export const PatientGrantedUsersCardListItem: FC<PatientGrantedUsersCardListItem
         <Phone />
       </ListItemIcon>
       <ListItemText>
-        <a className="simple-link" href={`tel:+${phone}`}>
-          +{phone}
+        <a className="simple-link" href={`tel:${phone}`}>
+          {phone}
         </a>
       </ListItemText>
     </ListItem>
