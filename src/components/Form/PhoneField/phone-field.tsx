@@ -16,7 +16,6 @@ interface PhoneFieldProps {
 export const PhoneField: FC<PhoneFieldProps> = ({ field, fieldValidation: { error, helperText } }) => (
   <FormControl error={error} fullWidth>
     <PhoneInput
-      copyNumbersOnly={false}
       country="ca"
       enableSearch
       inputProps={{
