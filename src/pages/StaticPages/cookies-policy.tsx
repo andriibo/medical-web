@@ -43,8 +43,8 @@ export const CookiesPolicy = () => (
       </li>
       <li>
         <strong>Website</strong> refers to Medical app, accessible from{' '}
-        <a href="https://medicalapp.ca" rel="external nofollow noopener noreferrer" target="_blank">
-          medicalapp.ca
+        <a href="https://medical-web.sygmenta.dev/" rel="external nofollow noopener noreferrer" target="_blank">
+          medical-web.sygmenta.dev
         </a>
       </li>
       <li>
