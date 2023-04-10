@@ -119,7 +119,8 @@ export const GrantedUserPersonalInfo = () => {
           </div>
           <ul className={styles.personalInfoList}>
             <li>
-              <span className={styles.infoListLabel}>Phone</span>+{userData.phone}
+              <span className={styles.infoListLabel}>Phone</span>
+              {userData.phone}
             </li>
             {isDoctor(userData) && (
               <li>

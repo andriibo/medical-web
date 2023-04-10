@@ -102,7 +102,8 @@ export const PatientPersonalInfo = () => {
               {patientData.weight} kg
             </li>
             <li>
-              <span className={styles.infoListLabel}>Phone</span>+{patientData.phone}
+              <span className={styles.infoListLabel}>Phone</span>
+              {patientData.phone}
             </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />

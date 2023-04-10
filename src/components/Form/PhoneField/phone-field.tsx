@@ -16,13 +16,14 @@ interface PhoneFieldProps {
 export const PhoneField: FC<PhoneFieldProps> = ({ field, fieldValidation: { error, helperText } }) => (
   <FormControl error={error} fullWidth>
     <PhoneInput
+      copyNumbersOnly={false}
       country="ca"
       enableSearch
       inputProps={{
         name: field.name,
       }}
       isValid={!error}
-      onChange={(phone) => field.onChange(phone)}
+      onChange={(phone) => field.onChange(`+${phone}`)}
       specialLabel="Phone number"
       value={field.value}
     />
