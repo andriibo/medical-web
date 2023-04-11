@@ -23,6 +23,8 @@
 }
 
 .userAvatar {
+  text-transform: uppercase;
+
   &:global(.MuiButton-root) {
     &:hover {
       opacity: 0.7;

@@ -6,12 +6,11 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 import { useEmailParam } from '~/hooks/use-email-param'
 import styles from '~pages/Auth/auth.module.scss'
-import { useAppDispatch } from '~stores/hooks'
-import { clearPersist, useIsAuth, useUserEmail } from '~stores/slices/auth.slice'
+import { useIsAuth, useUserEmail } from '~stores/slices/auth.slice'
 import { useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
+import { callLogOut } from '~stores/store'
 
 export const AuthLayout = () => {
-  const dispatch = useAppDispatch()
   const isAuth = useIsAuth()
   const userEmail = useUserEmail()
   const emailParam = useEmailParam()
@@ -21,9 +20,9 @@ export const AuthLayout = () => {
 
   useEffect(() => {
     if (emailParam && !theSameEmail) {
-      dispatch(clearPersist())
+      callLogOut().then()
     }
-  }, [dispatch, emailParam, theSameEmail])
+  }, [emailParam, theSameEmail])
 
   if (isAuth && (!emailParam || theSameEmail) && !emergencyContactIsLoading) {
     return <Navigate replace to="/" />
