@@ -16,7 +16,6 @@ export interface IDataAccessUser {
 
 export interface IDataAccessEmail {
   email: string
-  message: string
 }
 
 export interface IDataAccessInitiateForGrantedUser {
@@ -24,5 +23,4 @@ export interface IDataAccessInitiateForGrantedUser {
   email: string
 }
 
-export type IDataAccessEmailKeys = keyof IDataAccessEmail
 export type DataAccessInitiateForGrantedUserKeys = keyof IDataAccessInitiateForGrantedUser

@@ -2,14 +2,11 @@ import { Modify } from '~/types/modify.type'
 import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
 import { IUserModel } from '~models/user.model'
 
-export interface IAuthData extends IAccessToken {
-  refreshToken?: string
-  user: IUserModel
-}
-
-export interface IAccessToken {
+export interface IAuthData {
   accessToken: string
-  accessTokenExpireTime: number
+  accessTokenExpireTime: string
+  refreshToken: string
+  user: IUserModel
 }
 
 export interface IAuthSignIn {

@@ -2,16 +2,20 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, AlertTitle, Box, Button, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { ACCOUNT_DELETION_DELAY } from '~constants/constants'
+import { useAppDispatch } from '~stores/hooks'
 import { usePatchRecoveryMyAccountMutation } from '~stores/services/profile.api'
-import { useUserDeletedAt } from '~stores/slices/auth.slice'
-import { callLogOut } from '~stores/store'
+import { clearPersist, useUserDeletedAt } from '~stores/slices/auth.slice'
 
 import styles from './account-recovery.module.scss'
 
 export const AccountRecovery = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const userDeletedAt = useUserDeletedAt()
   const [isLoading, setIsLoading] = useState(false)
@@ -30,13 +34,13 @@ export const AccountRecovery = () => {
     [deletedAt],
   )
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     setIsLoading(true)
-
-    await callLogOut()
+    await dispatch(clearPersist())
 
     setIsLoading(false)
-  }
+    navigate(PageUrls.SignIn, { replace: true, state: undefined })
+  }, [dispatch, navigate])
 
   const handleRecovery = async () => {
     try {

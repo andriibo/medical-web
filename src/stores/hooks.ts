@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { io } from 'socket.io-client'
 
-import { useAccessToken } from '~stores/slices/auth.slice'
+import { useToken } from '~stores/slices/auth.slice'
 
 import type { AppDispatch, RootState } from './store'
 
@@ -11,19 +11,19 @@ export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 
 export const useSocket = () => {
-  const accessToken = useAccessToken()
+  const token = useToken()
 
   return useMemo(() => {
     const socketOptions = {
       transportOptions: {
         polling: {
           extraHeaders: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${token}`,
           },
         },
       },
     }
 
     return io(`${process.env.REACT_APP_API_URL}/ws/current-vitals`, socketOptions)
-  }, [accessToken])
+  }, [token])
 }

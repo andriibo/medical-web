@@ -1,24 +1,26 @@
 import { Logout } from '@mui/icons-material'
-import { CircularProgress, ListItemIcon, MenuItem } from '@mui/material'
-import React, { useState } from 'react'
+import { ListItemIcon, MenuItem } from '@mui/material'
+import React, { useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { callLogOut } from '~stores/store'
+import { PageUrls } from '~/enums/page-urls.enum'
+import { useAppDispatch } from '~stores/hooks'
+import { clearPersist } from '~stores/slices/auth.slice'
 
 export const LogoutButton = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
-  const handleLogout = async () => {
-    setIsLoading(true)
+  const handleLogout = useCallback(async () => {
+    await dispatch(clearPersist())
 
-    await callLogOut()
-
-    setIsLoading(false)
-  }
+    navigate(PageUrls.SignIn, { replace: true, state: undefined })
+  }, [dispatch, navigate])
 
   return (
-    <MenuItem color="inherit" disabled={isLoading} onClick={handleLogout}>
+    <MenuItem color="inherit" onClick={handleLogout}>
       <ListItemIcon>
-        {isLoading ? <CircularProgress color="inherit" size={20} /> : <Logout fontSize="small" />}
+        <Logout fontSize="small" />
       </ListItemIcon>
       Logout
     </MenuItem>

@@ -25,14 +25,10 @@ export interface IVital {
 export interface IVitalsCard {
   timestamp: number
   title: VitalType
-  value?: number | boolean | null
+  value: string | number | null | undefined | boolean
   thresholds?: {
     min?: number
     max?: number
-  }
-  limits?: {
-    floor?: number
-    ceiling?: number
   }
   icon: string
   units: VitalUnits
