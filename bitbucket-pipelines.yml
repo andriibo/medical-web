@@ -51,3 +51,11 @@ pipelines:
           <<: *scp-deploy
       - step:
           <<: *ssh-run
+    release/*:
+      - step:
+          <<: *build
+          deployment: Staging
+      - step:
+          <<: *scp-deploy
+      - step:
+          <<: *ssh-run
