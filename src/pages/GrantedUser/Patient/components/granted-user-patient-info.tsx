@@ -52,8 +52,8 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
       <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
         <li>
           <span className={styles.infoListLabel}>Phone</span>
-          <a className="simple-link" href={`tel:+${phone}`}>
-            +{phone}
+          <a className="simple-link" href={`tel:${phone}`}>
+            {phone}
           </a>
         </li>
         <li>

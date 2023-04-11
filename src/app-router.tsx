@@ -2,9 +2,10 @@ import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { AuthLayout } from '~components/Layouts/auth-layout'
 import { DefaultLayout } from '~components/Layouts/default-layout'
-import { isUserRoleGrantable } from '~helpers/user-role'
+import { StaticLayout } from '~components/Layouts/static-layout'
 import { AccountRecovery } from '~pages/AccountRecovery/account-recovery'
 import { AddEmergencyContact } from '~pages/AddEmergencyContact/add-emergency-contact'
 import { AccountTypeSelection } from '~pages/Auth/account-type-selection'
@@ -25,10 +26,12 @@ import { PatientEmergencyContacts } from '~pages/Patient/EmergencyContacts/patie
 import { PatientGrantedUsers } from '~pages/Patient/GrantedUsers/patient-granted-users'
 import { PatientRequests } from '~pages/Patient/Requests/patient-requests'
 import { PatientVitals } from '~pages/Patient/Vitals/patient-vitals'
-import { useUserRole } from '~stores/slices/auth.slice'
+import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
+import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
+import { TermsAndConditions } from '~pages/StaticPages/terms-and-conditions'
 
 export const AppRouter = () => {
-  const userRole = useUserRole()
+  const { isUserRoleGrantable } = useUserRoles()
 
   return (
     <Routes>
@@ -44,7 +47,7 @@ export const AppRouter = () => {
         <Route element={<EmailVerification />} path={PageUrls.EmailVerification} />
       </Route>
       <Route element={<DefaultLayout />}>
-        {isUserRoleGrantable(userRole) ? (
+        {isUserRoleGrantable ? (
           <>
             <Route element={<GrantedUserAccount />} path={PageUrls.MyAccount} />
             <Route element={<GrantedUserPatients />} path={PageUrls.Patients} />
@@ -60,6 +63,11 @@ export const AppRouter = () => {
             <Route element={<PatientRequests />} path={PageUrls.Requests} />
           </>
         )}
+      </Route>
+      <Route element={<StaticLayout />}>
+        <Route element={<PrivacyPolicy />} path={PageUrls.PrivacyPolicy} />
+        <Route element={<TermsAndConditions />} path={PageUrls.TermsAndConditions} />
+        <Route element={<CookiesPolicy />} path={PageUrls.CookiesPolicy} />
       </Route>
       <Route element={<AccountRecovery />} path={PageUrls.AccountRecovery} />
       <Route element={<AddEmergencyContact />} path={PageUrls.AddEmergencyContact} />

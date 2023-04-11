@@ -144,7 +144,7 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
       validate: {
         isPhone: async (value: string) => {
-          const isValid = await phoneSchema.isValid(`+${value}`)
+          const isValid = await phoneSchema.isValid(value)
 
           return isValid || 'Enter valid phone number.'
         },

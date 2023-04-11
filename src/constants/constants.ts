@@ -16,6 +16,7 @@ export const BASE_API = process.env.REACT_APP_API_URL
 export const ACCOUNT_DELETION_DELAY = 30
 
 export const DATE_FORMAT = 'YYYY/MM/DD'
+export const DATE_FORMAT_FOR_SENDING = DATE_FORMAT.replaceAll('/', '-')
 
 export const DEFAULT_AVATAR = 'default-avatar.png'
 

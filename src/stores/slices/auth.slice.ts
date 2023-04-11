@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage'
 
 import { UserRoles } from '~/enums/user-roles.enum'
 import { IAuthData } from '~models/auth.model'
+import { IUserModel } from '~models/user.model'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
 
@@ -36,6 +37,9 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.accessToken = payload.accessToken
+    },
+    setUser: (state, { payload }: PayloadAction<IUserModel>) => {
+      state.data.user = payload
     },
     setUserAvatar: (state, { payload }: PayloadAction<string | null>) => {
       state.data.user.avatar = payload
@@ -83,5 +87,5 @@ export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyCo
 
 export const {
   reducer: authReducer,
-  actions: { setToken, setUserAvatar, setUserName, setHasEmergencyContacts, signInSuccess, clearPersist },
+  actions: { setToken, setUser, setUserAvatar, setUserName, setHasEmergencyContacts, signInSuccess, clearPersist },
 } = authSlice

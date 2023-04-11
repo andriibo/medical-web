@@ -3,6 +3,7 @@ import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { DeleteAccountButton } from '~components/DeleteAccountButton/delete-account-button'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { ChangePasswordPopup } from '~components/Modal/ChangePasswordPopup/change-password-popup'
@@ -11,7 +12,6 @@ import { EditDoctorProfilePopup } from '~components/Modal/EditDoctorProfilePopup
 import { EditEmailPopup } from '~components/Modal/EditEmailPopup/edit-email-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
-import { isUserRoleCaregiver, isUserRoleDoctor } from '~helpers/user-role'
 import { ICaregiverProfile, IDoctorProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyCaregiverProfileQuery, useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
@@ -22,6 +22,7 @@ import styles from '../granted-user-account.module.scss'
 
 export const GrantedUserPersonalInfo = () => {
   const userRole = useUserRole()
+  const { isUserRoleDoctor, isUserRoleCaregiver } = useUserRoles()
   const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
   const [changePasswordPopupOpen, setChangePasswordPopupOpen] = useState(false)
@@ -29,10 +30,10 @@ export const GrantedUserPersonalInfo = () => {
   const [isLoading, setIsLoading] = useState(false)
 
   const { data: doctorData, isLoading: doctorDataIsLoading } = useGetMyDoctorProfileQuery(
-    isUserRoleDoctor(userRole) ? undefined : skipToken,
+    isUserRoleDoctor ? undefined : skipToken,
   )
   const { data: caregiverData, isLoading: caregiverDataIsLoading } = useGetMyCaregiverProfileQuery(
-    isUserRoleCaregiver(userRole) ? undefined : skipToken,
+    isUserRoleCaregiver ? undefined : skipToken,
   )
 
   const isDoctor = (data: IDoctorProfile | ICaregiverProfile): data is IDoctorProfile =>
@@ -118,7 +119,8 @@ export const GrantedUserPersonalInfo = () => {
           </div>
           <ul className={styles.personalInfoList}>
             <li>
-              <span className={styles.infoListLabel}>Phone</span>+{userData.phone}
+              <span className={styles.infoListLabel}>Phone</span>
+              {userData.phone}
             </li>
             {isDoctor(userData) && (
               <li>

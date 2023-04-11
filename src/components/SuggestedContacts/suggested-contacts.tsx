@@ -175,8 +175,8 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
                         <Phone />
                       </ListItemIcon>
                       <ListItemText>
-                        <a className="simple-link" href={`tel:+${phone}`}>
-                          +{phone}
+                        <a className="simple-link" href={`tel:${phone}`}>
+                          {phone}
                         </a>
                       </ListItemText>
                     </ListItem>

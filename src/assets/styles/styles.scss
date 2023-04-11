@@ -70,6 +70,11 @@ form {
     .form-control {
       width: 100%;
 
+      &:-webkit-autofill {
+        transition-property: background-color, color;
+        transition-delay: 9999s;
+      }
+
       &.invalid-number {
         border-color: var(--danger);
       }
@@ -215,4 +220,13 @@ form {
   left: 50%;
   translate: -50% -50%;
   filter: blur(0);
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
