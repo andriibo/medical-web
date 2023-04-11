@@ -13,7 +13,7 @@ interface VitalItemProps {
 }
 
 export const VitalItem: FC<VitalItemProps> = ({
-  vital: { title, value, units, icon, thresholds, limits },
+  vital: { title, value, units, icon, thresholds },
   toggleVitals,
   onClick,
   tag = 'div',
@@ -25,39 +25,6 @@ export const VitalItem: FC<VitalItemProps> = ({
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
   )
-
-  const getValue = useMemo(() => {
-    if (!value) return '-'
-
-    if (typeof value === 'boolean') {
-      return value ? 'Yes' : 'No'
-    }
-
-    if (limits?.floor && value < limits.floor) {
-      return (
-        <>
-          {'<'} {limits.floor} <span className={styles.vitalAbsText}>abs min</span>
-        </>
-      )
-    }
-
-    if (limits?.ceiling && value > limits.ceiling) {
-      return (
-        <>
-          {'>'} {limits.ceiling} <span className={styles.vitalAbsText}>abs max</span>
-        </>
-      )
-    }
-
-    return value
-  }, [limits, value])
-
-  const exceedingLimit = useMemo(
-    () => value && ((limits?.ceiling && value > limits.ceiling) || (limits?.floor && value < limits.floor)),
-    [limits, value],
-  )
-
-  const isDanger = useMemo(() => isAbnormal || exceedingLimit, [exceedingLimit, isAbnormal])
 
   const isButton = useMemo(() => {
     if (tag === 'button') {
@@ -84,7 +51,7 @@ export const VitalItem: FC<VitalItemProps> = ({
 
   return (
     <Box
-      className={`${styles.vitalItem} ${isDanger ? styles.vitalItemDanger : ''}`}
+      className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : ''}`}
       component={tag}
       onClick={onClick}
       {...isButton}
@@ -99,7 +66,7 @@ export const VitalItem: FC<VitalItemProps> = ({
       </div>
       <div className={styles.vitalValue}>
         <strong className={`${blinkClass} ${changedClass}`} onAnimationEnd={onAnimationEnd}>
-          {getValue}
+          {value ? value : '-'}
         </strong>
         <span>{units && units}</span>
       </div>

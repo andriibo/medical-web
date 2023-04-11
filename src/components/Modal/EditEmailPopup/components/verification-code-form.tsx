@@ -13,8 +13,8 @@ import { AuthChangeEmailConfirmKeys, IAuthChangeEmailConfirm } from '~models/aut
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangeEmailConfirmMutation, usePostAuthChangeEmailMutation } from '~stores/services/auth.api'
+import { clearPersist } from '~stores/slices/auth.slice'
 import { closeEditEmailPopup, setEditEmailStep, useNewEmail } from '~stores/slices/edit-email.slice'
-import { callLogOut } from '~stores/store'
 
 export const VerificationCodeForm = () => {
   const { enqueueSnackbar } = useSnackbar()
@@ -22,11 +22,10 @@ export const VerificationCodeForm = () => {
   const newEmail = useNewEmail()
   const { validationRules } = useValidationRules()
 
-  const [submitIsLoading, setSubmitIsLoading] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const [resendCode, { isLoading: resendCodeIsLoading }] = usePostAuthChangeEmailMutation()
-  const [changeEmailConfirm] = usePostAuthChangeEmailConfirmMutation()
+  const [changeEmailConfirm, { isLoading: changeEmailConfirmIsLoading }] = usePostAuthChangeEmailConfirmMutation()
 
   const {
     handleSubmit,
@@ -43,10 +42,9 @@ export const VerificationCodeForm = () => {
 
   const onSubmit: SubmitHandler<IAuthChangeEmailConfirm> = async (data) => {
     try {
-      setSubmitIsLoading(true)
       await changeEmailConfirm(data).unwrap()
 
-      await callLogOut()
+      await dispatch(clearPersist())
 
       enqueueSnackbar('Email updated')
       dispatch(closeEditEmailPopup())
@@ -59,8 +57,6 @@ export const VerificationCodeForm = () => {
       setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
-    } finally {
-      setSubmitIsLoading(false)
     }
   }
 
@@ -127,7 +123,13 @@ export const VerificationCodeForm = () => {
               </Button>
             </Grid>
             <Grid xs={6}>
-              <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
+              <LoadingButton
+                fullWidth
+                loading={changeEmailConfirmIsLoading}
+                size="large"
+                type="submit"
+                variant="contained"
+              >
                 Verify
               </LoadingButton>
             </Grid>

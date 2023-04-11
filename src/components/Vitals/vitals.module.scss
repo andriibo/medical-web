@@ -32,7 +32,7 @@ button.vitalItem {
   }
 }
 
-.vitalItemDanger {
+.vitalItemAbnormal {
   border-left-color: var(--danger);
   background: rgb(var(--danger-rgb) / 10%);
 }
@@ -80,40 +80,22 @@ button.vitalItem {
   font-size: 1rem;
   line-height: 1.3rem;
 
-  > strong {
+  strong {
     display: block;
-    position: relative;
     color: var(--primary);
     font-size: 2.125rem;
     font-weight: 400;
-    letter-spacing: 0.25px;
     line-height: 1;
     text-align: center;
-
-    .vitalItemDanger & {
-      color: var(--danger);
-    }
   }
 
-  > span {
+  span {
     display: block;
     min-height: 1.3rem;
     margin-top: 0.5rem;
     opacity: 0.6;
     text-align: right;
   }
-}
-
-.vitalAbsText {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  left: 0;
-  margin: 0.25rem 0 0;
-  font-size: 0.75rem;
-  line-height: 1;
-  text-align: center;
-  text-transform: uppercase;
 }
 
 .changed {

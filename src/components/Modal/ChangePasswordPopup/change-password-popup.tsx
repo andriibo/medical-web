@@ -4,14 +4,17 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
+import { PageUrls } from '~/enums/page-urls.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { AuthChangePasswordKeys, IAuthChangePassword } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
+import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthChangePasswordMutation } from '~stores/services/auth.api'
-import { callLogOut } from '~stores/store'
+import { clearPersist } from '~stores/slices/auth.slice'
 
 interface ChangePasswordPopupProps {
   open: boolean
@@ -20,11 +23,12 @@ interface ChangePasswordPopupProps {
 
 export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const { validationRules } = useValidationRules()
 
-  const [submitIsLoading, setSubmitIsLoading] = useState(false)
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
-  const [changePassword] = usePostAuthChangePasswordMutation()
+  const [changePassword, { isLoading: changePasswordIsLoading }] = usePostAuthChangePasswordMutation()
 
   const {
     handleSubmit,
@@ -44,12 +48,13 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
 
   const onSubmit: SubmitHandler<IAuthChangePassword> = async (data) => {
     try {
-      setSubmitIsLoading(true)
       await changePassword(data).unwrap()
 
       enqueueSnackbar('Password changed')
 
-      await callLogOut()
+      await dispatch(clearPersist())
+
+      navigate(PageUrls.SignIn, { replace: true, state: undefined })
     } catch (err) {
       const {
         data: { message },
@@ -58,8 +63,6 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
       setFormErrors(Array.isArray(message) ? message : [message])
 
       console.error(err)
-    } finally {
-      setSubmitIsLoading(false)
     }
   }
 
@@ -69,57 +72,65 @@ export const ChangePasswordPopup: FC<ChangePasswordPopupProps> = ({ open, handle
   })
 
   return (
-    <Dialog fullWidth maxWidth="xs" open={open} scroll="body">
-      <DialogTitle>Update password</DialogTitle>
-      <DialogContent>
-        {formErrors && (
-          <Alert className="form-alert" severity="error">
-            <AlertTitle>Error</AlertTitle>
-            <ul>
-              {formErrors.map((error) => (
-                <li key={error}>{error}</li>
-              ))}
-            </ul>
-          </Alert>
-        )}
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            control={control}
-            defaultValue=""
-            name="currentPassword"
-            render={({ field }) => (
-              <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="Current password" />
-            )}
-            rules={validationRules.password}
-          />
-          <Controller
-            control={control}
-            defaultValue=""
-            name="newPassword"
-            render={({ field }) => (
-              <PasswordField
-                field={field}
-                fieldValidation={fieldValidation(field.name)}
-                label="New password"
-                showRules
-              />
-            )}
-            rules={validationRules.password}
-          />
-          <Grid container spacing={2}>
-            <Grid xs={6}>
-              <Button fullWidth onClick={handleClose} size="large" variant="outlined">
-                Cancel
-              </Button>
+    <>
+      <Dialog disableEscapeKeyDown fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
+        <DialogTitle>Update password</DialogTitle>
+        <DialogContent>
+          {formErrors && (
+            <Alert className="form-alert" severity="error">
+              <AlertTitle>Error</AlertTitle>
+              <ul>
+                {formErrors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            </Alert>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              control={control}
+              defaultValue=""
+              name="currentPassword"
+              render={({ field }) => (
+                <PasswordField field={field} fieldValidation={fieldValidation(field.name)} label="Current password" />
+              )}
+              rules={validationRules.password}
+            />
+            <Controller
+              control={control}
+              defaultValue=""
+              name="newPassword"
+              render={({ field }) => (
+                <PasswordField
+                  field={field}
+                  fieldValidation={fieldValidation(field.name)}
+                  label="New password"
+                  showRules
+                />
+              )}
+              rules={validationRules.password}
+            />
+            <Grid container spacing={2}>
+              <Grid xs={6}>
+                <Button fullWidth onClick={handleClose} size="large" variant="outlined">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid xs={6}>
+                <LoadingButton
+                  fullWidth
+                  loading={changePasswordIsLoading}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                >
+                  Update
+                </LoadingButton>
+              </Grid>
             </Grid>
-            <Grid xs={6}>
-              <LoadingButton fullWidth loading={submitIsLoading} size="large" type="submit" variant="contained">
-                Update
-              </LoadingButton>
-            </Grid>
-          </Grid>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
