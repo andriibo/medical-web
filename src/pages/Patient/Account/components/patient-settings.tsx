@@ -5,7 +5,7 @@ import { AccountLegal } from '~components/AccountLegal/account-legal'
 
 export const PatientSettings = () => {
   const [settings, setSettings] = useState({
-    inApp: true,
+    inApp: false,
     email: false,
   })
 
@@ -23,11 +23,11 @@ export const PatientSettings = () => {
       </Typography>
       <FormGroup>
         <FormControlLabel
-          control={<Switch checked={settings.inApp} name="inApp" onChange={handleChange} />}
+          control={<Switch checked={settings.inApp} disabled name="inApp" onChange={handleChange} />}
           label="In-App"
         />
         <FormControlLabel
-          control={<Switch checked={settings.email} name="email" onChange={handleChange} />}
+          control={<Switch checked={settings.email} disabled name="email" onChange={handleChange} />}
           label="Email"
         />
       </FormGroup>

@@ -70,8 +70,8 @@ export const Header = () => {
               </NavLink>
             ))}
       </nav>
-      <IconButton aria-label="cart" sx={{ mr: '1rem' }}>
-        <Badge badgeContent={3} color="primary">
+      <IconButton disabled sx={{ mr: '1rem' }}>
+        <Badge color="primary">
           <Notifications />
         </Badge>
       </IconButton>
