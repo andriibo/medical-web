@@ -1,5 +1,6 @@
 import { Gender } from '~/enums/gender.enum'
 import { PatientCategory } from '~/enums/patient-category'
+import { UserRoles } from '~/enums/user-roles.enum'
 import { Modify } from '~/types/modify.type'
 
 export interface IPatientProfile {
@@ -14,6 +15,7 @@ export interface IPatientProfile {
   height: number
   weight: number
   deletedAt: number
+  passwordUpdatedAt: number
 }
 
 export interface IUpdatePatientProfile {
@@ -38,11 +40,15 @@ export interface IUpdatePatientProfileForm
 export type UpdatePatientProfileKeys = keyof IUpdatePatientProfile
 
 export interface ICaregiverProfile {
-  avatar: string | null
+  userId: string
   email: string
   firstName: string
   lastName: string
   phone: string
+  avatar: string | null
+  role: UserRoles
+  deletedAt: number | null
+  passwordUpdatedAt: number
 }
 
 export interface IDoctorProfile extends ICaregiverProfile {
