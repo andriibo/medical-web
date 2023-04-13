@@ -48,9 +48,9 @@ export const NumberField: FC<NumberFieldProps> = ({
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value, validity } = e.currentTarget
 
-    const regexVar = digitsAfterDecimal ? new RegExp(`^\\d+(?<decimal>\\.\\d{0,${digitsAfterDecimal}})?$`) : /^\d+$/
+    const regex = digitsAfterDecimal ? new RegExp(`^\\d+(?<decimal>\\.\\d{0,${digitsAfterDecimal}})?$`) : /^\d+$/
 
-    if (!validity.badInput && (regexVar.test(value) || !value.length)) {
+    if (!validity.badInput && (regex.test(value) || !value.length)) {
       field.onChange(e)
     }
   }
@@ -75,8 +75,8 @@ export const NumberField: FC<NumberFieldProps> = ({
       error={fieldValidation.error}
       fullWidth
       helperText={helperText || fieldValidation.helperText}
-      onChange={(e) => onChange(e)}
-      onKeyDown={(e) => handleKeyDown(e)}
+      onChange={onChange}
+      onKeyDown={handleKeyDown}
       type="number"
       {...other}
     />
