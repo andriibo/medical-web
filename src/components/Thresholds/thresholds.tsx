@@ -38,9 +38,9 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
 
   const getSetByUser = useCallback((id: string | null) => users?.find((user) => user.userId === id) || null, [users])
 
-  const thresholdsList: IThresholdList[] | undefined = useMemo(() => {
+  const thresholdsList = useMemo(() => {
     if (threshold) {
-      return [
+      const result: IThresholdList[] = [
         {
           title: VitalType.hr,
           icon: iconHeartRate,
@@ -60,6 +60,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             max: threshold.maxTemp,
           },
           setBy: getSetByUser(threshold.tempSetBy),
+          fractionDigits: 1,
           units: '°C',
           onClick: () => setTemperaturePopupOpen(true),
         },
@@ -88,6 +89,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           icon: iconSaturation,
           values: {
             min: threshold.minSpo2,
+            max: 100,
           },
           setBy: getSetByUser(threshold.spo2SetBy),
           units: '%',
@@ -105,6 +107,8 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
           onClick: () => setRespirationRatePopupOpen(true),
         },
       ]
+
+      return result
     }
   }, [getSetByUser, threshold])
 

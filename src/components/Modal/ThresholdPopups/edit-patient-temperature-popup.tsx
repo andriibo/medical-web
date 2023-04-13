@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { Alert, AlertTitle, Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
@@ -111,6 +111,7 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Min"
+                    step={0.1}
                     validationProps={validationProps.temperature}
                   />
                 )}
@@ -126,6 +127,7 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Max"
+                    step={0.1}
                     validationProps={validationProps.temperature}
                   />
                 )}
