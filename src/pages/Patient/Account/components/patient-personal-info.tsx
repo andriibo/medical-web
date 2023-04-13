@@ -121,7 +121,7 @@ export const PatientPersonalInfo = () => {
             <li>
               <span className={styles.infoListLabel}>Password</span>
               <span className={styles.infoListText}>
-                Last updated on September 5, 2022
+                Last updated on {dayjs(patientData.passwordUpdatedAt * 1000).format('MMMM D, YYYY')}
                 <IconButton className={styles.infoListButton} onClick={handleChangePasswordPopupOpen} size="small">
                   <Edit fontSize="inherit" />
                 </IconButton>

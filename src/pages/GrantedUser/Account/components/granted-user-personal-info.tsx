@@ -1,6 +1,7 @@
 import { Edit } from '@mui/icons-material'
 import { Button, Chip, Divider, IconButton, Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
+import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 
 import { useUserRoles } from '~/hooks/use-user-roles'
@@ -144,7 +145,7 @@ export const GrantedUserPersonalInfo = () => {
             <li>
               <span className={styles.infoListLabel}>Password</span>
               <span className={styles.infoListText}>
-                Last updated on September 5, 2022
+                Last updated on {dayjs(userData.passwordUpdatedAt * 1000).format('MMMM D, YYYY')}
                 <IconButton className={styles.infoListButton} onClick={handleChangePasswordPopupOpen} size="small">
                   <Edit fontSize="inherit" />
                 </IconButton>
