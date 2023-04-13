@@ -46,6 +46,7 @@ export interface IThresholdList {
   values: IThresholdListValues | IThresholdListValues[]
   setBy: IUserModel | null
   units: string
+  fractionDigits?: number
   onClick?: () => void
 }
 

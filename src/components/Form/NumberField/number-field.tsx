@@ -1,6 +1,6 @@
 import { InputAdornment, TextField } from '@mui/material'
 import { InputProps as StandardInputProps } from '@mui/material/Input/Input'
-import React, { FC, KeyboardEvent } from 'react'
+import React, { ChangeEvent, FC, KeyboardEvent, useMemo } from 'react'
 import { ControllerRenderProps } from 'react-hook-form/dist/types/controller'
 
 import { ValidationPropsItemType } from '~/hooks/use-validation-rules'
@@ -12,36 +12,58 @@ interface NumberFieldProps {
     error: boolean
     helperText: string | boolean
   }
-  inputProps?: Partial<StandardInputProps>
+  InputProps?: Partial<StandardInputProps>
   validationProps?: ValidationPropsItemType
+  step?: number
   helperText?: string
 }
 
 export const NumberField: FC<NumberFieldProps> = ({
   field,
   fieldValidation,
-  inputProps,
+  InputProps,
+  step = 1,
   helperText,
   validationProps,
   ...other
 }) => {
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    const regex = /(?<numbers>^\d*$)|(?<actions>Backspace|Tab|Delete|ArrowLeft|ArrowRight)/
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const regex = /(?<numbers>^\d*$)|(?<actions>Backspace|Tab|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown|\.|,)/
 
     if (!event.key.match(regex)) {
       event.preventDefault()
     }
   }
 
+  const digitsAfterDecimal = useMemo(() => {
+    if (Number.isInteger(step)) {
+      return 0
+    }
+
+    const arr = step.toString().split('.')
+
+    return arr[1].length
+  }, [step])
+
+  const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value, validity } = e.currentTarget
+
+    const regex = digitsAfterDecimal ? new RegExp(`^\\d+(?<decimal>\\.\\d{0,${digitsAfterDecimal}})?$`) : /^\d+$/
+
+    if (!validity.badInput && (regex.test(value) || !value.length)) {
+      field.onChange(e)
+    }
+  }
+
   const inputPropsSettings: Partial<StandardInputProps> = {
-    ...inputProps,
+    ...InputProps,
     inputProps: {
       ...(validationProps && {
         min: validationProps.min,
         max: validationProps.max,
       }),
-      step: 1,
-      ...inputProps?.inputProps,
+      step,
+      ...InputProps?.inputProps,
     },
     ...(validationProps && { endAdornment: <InputAdornment position="end">{validationProps.unit}</InputAdornment> }),
   }
@@ -53,6 +75,7 @@ export const NumberField: FC<NumberFieldProps> = ({
       error={fieldValidation.error}
       fullWidth
       helperText={helperText || fieldValidation.helperText}
+      onChange={onChange}
       onKeyDown={handleKeyDown}
       type="number"
       {...other}

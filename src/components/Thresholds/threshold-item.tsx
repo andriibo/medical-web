@@ -10,19 +10,20 @@ import styles from './thresholds.module.scss'
 
 interface ThresholdInfoProps extends IThresholdListValues {
   units: string
+  fractionDigits?: number
 }
 
-const ThresholdInfo: FC<ThresholdInfoProps> = ({ title, min, max, units }) => (
+const ThresholdInfo: FC<ThresholdInfoProps> = ({ title, min, max, units, fractionDigits = 0 }) => (
   <ul className={styles.thresholdInfo}>
     {title && <li>{title}:</li>}
     <li>
       <span className={styles.thresholdInfoLabel}>Min</span>
-      <span className={styles.thresholdInfoValue}>{min}</span>
+      <span className={styles.thresholdInfoValue}>{min.toFixed(fractionDigits)}</span>
     </li>
     {max && (
       <li>
         <span className={styles.thresholdInfoLabel}>Max</span>
-        <span className={styles.thresholdInfoValue}>{max}</span>
+        <span className={styles.thresholdInfoValue}>{max.toFixed(fractionDigits)}</span>
       </li>
     )}
     <li className={styles.thresholdInfoMeasure}>{units}</li>
@@ -36,7 +37,7 @@ interface ThresholdItemProps {
 
 export const ThresholdItem: FC<ThresholdItemProps> = ({
   patientUserId,
-  threshold: { title, icon, className, values, units, setBy, onClick },
+  threshold: { title, icon, className, values, fractionDigits, units, setBy, onClick },
 }) => {
   const { isUserRoleDoctor } = useUserRoles()
 
@@ -69,11 +70,24 @@ export const ThresholdItem: FC<ThresholdItemProps> = ({
       {Array.isArray(values) ? (
         <div className={styles.thresholdInfoGroup}>
           {values.map(({ min, max, title }, index) => (
-            <ThresholdInfo key={index} max={max} min={min} title={title} units={units} />
+            <ThresholdInfo
+              fractionDigits={fractionDigits}
+              key={index}
+              max={max}
+              min={min}
+              title={title}
+              units={units}
+            />
           ))}
         </div>
       ) : (
-        <ThresholdInfo max={values.max} min={values.min} title={values.title} units={units} />
+        <ThresholdInfo
+          fractionDigits={fractionDigits}
+          max={values.max}
+          min={values.min}
+          title={values.title}
+          units={units}
+        />
       )}
     </div>
   )

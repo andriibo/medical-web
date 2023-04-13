@@ -111,6 +111,7 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Min"
+                    step={0.1}
                     validationProps={validationProps.temperature}
                   />
                 )}
@@ -126,6 +127,7 @@ export const EditPatientTemperaturePopup: FC<EditPatientTemperaturePopupProps> =
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Max"
+                    step={0.1}
                     validationProps={validationProps.temperature}
                   />
                 )}
