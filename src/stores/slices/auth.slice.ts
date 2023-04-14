@@ -38,6 +38,9 @@ const authSlice = createSlice({
     setToken: (state, { payload }: PayloadAction<IAuthData>) => {
       state.data.accessToken = payload.accessToken
     },
+    setUserData: (state, { payload }: PayloadAction<IAuthData>) => {
+      state.data = payload
+    },
     setUser: (state, { payload }: PayloadAction<IUserModel>) => {
       state.data.user = payload
     },
@@ -71,7 +74,7 @@ const selectIsAuth = (state: RootState) => Boolean(state.auth.data.accessToken)
 const selectUserRole = (state: RootState) => state.auth.data.user.role
 const selectUserId = (state: RootState) => state.auth.data.user.userId
 const selectUserEmail = (state: RootState) => state.auth.data.user.email
-const selectToken = (state: RootState) => state.auth.data.accessToken
+const selectAccessToken = (state: RootState) => state.auth.data.accessToken
 const selectUserDeletedAt = (state: RootState) => state.auth.data.user.deletedAt
 const selectUser = (state: RootState) => state.auth.data.user
 const selectHasEmergencyContacts = (state: RootState) => state.auth.hasEmergencyContacts
@@ -80,12 +83,21 @@ export const useIsAuth = () => useAppSelector(selectIsAuth)
 export const useUserRole = () => useAppSelector(selectUserRole)
 export const useUserId = () => useAppSelector(selectUserId)
 export const useUserEmail = () => useAppSelector(selectUserEmail)
-export const useToken = () => useAppSelector(selectToken)
+export const useToken = () => useAppSelector(selectAccessToken)
 export const useUserDeletedAt = () => useAppSelector(selectUserDeletedAt)
 export const useUser = () => useAppSelector(selectUser)
 export const useHasEmergencyContacts = () => useAppSelector(selectHasEmergencyContacts)
 
 export const {
   reducer: authReducer,
-  actions: { setToken, setUser, setUserAvatar, setUserName, setHasEmergencyContacts, signInSuccess, clearPersist },
+  actions: {
+    setToken,
+    setUser,
+    setUserData,
+    setUserAvatar,
+    setUserName,
+    setHasEmergencyContacts,
+    signInSuccess,
+    clearPersist,
+  },
 } = authSlice
