@@ -31,10 +31,21 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
     rr: [],
   }
 
+  let theFirstIteration = true
+
   for (let currentInterval = start; currentInterval <= end; currentInterval += interval) {
+    if (theFirstIteration) {
+      currentInterval -= 1
+    }
+
     const filteredByInterval = vitals.filter(
-      (vital) => currentInterval <= vital.timestamp && vital.timestamp <= currentInterval + interval,
+      (vital) => currentInterval < vital.timestamp && vital.timestamp <= currentInterval + interval,
     )
+
+    if (theFirstIteration) {
+      currentInterval += 1
+      theFirstIteration = false
+    }
 
     if (filteredByInterval.length) {
       temporaryArray.push(filteredByInterval)

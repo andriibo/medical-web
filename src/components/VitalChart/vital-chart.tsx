@@ -73,17 +73,64 @@ export const VitalChart: FC<VitalChartProps> = ({
     [maxThreshold, minThreshold, thresholds],
   )
 
+  const minMaxValue = useMemo(() => {
+    const vitalsValues = vitals.map((item) => item.value)
+    const offsetPercent = 10
+
+    let max = Math.max(...vitalsValues)
+    let min = Math.min(...vitalsValues)
+    const difference = max - min
+
+    if (difference === 0) {
+      min -= 1
+      max += 1
+    }
+
+    if (difference < 1) {
+      min -= (difference / 100) * offsetPercent
+      max += (difference / 100) * offsetPercent
+    }
+
+    return { min, max }
+  }, [vitals])
+
+  const minMaxDomain = useMemo((): [number, number] => {
+    let { min, max } = minMaxValue
+
+    const thresholdsMinValues = thresholds.map((threshold) => threshold[minThreshold])
+    const thresholdsMaxValues = maxThreshold ? thresholds.map((threshold) => threshold[maxThreshold]) : 0
+    const stdMinValues = vitals.map((item) => item.minStd)
+    const stdMaxValues = vitals.map((item) => item.maxStd)
+
+    if (settings.abnormalValues) {
+      min = Math.min(min, ...thresholdsMinValues)
+
+      if (thresholdsMaxValues) {
+        max = Math.max(max, ...thresholdsMaxValues, ...thresholdsMinValues)
+      } else {
+        max = Math.max(max, ...thresholdsMinValues)
+      }
+    }
+
+    if (settings.variance) {
+      min = Math.min(min, ...stdMinValues)
+      max = Math.max(max, ...stdMaxValues)
+    }
+
+    return [min, max]
+  }, [maxThreshold, minMaxValue, minThreshold, settings.abnormalValues, settings.variance, thresholds, vitals])
+
   return (
     <>
       <VictoryChart
         containerComponent={<VictoryContainer responsive={false} />}
-        domain={{ x: [startDate, endDate] }}
+        domain={{ x: [startDate, endDate], y: minMaxDomain }}
         domainPadding={{ y: [30, 30] }}
         height={500}
         padding={{
           left: 60,
           bottom: 50,
-          right: 5,
+          right: 15,
           top: 10,
         }}
         theme={VictoryTheme.material}

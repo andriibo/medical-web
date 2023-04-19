@@ -214,7 +214,14 @@
       }
     ],
     "no-unneeded-ternary": "warn",
-    "no-mixed-operators": "warn",
+    "no-mixed-operators": ["warn",  {
+      "groups": [
+        ["&", "|", "^", "~", "<<", ">>", ">>>"],
+        ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+        ["&&", "||"],
+        ["in", "instanceof"]
+      ]
+    }],
     "brace-style": ["warn", "1tbs"],
     "no-else-return": "warn",
     "spaced-comment": "warn",
