@@ -23,6 +23,7 @@ import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VitalChart } from '~components/VitalChart/vital-chart'
 import { TIME_PERIOD, VITAL_SETTINGS as VitalSettings } from '~constants/constants'
+import { resetSeconds } from '~helpers/date-helper'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getVitalsByPeriod } from '~helpers/get-vitals-by-period'
 import { IThresholds } from '~models/threshold.model'
@@ -269,10 +270,15 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                     inputFormat="MM/DD hh:mm A"
                     maxDateTime={dayjs().subtract(1, 'hour')}
                     minDateTime={dayjs().subtract(1, 'month')}
-                    onAccept={(newValue) => {
+                    onAccept={(value) => {
+                      const newValue = resetSeconds(value)
+
                       setRangeStartDate(newValue)
                       if (newValue && rangeTempEndDate && newValue > rangeTempEndDate) {
-                        setRangeTempEndDate(dayjs(newValue).add(2, 'hours'))
+                        const newEndDate = dayjs(newValue).add(2, 'hours')
+
+                        setRangeTempEndDate(newEndDate)
+                        setRangeEndDate(newEndDate)
                         setEndDateOpen(true)
                       }
                     }}
@@ -307,7 +313,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                     maxDate={dayjs()}
                     minDateTime={dayjs(rangeStartDate).add(1, 'hour')}
                     onAccept={(newValue) => {
-                      setRangeEndDate(newValue)
+                      setRangeEndDate(resetSeconds(newValue))
                     }}
                     onChange={(newValue) => {
                       setRangeTempEndDate(newValue)
