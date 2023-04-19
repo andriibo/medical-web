@@ -120,6 +120,23 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
             },
           },
           {
+            ...getVitalSettings('bp'),
+            value: 0,
+            isNormal: true,
+            threshold: [
+              {
+                title: 'DBP',
+                min: currentThresholds?.minDbp,
+                max: currentThresholds?.maxDbp,
+              },
+              {
+                title: 'SBP',
+                min: currentThresholds?.minSbp,
+                max: currentThresholds?.maxSbp,
+              },
+            ],
+          },
+          {
             ...getVitalSettings('fall'),
             value: vital.fall,
           },
@@ -201,7 +218,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
       </Typography>
       <div className={styles.vitalContainer}>
         {vital.items.map((vitalItem, index) =>
-          vitalItem.title === VitalType.fall ? (
+          vitalItem.title === VitalType.fall || vitalItem.title === VitalType.bp ? (
             <VitalHistoryItem key={index} vital={vitalItem} />
           ) : (
             <VitalHistoryItem

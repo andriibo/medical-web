@@ -58,10 +58,13 @@ export interface IVitalsHistoryCardItems {
   icon: string
   units: VitalUnits
   type: VitalTypeKeys
-  threshold?: {
-    min?: number
-    max?: number
-  }
+  threshold?: IVitalsHistoryCardThreshold | IVitalsHistoryCardThreshold[]
+}
+
+export interface IVitalsHistoryCardThreshold {
+  min?: number
+  max?: number
+  title?: string
 }
 
 export interface IVitalChart {

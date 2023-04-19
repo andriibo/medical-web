@@ -51,17 +51,27 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
         </div>
       )}
       <ul className={styles.thresholdInfo}>
-        {threshold?.min && (
-          <li>
-            <span className={styles.thresholdInfoLabel}>Min</span>
-            {threshold.min}
-          </li>
-        )}
-        {threshold?.max && (
-          <li>
-            <span className={styles.thresholdInfoLabel}>Max</span>
-            {threshold.max}
-          </li>
+        {Array.isArray(threshold) ? (
+          threshold.map(({ min, max, title }) => (
+            <li key={title}>
+              <span>{title}</span> {min} / {max}
+            </li>
+          ))
+        ) : (
+          <>
+            {threshold?.min && (
+              <li>
+                <span className={styles.thresholdInfoLabel}>Min</span>
+                {threshold.min}
+              </li>
+            )}
+            {threshold?.max && (
+              <li>
+                <span className={styles.thresholdInfoLabel}>Max</span>
+                {threshold.max}
+              </li>
+            )}
+          </>
         )}
       </ul>
     </Box>

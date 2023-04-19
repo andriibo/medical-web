@@ -12,8 +12,8 @@ export enum VitalUnits {
   spo2 = '%',
   rr = 'rpm',
   temp = '°C',
+  bp = 'mmHg',
   fall = '',
-  bp = '',
 }
 
 export enum VitalsChartTab {

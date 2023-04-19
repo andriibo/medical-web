@@ -61,10 +61,12 @@ button.vitalItem {
 .vitalHeaderText {
   flex: 1;
   min-width: 0;
+  margin: auto 0;
 
   :global {
     .MuiTypography-body1 {
       opacity: 0.87;
+      color: #000;
     }
 
     .MuiTypography-body2 {
