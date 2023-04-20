@@ -13,7 +13,7 @@ interface VitalItemProps {
 }
 
 export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'div' }) => {
-  const { isNormal, title, value, threshold, units, icon } = vital
+  const { isNormal, title, value, threshold, units, icon, type } = vital
 
   const isFall = useMemo(() => title === VitalType.fall, [title])
 
@@ -50,20 +50,36 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
           <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
         </div>
       )}
-      <ul className={styles.thresholdInfo}>
-        {threshold?.min && (
-          <li>
-            <span className={styles.thresholdInfoLabel}>Min</span>
-            {threshold.min}
-          </li>
-        )}
-        {threshold?.max && (
-          <li>
-            <span className={styles.thresholdInfoLabel}>Max</span>
-            {threshold.max}
-          </li>
-        )}
-      </ul>
+      {threshold && (
+        <ul className={styles.thresholdInfo}>
+          {threshold.map(({ min, max, title }, index) => {
+            if (type === 'bp') {
+              return (
+                <li key={index}>
+                  <span>{title}</span> {min} / {max}
+                </li>
+              )
+            }
+
+            return (
+              <>
+                {min && (
+                  <li>
+                    <span className={styles.thresholdInfoLabel}>Min</span>
+                    {min}
+                  </li>
+                )}
+                {max && (
+                  <li>
+                    <span className={styles.thresholdInfoLabel}>Max</span>
+                    {max}
+                  </li>
+                )}
+              </>
+            )
+          })}
+        </ul>
+      )}
     </Box>
   )
 }

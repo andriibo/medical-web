@@ -4,8 +4,7 @@ body {
   margin: 0;
   background: #f0f2f5;
   color: #333;
-  font: 1rem/1.3 Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
+  font: 1rem/1.3 var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   word-wrap: break-word;
@@ -16,6 +15,7 @@ body {
 }
 
 button {
+  font-family: var(--font-family);
   font-size: 100%;
 }
 
