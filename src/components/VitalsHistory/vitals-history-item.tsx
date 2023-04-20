@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material'
-import React, { FC, useMemo } from 'react'
+import React, { FC, Fragment, useMemo } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
 import { IVitalsHistoryCardItems } from '~models/vital.model'
@@ -62,7 +62,7 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
             }
 
             return (
-              <>
+              <Fragment key={index}>
                 {min && (
                   <li>
                     <span className={styles.thresholdInfoLabel}>Min</span>
@@ -75,7 +75,7 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
                     {max}
                   </li>
                 )}
-              </>
+              </Fragment>
             )
           })}
         </ul>
