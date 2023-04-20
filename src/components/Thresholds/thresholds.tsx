@@ -124,7 +124,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
     <>
       {patientUserId && threshold.isPending && (
         <Alert severity="warning" sx={{ mb: 2 }}>
-          The latest threshold changes will be applied when the patient establishes internet connection to the server
+          The latest threshold changes will be applied when the patient establishes internet connection to the server.
         </Alert>
       )}
       <div className={`${styles.vitalContainer} ${patientUserId ? styles.vitalContainerAlt : ''}`}>
