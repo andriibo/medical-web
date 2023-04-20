@@ -88,53 +88,71 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
             ...getVitalSettings('hr'),
             value: vital.hr,
             isNormal: vital.isHrNormal,
-            threshold: {
-              min: currentThresholds?.minHr,
-              max: currentThresholds?.maxHr,
-            },
+            ...(currentThresholds && {
+              threshold: [
+                {
+                  min: currentThresholds.minHr,
+                  max: currentThresholds.maxHr,
+                },
+              ],
+            }),
           },
           {
             ...getVitalSettings('temp'),
             value: vital.temp,
             isNormal: vital.isTempNormal,
-            threshold: {
-              min: currentThresholds?.minTemp,
-              max: currentThresholds?.maxTemp,
-            },
+            ...(currentThresholds && {
+              threshold: [
+                {
+                  min: currentThresholds.minTemp,
+                  max: currentThresholds.maxTemp,
+                },
+              ],
+            }),
           },
           {
             ...getVitalSettings('spo2'),
             value: vital.spo2,
             isNormal: vital.isSpo2Normal,
-            threshold: {
-              min: currentThresholds?.minSpo2,
-            },
+            ...(currentThresholds && {
+              threshold: [
+                {
+                  min: currentThresholds.minSpo2,
+                },
+              ],
+            }),
           },
           {
             ...getVitalSettings('rr'),
             value: vital.rr,
             isNormal: vital.isRrNormal,
-            threshold: {
-              min: currentThresholds?.minRr,
-              max: currentThresholds?.maxRr,
-            },
+            ...(currentThresholds && {
+              threshold: [
+                {
+                  min: currentThresholds.minRr,
+                  max: currentThresholds.maxRr,
+                },
+              ],
+            }),
           },
           {
             ...getVitalSettings('bp'),
             value: 0,
             isNormal: true,
-            threshold: [
-              {
-                title: 'DBP',
-                min: currentThresholds?.minDbp,
-                max: currentThresholds?.maxDbp,
-              },
-              {
-                title: 'SBP',
-                min: currentThresholds?.minSbp,
-                max: currentThresholds?.maxSbp,
-              },
-            ],
+            ...(currentThresholds && {
+              threshold: [
+                {
+                  title: 'DBP',
+                  min: currentThresholds.minDbp,
+                  max: currentThresholds.maxDbp,
+                },
+                {
+                  title: 'SBP',
+                  min: currentThresholds.minSbp,
+                  max: currentThresholds.maxSbp,
+                },
+              ],
+            }),
           },
           {
             ...getVitalSettings('fall'),
