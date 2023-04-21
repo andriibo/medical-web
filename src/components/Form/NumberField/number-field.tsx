@@ -45,6 +45,14 @@ export const NumberField: FC<NumberFieldProps> = ({
     return arr[1].length
   }, [step])
 
+  const getField = useMemo(() => {
+    if (Number.isInteger(field.value) && digitsAfterDecimal) {
+      return Number(field.value).toFixed(digitsAfterDecimal)
+    }
+
+    return field.value
+  }, [field.value, digitsAfterDecimal])
+
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { value, validity } = e.currentTarget
 
@@ -53,6 +61,16 @@ export const NumberField: FC<NumberFieldProps> = ({
     if (!validity.badInput && (regex.test(value) || !value.length)) {
       field.onChange(e)
     }
+  }
+
+  const onBlur = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value } = e.currentTarget
+
+    if (Number.isInteger(Number(value)) && digitsAfterDecimal) {
+      field.onChange(Number(value).toFixed(digitsAfterDecimal))
+    }
+
+    return value
   }
 
   const inputPropsSettings: Partial<StandardInputProps> = {
@@ -69,16 +87,20 @@ export const NumberField: FC<NumberFieldProps> = ({
   }
 
   return (
-    <TextField
-      {...field}
-      InputProps={inputPropsSettings}
-      error={fieldValidation.error}
-      fullWidth
-      helperText={helperText || fieldValidation.helperText}
-      onChange={onChange}
-      onKeyDown={handleKeyDown}
-      type="number"
-      {...other}
-    />
+    <>
+      <TextField
+        {...field}
+        InputProps={inputPropsSettings}
+        error={fieldValidation.error}
+        fullWidth
+        helperText={helperText || fieldValidation.helperText}
+        onBlur={onBlur}
+        onChange={onChange}
+        onKeyDown={handleKeyDown}
+        type="number"
+        value={getField}
+        {...other}
+      />
+    </>
   )
 }
