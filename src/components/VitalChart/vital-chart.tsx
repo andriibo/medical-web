@@ -24,6 +24,15 @@ const FlyoutComponent = ({ x, y, datum, style, units }: any) => (
   </g>
 )
 
+const colors = {
+  primary: '#42a5f5',
+  success: '#52b202',
+  danger: '#ff1744',
+  secondary: '#dfdfdf',
+}
+
+const lineInterpolation = 'monotoneX'
+
 interface VitalChartProps {
   activeVitalsType: VitalsChartTabKeys
   vitals: IVitalChartModel[]
@@ -139,8 +148,8 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryArea
             data={vitals}
-            interpolation="linear"
-            style={{ data: { stroke: '#dfdfdf', strokeWidth: '2', fill: 'rgb(209 209 209 / 20%)' } }}
+            interpolation={lineInterpolation}
+            style={{ data: { stroke: colors.secondary, strokeWidth: '2', fill: 'rgb(209 209 209 / 20%)' } }}
             x="timestamp"
             y="maxStd"
             y0="minStd"
@@ -149,9 +158,9 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryLine
             data={vitals}
-            interpolation="linear"
+            interpolation={lineInterpolation}
             style={{
-              data: { stroke: '#dfdfdf' },
+              data: { stroke: colors.secondary },
             }}
             x="timestamp"
             y="minStd"
@@ -170,7 +179,7 @@ export const VitalChart: FC<VitalChartProps> = ({
           <VictoryLine
             data={thresholds}
             interpolation="stepAfter"
-            style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
+            style={{ data: { stroke: colors.danger, strokeDasharray: 5, strokeWidth: 1 } }}
             x="createdAt"
             y={minThreshold}
           />
@@ -179,17 +188,17 @@ export const VitalChart: FC<VitalChartProps> = ({
           <VictoryLine
             data={thresholds}
             interpolation="stepAfter"
-            style={{ data: { stroke: '#ff1744', strokeDasharray: 5, strokeWidth: 1 } }}
+            style={{ data: { stroke: colors.danger, strokeDasharray: 5, strokeWidth: 1 } }}
             x="createdAt"
             y={maxThreshold}
           />
         )}
         <VictoryLine
           data={vitals}
-          interpolation="linear"
+          interpolation={lineInterpolation}
           standalone={false}
           style={{
-            data: { stroke: '#42a5f5' },
+            data: { stroke: colors.primary },
           }}
           x="timestamp"
           y="value"
@@ -201,7 +210,7 @@ export const VitalChart: FC<VitalChartProps> = ({
               flyoutComponent={<FlyoutComponent units={VITAL_SETTINGS[activeVitalsType].units} />}
               flyoutStyle={{
                 backgroundColor: ({ datum }) =>
-                  settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#42a5f5',
+                  settings.abnormalValues && isAbnormal(datum._x, datum._y) ? colors.danger : colors.success,
                 strokeWidth: 0,
                 fontSize: '13px',
                 lineHeight: '1',
@@ -217,7 +226,8 @@ export const VitalChart: FC<VitalChartProps> = ({
           standalone={false}
           style={{
             data: {
-              fill: ({ datum }) => (settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '#ff1744' : '#1976D2'),
+              fill: ({ datum }) =>
+                settings.abnormalValues && isAbnormal(datum._x, datum._y) ? colors.danger : colors.success,
               stroke: '#fff',
               strokeWidth: ({ datum }) => (settings.abnormalValues && isAbnormal(datum._x, datum._y) ? '3px' : '2px'),
             },
