@@ -31,7 +31,7 @@ const colors = {
   secondary: '#dfdfdf',
 }
 
-const lineInterpolation = 'monotoneX'
+const interpolation = 'monotoneX'
 
 interface VitalChartProps {
   activeVitalsType: VitalsChartTabKeys
@@ -148,7 +148,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryArea
             data={vitals}
-            interpolation={lineInterpolation}
+            interpolation={interpolation}
             style={{ data: { stroke: colors.secondary, strokeWidth: '2', fill: 'rgb(209 209 209 / 20%)' } }}
             x="timestamp"
             y="maxStd"
@@ -158,7 +158,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         {settings.variance && (
           <VictoryLine
             data={vitals}
-            interpolation={lineInterpolation}
+            interpolation={interpolation}
             style={{
               data: { stroke: colors.secondary },
             }}
@@ -195,7 +195,7 @@ export const VitalChart: FC<VitalChartProps> = ({
         )}
         <VictoryLine
           data={vitals}
-          interpolation={lineInterpolation}
+          interpolation={interpolation}
           standalone={false}
           style={{
             data: { stroke: colors.primary },
