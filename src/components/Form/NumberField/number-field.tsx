@@ -27,7 +27,7 @@ export const NumberField: FC<NumberFieldProps> = ({
   validationProps,
   ...other
 }) => {
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const regex = /(?<numbers>^\d*$)|(?<actions>Backspace|Tab|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown|\.|,)/
 
     if (!event.key.match(regex)) {
@@ -45,7 +45,7 @@ export const NumberField: FC<NumberFieldProps> = ({
     return arr[1].length
   }, [step])
 
-  const getField = useMemo(() => {
+  const getValue = useMemo(() => {
     if (Number.isInteger(field.value) && digitsAfterDecimal) {
       return Number(field.value).toFixed(digitsAfterDecimal)
     }
@@ -69,8 +69,6 @@ export const NumberField: FC<NumberFieldProps> = ({
     if (Number.isInteger(Number(value)) && digitsAfterDecimal) {
       field.onChange(Number(value).toFixed(digitsAfterDecimal))
     }
-
-    return value
   }
 
   const inputPropsSettings: Partial<StandardInputProps> = {
@@ -87,20 +85,18 @@ export const NumberField: FC<NumberFieldProps> = ({
   }
 
   return (
-    <>
-      <TextField
-        {...field}
-        InputProps={inputPropsSettings}
-        error={fieldValidation.error}
-        fullWidth
-        helperText={helperText || fieldValidation.helperText}
-        onBlur={onBlur}
-        onChange={onChange}
-        onKeyDown={handleKeyDown}
-        type="number"
-        value={getField}
-        {...other}
-      />
-    </>
+    <TextField
+      {...field}
+      InputProps={inputPropsSettings}
+      error={fieldValidation.error}
+      fullWidth
+      helperText={helperText || fieldValidation.helperText}
+      onBlur={onBlur}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      type="number"
+      value={getValue}
+      {...other}
+    />
   )
 }
