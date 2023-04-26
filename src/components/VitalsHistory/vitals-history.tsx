@@ -217,20 +217,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     }
   }, [filteredTypes, preparedVitals, dateRange, historySort])
 
-  // useEffect(() => {
-  //   if (filteredVitals && historySort) {
-  //     console.log(historySort)
-  //
-  //     filteredVitals.sort((a, b) => {
-  //       if (historySort === 'recent') {
-  //         return a.timestamp - b.timestamp
-  //       }
-  //
-  //       return b.timestamp - a.timestamp
-  //     })
-  //   }
-  // }, [filteredVitals, historySort])
-
   useEffect(() => {
     setHistoryIsLoading(false)
   }, [filteredVitals])
