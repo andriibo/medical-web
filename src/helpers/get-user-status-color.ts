@@ -1,4 +1,4 @@
-import { PatientCategory } from '~/enums/patient-category'
+import { PatientCategory } from '~/enums/patient-category.enum'
 
 type Statuses = 'success' | 'error' | 'warning'
 

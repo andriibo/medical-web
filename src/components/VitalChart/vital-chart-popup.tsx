@@ -19,7 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
-import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period'
+import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VitalChart } from '~components/VitalChart/vital-chart'
 import { TIME_PERIOD, VITAL_SETTINGS as VitalSettings } from '~constants/constants'

@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-import { LegalPages } from '~/enums/legal-pages'
+import { LegalPages } from '~/enums/legal-pages.enum'
 import { LegalPopup } from '~components/Modal/LegalPopup/legal-popup'
 
 export const SignUpLegal = () => {
