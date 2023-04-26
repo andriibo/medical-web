@@ -11,7 +11,7 @@ interface VitalHistorySortingProps {
   handleSort: (value: VitalOrderKeys) => void
 }
 
-export const VitalHistorySorting: FC<VitalHistorySortingProps> = ({ sort, handleSort }) => {
+export const VitalsHistorySorting: FC<VitalHistorySortingProps> = ({ sort, handleSort }) => {
   const [historySort, setHistorySort] = useState<VitalOrderKeys>(sort)
   const [dropClose, setDropClose] = useState(false)
 

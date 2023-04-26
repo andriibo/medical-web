@@ -7,7 +7,7 @@ import { VitalsTab } from '~/enums/vitals-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
 import { Vitals } from '~components/Vitals/vitals'
-import { VitalHistorySorting } from '~components/VitalsHistory/vital-history-sorting'
+import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
 
 export const PatientVitals = () => {
@@ -30,7 +30,7 @@ export const PatientVitals = () => {
         </Grid>
         {isHistory && (
           <Grid>
-            <VitalHistorySorting handleSort={setHistorySort} sort={historySort} />
+            <VitalsHistorySorting handleSort={setHistorySort} sort={historySort} />
           </Grid>
         )}
         <Grid>

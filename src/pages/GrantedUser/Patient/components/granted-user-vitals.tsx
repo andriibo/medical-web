@@ -6,7 +6,7 @@ import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { VitalsTab } from '~/enums/vitals-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Vitals } from '~components/Vitals/vitals'
-import { VitalHistorySorting } from '~components/VitalsHistory/vital-history-sorting'
+import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
 
 interface GrantedUserVitalsProps {
@@ -33,7 +33,7 @@ export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId })
         </Grid>
         {isHistory && (
           <Grid>
-            <VitalHistorySorting handleSort={setHistorySort} sort={historySort} />
+            <VitalsHistorySorting handleSort={setHistorySort} sort={historySort} />
           </Grid>
         )}
         <Grid>
