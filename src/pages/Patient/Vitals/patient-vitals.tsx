@@ -12,7 +12,7 @@ import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-s
 
 export const PatientVitals = () => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
-  const [historySort, setHistorySort] = useState<VitalOrderKeys>('oldest')
+  const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
 
   const isHistory = useMemo(() => activeTab === VitalsTab.history, [activeTab])
 
