@@ -6,8 +6,8 @@ import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { VitalsTab } from '~/enums/vitals-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Vitals } from '~components/Vitals/vitals'
-import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
+import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 
 interface GrantedUserVitalsProps {
   patientUserId: string

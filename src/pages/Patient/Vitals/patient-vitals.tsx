@@ -7,8 +7,8 @@ import { VitalsTab } from '~/enums/vitals-tab.enum'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
 import { Vitals } from '~components/Vitals/vitals'
-import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
+import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 
 export const PatientVitals = () => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
