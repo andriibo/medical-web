@@ -1,6 +1,6 @@
 import { ManipulateType } from 'dayjs'
 
-import { VitalPeriodKeys } from '~/enums/vital-period'
+import { VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTabKeys, VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
 import iconBloodPressure from '~images/icon-blood-pressure.png'
 import iconFall from '~images/icon-fall.svg'

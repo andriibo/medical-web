@@ -2,7 +2,7 @@ import { ChevronRight } from '@mui/icons-material'
 import { List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-import { LegalPages } from '~/enums/legal-pages'
+import { LegalPages } from '~/enums/legal-pages.enum'
 import { LegalPopup } from '~components/Modal/LegalPopup/legal-popup'
 import { getObjectKeys } from '~helpers/get-object-keys'
 

@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent } from '@mui/material'
 import React, { FC } from 'react'
 
-import { LegalPages } from '~/enums/legal-pages'
+import { LegalPages } from '~/enums/legal-pages.enum'
 import { CookiesPolicy } from '~pages/StaticPages/cookies-policy'
 import { PrivacyPolicy } from '~pages/StaticPages/privacy-policy'
 import { TermsAndConditions } from '~pages/StaticPages/terms-and-conditions'

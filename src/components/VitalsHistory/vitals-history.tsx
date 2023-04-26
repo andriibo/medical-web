@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
+import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
@@ -25,9 +26,10 @@ interface IDateRange {
 
 interface VitalsHistoryProps {
   patientUserId?: string
+  historySort?: VitalOrderKeys
 }
 
-export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
+export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySort }) => {
   const startDate = useMemo(() => dayjs().subtract(30, 'days').toISOString(), [])
   const endDate = useMemo(() => dayjs().toISOString(), [])
   const [dateRange, setDateRange] = useState<IDateRange>({
@@ -184,6 +186,16 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
       setHistoryIsLoading(true)
       const { all, hr, spo2, rr, temp } = filteredTypes
 
+      if (historySort) {
+        preparedVitals.sort((a, b) => {
+          if (historySort === 'recent') {
+            return b.timestamp - a.timestamp
+          }
+
+          return a.timestamp - b.timestamp
+        })
+      }
+
       const dateFilteredVitals = preparedVitals.filter(
         ({ timestamp }) => timestamp >= dateRange.start && timestamp <= dateRange.end,
       )
@@ -203,7 +215,21 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId }) => {
       setFilteredVitals(filtered)
       setHistoryIsLoading(false)
     }
-  }, [filteredTypes, preparedVitals, dateRange])
+  }, [filteredTypes, preparedVitals, dateRange, historySort])
+
+  // useEffect(() => {
+  //   if (filteredVitals && historySort) {
+  //     console.log(historySort)
+  //
+  //     filteredVitals.sort((a, b) => {
+  //       if (historySort === 'recent') {
+  //         return a.timestamp - b.timestamp
+  //       }
+  //
+  //       return b.timestamp - a.timestamp
+  //     })
+  //   }
+  // }, [filteredVitals, historySort])
 
   useEffect(() => {
     setHistoryIsLoading(false)

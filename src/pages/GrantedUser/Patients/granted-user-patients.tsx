@@ -3,7 +3,7 @@ import { Button, List, ListItem, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useEffect, useState } from 'react'
 
-import { PatientCategory } from '~/enums/patient-category'
+import { PatientCategory } from '~/enums/patient-category.enum'
 import { InvitePatientPopup } from '~components/Modal/InvitePatientPopup/invite-patient-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { sortByName } from '~helpers/sort-by-name'

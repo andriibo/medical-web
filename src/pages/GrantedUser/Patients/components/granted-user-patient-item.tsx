@@ -4,7 +4,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { PatientCategory } from '~/enums/patient-category'
+import { PatientCategory } from '~/enums/patient-category.enum'
 import { useDeletePatient } from '~/hooks/use-delete-patient'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { LastConnected } from '~components/LastConnected/last-connected'

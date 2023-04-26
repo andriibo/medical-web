@@ -1,5 +1,5 @@
 import { Gender } from '~/enums/gender.enum'
-import { PatientCategory } from '~/enums/patient-category'
+import { PatientCategory } from '~/enums/patient-category.enum'
 import { UserRoles } from '~/enums/user-roles.enum'
 import { Modify } from '~/types/modify.type'
 
