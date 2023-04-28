@@ -1,6 +1,6 @@
 export enum VitalType {
   hr = 'Heart Rate',
-  spo2 = 'Oxygen Saturation',
+  spo2 = 'O2 Saturation',
   rr = 'Respiration Rate',
   temp = 'Temperature',
   fall = 'FALL',
