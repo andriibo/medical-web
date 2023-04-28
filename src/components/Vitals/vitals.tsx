@@ -10,6 +10,7 @@ import { VitalItem } from '~components/Vitals/vital-item'
 import { getVitalSettings } from '~helpers/get-vital-settings'
 import { IVitalsCard } from '~models/vital.model'
 import { useSocket } from '~stores/hooks'
+import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
 import { useUserId } from '~stores/slices/auth.slice'
 
 type SocketVitalsData = {
@@ -18,7 +19,7 @@ type SocketVitalsData = {
   spo: number | null
   rr: number | null
   bp: number | null
-  fall: number | null
+  fall: boolean | null
 }
 
 interface VitalsProps {
@@ -49,6 +50,8 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
   const updatingTimeout = useRef<any>()
 
   const { threshold } = useThresholds({ patientUserId })
+
+  const { data: vitalsAbsolute } = useGetVitalsAbsoluteQuery()
 
   const [vitals, setVitals] = useState<SocketVitalsData>({
     hr: null,
@@ -143,6 +146,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
           min: threshold?.minHr,
           max: threshold?.maxHr,
         },
+        limits: {
+          floor: vitalsAbsolute?.minHr,
+          ceiling: vitalsAbsolute?.maxHr,
+        },
       },
       {
         ...getVitalSettings('temp'),
@@ -152,6 +159,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
           min: threshold?.minTemp,
           max: threshold?.maxTemp,
         },
+        limits: {
+          floor: vitalsAbsolute?.minTemp,
+          ceiling: vitalsAbsolute?.maxTemp,
+        },
       },
       {
         ...getVitalSettings('spo2'),
@@ -159,6 +170,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         value: vitals.spo,
         thresholds: {
           min: threshold?.minSpo2,
+        },
+        limits: {
+          floor: vitalsAbsolute?.minSpo2,
+          ceiling: vitalsAbsolute?.maxSpo2,
         },
       },
       {
@@ -168,6 +183,10 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
         thresholds: {
           min: threshold?.minRr,
           max: threshold?.maxRr,
+        },
+        limits: {
+          floor: vitalsAbsolute?.minRr,
+          ceiling: vitalsAbsolute?.maxRr,
         },
       },
       {
@@ -183,7 +202,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
     ]
 
     return result
-  }, [vitals, threshold])
+  }, [vitals, threshold, vitalsAbsolute])
 
   useEffect(() => {
     setToggleVitals((prev) => !prev)

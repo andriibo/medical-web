@@ -13,7 +13,7 @@ interface VitalItemProps {
 }
 
 export const VitalItem: FC<VitalItemProps> = ({
-  vital: { title, value, units, icon, thresholds },
+  vital: { title, value, units, icon, thresholds, limits },
   toggleVitals,
   onClick,
   tag = 'div',
@@ -25,6 +25,41 @@ export const VitalItem: FC<VitalItemProps> = ({
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
   )
+
+  const getValue = useMemo(() => {
+    if (!value) return '-'
+
+    if (typeof value === 'boolean') {
+      return value ? 'Yes' : 'No'
+    }
+
+    if (limits?.floor && value < limits.floor) {
+      return (
+        <>
+          <span className={styles.vitalLimitText}>below</span>
+          {limits.floor}
+        </>
+      )
+    }
+
+    if (limits?.ceiling && value > limits.ceiling) {
+      return (
+        <>
+          <span className={styles.vitalLimitText}>above</span>
+          {limits.ceiling}
+        </>
+      )
+    }
+
+    return value
+  }, [limits, value])
+
+  const exceedingLimit = useMemo(
+    () => value && ((limits?.ceiling && value > limits.ceiling) || (limits?.floor && value < limits.floor)),
+    [limits, value],
+  )
+
+  const isDanger = useMemo(() => isAbnormal || exceedingLimit, [exceedingLimit, isAbnormal])
 
   const isButton = useMemo(() => {
     if (tag === 'button') {
@@ -51,7 +86,7 @@ export const VitalItem: FC<VitalItemProps> = ({
 
   return (
     <Box
-      className={`${styles.vitalItem} ${isAbnormal ? styles.vitalItemAbnormal : ''}`}
+      className={`${styles.vitalItem} ${isDanger ? styles.vitalItemDanger : ''}`}
       component={tag}
       onClick={onClick}
       {...isButton}
@@ -66,7 +101,7 @@ export const VitalItem: FC<VitalItemProps> = ({
       </div>
       <div className={styles.vitalValue}>
         <strong className={`${blinkClass} ${changedClass}`} onAnimationEnd={onAnimationEnd}>
-          {value ? value : '-'}
+          {getValue}
         </strong>
         <span>{units && units}</span>
       </div>
