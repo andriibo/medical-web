@@ -87,7 +87,7 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
 
   return (
     <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-      <DialogTitle textTransform="capitalize">Patient&apos;s oxygen saturation</DialogTitle>
+      <DialogTitle textTransform="capitalize">Patient&apos;s O2 saturation</DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">

@@ -276,11 +276,11 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
       min: {
         value: saturation.min,
-        message: `Min oxygen saturation is ${saturation.min} ${saturation.unit}`,
+        message: `Min O2 saturation is ${saturation.min} ${saturation.unit}`,
       },
       max: {
         value: saturation.max,
-        message: `Max oxygen saturation is ${saturation.max} ${saturation.unit}`,
+        message: `Max O2 saturation is ${saturation.max} ${saturation.unit}`,
       },
     },
     dbp: {
