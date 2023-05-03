@@ -15,11 +15,13 @@ import { IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
 const FlyoutComponent = ({ x, y, datum, style, units }: any) => (
   <g>
-    <foreignObject height="50" style={style} width="110" x={x - 55} y={y - 58}>
-      <strong style={{ fontSize: '1.15em', display: 'block', paddingBottom: '6px' }}>
-        {datum.value} {units && units}
-      </strong>
-      {dayjs(datum._x * 1000).format('MM-DD hh:mm a')}
+    <foreignObject height="50" width="110" x={x - 55} y={y - 58}>
+      <div style={style}>
+        <strong style={{ fontSize: '1.15em', display: 'block', paddingBottom: '6px' }}>
+          {datum.value} {units && units}
+        </strong>
+        {dayjs(datum._x * 1000).format('MM-DD hh:mm a')}
+      </div>
     </foreignObject>
   </g>
 )
@@ -218,6 +220,7 @@ export const VitalChart: FC<VitalChartProps> = ({
                 color: '#fff',
                 borderRadius: '5px',
                 padding: '8px 5px 3px',
+                height: '100%',
               }}
             />
           }
