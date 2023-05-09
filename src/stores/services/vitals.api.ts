@@ -1,4 +1,3 @@
-import { BaseQueryMeta } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
 import { IMyVitalsRequest, IPatientVitalsRequest, IVitalsAbsolute, IVitalsData } from '~models/vital.model'
@@ -21,23 +20,6 @@ export const vitalsApi = createApi({
           endDate,
         },
       }),
-      transformResponse: (response: IVitalsData, meta: BaseQueryMeta<any>, arg) => {
-        console.log(response)
-        console.log(meta)
-        // console.log(meta?.response?.headers.getAll())
-        console.log(meta?.response?.headers.get('x-powered-by'))
-        // meta.response.headers.ea
-        meta.response.headers.forEach(([key, value]: any) => {
-          console.log(7)
-          console.log({ [key]: value })
-        })
-
-        console.log(arg)
-
-        return response
-
-        // return { apiResponse, pagination: meta?.response?.headers.get('X-Pagination') }
-      },
       providesTags: ['Vitals'],
     }),
     getPatientVitalsByDoctor: build.query<IVitalsData, IPatientVitalsRequest>({
