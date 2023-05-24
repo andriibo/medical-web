@@ -103,10 +103,10 @@ export const ForgotPasswordConfirm = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          Enter the confirmation that we sent to your email.
+          Enter the confirmation that we sent to your email <strong>{email}</strong>
         </Typography>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          Didn’t receive the confirmation code? Try RESEND or make sure you entered the correct email address.
+          Didn’t receive the confirmation code? Try RESEND
         </Typography>
         <Controller
           control={control}
@@ -122,11 +122,8 @@ export const ForgotPasswordConfirm = () => {
           rules={validationRules.code}
         />
         <Box className={styles.authHelperBox} sx={{ justifyContent: 'flex-end' }}>
-          <Typography component="span" variant="body2">
-            Need a new verification code?
-          </Typography>
-          <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small" sx={{ ml: 1 }}>
-            Resend
+          <LoadingButton loading={resendCodeIsLoading} onClick={handleResendCode} size="small">
+            Resend Code
           </LoadingButton>
         </Box>
         <Controller

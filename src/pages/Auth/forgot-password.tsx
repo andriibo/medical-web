@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
+import { NotificationPopup } from '~components/Modal/NotificationPopup/notification-popup'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'
@@ -17,9 +18,10 @@ import styles from './auth.module.scss'
 
 export const ForgotPassword = () => {
   const navigate = useNavigate()
-  const [formErrors, setFormErrors] = useState<string[] | null>(null)
-
   const { validationRules } = useValidationRules()
+
+  const [formErrors, setFormErrors] = useState<string[] | null>(null)
+  const [notificationPopupOpen, setNotificationPopupOpen] = useState(false)
 
   const [forgotPassword, { isLoading: forgotPasswordIsLoading }] = usePostAuthForgotPasswordMutation()
 
@@ -27,6 +29,7 @@ export const ForgotPassword = () => {
     handleSubmit,
     control,
     formState: { errors },
+    getValues,
   } = useForm<IAuthEmail>()
 
   const onSubmit: SubmitHandler<IAuthEmail> = async (data) => {
@@ -39,11 +42,18 @@ export const ForgotPassword = () => {
     } catch (err) {
       const {
         data: { message },
+        status,
       } = err as IErrorRequest
 
-      setFormErrors(Array.isArray(message) ? message : [message])
-
       console.error(err)
+
+      if (status === 404) {
+        setNotificationPopupOpen(true)
+
+        return
+      }
+
+      setFormErrors(Array.isArray(message) ? message : [message])
     }
   }
 
@@ -69,7 +79,8 @@ export const ForgotPassword = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          Enter your email and we’ll send you a confirmation code to reset your password.
+          Enter the email address you use to sign in to Zenzers 4Life and we’ll send you a confirmation code to reset
+          your password.
         </Typography>
         <Controller
           control={control}
@@ -93,6 +104,18 @@ export const ForgotPassword = () => {
           Cancel
         </Button>
       </form>
+      <div className={styles.authFooter}>
+        <Button component={NavLink} size="large" to={PageUrls.AccountType}>
+          Create a new account
+        </Button>
+      </div>
+      <NotificationPopup
+        handleClose={() => setNotificationPopupOpen(false)}
+        open={notificationPopupOpen}
+        title="Account not found"
+      >
+        No existing account with this email address <strong>{getValues('email')}</strong>
+      </NotificationPopup>
     </>
   )
 }
