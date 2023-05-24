@@ -1,4 +1,4 @@
-import { UserRoles } from '~/enums/user-roles.enum'
+import { UserRoleKeys } from '~/enums/roles.enum'
 
 export interface IUserModel {
   userId: string
@@ -6,7 +6,7 @@ export interface IUserModel {
   firstName: string
   lastName: string
   avatar: string | null
-  role: UserRoles
+  role: UserRoleKeys
   phone: string
   deletedAt: number | null
 }

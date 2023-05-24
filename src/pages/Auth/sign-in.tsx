@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { AuthErrorMessage } from '~/enums/auth-error-message.enum'
 import { PageUrls } from '~/enums/page-urls.enum'
-import { UserRoles } from '~/enums/user-roles.enum'
+import { UserRole } from '~/enums/roles.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
@@ -49,7 +49,7 @@ export const SignIn = () => {
       dispatch(signInSuccess(response))
       setFormErrors(null)
 
-      if (response.user.role === UserRoles.patient) {
+      if (response.user.role === UserRole.Patient) {
         const emergencyContact = await myEmergencyContacts().unwrap()
 
         if (!emergencyContact.length) {

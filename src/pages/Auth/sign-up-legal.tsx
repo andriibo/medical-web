@@ -14,7 +14,7 @@ export const SignUpLegal = () => {
   return (
     <>
       <Typography sx={{ mb: '1.5rem' }} variant="body2">
-        By selecting <strong>Sign Up</strong>, I agree to Zenzers Medical’s{' '}
+        By selecting <strong>Sign Up</strong>, I agree to Zenzers 4Life{' '}
         <span className="link" onClick={() => setLegalPopup(LegalPages.TermsAndConditions)}>
           Terms and Conditions
         </span>
