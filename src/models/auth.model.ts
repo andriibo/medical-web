@@ -1,3 +1,5 @@
+import { GenderKeys } from '~/enums/gender.enum'
+import { CaregiverRoleLabelKeys, DoctorRoleLabelKeys, PatientRoleLabelKeys } from '~/enums/roles.enum'
 import { Modify } from '~/types/modify.type'
 import { ICaregiverProfile, IDoctorProfile, IPatientProfile } from '~models/profie.model'
 import { IUserModel } from '~models/user.model'
@@ -15,25 +17,36 @@ export interface IAuthSignIn {
   rememberMe: boolean
 }
 
-export interface IAuthSignUpPatient extends IPatientProfile {
-  password: string
-}
-
-export interface IAuthSignUpPatientForm
+export interface IAuthSignUpPatient
   extends Modify<
-    IAuthSignUpPatient,
+    IPatientProfile,
     {
-      gender: string
-      height: number | string
-      weight: number | string
+      gender: GenderKeys | ''
+      roleLabel: PatientRoleLabelKeys | ''
+      height: number | ''
+      weight: number | ''
     }
-  > {}
-
-export interface IAuthSignUpDoctor extends IDoctorProfile {
+  > {
   password: string
 }
 
-export interface IAuthSignUpCaregiver extends ICaregiverProfile {
+export interface IAuthSignUpDoctor
+  extends Modify<
+    IDoctorProfile,
+    {
+      roleLabel: DoctorRoleLabelKeys | ''
+    }
+  > {
+  password: string
+}
+
+export interface IAuthSignUpCaregiver
+  extends Modify<
+    ICaregiverProfile,
+    {
+      roleLabel: CaregiverRoleLabelKeys | ''
+    }
+  > {
   password: string
 }
 

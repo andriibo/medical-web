@@ -1,5 +1,7 @@
 export enum Gender {
-  male = 'Male',
-  female = 'Female',
-  other = 'Other',
+  Male = 'Male',
+  Female = 'Female',
+  Other = 'Other',
 }
+
+export type GenderKeys = keyof typeof Gender

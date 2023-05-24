@@ -1,6 +1,18 @@
 import { ArrowBack } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, AlertTitle, Button, IconButton, TextField, Typography } from '@mui/material'
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
@@ -8,12 +20,14 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
+import { CaregiverRoleLabel } from '~/enums/roles.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { getObjectKeys } from '~helpers/get-object-keys'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
 import { AuthSignUpCaregiverKeys, IAuthSignUpCaregiver } from '~models/auth.model'
@@ -83,6 +97,25 @@ export const SignUpCaregiver = () => {
         </Alert>
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          control={control}
+          defaultValue=""
+          name="roleLabel"
+          render={({ field }) => (
+            <FormControl error={Boolean(errors[field.name])} fullWidth>
+              <InputLabel id="role-label-select">Role</InputLabel>
+              <Select {...field} label="Role" labelId="role-label-select">
+                {getObjectKeys(CaregiverRoleLabel).map((key) => (
+                  <MenuItem key={key} value={key}>
+                    {CaregiverRoleLabel[key]}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{getErrorMessage(errors, field.name)}</FormHelperText>
+            </FormControl>
+          )}
+          rules={validationRules.roleLabel}
+        />
         <Grid container spacing={3}>
           <Grid xs={6}>
             <Controller

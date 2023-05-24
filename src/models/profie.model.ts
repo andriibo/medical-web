@@ -1,6 +1,6 @@
-import { Gender } from '~/enums/gender.enum'
+import { GenderKeys } from '~/enums/gender.enum'
 import { PatientCategory } from '~/enums/patient-category.enum'
-import { UserRoles } from '~/enums/user-roles.enum'
+import { CaregiverRoleLabelKeys, DoctorRoleLabelKeys, PatientRoleLabelKeys, UserRoleKeys } from '~/enums/roles.enum'
 import { Modify } from '~/types/modify.type'
 
 export interface IPatientProfile {
@@ -11,7 +11,9 @@ export interface IPatientProfile {
   lastName: string
   phone: string
   dob: string
-  gender: Gender
+  gender: GenderKeys
+  role: UserRoleKeys
+  roleLabel: PatientRoleLabelKeys
   height: number
   weight: number
   deletedAt: number
@@ -23,7 +25,7 @@ export interface IUpdatePatientProfile {
   lastName: string
   phone: string
   dob: string
-  gender: Gender
+  gender: GenderKeys
   height: number
   weight: number
 }
@@ -46,12 +48,19 @@ export interface ICaregiverProfile {
   lastName: string
   phone: string
   avatar: string | null
-  role: UserRoles
+  role: UserRoleKeys
+  roleLabel: CaregiverRoleLabelKeys
   deletedAt: number | null
   passwordUpdatedAt: number
 }
 
-export interface IDoctorProfile extends ICaregiverProfile {
+export interface IDoctorProfile
+  extends Modify<
+    ICaregiverProfile,
+    {
+      roleLabel: DoctorRoleLabelKeys
+    }
+  > {
   institution: string
 }
 

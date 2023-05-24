@@ -1,17 +1,17 @@
-import { UserRoles } from '~/enums/user-roles.enum'
+import { UserRole, UserRoleKeys } from '~/enums/roles.enum'
 import { useUserRole } from '~stores/slices/auth.slice'
 
 export const useUserRoles = () => {
   const userRole = useUserRole()
-  const grantableRoles = [UserRoles.caregiver, UserRoles.doctor]
+  const grantableRoles: UserRoleKeys[] = ['Caregiver', 'Doctor']
 
   const isUserRoleGrantable = grantableRoles.includes(userRole)
 
-  const isUserRoleCaregiver = UserRoles.caregiver === userRole
+  const isUserRoleCaregiver = UserRole.Caregiver === userRole
 
-  const isUserRolePatient = UserRoles.patient === userRole
+  const isUserRolePatient = UserRole.Patient === userRole
 
-  const isUserRoleDoctor = UserRoles.doctor === userRole
+  const isUserRoleDoctor = UserRole.Doctor === userRole
 
   return { isUserRoleGrantable, isUserRoleCaregiver, isUserRolePatient, isUserRoleDoctor }
 }

@@ -29,9 +29,10 @@ import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { convertToUtc } from '~helpers/date-helper'
 import { getErrorMessage } from '~helpers/get-error-message'
+import { getObjectKeys } from '~helpers/get-object-keys'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
 import { trimValues } from '~helpers/trim-values'
-import { AuthSignUpPatientKeys, IAuthSignUpPatientForm } from '~models/auth.model'
+import { AuthSignUpPatientKeys, IAuthSignUpPatient } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { SignUpLegal } from '~pages/Auth/sign-up-legal'
 import { usePostAuthSignUpPatientMutation } from '~stores/services/auth.api'
@@ -50,19 +51,19 @@ export const SignUpPatient = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<IAuthSignUpPatientForm>({
+  } = useForm<IAuthSignUpPatient>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IAuthSignUpPatientForm> = async (data) => {
+  const onSubmit: SubmitHandler<IAuthSignUpPatient> = async (data) => {
     try {
       await authSignUpPatient({
         ...trimValues(data),
         dob: convertToUtc(data.dob),
         email: emailParam || data.email,
-        gender: data.gender as Gender,
         height: Number(data.height),
         weight: Number(data.weight),
+        roleLabel: 'Patient',
       }).unwrap()
 
       setFormErrors(null)
@@ -141,9 +142,9 @@ export const SignUpPatient = () => {
             <FormControl error={Boolean(errors[field.name])} fullWidth>
               <InputLabel id="gender-select">Gender</InputLabel>
               <Select {...field} label="Gender" labelId="gender-select">
-                {Object.values(Gender).map((gender) => (
-                  <MenuItem key={gender} value={gender}>
-                    {gender}
+                {getObjectKeys(Gender).map((key) => (
+                  <MenuItem key={key} value={key}>
+                    {Gender[key]}
                   </MenuItem>
                 ))}
               </Select>

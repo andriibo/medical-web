@@ -51,6 +51,7 @@ type ValidationKeyType =
   | 'dbp'
   | 'relationship'
   | 'role'
+  | 'roleLabel'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -179,6 +180,9 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
     },
     role: {
+      required: true,
+    },
+    roleLabel: {
       required: true,
     },
     dob: {
