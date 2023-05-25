@@ -4,6 +4,7 @@ import React, { FC, useMemo, useState } from 'react'
 
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { VitalsTab } from '~/enums/vitals-tab.enum'
+import { useCurrentVitalsSocket } from '~/hooks/use-current-vitals-socket'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Vitals } from '~components/Vitals/vitals'
 import { VitalsHistory } from '~components/VitalsHistory/vitals-history'
@@ -16,6 +17,8 @@ interface GrantedUserVitalsProps {
 export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId }) => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
+
+  const { vitals, lastUpdate, isUpdatingEnd, isLoading } = useCurrentVitalsSocket({ patientUserId })
 
   const isHistory = useMemo(() => activeTab === VitalsTab.history, [activeTab])
 
@@ -47,7 +50,13 @@ export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId })
         <VitalsHistory historySort={historySort} patientUserId={patientUserId} />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>
-        <Vitals patientUserId={patientUserId} />
+        <Vitals
+          isLoading={isLoading}
+          isUpdatingEnd={isUpdatingEnd}
+          lastUpdate={lastUpdate}
+          patientUserId={patientUserId}
+          vitals={vitals}
+        />
       </TabPanel>
     </>
   )

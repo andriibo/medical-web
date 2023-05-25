@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react'
 
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { VitalsTab } from '~/enums/vitals-tab.enum'
+import { useCurrentVitalsSocket } from '~/hooks/use-current-vitals-socket'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { Thresholds } from '~components/Thresholds/thresholds'
 import { Vitals } from '~components/Vitals/vitals'
@@ -13,6 +14,8 @@ import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-s
 export const PatientVitals = () => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
+
+  const { vitals, lastUpdate, isUpdatingEnd, isLoading } = useCurrentVitalsSocket({})
 
   const isHistory = useMemo(() => activeTab === VitalsTab.history, [activeTab])
 
@@ -45,7 +48,7 @@ export const PatientVitals = () => {
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>
         <Box sx={{ mb: 4 }}>
-          <Vitals />
+          <Vitals isLoading={isLoading} isUpdatingEnd={isUpdatingEnd} lastUpdate={lastUpdate} vitals={vitals} />
         </Box>
         <Typography sx={{ mb: 1 }} variant="h5">
           Thresholds
