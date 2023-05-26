@@ -230,3 +230,16 @@ form {
     text-decoration: none;
   }
 }
+
+.contact-sortable-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sortable-chosen {
+  position: relative;
+}
+
+.sortable-chosen > div {
+  box-shadow: 0 0 10px rgb(0 0 0 / 24%);
+}
