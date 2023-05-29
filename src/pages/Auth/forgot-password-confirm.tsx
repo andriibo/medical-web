@@ -103,7 +103,7 @@ export const ForgotPasswordConfirm = () => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
-          Enter the confirmation that we sent to your email <strong>{email}</strong>
+          Enter the confirmation code that we sent to your email <strong>{email}</strong>
         </Typography>
         <Typography sx={{ mb: '1.5rem' }} variant="body2">
           Didn’t receive the confirmation code? Try RESEND
