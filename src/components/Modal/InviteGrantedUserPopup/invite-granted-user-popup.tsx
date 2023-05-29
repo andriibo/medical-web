@@ -33,11 +33,12 @@ import {
 } from '~stores/services/patient-data-access.api'
 
 interface InviteDoctorPopupProps {
+  initialEmail?: string | null
   open: boolean
   handleClose: () => void
 }
 
-export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ open, handleClose }) => {
+export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ initialEmail, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
   const { validationRules } = useValidationRules()
@@ -60,9 +61,11 @@ export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ open, handl
   useEffect(() => {
     if (open) {
       setFormErrors(null)
-      reset()
+      reset({
+        email: initialEmail || undefined,
+      })
     }
-  }, [open, reset])
+  }, [open, reset, initialEmail])
 
   const onSubmit: SubmitHandler<IDataAccessInitiateForGrantedUser> = async ({ email, roleLabel }) => {
     try {
