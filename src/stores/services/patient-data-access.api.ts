@@ -70,6 +70,12 @@ export const patientDataAccessApi = createApi({
       }),
       invalidatesTags: ['PatientDataAccess'],
     }),
+    getDataAccess: build.query<IDataAccessModel[], void>({
+      query: () => ({
+        url: 'data-accesses',
+      }),
+      providesTags: ['PatientDataAccess'],
+    }),
     deleteDataAccess: build.mutation<null, { accessId: string }>({
       query: ({ accessId }) => ({
         url: `data-access/${accessId}`,
@@ -77,11 +83,12 @@ export const patientDataAccessApi = createApi({
       }),
       invalidatesTags: ['PatientDataAccess'],
     }),
-    getDataAccess: build.query<IDataAccessModel[], void>({
-      query: () => ({
-        url: 'data-accesses',
+    patchDataAccessResend: build.mutation<null, { accessId: string }>({
+      query: ({ accessId }) => ({
+        url: `data-access/resend/${accessId}`,
+        method: 'PATCH',
       }),
-      providesTags: ['PatientDataAccess'],
+      invalidatesTags: ['PatientDataAccess'],
     }),
   }),
 })
@@ -96,6 +103,7 @@ export const {
   usePostDataAccessInitiateMutation,
   usePatchDataAccessRefuseMutation,
   usePatchDataAccessApproveMutation,
-  useDeleteDataAccessMutation,
   useGetDataAccessQuery,
+  useDeleteDataAccessMutation,
+  usePatchDataAccessResendMutation,
 } = patientDataAccessApi

@@ -55,7 +55,7 @@ export const Header = () => {
   return (
     <header className={styles.header}>
       <NavLink className={styles.logo} to="/">
-        LIFE ZENZERS
+        Zenzers 4Life
       </NavLink>
       <nav className={styles.nav}>
         {isUserRoleGrantable
