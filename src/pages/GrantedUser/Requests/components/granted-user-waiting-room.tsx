@@ -1,8 +1,10 @@
-import { Button, List, ListItem, ListItemText } from '@mui/material'
+import { Check, Close } from '@mui/icons-material'
+import { IconButton, List, ListItem, ListItemText } from '@mui/material'
 import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo, useState } from 'react'
 
+import { btnIconError, btnIconSuccess } from '~/assets/styles/styles-scheme'
 import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel } from '~models/data-access.model'
@@ -30,7 +32,7 @@ export const GrantedUserWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) 
         .filter(
           (data) => data.status === DataAccessStatus.initiated && data.direction === DataAccessDirection.fromPatient,
         )
-        .sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
+        .sort((a, b) => b.lastInviteSentAt - a.lastInviteSentAt),
     [dataAccess],
   )
 
@@ -57,11 +59,11 @@ export const GrantedUserWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) 
         setPatchingRequestId(accessId)
 
         await refuseRequest({ accessId }).unwrap()
-        enqueueSnackbar('Request rejected')
+        enqueueSnackbar('Request declined')
       } catch (err) {
         console.error(err)
         setPatchingRequestId(null)
-        enqueueSnackbar('Request not rejected', { variant: 'warning' })
+        enqueueSnackbar('Request not declined', { variant: 'warning' })
       }
     },
     [enqueueSnackbar, refuseRequest],
@@ -70,17 +72,33 @@ export const GrantedUserWaitingRoom: FC<DoctorIncomingProps> = ({ dataAccess }) 
   return (
     <List className="list-divided">
       {waitingRequests?.length ? (
-        waitingRequests.map(({ accessId, createdAt, requestedUser }) => (
+        waitingRequests.map(({ accessId, lastInviteSentAt, requestedUser }) => (
           <ListItem className={patchingRequestId === accessId ? 'disabled' : ''} key={accessId}>
-            <ListItemText secondary={`${dayjs(createdAt).format('MMMM D, YYYY')}`}>
+            <ListItemText secondary={`${dayjs(lastInviteSentAt * 1000).format('MMMM D, YYYY')}`}>
               {getRequestedUserName(requestedUser)}
             </ListItemText>
-            <Button onClick={() => handleRefuseRequest(accessId)} sx={{ ml: 2 }}>
-              Reject
-            </Button>
-            <Button onClick={() => handleApproveRequest(accessId)} sx={{ ml: 2 }} variant="contained">
-              Accept
-            </Button>
+            <IconButton
+              color="error"
+              onClick={() => handleRefuseRequest(accessId)}
+              sx={{
+                ml: 2,
+                ...btnIconError,
+              }}
+              title="Decline"
+            >
+              <Close />
+            </IconButton>
+            <IconButton
+              color="success"
+              onClick={() => handleApproveRequest(accessId)}
+              sx={{
+                ml: 2,
+                ...btnIconSuccess,
+              }}
+              title="Approve"
+            >
+              <Check />
+            </IconButton>
           </ListItem>
         ))
       ) : (

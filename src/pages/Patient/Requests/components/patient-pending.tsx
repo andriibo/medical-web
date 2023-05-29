@@ -1,8 +1,11 @@
-import { Button, List, ListItem, ListItemText } from '@mui/material'
+import { Close } from '@mui/icons-material'
+import { IconButton, List, ListItem, ListItemText, Typography } from '@mui/material'
+import { red } from '@mui/material/colors'
 import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useMemo, useState } from 'react'
 
+import { btnIconError } from '~/assets/styles/styles-scheme'
 import { DataAccessDirection, DataAccessStatus } from '~/enums/data-access.enum'
 import { getRequestedUserName } from '~helpers/get-requested-user-name'
 import { IDataAccessModel } from '~models/data-access.model'
@@ -23,7 +26,7 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
         .filter(
           (data) => data.status !== DataAccessStatus.approved && data.direction === DataAccessDirection.fromPatient,
         )
-        .sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
+        .sort((a, b) => b.lastInviteSentAt - a.lastInviteSentAt),
     [patientDataAccess],
   )
 
@@ -48,12 +51,36 @@ export const PatientPending: FC<PatientPendingProps> = ({ patientDataAccess }) =
   return (
     <List className="list-divided">
       {pendingRequests.length ? (
-        pendingRequests.map(({ accessId, createdAt, requestedUser, status }) => (
+        pendingRequests.map(({ accessId, lastInviteSentAt, requestedUser, status }) => (
           <ListItem className={deletingRequestId === accessId ? 'disabled' : ''} key={accessId}>
-            <ListItemText secondary={`${dayjs(createdAt).format('MMMM D, YYYY')}`}>
-              {getRequestedUserName(requestedUser)} {isRefuse(status) && <>(Rejected)</>}
+            <ListItemText
+              secondary={
+                <>
+                  {dayjs(lastInviteSentAt * 1000).format('MMMM D, YYYY')}
+                  {isRefuse(status) && (
+                    <>
+                      {' • '}
+                      <Typography color={red[600]} display="inline" textTransform="uppercase" variant="subtitle2">
+                        Declined
+                      </Typography>
+                    </>
+                  )}
+                </>
+              }
+            >
+              {getRequestedUserName(requestedUser)}
             </ListItemText>
-            <Button onClick={() => handleDeleteRequest(accessId)}>{isRefuse(status) ? 'Delete' : 'Withdraw'}</Button>
+            <IconButton
+              color="error"
+              onClick={() => handleDeleteRequest(accessId)}
+              sx={{
+                ml: 2,
+                ...btnIconError,
+              }}
+              title="Withdraw"
+            >
+              <Close />
+            </IconButton>
           </ListItem>
         ))
       ) : (

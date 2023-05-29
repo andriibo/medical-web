@@ -4,17 +4,14 @@ import Grid from '@mui/material/Unstable_Grid2'
 import React, { useState } from 'react'
 
 import { UserRole } from '~/enums/roles.enum'
-import { InviteCaregiverPopup } from '~components/Modal/InviteCaregiverPopup/invite-caregiver-popup'
-import { InviteDoctorPopup } from '~components/Modal/InviteDoctorPopup/invite-doctor-popup'
+import { InviteGrantedUserPopup } from '~components/Modal/InviteGrantedUserPopup/invite-granted-user-popup'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { PatientCaregivers } from '~pages/Patient/GrantedUsers/components/patient-caregivers'
 import { PatientDoctors } from '~pages/Patient/GrantedUsers/components/patient-doctors'
 
 export const PatientGrantedUsers = () => {
   const [activeTab, setActiveTab] = useState<UserRole>(UserRole.Doctor)
-
-  const [inviteDoctorPopupOpen, setInviteDoctorPopupOpen] = useState(false)
-  const [inviteCaregiverPopupOpen, setInviteCaregiverPopupOpen] = useState(false)
+  const [inviteGrantedUserPopupOpen, setInviteGrantedUserPopupOpen] = useState(false)
 
   const handleChangeTab = (event: React.SyntheticEvent, value: UserRole) => {
     if (value !== null) {
@@ -22,13 +19,9 @@ export const PatientGrantedUsers = () => {
     }
   }
 
-  const handleInviteDoctorPopupOpen = () => setInviteDoctorPopupOpen(true)
+  const handleInviteGrantedUserPopupOpen = () => setInviteGrantedUserPopupOpen(true)
 
-  const handleInviteDoctorPopupClose = () => setInviteDoctorPopupOpen(false)
-
-  const handleInviteCaregiverPopupOpen = () => setInviteCaregiverPopupOpen(true)
-
-  const handleInviteCaregiverPopupClose = () => setInviteCaregiverPopupOpen(false)
+  const handleInviteGrantedUserPopupClose = () => setInviteGrantedUserPopupOpen(false)
 
   return (
     <>
@@ -44,26 +37,19 @@ export const PatientGrantedUsers = () => {
             </Tabs>
           </Grid>
           <Grid mdOffset="auto">
-            {activeTab === UserRole.Doctor ? (
-              <Button onClick={handleInviteDoctorPopupOpen} startIcon={<PersonAdd />} variant="outlined">
-                Invite
-              </Button>
-            ) : activeTab === UserRole.Caregiver ? (
-              <Button onClick={handleInviteCaregiverPopupOpen} startIcon={<PersonAdd />} variant="outlined">
-                Invite
-              </Button>
-            ) : null}
+            <Button onClick={handleInviteGrantedUserPopupOpen} startIcon={<PersonAdd />} variant="outlined">
+              Invite
+            </Button>
           </Grid>
         </Grid>
         <TabPanel activeTab={activeTab} value={UserRole.Doctor}>
           <PatientDoctors />
         </TabPanel>
         <TabPanel activeTab={activeTab} value={UserRole.Caregiver}>
-          <PatientCaregivers />
+          <PatientCaregivers />`
         </TabPanel>
       </div>
-      <InviteDoctorPopup handleClose={handleInviteDoctorPopupClose} open={inviteDoctorPopupOpen} />
-      <InviteCaregiverPopup handleClose={handleInviteCaregiverPopupClose} open={inviteCaregiverPopupOpen} />
+      <InviteGrantedUserPopup handleClose={handleInviteGrantedUserPopupClose} open={inviteGrantedUserPopupOpen} />
     </>
   )
 }
