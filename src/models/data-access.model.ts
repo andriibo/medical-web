@@ -1,8 +1,11 @@
+import { PatientRoleLabelKeys } from '~/enums/roles.enum'
+
 export interface IDataAccessModel {
   accessId: string
   direction: string
   status: string
   createdAt: string
+  lastInviteSentAt: number
   requestedUser: IDataAccessUser
 }
 
@@ -19,7 +22,7 @@ export interface IDataAccessEmail {
 }
 
 export interface IDataAccessInitiateForGrantedUser {
-  role: string
+  roleLabel: PatientRoleLabelKeys | ''
   email: string
 }
 
