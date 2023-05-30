@@ -114,4 +114,18 @@ export interface IVitalsAbsolute {
   maxSbp: number
 }
 
+export interface ISocketVitals {
+  hr: number | null
+  temp: number | null
+  spo: number | null
+  rr: number | null
+  bp: number | null
+  fall: boolean | null
+}
+
+export interface ISocketVitalsResponse {
+  patientUserId: string
+  data: ISocketVitals
+}
+
 export type IVitalsFilterTypes = Record<VitalsTypeFilterKeys, boolean>

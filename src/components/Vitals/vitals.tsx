@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Box, CircularProgress, Typography } from '@mui/material'
 import dayjs, { Dayjs } from 'dayjs'
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { useThresholds } from '~/hooks/use-thresholds'
@@ -8,36 +8,18 @@ import styles from '~components/Thresholds/thresholds.module.scss'
 import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalItem } from '~components/Vitals/vital-item'
 import { getVitalSettings } from '~helpers/get-vital-settings'
-import { IVitalsCard } from '~models/vital.model'
-import { useSocket } from '~stores/hooks'
+import { ISocketVitals, IVitalsCard } from '~models/vital.model'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
-import { useUserId } from '~stores/slices/auth.slice'
-
-type SocketVitalsData = {
-  hr: number | null
-  temp: number | null
-  spo: number | null
-  rr: number | null
-  bp: number | null
-  fall: boolean | null
-}
 
 interface VitalsProps {
+  isLoading: boolean
+  isUpdatingEnd: boolean
+  lastUpdate: string
+  vitals: ISocketVitals
   patientUserId?: string
 }
 
-const FIRST_LOAD_INTERVAL = 5000
-const UPDATE_INTERVAL = 15000
-
-export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
-  const socket = useSocket()
-  const userId = useUserId()
-
-  const [isConnected, setIsConnected] = useState(socket.connected)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isUpdatingEnd, setIsUpdatingEnd] = useState(false)
-
-  const [lastUpdate, setLastUpdate] = useState('')
+export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEnd, lastUpdate, vitals }) => {
   const [toggleVitals, setToggleVitals] = useState(false)
 
   const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
@@ -45,94 +27,9 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId }) => {
   const [vitalsType, setVitalsType] = useState<VitalsChartTabKeys | null>(null)
   const [vitalChartPopupOpen, setVitalChartPopupOpen] = useState(false)
 
-  const socketPatientUserId = useMemo(() => patientUserId || userId, [patientUserId, userId])
-
-  const updatingTimeout = useRef<any>()
-
   const { threshold } = useThresholds({ patientUserId })
 
   const { data: vitalsAbsolute } = useGetVitalsAbsoluteQuery()
-
-  const [vitals, setVitals] = useState<SocketVitalsData>({
-    hr: null,
-    temp: null,
-    spo: null,
-    rr: null,
-    bp: null,
-    fall: null,
-  })
-
-  useEffect(() => {
-    setTimeout(() => setIsLoading(false), FIRST_LOAD_INTERVAL)
-  }, [])
-
-  useEffect(() => {
-    if (lastUpdate) {
-      if (updatingTimeout.current) {
-        clearTimeout(updatingTimeout.current)
-      }
-
-      updatingTimeout.current = setTimeout(() => setIsUpdatingEnd(true), UPDATE_INTERVAL)
-    }
-  }, [lastUpdate])
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connect')
-      setIsConnected(true)
-    })
-
-    socket.on('disconnect', (reason) => {
-      console.log('disconnect reason-', reason)
-      setIsConnected(false)
-      if (reason === 'io server disconnect') {
-        socket.connect()
-      }
-    })
-
-    socket.on('messageToClient', (response: any) => {
-      setVitals((prev) => ({ ...prev, ...response.data }))
-      setIsUpdatingEnd(false)
-      setLastUpdate(new Date().toISOString())
-      if (isLoading) {
-        setIsLoading(false)
-      }
-    })
-
-    socket.on('joinedRoom', (messages: any) => {
-      console.log('joinedRoom', messages)
-    })
-
-    socket.on('exception', (error: any) => {
-      console.log('exception', error)
-    })
-
-    return () => {
-      socket.off('connect')
-      socket.off('disconnect')
-      socket.off('messageToClient')
-      socket.off('joinedRoom')
-      socket.off('exception')
-    }
-  }, [isLoading, socket])
-
-  useEffect(() => {
-    if (isConnected) {
-      console.log('user join room')
-      socket.emit('joinRoom', { patientUserId: socketPatientUserId }, (roomData: any) => {
-        console.log('emit joinRoom', roomData)
-      })
-    }
-
-    return () => {
-      if (isConnected) {
-        console.log('user leave room')
-        socket.emit('leaveRoom', { patientUserId: socketPatientUserId }, (roomData: any) => {
-          console.log('emit leaveRoom', roomData)
-        })
-      }
-    }
-  }, [socket, isConnected, socketPatientUserId])
 
   const vitalsList = useMemo(() => {
     const timestamp = 0
