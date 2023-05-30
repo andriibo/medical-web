@@ -1,12 +1,27 @@
 .card {
   height: 100%;
   padding: 1rem;
+  transition: box-shadow 0.2s ease;
   border: 1px solid var(--gray);
   border-radius: 4px;
+  background: #fff;
 
   &.disable {
     opacity: 0.4;
     pointer-events: none;
+  }
+
+  :global {
+    .sort-handle {
+      margin: 0 0.375rem 0 -0.625rem;
+      transition: all 0.2s ease;
+      opacity: 0.4;
+      cursor: grab;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 }
 

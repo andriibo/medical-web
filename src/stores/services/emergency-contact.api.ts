@@ -6,7 +6,7 @@ import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-qu
 export const emergencyContactApi = createApi({
   reducerPath: 'emergencyContactApi',
   baseQuery: staggeredBaseQueryWithBailOut(''),
-  tagTypes: ['EmergencyContact'],
+  tagTypes: ['EmergencyContact', 'EmergencyContactOrder'],
   endpoints: (build) => ({
     getPatientEmergencyContacts: build.query<IEmergencyContact[], { patientUserId: string }>({
       query: ({ patientUserId }) => ({
@@ -36,6 +36,14 @@ export const emergencyContactApi = createApi({
       query: ({ contactId }) => ({ url: `patient/my-emergency-contact/${contactId}`, method: 'DELETE' }),
       invalidatesTags: ['EmergencyContact'],
     }),
+    patchMyEmergencyContactOrder: build.mutation<null, { contactIds: string[] }>({
+      query: ({ contactIds }) => ({
+        url: 'patient/my-emergency-contacts/order',
+        method: 'PATCH',
+        body: { contactIds },
+      }),
+      invalidatesTags: ['EmergencyContactOrder'],
+    }),
   }),
 })
 
@@ -46,4 +54,5 @@ export const {
   usePostMyEmergencyContactMutation,
   usePatchPatientEmergencyContactMutation,
   useDeletePatientEmergencyContactMutation,
+  usePatchMyEmergencyContactOrderMutation,
 } = emergencyContactApi

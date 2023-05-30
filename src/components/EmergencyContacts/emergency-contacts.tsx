@@ -1,22 +1,24 @@
-import { MailOutline, Phone } from '@mui/icons-material'
-import { Chip, ListItem, ListItemIcon, ListItemText, MenuItem, Typography } from '@mui/material'
+import { DragIndicator, MailOutline, Phone } from '@mui/icons-material'
+import { Chip, IconButton, ListItem, ListItemIcon, ListItemText, MenuItem, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { skipToken } from '@reduxjs/toolkit/query'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactSortable } from 'react-sortablejs'
 
 import { Relationship } from '~/enums/relationship.enum'
 import { CardBox } from '~components/Card/card-box'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
+import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
-import { sortByName } from '~helpers/sort-by-name'
 import { IEmergencyContact } from '~models/emergency-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
   useDeletePatientEmergencyContactMutation,
   useGetMyEmergencyContactsQuery,
   useGetPatientEmergencyContactsQuery,
+  usePatchMyEmergencyContactOrderMutation,
 } from '~stores/services/emergency-contact.api'
 import {
   setEmergencyContact,
@@ -58,11 +60,14 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
+  const emergencyContactHasChanges = useEmergencyContactHasChanges()
+
   const [emergencyContacts, setEmergencyContacts] = useState<IEmergencyContact[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [dropClose, setDropClose] = useState(false)
   const [setDeletingContactId, setSetDeletingContactId] = useState<string | null>(null)
-  const emergencyContactHasChanges = useEmergencyContactHasChanges()
+
+  const contactIds = useMemo(() => emergencyContacts?.map(({ contactId }) => contactId) || null, [emergencyContacts])
 
   const {
     data: myEmergencyContacts,
@@ -74,16 +79,17 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
     useGetPatientEmergencyContactsQuery(patientUserId ? { patientUserId } : skipToken)
 
   const [deleteEmergencyContact] = useDeletePatientEmergencyContactMutation()
+  const [orderEmergencyContact] = usePatchMyEmergencyContactOrderMutation()
 
   useEffect(() => {
     if (myEmergencyContacts && !myEmergencyContactsIsLoading) {
-      setEmergencyContacts(sortByName([...myEmergencyContacts]))
+      setEmergencyContacts([...myEmergencyContacts])
 
       return
     }
 
     if (patientEmergencyContacts && !patientEmergencyContactsIsLoading) {
-      setEmergencyContacts(sortByName([...patientEmergencyContacts]))
+      setEmergencyContacts([...patientEmergencyContacts])
     }
   }, [myEmergencyContacts, myEmergencyContactsIsLoading, patientEmergencyContacts, patientEmergencyContactsIsLoading])
 
@@ -159,47 +165,83 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
     }
   }, [emergencyContactHasChanges, dispatch, refetchMyEmergencyContacts])
 
+  const onSortContacts = useCallback(
+    (newContacts: IEmergencyContact[]) => {
+      const newContactIds = newContacts.map(({ contactId }) => contactId)
+
+      if (JSON.stringify(contactIds) !== JSON.stringify(newContactIds)) {
+        console.log(newContacts)
+        setEmergencyContacts([...newContacts])
+
+        orderEmergencyContact({ contactIds: newContactIds })
+      }
+    },
+    [contactIds, orderEmergencyContact],
+  )
+
   if (isLoading) {
     return <Spinner />
   }
 
-  return (
-    <Grid container spacing={3} sx={{ mb: 1 }}>
-      {emergencyContacts?.map((emergencyContact) => {
-        const { lastName, firstName, relationship, contactId } = emergencyContact
+  if (!emergencyContacts) {
+    return <EmptyBox message="No emergency contacts" />
+  }
 
-        return (
-          <Grid key={contactId} xs={6}>
-            <CardBox
-              disable={setDeletingContactId === contactId}
-              header={
-                <>
-                  <Typography variant="subtitle1">
-                    {firstName} {lastName}
-                  </Typography>
-                  <Chip label={Relationship[relationship]} size="small" />
-                  {!patientUserId && (
-                    <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
-                      {handleInviteNewUser && (
-                        <MenuItem onClick={() => handleInvite(emergencyContact.email)}>
-                          Invite to follow my vitals
-                        </MenuItem>
-                      )}
-                      <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
-                      {emergencyContacts?.length === 1 ? (
-                        <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>
-                      ) : (
-                        <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
-                      )}
-                    </DropdownMenu>
-                  )}
-                </>
-              }
-              infoListItems={<ListItems emergencyContact={emergencyContact} />}
-            />
-          </Grid>
-        )
-      })}
+  return (
+    <Grid container spacing={3}>
+      <ReactSortable
+        animation={300}
+        className="contact-sortable-container"
+        delay={0}
+        disabled={Boolean(patientUserId)}
+        handle=".sort-handle"
+        list={emergencyContacts.map((emergencyContact, index) => ({
+          ...emergencyContact,
+          id: index,
+        }))}
+        setList={onSortContacts}
+      >
+        {emergencyContacts?.map((emergencyContact) => {
+          const { lastName, firstName, relationship, contactId } = emergencyContact
+
+          return (
+            <Grid key={contactId} xs={6}>
+              <CardBox
+                disable={setDeletingContactId === contactId}
+                header={
+                  <>
+                    {!patientUserId && (
+                      <IconButton className="sort-handle" color="inherit" size="small" title="sort">
+                        <DragIndicator />
+                      </IconButton>
+                    )}
+                    <Typography variant="subtitle1">
+                      {firstName} {lastName}
+                    </Typography>
+                    <Chip label={Relationship[relationship]} size="small" />
+                    {!patientUserId && (
+                      <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                        {handleInviteNewUser && (
+                          <MenuItem onClick={() => handleInvite(emergencyContact.email)}>
+                            Invite to follow my vitals
+                          </MenuItem>
+                        )}
+                        <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
+                        {emergencyContacts?.length === 1 ? (
+                          <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>
+                        ) : (
+                          <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>
+                        )}
+                      </DropdownMenu>
+                    )}
+                  </>
+                }
+                infoListItems={<ListItems emergencyContact={emergencyContact} />}
+              />
+            </Grid>
+          )
+        })}
+      </ReactSortable>
     </Grid>
   )
 }
