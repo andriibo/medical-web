@@ -28,6 +28,7 @@ import {
 
 interface EmergencyContactsProps {
   patientUserId?: string
+  handleInviteNewUser?: (email: string) => void
 }
 
 const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }) => (
@@ -55,7 +56,7 @@ const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }
   </>
 )
 
-export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId }) => {
+export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, handleInviteNewUser }) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
@@ -137,6 +138,16 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
     [confirm, deleteEmergencyContact, enqueueSnackbar, handleDrop],
   )
 
+  const handleInvite = useCallback(
+    (email: string) => {
+      if (handleInviteNewUser) {
+        handleDrop(true)
+        handleInviteNewUser(email)
+      }
+    },
+    [handleDrop, handleInviteNewUser],
+  )
+
   const handleDeleteForbidden = async () => {
     handleDrop(true)
 
@@ -210,6 +221,11 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId })
                     <Chip label={Relationship[relationship]} size="small" />
                     {!patientUserId && (
                       <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                        {handleInviteNewUser && (
+                          <MenuItem onClick={() => handleInvite(emergencyContact.email)}>
+                            Invite to follow my vitals
+                          </MenuItem>
+                        )}
                         <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
                         {emergencyContacts?.length === 1 ? (
                           <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>

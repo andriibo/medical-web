@@ -14,6 +14,7 @@ import {
   TextField,
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
@@ -41,14 +42,21 @@ import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 interface EmergencyContactPopupProps {
   open: boolean
-  handleClose: () => void
   contactData?: IEmergencyContact
+  handleClose: () => void
+  handleInviteNewUser?: (email: string) => void
 }
 
-export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, handleClose, contactData }) => {
+export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
+  open,
+  contactData,
+  handleClose,
+  handleInviteNewUser,
+}) => {
   const dispatch = useAppDispatch()
   const { enqueueSnackbar } = useSnackbar()
   const { validationRules } = useValidationRules()
+  const confirm = useConfirm()
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const contactId = useMemo(() => contactData?.contactId, [contactData])
@@ -124,6 +132,16 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
       initiateClosePopup()
       setFormErrors(null)
       enqueueSnackbar('Emergency contact added')
+
+      await confirm({
+        title: `Invite ${data.firstName} ${data.lastName} to follow your vitals?`,
+        cancellationText: 'Not now',
+        confirmationText: 'Yes, Invite',
+      })
+
+      if (handleInviteNewUser) {
+        handleInviteNewUser(data.email)
+      }
     } catch (err) {
       const {
         data: { message },

@@ -5,12 +5,16 @@ import React, { useEffect, useState } from 'react'
 
 import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
 import { EmergencyContactPopup } from '~components/Modal/EmergencyContactPopup/emergency-contact-popup'
+import { InviteGrantedUserPopup } from '~components/Modal/InviteGrantedUserPopup/invite-granted-user-popup'
 import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
 import { useEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 export const PatientEmergencyContacts = () => {
-  const [emergencyContactPopupOpen, setEmergencyContactPopupOpen] = useState(false)
   const emergencyContact = useEmergencyContact()
+
+  const [emergencyContactPopupOpen, setEmergencyContactPopupOpen] = useState(false)
+  const [invitePopupOpen, setInvitePopupOpen] = useState(false)
+  const [newUserEmail, setNewUserEmail] = useState<string | null>(null)
 
   const handleEmergencyContactPopupOpen = () => {
     setEmergencyContactPopupOpen(true)
@@ -20,11 +24,24 @@ export const PatientEmergencyContacts = () => {
     setEmergencyContactPopupOpen(false)
   }
 
+  const handleInvitePopupOpen = () => setInvitePopupOpen(true)
+
+  const handleInvitePopupClose = () => {
+    setInvitePopupOpen(false)
+    setNewUserEmail(null)
+  }
+
   useEffect(() => {
     if (emergencyContact.contactId) {
       handleEmergencyContactPopupOpen()
     }
   }, [emergencyContact])
+
+  useEffect(() => {
+    if (newUserEmail) {
+      handleInvitePopupOpen()
+    }
+  }, [newUserEmail])
 
   return (
     <div className="white-box content-md">
@@ -45,12 +62,14 @@ export const PatientEmergencyContacts = () => {
           </Button>
         </Grid>
       </Grid>
-      <EmergencyContacts />
+      <EmergencyContacts handleInviteNewUser={setNewUserEmail} />
       <EmergencyContactPopup
         contactData={emergencyContact}
         handleClose={handleEmergencyContactPopupClose}
+        handleInviteNewUser={setNewUserEmail}
         open={emergencyContactPopupOpen}
       />
+      <InviteGrantedUserPopup handleClose={handleInvitePopupClose} initialEmail={newUserEmail} open={invitePopupOpen} />
     </div>
   )
 }
