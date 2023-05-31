@@ -34,14 +34,14 @@ export interface IVitalsCard {
     floor?: number
     ceiling?: number
   }
-  icon: string
+  icon?: string
   units: VitalUnits
   type: VitalTypeKeys
 }
 
 export interface IVitalsSettings {
   title: VitalType
-  icon: string
+  icon?: string
   units: VitalUnits
   type: VitalTypeKeys
 }
@@ -59,7 +59,7 @@ export interface IVitalsHistoryCardItems {
   title: VitalType
   value: number | boolean | null
   isNormal?: boolean
-  icon: string
+  icon?: string
   units: VitalUnits
   type: VitalTypeKeys
   threshold?: IVitalsHistoryCardThreshold[]

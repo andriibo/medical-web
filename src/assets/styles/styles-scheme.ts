@@ -1,4 +1,4 @@
-import { green, red } from '@mui/material/colors'
+import { green, grey, red } from '@mui/material/colors'
 
 export const btnIconError = {
   bgcolor: `${red[700]}1F`,
@@ -12,4 +12,11 @@ export const btnIconSuccess = {
   '&:hover': {
     bgcolor: `${green[700]}4d`,
   },
+}
+
+export const btnClosePopup = {
+  position: 'absolute',
+  right: 12,
+  top: 8,
+  color: grey[500],
 }

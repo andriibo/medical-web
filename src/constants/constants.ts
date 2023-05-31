@@ -3,7 +3,6 @@ import { ManipulateType } from 'dayjs'
 import { VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTabKeys, VitalType, VitalTypeKeys, VitalUnits } from '~/enums/vital-type.enum'
 import iconBloodPressure from '~images/icon-blood-pressure.png'
-import iconFall from '~images/icon-fall.svg'
 import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
@@ -89,7 +88,7 @@ export const VITAL_THRESHOLDS_TYPE: VitalThresholdType = {
 type VitalSettingsType = {
   [key in VitalTypeKeys]: {
     title: VitalType
-    icon: string
+    icon?: string
     units: VitalUnits
   }
 }
@@ -117,7 +116,6 @@ export const VITAL_SETTINGS: VitalSettingsType = {
   },
   fall: {
     title: VitalType.fall,
-    icon: iconFall,
     units: VitalUnits.fall,
   },
   bp: {

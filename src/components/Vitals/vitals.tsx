@@ -4,6 +4,7 @@ import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { useThresholds } from '~/hooks/use-thresholds'
+import { FallsHistoryPopup } from '~components/Modal/FallsHistoryPopup/falls-history-popup'
 import styles from '~components/Thresholds/thresholds.module.scss'
 import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalItem } from '~components/Vitals/vital-item'
@@ -26,6 +27,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
   const [initialEndDate, setInitialEndDate] = useState<Dayjs>()
   const [vitalsType, setVitalsType] = useState<VitalsChartTabKeys | null>(null)
   const [vitalChartPopupOpen, setVitalChartPopupOpen] = useState(false)
+  const [fallsHistoryPopupOpen, setFallsHistoryPopupOpen] = useState(false)
 
   const { threshold } = useThresholds({ patientUserId })
 
@@ -105,7 +107,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
     setToggleVitals((prev) => !prev)
   }, [vitals])
 
-  const handleOpenPopup = (type: VitalTypeKeys) => {
+  const handleChartOpenPopup = (type: VitalTypeKeys) => {
     setInitialStartDate(dayjs().subtract(2, 'hours'))
     setInitialEndDate(dayjs())
 
@@ -147,12 +149,20 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
       )}
       <div className={styles.vitalContainer}>
         {vitalsList.map((vital, index) =>
-          vital.title === VitalType.fall || vital.title === VitalType.bp ? (
+          vital.title === VitalType.bp ? (
             <VitalItem key={index} toggleVitals={toggleVitals} vital={vital} />
+          ) : vital.title === VitalType.fall ? (
+            <VitalItem
+              key={index}
+              onClick={() => setFallsHistoryPopupOpen(true)}
+              tag="button"
+              toggleVitals={toggleVitals}
+              vital={vital}
+            />
           ) : (
             <VitalItem
               key={index}
-              onClick={() => handleOpenPopup(vital.type)}
+              onClick={() => handleChartOpenPopup(vital.type)}
               tag="button"
               toggleVitals={toggleVitals}
               vital={vital}
@@ -170,6 +180,7 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
           vitalsType={vitalsType}
         />
       )}
+      <FallsHistoryPopup handleClose={() => setFallsHistoryPopupOpen(false)} open={fallsHistoryPopupOpen} />
     </>
   )
 }

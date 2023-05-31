@@ -4,7 +4,7 @@ import { IVitalsSettings } from '~models/vital.model'
 
 export const getVitalSettings = (name: VitalTypeKeys): IVitalsSettings => ({
   title: VitalSettings[name].title,
-  icon: VitalSettings[name].icon,
+  ...(VitalSettings[name].icon && { icon: VitalSettings[name].icon }),
   units: VitalSettings[name].units,
   type: name,
 })

@@ -9,9 +9,10 @@ import { getObjectKeys } from '~helpers/get-object-keys'
 interface VitalHistorySortingProps {
   sort: VitalOrderKeys
   handleSort: (value: VitalOrderKeys) => void
+  buttonVariant?: 'text' | 'outlined' | 'contained'
 }
 
-export const VitalsHistorySorting: FC<VitalHistorySortingProps> = ({ sort, handleSort }) => {
+export const VitalsHistorySorting: FC<VitalHistorySortingProps> = ({ sort, handleSort, buttonVariant }) => {
   const [historySort, setHistorySort] = useState<VitalOrderKeys>(sort)
   const [dropClose, setDropClose] = useState(false)
 
@@ -27,7 +28,11 @@ export const VitalsHistorySorting: FC<VitalHistorySortingProps> = ({ sort, handl
 
   return (
     <DropdownMenu
-      button={<Button endIcon={<KeyboardArrowDown />}>{VitalOrder[historySort]}</Button>}
+      button={
+        <Button endIcon={<KeyboardArrowDown />} variant={buttonVariant}>
+          {VitalOrder[historySort]}
+        </Button>
+      }
       dropClose={dropClose}
       handleDrop={handleDrop}
     >

@@ -2,6 +2,8 @@ import { Box, Typography } from '@mui/material'
 import React, { FC, Fragment, useMemo } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
+import iconManFalling from '~images/icon-man-falling.svg'
+import iconManWalking from '~images/icon-man-walking.svg'
 import { IVitalsHistoryCardItems } from '~models/vital.model'
 
 import styles from './vitals-history.module.scss'
@@ -16,6 +18,7 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
   const { isNormal, title, value, threshold, units, icon, type } = vital
 
   const isFall = useMemo(() => title === VitalType.fall, [title])
+  const isBp = useMemo(() => title === VitalType.bp, [title])
 
   const abnormalClass = useMemo(() => {
     if (isFall) {
@@ -34,17 +37,26 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
   }, [tag])
 
   return (
-    <Box className={`${styles.vitalItem} ${abnormalClass}`} component={tag} onClick={onClick} {...isButton}>
+    <Box
+      className={`${styles.vitalItem} ${abnormalClass} ${isBp ? styles.vitalItemBp : ''}`}
+      component={tag}
+      onClick={onClick}
+      {...isButton}
+    >
       <div className={styles.vitalHeader}>
-        <div className={styles.vitalIcon}>
-          <img alt={title} src={icon} />
-        </div>
+        {icon && (
+          <div className={styles.vitalIcon}>
+            <img alt={title} src={icon} />
+          </div>
+        )}
         <div className={styles.vitalHeaderText}>
           <Typography variant="body1">{title}</Typography>
         </div>
       </div>
       {isFall ? (
-        <div className={styles.vitalFallText}>{value ? 'Yes' : 'No'}</div>
+        <div className={styles.vitalFallIcon}>
+          <img alt={title} src={value ? iconManFalling : iconManWalking} />
+        </div>
       ) : (
         <div className={styles.vitalText}>
           <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
