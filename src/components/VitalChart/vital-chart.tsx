@@ -10,6 +10,7 @@ import { VictoryTooltip } from 'victory-tooltip'
 
 import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
+import { filterNullable } from '~helpers/filter-nullable'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
@@ -85,7 +86,8 @@ export const VitalChart: FC<VitalChartProps> = ({
   )
 
   const minMaxValue = useMemo(() => {
-    const vitalsValues = vitals.map((item) => item.value)
+    const vitalsValues = filterNullable(vitals.map((item) => item.value))
+
     const offsetPercent = 10
 
     let max = Math.max(...vitalsValues)
@@ -110,8 +112,8 @@ export const VitalChart: FC<VitalChartProps> = ({
 
     const thresholdsMinValues = thresholds.map((threshold) => threshold[minThreshold])
     const thresholdsMaxValues = maxThreshold ? thresholds.map((threshold) => threshold[maxThreshold]) : 0
-    const stdMinValues = vitals.map((item) => item.minStd)
-    const stdMaxValues = vitals.map((item) => item.maxStd)
+    const stdMinValues = filterNullable(vitals.map((item) => item.minStd))
+    const stdMaxValues = filterNullable(vitals.map((item) => item.maxStd))
 
     if (settings.abnormalValues) {
       min = Math.min(min, ...thresholdsMinValues)
