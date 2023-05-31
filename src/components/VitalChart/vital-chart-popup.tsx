@@ -341,7 +341,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
         </Grid>
         <div className={`${styles.chartHolder} ${isLoading ? 'loading' : ''}`}>
           {isLoading && <CircularProgress className="loading-icon" />}
-          {vitalResponse && vitalResponse.vitals[activeVitalsType].some(({ value }) => value !== null) ? (
+          {vitalResponse && Boolean(vitalResponse.vitals[activeVitalsType].length) ? (
             <VitalChart
               activeVitalsType={activeVitalsType}
               endDate={vitalResponse.endDate}

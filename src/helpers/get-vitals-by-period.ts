@@ -1,20 +1,12 @@
 import { mean, std } from 'mathjs'
 
-import { filterNullable } from '~helpers/filter-nullable'
 import { IVital, IVitalChart } from '~models/vital.model'
 
-const INTERVALS_NUMBER = 60
-const MIN_INTERVAL_DURATION = 30
-
 const getIndications = <T extends number | null>(arr: T[], digits: number = 0) => {
-  const nonNullableArr = filterNullable(arr)
+  const nonNullableArr = arr.filter((el) => el !== null) as Array<NonNullable<T>>
 
   if (!nonNullableArr.length) {
-    return {
-      value: null,
-      maxStd: null,
-      minStd: null,
-    }
+    return null
   }
 
   const meanValue = Number(mean(...nonNullableArr).toFixed(digits))
@@ -30,10 +22,7 @@ const getIndications = <T extends number | null>(arr: T[], digits: number = 0) =
 }
 
 export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number): [IVitalChart, number] => {
-  const duration = end - start
-  const interval =
-    duration > INTERVALS_NUMBER * MIN_INTERVAL_DURATION ? duration / INTERVALS_NUMBER : MIN_INTERVAL_DURATION
-
+  const interval = (end - start) / 60
   const temporaryArray: IVital[][] = []
   const result: IVitalChart = {
     hr: [],
@@ -55,22 +44,6 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
 
     if (filteredByInterval.length) {
       temporaryArray.push(filteredByInterval)
-    } else {
-      temporaryArray.push([
-        {
-          temp: null,
-          isTempNormal: false,
-          hr: null,
-          isHrNormal: false,
-          spo2: null,
-          isSpo2Normal: false,
-          rr: null,
-          isRrNormal: false,
-          fall: null,
-          timestamp: (endPoint + startPoint) / 2,
-          thresholdsId: '',
-        },
-      ])
     }
   }
 
@@ -96,10 +69,15 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
       const spo2Indications = getIndications(spo2Arr)
       const averageTime: number = mean(timestampArr)
 
-      result.hr.push({ ...hrIndications, timestamp: averageTime })
-      result.rr.push({ ...rrIndications, timestamp: averageTime })
-      result.temp.push({ ...tempIndications, timestamp: averageTime })
-      result.spo2.push({ ...spo2Indications, timestamp: averageTime })
+      if (averageTime !== null) {
+        if (hrIndications) result.hr.push({ ...hrIndications, timestamp: averageTime })
+
+        if (rrIndications) result.rr.push({ ...rrIndications, timestamp: averageTime })
+
+        if (tempIndications) result.temp.push({ ...tempIndications, timestamp: averageTime })
+
+        if (spo2Indications) result.spo2.push({ ...spo2Indications, timestamp: averageTime })
+      }
     })
   }
 

@@ -9,15 +9,15 @@ export interface IVitalsData {
 }
 
 export interface IVital {
-  temp: number | null
+  temp: number
   isTempNormal: boolean
-  hr: number | null
+  hr: number
   isHrNormal: boolean
-  spo2: number | null
+  spo2: number
   isSpo2Normal: boolean
-  rr: number | null
+  rr: number
   isRrNormal: boolean
-  fall: boolean | null
+  fall: boolean
   timestamp: number
   thresholdsId: string
 }
@@ -57,7 +57,7 @@ export interface IVitalsHistoryCard {
 
 export interface IVitalsHistoryCardItems {
   title: VitalType
-  value: number | boolean | null
+  value: number | boolean
   isNormal?: boolean
   icon: string
   units: VitalUnits
@@ -84,9 +84,9 @@ export interface IVitalChartSettings {
 }
 
 export interface IVitalChartModel {
-  value: number | null
-  minStd: number | null
-  maxStd: number | null
+  value: number
+  minStd: number
+  maxStd: number
   timestamp: number
 }
 
