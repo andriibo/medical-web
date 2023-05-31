@@ -221,7 +221,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     setHistoryIsLoading(false)
   }, [filteredVitals])
 
-  const handleOpenPopup = (timestamp: number, type: VitalTypeKeys) => {
+  const handleChartOpenPopup = (timestamp: number, type: VitalTypeKeys) => {
     setInitialStartDate(dayjs(timestamp * 1000).subtract(1, 'hour'))
     setInitialEndDate(dayjs(timestamp * 1000).add(1, 'hour'))
 
@@ -248,12 +248,12 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
       </Typography>
       <div className={styles.vitalContainer}>
         {vital.items.map((vitalItem, index) =>
-          vitalItem.title === VitalType.fall || vitalItem.title === VitalType.bp ? (
+          vitalItem.title === VitalType.fall ? null : vitalItem.title === VitalType.bp ? (
             <VitalHistoryItem key={index} vital={vitalItem} />
           ) : (
             <VitalHistoryItem
               key={index}
-              onClick={() => handleOpenPopup(vital.timestamp, vitalItem.type)}
+              onClick={() => handleChartOpenPopup(vital.timestamp, vitalItem.type)}
               tag="button"
               vital={vitalItem}
             />

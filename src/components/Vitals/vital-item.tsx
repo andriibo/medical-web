@@ -1,6 +1,9 @@
 import { Box, Typography } from '@mui/material'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 
+import { VitalType } from '~/enums/vital-type.enum'
+import iconManFalling from '~images/icon-man-falling.svg'
+import iconManWalking from '~images/icon-man-walking.svg'
 import { IVitalsCard } from '~models/vital.model'
 
 import styles from './vitals.module.scss'
@@ -21,16 +24,22 @@ export const VitalItem: FC<VitalItemProps> = ({
   const [changedClass, setChangedClass] = useState('')
   const [blinkClass, setBlinkClass] = useState('')
 
+  const isFall = useMemo(() => title === VitalType.fall, [title])
+
   const isAbnormal = useMemo(
     () => value && ((thresholds?.min && value < thresholds.min) || (thresholds?.max && value > thresholds.max)),
     [thresholds, value],
   )
 
   const getValue = useMemo(() => {
-    if (!value) return '-'
+    if (value === null || value === undefined) return '-'
 
-    if (typeof value === 'boolean') {
-      return value ? 'Yes' : 'No'
+    if (isFall) {
+      return (
+        <div className={styles.vitalFallIcon}>
+          <img alt={title} src={value ? iconManFalling : iconManWalking} />
+        </div>
+      )
     }
 
     if (limits?.floor && value < limits.floor) {
@@ -52,7 +61,7 @@ export const VitalItem: FC<VitalItemProps> = ({
     }
 
     return value
-  }, [limits, value])
+  }, [isFall, limits?.ceiling, limits?.floor, title, value])
 
   const exceedingLimit = useMemo(
     () => value && ((limits?.ceiling && value > limits.ceiling) || (limits?.floor && value < limits.floor)),
@@ -92,9 +101,11 @@ export const VitalItem: FC<VitalItemProps> = ({
       {...isButton}
     >
       <div className={styles.vitalHeader}>
-        <div className={styles.vitalIcon}>
-          <img alt={title} src={icon} />
-        </div>
+        {icon && (
+          <div className={styles.vitalIcon}>
+            <img alt={title} src={icon} />
+          </div>
+        )}
         <div className={styles.vitalHeaderText}>
           <Typography variant="body1">{title}</Typography>
         </div>

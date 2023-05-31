@@ -19,6 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
+import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VitalChart } from '~components/VitalChart/vital-chart'
@@ -212,15 +213,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
     <Dialog fullWidth maxWidth="md" onClose={handleClose} open={open} scroll="body">
       <DialogTitle variant="h5">
         Vital sign chart
-        <IconButton
-          onClick={handleClose}
-          sx={{
-            position: 'absolute',
-            right: 12,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
+        <IconButton onClick={handleClose} sx={btnClosePopup}>
           <Close />
         </IconButton>
       </DialogTitle>
