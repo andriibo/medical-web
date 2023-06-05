@@ -1,3 +1,4 @@
+import { SelectedVitalHistoryUseCaseFactory, VitalsItemMapper } from '@abnk/medical-support/src/history-vitals'
 import { Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs, { Dayjs } from 'dayjs'
@@ -58,6 +59,15 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
     patientUserId ? { patientUserId, startDate, endDate } : skipToken,
   )
+
+  // const vitals: object[] = []
+  // eslint-disable-next-line new-cap
+  // const mapper = VitalsItemMapper()
+  // const items = vitals.map((vital) => mapper.map(vital))
+  const useCase = SelectedVitalHistoryUseCaseFactory.createWithDefaultOptions()
+  // const historyItems = useCase.createHistory(items, 'temp')
+  //
+  // console.log(items)
 
   useEffect(() => {
     if (myVitalsData) {

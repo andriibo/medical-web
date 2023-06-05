@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
+      "DOM", "ES6", "DOM.Iterable", "ScriptHost", "ES2016.Array.Include", "ES2021.String"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -24,5 +22,5 @@
     "src",
     "./src/declaration.d.ts"
   ],
-  "extends": "./path.tsconfig.json"
+  "extends": "./path.tsconfig.json",
 }
