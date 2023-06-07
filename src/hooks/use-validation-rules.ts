@@ -1,3 +1,5 @@
+import 'yup-phone/dist/yup-phone.cjs'
+
 import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs from 'dayjs'
 import { RegisterOptions } from 'react-hook-form/dist/types/validator'
@@ -6,8 +8,6 @@ import * as yup from 'yup'
 
 import { DATE_FORMAT } from '~constants/constants'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
-
-require('yup-phone')
 
 declare module 'yup' {
   export interface StringSchema {

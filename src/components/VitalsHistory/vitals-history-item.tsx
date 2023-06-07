@@ -1,48 +1,42 @@
-import { Box, Typography } from '@mui/material'
-import React, { FC, Fragment, useMemo } from 'react'
+import { Typography } from '@mui/material'
+import React, { FC, useMemo } from 'react'
 
-import { VitalType } from '~/enums/vital-type.enum'
-import iconManFalling from '~images/icon-man-falling.svg'
-import iconManWalking from '~images/icon-man-walking.svg'
-import { IVitalsHistoryCardItems } from '~models/vital.model'
+import { VitalTypeKeys } from '~/enums/vital-type.enum'
+import { VITAL_SETTINGS } from '~constants/constants'
+import { IThresholds } from '~models/threshold.model'
+import { IHistoryItemMetadata } from '~models/vital.model'
 
 import styles from './vitals-history.module.scss'
 
 interface VitalItemProps {
-  vital: IVitalsHistoryCardItems
+  vital: IHistoryItemMetadata
+  threshold: IThresholds | null
+  disabled?: boolean
   onClick?: () => void
-  tag?: 'div' | 'button'
 }
 
-export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'div' }) => {
-  const { isNormal, title, value, threshold, units, icon, type } = vital
+export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, disabled, onClick }) => {
+  const {
+    name,
+    historyVitalMetadataDto: { isNormal, abnormalMinValue, abnormalMaxValue, totalMean },
+  } = vital
 
-  const isFall = useMemo(() => title === VitalType.fall, [title])
-  const isBp = useMemo(() => title === VitalType.bp, [title])
+  const isBp = useMemo(() => name === 'bp', [name])
 
-  const abnormalClass = useMemo(() => {
-    if (isFall) {
-      return value && styles.vitalItemDanger
+  const abnormalClass = useMemo(() => !isNormal && styles.vitalItemDanger, [isNormal])
+
+  const getValue = useMemo(() => {
+    if (abnormalMinValue && abnormalMaxValue) {
+      return abnormalMinValue === abnormalMaxValue ? abnormalMinValue : `${abnormalMinValue}-${abnormalMaxValue}`
     }
 
-    return !isNormal && styles.vitalItemDanger
-  }, [isFall, isNormal, value])
+    return totalMean || '-'
+  }, [abnormalMaxValue, abnormalMinValue, totalMean])
 
-  const isButton = useMemo(() => {
-    if (tag === 'button') {
-      return {
-        type: 'button',
-      }
-    }
-  }, [tag])
+  const { icon, title, units, min, max, bpMinMax } = VITAL_SETTINGS[name as VitalTypeKeys]
 
   return (
-    <Box
-      className={`${styles.vitalItem} ${abnormalClass} ${isBp ? styles.vitalItemBp : ''}`}
-      component={tag}
-      onClick={onClick}
-      {...isButton}
-    >
+    <button className={`${styles.vitalItem} ${abnormalClass}`} disabled={disabled} onClick={onClick} type="button">
       <div className={styles.vitalHeader}>
         {icon && (
           <div className={styles.vitalIcon}>
@@ -53,45 +47,35 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, onClick, tag = 'di
           <Typography variant="body1">{title}</Typography>
         </div>
       </div>
-      {isFall ? (
-        <div className={styles.vitalFallIcon}>
-          <img alt={title} src={value ? iconManFalling : iconManWalking} />
-        </div>
-      ) : (
-        <div className={styles.vitalText}>
-          <strong>{value ? value : '-'}</strong> {units && <span>{units}</span>}
-        </div>
-      )}
+      <div className={styles.vitalText}>
+        <strong>{getValue}</strong> {units && <span>{units}</span>}
+      </div>
       {threshold && (
         <ul className={styles.thresholdInfo}>
-          {threshold.map(({ min, max, title }, index) => {
-            if (type === 'bp') {
-              return (
-                <li key={index}>
-                  <span>{title}</span> {min} / {max}
+          {isBp && bpMinMax ? (
+            bpMinMax.map(({ title, min, max }) => (
+              <li key={title}>
+                <span>{title}</span> {threshold[min]} / {threshold[max]}
+              </li>
+            ))
+          ) : (
+            <>
+              {min && (
+                <li>
+                  <span className={styles.thresholdInfoLabel}>Min</span>
+                  {threshold[min]}
                 </li>
-              )
-            }
-
-            return (
-              <Fragment key={index}>
-                {min && (
-                  <li>
-                    <span className={styles.thresholdInfoLabel}>Min</span>
-                    {min}
-                  </li>
-                )}
-                {max && (
-                  <li>
-                    <span className={styles.thresholdInfoLabel}>Max</span>
-                    {max}
-                  </li>
-                )}
-              </Fragment>
-            )
-          })}
+              )}
+              {max && (
+                <li>
+                  <span className={styles.thresholdInfoLabel}>Max</span>
+                  {threshold[max]}
+                </li>
+              )}
+            </>
+          )}
         </ul>
       )}
-    </Box>
+    </button>
   )
 }

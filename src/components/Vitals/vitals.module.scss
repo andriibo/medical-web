@@ -25,10 +25,28 @@
 }
 
 button.vitalItem {
-  cursor: pointer;
+  &:disabled {
+    background: #f4f4f4;
+    box-shadow: none;
+    color: #bbb;
 
-  &:hover {
-    opacity: 0.7;
+    p {
+      color: inherit;
+    }
+
+    .vitalIcon {
+      filter: grayscale(100%);
+      opacity: 0.6;
+    }
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+      box-shadow: 0 2px 2px -1px rgb(0 0 0 / 40%), 0 1px 2px rgb(0 0 0 / 28%), 0 1px 6px rgb(0 0 0 / 24%);
+    }
   }
 }
 

@@ -24,6 +24,6 @@ export const useSocket = () => {
       },
     }
 
-    return io(`${process.env.REACT_APP_API_URL}/ws/current-vitals`, socketOptions)
+    return io(`${import.meta.env.REACT_APP_API_URL}/ws/current-vitals`, socketOptions)
   }, [token])
 }

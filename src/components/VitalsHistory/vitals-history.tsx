@@ -1,24 +1,35 @@
-import { SelectedVitalHistoryUseCaseFactory, VitalsItemMapper } from '@abnk/medical-support/src/history-vitals'
 import { Typography } from '@mui/material'
 import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs, { Dayjs } from 'dayjs'
+import duration from 'dayjs/plugin/duration'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
-import { VitalsChartTab, VitalsChartTabKeys, VitalType, VitalTypeKeys } from '~/enums/vital-type.enum'
+import { VitalsChartTab, VitalsChartTabKeys, VitalsTypeFilterKeys } from '~/enums/vital-type.enum'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
 import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalsHistoryFilter } from '~components/VitalsHistory/vitals-history-filter'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
-import { DEFAULT_FILTER_TYPES as defaultFilterTypes } from '~constants/constants'
-import { getVitalSettings } from '~helpers/get-vital-settings'
+import { historyItemsMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
-import { IVital, IVitalsFilterTypes, IVitalsHistoryCard } from '~models/vital.model'
+import { IHistoryItemMetadata, IVital, IVitalsHistoryItem } from '~models/vital.model'
 import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
 
 import styles from './vitals-history.module.scss'
+
+dayjs.extend(duration)
+
+const bpMetadata: IHistoryItemMetadata = {
+  historyVitalMetadataDto: {
+    abnormalMaxValue: 0,
+    abnormalMinValue: 0,
+    isNormal: true,
+    totalMean: 0,
+  },
+  name: 'bp',
+}
 
 interface IDateRange {
   start: number
@@ -39,8 +50,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   })
 
   const [vitalsData, setVitalsData] = useState<IVital[]>()
-  const [filteredVitals, setFilteredVitals] = useState<IVitalsHistoryCard[]>()
-  const [preparedVitals, setPreparedVitals] = useState<IVitalsHistoryCard[]>()
+  const [filteredVitals, setFilteredVitals] = useState<IVitalsHistoryItem[]>()
 
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
 
@@ -49,7 +59,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const [vitalsType, setVitalsType] = useState<VitalsChartTabKeys | null>(null)
   const [vitalChartPopupOpen, setVitalChartPopupOpen] = useState(false)
 
-  const [filteredTypes, setFilteredTypes] = useState<IVitalsFilterTypes>(defaultFilterTypes)
+  const [filterType, setFilterType] = useState<VitalsTypeFilterKeys>('all')
   const [historyIsLoading, setHistoryIsLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -59,15 +69,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
     patientUserId ? { patientUserId, startDate, endDate } : skipToken,
   )
-
-  // const vitals: object[] = []
-  // eslint-disable-next-line new-cap
-  // const mapper = VitalsItemMapper()
-  // const items = vitals.map((vital) => mapper.map(vital))
-  const useCase = SelectedVitalHistoryUseCaseFactory.createWithDefaultOptions()
-  // const historyItems = useCase.createHistory(items, 'temp')
-  //
-  // console.log(items)
 
   useEffect(() => {
     if (myVitalsData) {
@@ -85,155 +86,44 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
   }, [myVitalsIsLoading, patientVitalsIsLoading])
 
-  const vitalsList = useCallback(
-    (vital: IVital) => {
-      const currentThresholds = thresholds.find((item) => item.thresholdsId === vital.thresholdsId)
-
-      const result: IVitalsHistoryCard = {
-        timestamp: vital.timestamp,
-        isTempNormal: vital.isTempNormal,
-        isHrNormal: vital.isHrNormal,
-        isSpo2Normal: vital.isSpo2Normal,
-        isRrNormal: vital.isRrNormal,
-        items: [
-          {
-            ...getVitalSettings('hr'),
-            value: vital.hr,
-            isNormal: vital.isHrNormal,
-            ...(currentThresholds && {
-              threshold: [
-                {
-                  min: currentThresholds.minHr,
-                  max: currentThresholds.maxHr,
-                },
-              ],
-            }),
-          },
-          {
-            ...getVitalSettings('temp'),
-            value: vital.temp,
-            isNormal: vital.isTempNormal,
-            ...(currentThresholds && {
-              threshold: [
-                {
-                  min: currentThresholds.minTemp,
-                  max: currentThresholds.maxTemp,
-                },
-              ],
-            }),
-          },
-          {
-            ...getVitalSettings('spo2'),
-            value: vital.spo2,
-            isNormal: vital.isSpo2Normal,
-            ...(currentThresholds && {
-              threshold: [
-                {
-                  min: currentThresholds.minSpo2,
-                },
-              ],
-            }),
-          },
-          {
-            ...getVitalSettings('rr'),
-            value: vital.rr,
-            isNormal: vital.isRrNormal,
-            ...(currentThresholds && {
-              threshold: [
-                {
-                  min: currentThresholds.minRr,
-                  max: currentThresholds.maxRr,
-                },
-              ],
-            }),
-          },
-          {
-            ...getVitalSettings('bp'),
-            value: 0,
-            isNormal: true,
-            ...(currentThresholds && {
-              threshold: [
-                {
-                  title: 'DBP',
-                  min: currentThresholds.minDbp,
-                  max: currentThresholds.maxDbp,
-                },
-                {
-                  title: 'SBP',
-                  min: currentThresholds.minSbp,
-                  max: currentThresholds.maxSbp,
-                },
-              ],
-            }),
-          },
-          {
-            ...getVitalSettings('fall'),
-            value: vital.fall,
-          },
-        ],
-      }
-
-      return result
-    },
-    [thresholds],
-  )
-
-  useEffect(() => {
-    if (vitalsData) {
-      const abnormalVitals = [...vitalsData].filter(
-        ({ isHrNormal, isRrNormal, isSpo2Normal, isTempNormal }) =>
-          !isHrNormal || !isRrNormal || !isSpo2Normal || !isTempNormal,
-      )
-
-      const preparedVitalsList = abnormalVitals.map((vital) => vitalsList(vital))
-
-      setPreparedVitals(preparedVitalsList)
+  const abnormalHistory = useMemo(() => {
+    if (!vitalsData?.length) {
+      return []
     }
-  }, [vitalsData, vitalsList])
+
+    return historyItemsMapper({ vitals: vitalsData, vitalType: filterType, thresholds })
+  }, [vitalsData, filterType, thresholds])
 
   useEffect(() => {
-    if (preparedVitals) {
+    if (abnormalHistory) {
       setHistoryIsLoading(true)
-      const { all, hr, spo2, rr, temp } = filteredTypes
 
       if (historySort) {
-        preparedVitals.sort((a, b) => {
+        abnormalHistory.sort((a, b) => {
           if (historySort === 'recent') {
-            return b.timestamp - a.timestamp
+            return b.startTimestamp - a.startTimestamp
           }
 
-          return a.timestamp - b.timestamp
+          return a.startTimestamp - b.startTimestamp
         })
       }
 
-      const dateFilteredVitals = preparedVitals.filter(
-        ({ timestamp }) => timestamp >= dateRange.start && timestamp <= dateRange.end,
+      const dateFilteredVitals = abnormalHistory.filter(
+        ({ startTimestamp, endTimestamp }) => startTimestamp >= dateRange.start && endTimestamp <= dateRange.end,
       )
 
-      if (all) {
-        setFilteredVitals(dateFilteredVitals)
-        setHistoryIsLoading(false)
-
-        return
-      }
-
-      const filtered = dateFilteredVitals.filter(
-        ({ isHrNormal, isRrNormal, isSpo2Normal, isTempNormal }) =>
-          (hr && !isHrNormal) || (rr && !isRrNormal) || (spo2 && !isSpo2Normal) || (temp && !isTempNormal),
-      )
-
-      setFilteredVitals(filtered)
+      setFilteredVitals(dateFilteredVitals)
       setHistoryIsLoading(false)
     }
-  }, [filteredTypes, preparedVitals, dateRange, historySort])
+  }, [dateRange, historySort, abnormalHistory])
 
   useEffect(() => {
     setHistoryIsLoading(false)
   }, [filteredVitals])
 
-  const handleChartOpenPopup = (timestamp: number, type: VitalTypeKeys) => {
-    setInitialStartDate(dayjs(timestamp * 1000).subtract(1, 'hour'))
-    setInitialEndDate(dayjs(timestamp * 1000).add(1, 'hour'))
+  const handleChartOpenPopup = (startTime: number, endTime: number, type: string) => {
+    setInitialStartDate(dayjs(startTime * 1000))
+    setInitialEndDate(dayjs(endTime * 1000))
 
     if (type in VitalsChartTab) {
       const typeAsChartTab = type as VitalsChartTabKeys
@@ -251,24 +141,34 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     })
   }, [])
 
-  const vitalGroup = (vital: IVitalsHistoryCard) => (
+  const groupTime = useCallback((vital: IVitalsHistoryItem) => {
+    const startTime = dayjs(vital.startTimestamp * 1000).format('MMM DD, YYYY hh:mm A')
+    const period = (vital.endTimestamp - vital.startTimestamp) * 1000
+
+    const duration = dayjs.duration(period)
+    const hours = duration.hours()
+    const hoursText = hours ? `${hours}h ` : ''
+    const minutes = duration.minutes()
+    const minutesText = minutes ? `${minutes} min` : ''
+
+    return `${startTime} (${hoursText}${minutesText})`
+  }, [])
+
+  const vitalGroup = (vital: IVitalsHistoryItem) => (
     <div className={styles.vitalHistoryGroup}>
       <Typography sx={{ mb: '0.25rem' }} variant="subtitle2">
-        {dayjs(vital.timestamp * 1000).format('MMM DD, YYYY hh:mm A')}
+        {groupTime(vital)}
       </Typography>
       <div className={styles.vitalContainer}>
-        {vital.items.map((vitalItem, index) =>
-          vitalItem.title === VitalType.fall ? null : vitalItem.title === VitalType.bp ? (
-            <VitalHistoryItem key={index} vital={vitalItem} />
-          ) : (
-            <VitalHistoryItem
-              key={index}
-              onClick={() => handleChartOpenPopup(vital.timestamp, vitalItem.type)}
-              tag="button"
-              vital={vitalItem}
-            />
-          ),
-        )}
+        {vital.historyVitalsMetadata.map((vitalItem, index) => (
+          <VitalHistoryItem
+            key={index}
+            onClick={() => handleChartOpenPopup(vital.startTimestamp, vital.endTimestamp, vitalItem.name)}
+            threshold={vital.thresholds}
+            vital={vitalItem}
+          />
+        ))}
+        <VitalHistoryItem disabled threshold={vital.thresholds} vital={bpMetadata} />
       </div>
     </div>
   )
@@ -283,7 +183,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
         handleRange={handleRange}
         initialEndDate={dayjs(endDate)}
         initialStartDate={dayjs(startDate)}
-        onTypesChange={setFilteredTypes}
+        onTypesChange={setFilterType}
       />
       <div className={`${historyIsLoading ? styles.blur : ''}`}>
         {filteredVitals?.length ? (
