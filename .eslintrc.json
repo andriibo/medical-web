@@ -224,7 +224,7 @@
     }],
     "brace-style": ["warn", "1tbs"],
     "no-else-return": "warn",
-    "spaced-comment": "warn",
+    "spaced-comment": ["warn", "always", { "markers": ["/"] }],
     "space-infix-ops": "warn",
     "no-multiple-empty-lines": "warn",
     "space-in-parens": ["warn", "never"],

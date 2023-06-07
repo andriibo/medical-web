@@ -304,7 +304,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                     disabled={!rangeStartDate}
                     inputFormat="MM/DD hh:mm A"
                     maxDate={dayjs()}
-                    minDateTime={dayjs(rangeStartDate).add(5, 'minutes')}
+                    minDateTime={dayjs(rangeStartDate)}
                     onAccept={(newValue) => {
                       setRangeEndDate(resetSeconds(newValue))
                     }}

@@ -46,6 +46,26 @@ export interface IVitalsSettings {
   type: VitalTypeKeys
 }
 
+export type IVitalsHistoryItem = {
+  endTimestamp: number
+  historyVitalsMetadata: IHistoryItemMetadata[]
+  startTimestamp: number
+  thresholdsId: string
+  thresholds: IThresholds | null
+}
+
+export type IHistoryItemMetadata = {
+  historyVitalMetadataDto: IHistoryVitalMetadataDto
+  name: string
+}
+
+type IHistoryVitalMetadataDto = {
+  abnormalMaxValue: number
+  abnormalMinValue: number
+  isNormal: boolean
+  totalMean: number
+}
+
 export interface IVitalsHistoryCard {
   timestamp: number
   isTempNormal: boolean

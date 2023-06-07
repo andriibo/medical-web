@@ -7,10 +7,9 @@ import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
-import { IThresholdsChartKeys } from '~models/threshold.model'
-import { IVitalsFilterTypes } from '~models/vital.model'
+import { IThresholdsChartKeys, ThresholdsBloodPressureResponseKeys } from '~models/threshold.model'
 
-export const BASE_API = process.env.REACT_APP_API_URL
+export const BASE_API = import.meta.env.REACT_APP_API_URL
 
 export const ACCOUNT_DELETION_DELAY = 30
 
@@ -85,11 +84,20 @@ export const VITAL_THRESHOLDS_TYPE: VitalThresholdType = {
   },
 }
 
+type VitalBpThresholds = {
+  title: string
+  min: ThresholdsBloodPressureResponseKeys
+  max: ThresholdsBloodPressureResponseKeys
+}
+
 type VitalSettingsType = {
   [key in VitalTypeKeys]: {
     title: VitalType
     icon?: string
     units: VitalUnits
+    min?: IThresholdsChartKeys
+    max?: IThresholdsChartKeys
+    bpMinMax?: VitalBpThresholds[]
   }
 }
 
@@ -98,21 +106,28 @@ export const VITAL_SETTINGS: VitalSettingsType = {
     title: VitalType.hr,
     icon: iconHeartRate,
     units: VitalUnits.hr,
+    min: 'minHr',
+    max: 'maxHr',
   },
   temp: {
     title: VitalType.temp,
     icon: iconTemperature,
     units: VitalUnits.temp,
+    max: 'maxTemp',
+    min: 'minTemp',
   },
   spo2: {
     title: VitalType.spo2,
     icon: iconSaturation,
     units: VitalUnits.spo2,
+    min: 'minSpo2',
   },
   rr: {
     title: VitalType.rr,
     icon: iconRespiration,
     units: VitalUnits.rr,
+    max: 'maxRr',
+    min: 'minRr',
   },
   fall: {
     title: VitalType.fall,
@@ -122,14 +137,17 @@ export const VITAL_SETTINGS: VitalSettingsType = {
     title: VitalType.bp,
     icon: iconBloodPressure,
     units: VitalUnits.bp,
+    bpMinMax: [
+      {
+        title: 'DBP',
+        min: 'minDbp',
+        max: 'maxDbp',
+      },
+      {
+        title: 'SBP',
+        min: 'minSbp',
+        max: 'maxSbp',
+      },
+    ],
   },
-}
-
-export const DEFAULT_FILTER_TYPES: IVitalsFilterTypes = {
-  all: true,
-  hr: false,
-  temp: false,
-  spo2: false,
-  rr: false,
-  bp: false,
 }
