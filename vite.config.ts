@@ -35,6 +35,10 @@ export default ({ mode }) => {
         typescript: true,
       }),
     ],
+    build: {
+      outDir: './build',
+      emptyOutDir: true,
+    },
     css: {
       devSourcemap: true,
     },
