@@ -72,7 +72,7 @@ export interface IThresholdsBloodPressure {
   maxSBP: number
 }
 
-// will be removed
+// @todo: will be removed
 export interface IThresholdsBloodPressureResponse {
   minDbp: number
   maxDbp: number
