@@ -76,7 +76,6 @@ export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ initialEmai
       }
 
       handleClose()
-      navigate(PageUrls.Requests)
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
