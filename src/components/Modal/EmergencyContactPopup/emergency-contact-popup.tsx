@@ -26,6 +26,7 @@ import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { isRelationshipValue } from '~helpers/is-relationship-value'
+import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
 import {
   IEmergencyContact,
@@ -102,7 +103,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
           contact: {
             ...trimValues(data),
             relationship: data.relationship,
-            phone: data.phone.split('-').join(''),
+            phone: preparePhoneForSending(data.phone),
           },
         }).unwrap()
 
@@ -126,7 +127,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
       await addEmergencyContact({
         ...data,
         relationship: data.relationship,
-        phone: data.phone.split('-').join(''),
+        phone: preparePhoneForSending(data.phone),
       }).unwrap()
 
       initiateClosePopup()

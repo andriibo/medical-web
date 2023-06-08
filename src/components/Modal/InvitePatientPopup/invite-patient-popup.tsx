@@ -52,7 +52,6 @@ export const InvitePatientPopup: FC<InvitePatientPopupProps> = ({ open, handleCl
       await initiatePatient(trimValues(data)).unwrap()
 
       handleClose()
-      navigate(PageUrls.Requests, { state: { activeTab: RequestsGrantedUserTab.outgoing } })
       enqueueSnackbar('Request sent')
     } catch (err) {
       const {
