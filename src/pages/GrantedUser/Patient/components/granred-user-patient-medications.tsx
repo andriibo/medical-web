@@ -5,6 +5,7 @@ import React, { FC, useState } from 'react'
 
 import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
 import { Spinner } from '~components/Spinner/spinner'
+import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
 import iconRx from '~images/icon-rx.png'
 import {
   useDeletePatientMedicationMutation,
@@ -36,32 +37,17 @@ export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProp
     setIsMedicationPopupOpen(false)
   }
 
-  const removeDeletingMedicationId = (medicationId: string, state: React.Dispatch<React.SetStateAction<string[]>>) => {
-    state((prevState) => {
-      const index = prevState.indexOf(medicationId)
-
-      prevState.splice(index, 1)
-
-      return prevState
-    })
-  }
-
   const handleDeleteMedication = async (medicationId: string) => {
     try {
-      setDeletingMedicationsId((prevState) => {
-        prevState.push(medicationId)
-
-        return prevState
-      })
+      pushValueToArrayState(medicationId, setDeletingMedicationsId)
       await deletePatientMedication({ medicationId }).unwrap()
 
       enqueueSnackbar('Medication deleted')
     } catch (err) {
-      removeDeletingMedicationId(medicationId, setDeletingMedicationsId)
       enqueueSnackbar('Medication not deleted', { variant: 'warning' })
       console.error(err)
     } finally {
-      removeDeletingMedicationId(medicationId, setDeletingMedicationsId)
+      removeValueFromArrayState(medicationId, setDeletingMedicationsId)
     }
   }
 

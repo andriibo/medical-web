@@ -10,6 +10,7 @@ import { NewDiagnosisPopup } from '~components/Modal/NewDiagnosisPopup/new-diagn
 import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel'
+import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
 import { useDeletePatientDiagnosisMutation, useGetPatientDiagnosesQuery } from '~stores/services/patient-diagnosis.api'
 import {
   useDeletePatientMedicationMutation,
@@ -25,8 +26,8 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
   const { enqueueSnackbar } = useSnackbar()
 
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
-  const [deletingDiagnosisId, setDeletingDiagnosisId] = useState<string | null>(null)
-  const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(null)
+  const [deletingDiagnosesId, setDeletingDiagnosesId] = useState<string[]>([])
+  const [deletingMedicationsId, setDeletingMedicationsId] = useState<string[]>([])
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Treatment>(Treatment.diagnoses)
 
@@ -49,14 +50,15 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
 
   const handleDeleteDiagnosis = async (diagnosisId: string) => {
     try {
-      setDeletingDiagnosisId(diagnosisId)
+      pushValueToArrayState(diagnosisId, setDeletingDiagnosesId)
       await deletePatientDiagnosis({ diagnosisId }).unwrap()
 
       enqueueSnackbar('Diagnosis deleted')
     } catch (err) {
       console.error(err)
-      setDeletingDiagnosisId(null)
       enqueueSnackbar('Diagnosis not deleted', { variant: 'warning' })
+    } finally {
+      removeValueFromArrayState(diagnosisId, setDeletingDiagnosesId)
     }
   }
 
@@ -70,14 +72,15 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
 
   const handleDeleteMedication = async (medicationId: string) => {
     try {
-      setDeletingMedicationId(medicationId)
+      pushValueToArrayState(medicationId, setDeletingMedicationsId)
       await deletePatientMedication({ medicationId }).unwrap()
 
       enqueueSnackbar('Medication deleted')
     } catch (err) {
-      setDeletingMedicationId(null)
       enqueueSnackbar('Medication not deleted', { variant: 'warning' })
       console.error(err)
+    } finally {
+      removeValueFromArrayState(medicationId, setDeletingMedicationsId)
     }
   }
 
@@ -116,7 +119,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           ) : patientDiagnosesData?.length ? (
             patientDiagnosesData.map(({ diagnosisId, diagnosisName, createdByUser }) => (
               <ListItem
-                className={deletingDiagnosisId === diagnosisId ? 'disabled' : ''}
+                className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
                 key={diagnosisId}
                 secondaryAction={
                   !isUserRoleCaregiver && (
@@ -144,7 +147,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           ) : patientMedicationsData?.length ? (
             patientMedicationsData.map(({ medicationId, genericName, brandNames, createdByUser }) => (
               <ListItem
-                className={deletingMedicationId === medicationId ? 'disabled' : ''}
+                className={deletingMedicationsId.includes(medicationId) ? 'disabled' : ''}
                 key={medicationId}
                 secondaryAction={
                   !isUserRoleCaregiver && (

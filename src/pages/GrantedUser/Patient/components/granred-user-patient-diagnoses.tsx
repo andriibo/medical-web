@@ -5,6 +5,7 @@ import React, { FC, useState } from 'react'
 
 import { NewDiagnosisPopup } from '~components/Modal/NewDiagnosisPopup/new-diagnosis-popup'
 import { Spinner } from '~components/Spinner/spinner'
+import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
 import iconDx from '~images/icon-dx.png'
 import { useDeletePatientDiagnosisMutation, useGetPatientDiagnosesQuery } from '~stores/services/patient-diagnosis.api'
 
@@ -33,32 +34,17 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
     setDiagnosisPopupOpen(false)
   }
 
-  const removeDeletingDiagnosisId = (diagnosisId: string) => {
-    setDeletingDiagnosesId((prevState) => {
-      const index = prevState.indexOf(diagnosisId)
-
-      prevState.splice(index, 1)
-
-      return prevState
-    })
-  }
-
   const handleDeleteDiagnosis = async (diagnosisId: string) => {
     try {
-      setDeletingDiagnosesId((prevState) => {
-        prevState.push(diagnosisId)
-
-        return prevState
-      })
+      pushValueToArrayState(diagnosisId, setDeletingDiagnosesId)
       await deletePatientDiagnosis({ diagnosisId }).unwrap()
 
       enqueueSnackbar('Diagnosis deleted')
     } catch (err) {
       console.error(err)
-      removeDeletingDiagnosisId(diagnosisId)
       enqueueSnackbar('Diagnosis not deleted', { variant: 'warning' })
     } finally {
-      removeDeletingDiagnosisId(diagnosisId)
+      removeValueFromArrayState(diagnosisId, setDeletingDiagnosesId)
     }
   }
 
