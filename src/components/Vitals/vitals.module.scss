@@ -114,6 +114,10 @@ button.vitalItem {
     .vitalItemDanger & {
       color: var(--danger);
     }
+
+    .vitalItem:disabled & {
+      color: inherit;
+    }
   }
 
   > span {
