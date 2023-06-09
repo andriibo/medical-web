@@ -12,7 +12,6 @@ interface PatientCardHeaderProps {
   avatar: string | null
   firstName: string
   lastName: string
-  role: 'Doctor' | 'Caregiver'
   handleDeletingId: (val: string | null) => void
   handleRefetch: () => void
 }
@@ -22,7 +21,6 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
   avatar,
   firstName,
   lastName,
-  role,
   handleDeletingId,
   handleRefetch,
 }) => {
@@ -61,7 +59,7 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
         }
       }
     },
-    [confirm, deleteGrantedUser, enqueueSnackbar, handleDeletingId, handleRefetch, role],
+    [confirm, deleteGrantedUser, enqueueSnackbar, firstName, handleDeletingId, handleRefetch, lastName],
   )
 
   return (

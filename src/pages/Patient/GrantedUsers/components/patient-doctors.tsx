@@ -47,7 +47,6 @@ export const PatientDoctors = () => {
                   handleDeletingId={setDeletingDoctorId}
                   handleRefetch={() => refetchPatientDoctors()}
                   lastName={lastName}
-                  role="Doctor"
                 />
               }
               infoListItems={<PatientGrantedUsersCardListItem email={email} institution={institution} phone={phone} />}
