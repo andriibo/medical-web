@@ -40,3 +40,65 @@ button.infoListButton {
     background: none;
   }
 }
+
+.contactList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    margin: 0 0 0.75rem;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.contactListLink {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  color: #323232;
+  text-decoration: none;
+
+  span {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  :global {
+    .MuiSvgIcon-root {
+      margin-right: 1rem;
+    }
+  }
+}
+
+.patientInfoList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 1rem;
+
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    width: 26px;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    margin: 0 0.625rem 0 0;
+  }
+}

@@ -16,9 +16,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
 
-import { PageUrls } from '~/enums/page-urls.enum'
 import { DoctorRoleLabel, GrantedUserLabel } from '~/enums/roles.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
@@ -40,7 +38,6 @@ interface InviteDoctorPopupProps {
 
 export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ initialEmail, open, handleClose }) => {
   const { enqueueSnackbar } = useSnackbar()
-  const navigate = useNavigate()
   const { validationRules } = useValidationRules()
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)

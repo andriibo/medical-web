@@ -1,11 +1,17 @@
+import { InfoOutlined, MailOutline, PersonRemove, PhoneInTalk } from '@mui/icons-material'
 import { Box, Button, Divider, Typography } from '@mui/material'
+import dayjs from 'dayjs'
 import React, { FC } from 'react'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useDeletePatient } from '~/hooks/use-delete-patient'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { getAge } from '~helpers/get-age'
+import iconHeight from '~images/icon-height.png'
+import iconWeigher from '~images/icon-weigher.png'
 import { IDoctorPatients } from '~models/profie.model'
+import { GrantedUserPatientDiagnoses } from '~pages/GrantedUser/Patient/components/granred-user-patient-diagnoses'
+import { GrantedUserPatientMedications } from '~pages/GrantedUser/Patient/components/granred-user-patient-medications'
 
 import styles from '../granted-user-patient.module.scss'
 
@@ -14,7 +20,7 @@ interface GrantedUserPatientInfoProps {
 }
 
 export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
-  patientData: { firstName, lastName, email, avatar, gender, dob, weight, height, phone, accessId },
+  patientData: { firstName, lastName, email, avatar, gender, dob, weight, height, phone, accessId, userId },
 }) => {
   const [deletePatient] = useDeletePatient()
 
@@ -26,47 +32,55 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
         lastName={lastName}
         sx={{ width: '120px', m: '0 auto 1rem', fontSize: '3.5rem' }}
       />
-      <Typography textAlign="center" variant="body1">
+      <Typography textAlign="center" variant="h6">
         {firstName} {lastName}
       </Typography>
+      <Typography textAlign="center" variant="body1">
+        {gender}
+      </Typography>
+      <Typography textAlign="center" variant="body1">
+        {dayjs(dob).format('MMM DD, YYYY')} ({getAge(dob)} years)
+      </Typography>
       <Divider sx={{ my: 2 }} />
-      <ul className={styles.personalInfoList}>
+      <ul className={`${styles.patientInfoList}`}>
         <li>
-          <span className={styles.infoListLabel}>Gender</span>
-          {gender}
-        </li>
-        <li>
-          <span className={styles.infoListLabel}>Age</span>
-          {getAge(dob)}
-        </li>
-        <li>
-          <span className={styles.infoListLabel}>Height</span>
+          <img alt="height icon" src={iconHeight} />
           {height} cm
         </li>
         <li>
-          <span className={styles.infoListLabel}>Weight</span>
+          <img alt="weigher icon" src={iconWeigher} />
           {weight} kg
         </li>
       </ul>
       <Divider sx={{ my: 2 }} />
-      <ul className={`${styles.personalInfoList} ${styles.fullWidth}`}>
+      <GrantedUserPatientDiagnoses patientUserId={userId} />
+      <Divider sx={{ my: 2 }} />
+      <GrantedUserPatientMedications patientUserId={userId} />
+      <Divider sx={{ my: 2 }} />
+      <div className={styles.patientAsideHeading}>
+        <InfoOutlined className={styles.patientAsideIcon} />
+        <strong className={styles.patientAsideTitle}>Contact info</strong>
+      </div>
+      <ul className={`${styles.contactList} ${styles.fullWidth}`}>
         <li>
-          <span className={styles.infoListLabel}>Phone</span>
-          <a className="simple-link" href={`tel:${phone}`}>
+          <a className={styles.contactListLink} href={`tel:${phone}`}>
+            <PhoneInTalk />
             {phone}
           </a>
         </li>
         <li>
-          <span className={styles.infoListLabel}>Email</span>
-          <a className="simple-link text-ellipsis" href={`mailto: ${email}`} title={email}>
-            {email}
+          <a className={styles.contactListLink} href={`mailto: ${email}`} title={email}>
+            <MailOutline />
+            <span>{email}</span>
           </a>
         </li>
       </ul>
-      <Box sx={{ textAlign: 'center', mt: 3 }}>
+      <Divider sx={{ my: 2 }} />
+      <Box sx={{ textAlign: 'center', mt: 4 }}>
         <Button
           color="error"
           onClick={() => deletePatient({ accessId, navigateTo: PageUrls.Patients })}
+          startIcon={<PersonRemove />}
           variant="outlined"
         >
           Remove
