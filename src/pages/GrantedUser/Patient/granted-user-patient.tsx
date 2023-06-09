@@ -9,7 +9,6 @@ import { PatientTab } from '~/enums/patient-tab.enum'
 import { EmergencyContacts } from '~components/EmergencyContacts/emergency-contacts'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { SuggestedContactPopup } from '~components/Modal/SuggestedContactPopup/suggested-contact-popup'
-import { PatientTreatment } from '~components/PatientTreatment/patient-treatment'
 import { Spinner } from '~components/Spinner/spinner'
 import { SuggestedContacts } from '~components/SuggestedContacts/suggested-contacts'
 import { TabPanel } from '~components/TabPanel/tab-panel'
@@ -56,7 +55,6 @@ export const GrantedUserPatient = () => {
           <Tabs className="tabs" onChange={handleChangeTab} value={activeTab}>
             <Tab label="Vitals" value={PatientTab.vitals} />
             <Tab label="Thresholds" value={PatientTab.thresholds} />
-            <Tab label="Treatment" value={PatientTab.treatment} />
             <Tab label="Emergency contacts" value={PatientTab.emergencyContacts} />
           </Tabs>
           <TabPanel activeTab={activeTab} value={PatientTab.vitals}>
@@ -64,9 +62,6 @@ export const GrantedUserPatient = () => {
           </TabPanel>
           <TabPanel activeTab={activeTab} value={PatientTab.thresholds}>
             <Thresholds patientUserId={patientUserId} />
-          </TabPanel>
-          <TabPanel activeTab={activeTab} value={PatientTab.treatment}>
-            <PatientTreatment patientUserId={patientUserId} />
           </TabPanel>
           <TabPanel activeTab={activeTab} value={PatientTab.emergencyContacts}>
             <SuggestedContacts
