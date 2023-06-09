@@ -46,7 +46,7 @@ export const PatientGrantedUsers = () => {
           <PatientDoctors />
         </TabPanel>
         <TabPanel activeTab={activeTab} value={UserRole.Caregiver}>
-          <PatientCaregivers />`
+          <PatientCaregivers />
         </TabPanel>
       </div>
       <InviteGrantedUserPopup handleClose={handleInviteGrantedUserPopupClose} open={inviteGrantedUserPopupOpen} />
