@@ -47,7 +47,6 @@ export const PatientCaregivers = () => {
                   handleDeletingId={setDeletingCaregiverId}
                   handleRefetch={() => refetchPatientCaregivers()}
                   lastName={lastName}
-                  role="Caregiver"
                 />
               }
               infoListItems={<PatientGrantedUsersCardListItem email={email} phone={phone} />}

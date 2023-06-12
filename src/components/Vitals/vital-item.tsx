@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
@@ -12,14 +12,14 @@ interface VitalItemProps {
   vital: IVitalsCard
   toggleVitals?: boolean
   onClick?: () => void
-  tag?: 'div' | 'button'
+  disabled?: boolean
 }
 
 export const VitalItem: FC<VitalItemProps> = ({
   vital: { title, value, units, icon, thresholds, limits },
   toggleVitals,
   onClick,
-  tag = 'div',
+  disabled,
 }) => {
   const [changedClass, setChangedClass] = useState('')
   const [blinkClass, setBlinkClass] = useState('')
@@ -70,14 +70,6 @@ export const VitalItem: FC<VitalItemProps> = ({
 
   const isDanger = useMemo(() => isAbnormal || exceedingLimit, [exceedingLimit, isAbnormal])
 
-  const isButton = useMemo(() => {
-    if (tag === 'button') {
-      return {
-        type: 'button',
-      }
-    }
-  }, [tag])
-
   useEffect(() => {
     setChangedClass(styles.changed)
   }, [toggleVitals])
@@ -94,11 +86,11 @@ export const VitalItem: FC<VitalItemProps> = ({
   }
 
   return (
-    <Box
+    <button
       className={`${styles.vitalItem} ${isDanger ? styles.vitalItemDanger : ''}`}
-      component={tag}
+      disabled={disabled}
       onClick={onClick}
-      {...isButton}
+      type="button"
     >
       <div className={styles.vitalHeader}>
         {icon && (
@@ -116,6 +108,6 @@ export const VitalItem: FC<VitalItemProps> = ({
         </strong>
         <span>{units && units}</span>
       </div>
-    </Box>
+    </button>
   )
 }

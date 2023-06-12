@@ -12,7 +12,6 @@ interface PatientCardHeaderProps {
   avatar: string | null
   firstName: string
   lastName: string
-  role: 'Doctor' | 'Caregiver'
   handleDeletingId: (val: string | null) => void
   handleRefetch: () => void
 }
@@ -22,7 +21,6 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
   avatar,
   firstName,
   lastName,
-  role,
   handleDeletingId,
   handleRefetch,
 }) => {
@@ -35,25 +33,33 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
     async (accessId: string) => {
       try {
         await confirm({
-          title: `Remove ${role.toLowerCase()}?`,
-          description: `The ${role.toLowerCase()} will lost access to your account information.`,
-          confirmationText: 'Remove',
+          title: false,
+          description: (
+            <>
+              Are you sure you would like to remove{' '}
+              <strong>
+                {firstName} {lastName}
+              </strong>{' '}
+              from your Trusted Care Network?
+            </>
+          ),
+          confirmationText: 'Yes, Remove',
         })
 
         handleDeletingId(accessId)
 
         await deleteGrantedUser({ accessId }).unwrap()
         handleRefetch()
-        enqueueSnackbar(`${role} removed`)
+        enqueueSnackbar(`${firstName} ${lastName} removed`)
       } catch (err) {
         console.error(err)
         handleDeletingId(null)
         if (err) {
-          enqueueSnackbar(`${role} not removed`, { variant: 'warning' })
+          enqueueSnackbar(`${firstName} ${lastName} not removed`, { variant: 'warning' })
         }
       }
     },
-    [confirm, deleteGrantedUser, enqueueSnackbar, handleDeletingId, handleRefetch, role],
+    [confirm, deleteGrantedUser, enqueueSnackbar, firstName, handleDeletingId, handleRefetch, lastName],
   )
 
   return (

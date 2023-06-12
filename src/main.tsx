@@ -32,7 +32,7 @@ root.render(
         <ConfirmProvider
           defaultOptions={{
             dialogProps: { maxWidth: 'xs', fullWidth: true },
-            confirmationButtonProps: { variant: 'contained' },
+            confirmationButtonProps: { variant: 'outlined' },
           }}
         >
           <App />

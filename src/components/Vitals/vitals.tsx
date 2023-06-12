@@ -150,12 +150,11 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
       <div className={styles.vitalContainer}>
         {vitalsList.map((vital, index) =>
           vital.title === VitalType.bp ? (
-            <VitalItem key={index} toggleVitals={toggleVitals} vital={vital} />
+            <VitalItem disabled key={index} toggleVitals={toggleVitals} vital={vital} />
           ) : vital.title === VitalType.fall ? (
             <VitalItem
               key={index}
               onClick={() => setFallsHistoryPopupOpen(true)}
-              tag="button"
               toggleVitals={toggleVitals}
               vital={vital}
             />
@@ -163,7 +162,6 @@ export const Vitals: FC<VitalsProps> = ({ patientUserId, isLoading, isUpdatingEn
             <VitalItem
               key={index}
               onClick={() => handleChartOpenPopup(vital.type)}
-              tag="button"
               toggleVitals={toggleVitals}
               vital={vital}
             />
