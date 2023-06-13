@@ -30,9 +30,18 @@ const getIndications = <T extends number | null>(arr: T[], digits: number = 0) =
 }
 
 export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number): [IVitalChart, number] => {
+  let startOffset = 0
   const duration = end - start
-  const interval =
-    duration > INTERVALS_NUMBER * MIN_INTERVAL_DURATION ? duration / INTERVALS_NUMBER : MIN_INTERVAL_DURATION
+  const isLongDuration = duration > INTERVALS_NUMBER * MIN_INTERVAL_DURATION
+
+  let interval = duration / INTERVALS_NUMBER
+
+  if (!isLongDuration) {
+    startOffset = 1
+    interval = MIN_INTERVAL_DURATION
+  }
+
+  const startWithOffset = start - startOffset
 
   const temporaryArray: IVital[][] = []
   const result: IVitalChart = {
@@ -42,11 +51,15 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
     rr: [],
   }
 
-  for (let currentInterval = start, firstIteration = true; currentInterval < end; currentInterval += interval) {
+  for (
+    let currentInterval = startWithOffset, firstIteration = true;
+    currentInterval < end;
+    currentInterval += interval
+  ) {
     let startPoint = currentInterval
     const endPoint = currentInterval + interval
 
-    if (firstIteration) {
+    if (firstIteration && !startOffset) {
       startPoint -= 1
       firstIteration = false
     }
