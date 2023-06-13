@@ -37,7 +37,7 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
   let interval = duration / INTERVALS_NUMBER
 
   if (!isLongDuration) {
-    startOffset = 1
+    startOffset = 1000
     interval = MIN_INTERVAL_DURATION
   }
 
