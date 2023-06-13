@@ -7,7 +7,7 @@ import iconHeartRate from '~images/icon-heart-rate.png'
 import iconRespiration from '~images/icon-respiration.png'
 import iconSaturation from '~images/icon-saturation.png'
 import iconTemperature from '~images/icon-temperature.png'
-import { IThresholdsChartKeys, ThresholdsBloodPressureResponseKeys } from '~models/threshold.model'
+import { IThresholdsChartKeys, ThresholdsBloodPressureKeys } from '~models/threshold.model'
 
 export const BASE_API = import.meta.env.REACT_APP_API_URL
 
@@ -86,8 +86,8 @@ export const VITAL_THRESHOLDS_TYPE: VitalThresholdType = {
 
 type VitalBpThresholds = {
   title: string
-  min: ThresholdsBloodPressureResponseKeys
-  max: ThresholdsBloodPressureResponseKeys
+  min: ThresholdsBloodPressureKeys
+  max: ThresholdsBloodPressureKeys
 }
 
 type VitalSettingsType = {

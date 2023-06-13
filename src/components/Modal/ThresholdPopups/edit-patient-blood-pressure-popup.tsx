@@ -57,15 +57,15 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
     }
   }, [open, mounted, reset, thresholds])
 
-  const onSubmit: SubmitHandler<IThresholdsBloodPressure> = async ({ minSBP, maxSBP, minDBP, maxDBP }) => {
+  const onSubmit: SubmitHandler<IThresholdsBloodPressure> = async ({ minSbp, maxSbp, minDbp, maxDbp }) => {
     try {
       await updateThresholds({
         patientUserId,
         thresholds: {
-          minDBP: Number(minDBP),
-          maxDBP: Number(maxDBP),
-          minSBP: Number(minSBP),
-          maxSBP: Number(maxSBP),
+          minDbp: Number(minDbp),
+          maxDbp: Number(maxDbp),
+          minSbp: Number(minSbp),
+          maxSbp: Number(maxSbp),
         },
       }).unwrap()
 
@@ -107,7 +107,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
             <Grid xs={6}>
               <Controller
                 control={control}
-                name="minDBP"
+                name="minDbp"
                 render={({ field }) => (
                   <NumberField
                     field={field}
@@ -122,7 +122,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
             <Grid xs={6}>
               <Controller
                 control={control}
-                name="maxDBP"
+                name="maxDbp"
                 render={({ field }) => (
                   <NumberField
                     field={field}
@@ -139,7 +139,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
             <Grid xs={6}>
               <Controller
                 control={control}
-                name="minSBP"
+                name="minSbp"
                 render={({ field }) => (
                   <NumberField
                     field={field}
@@ -154,7 +154,7 @@ export const EditPatientBloodPressurePopup: FC<EditPatientBloodPressurePopupProp
             <Grid xs={6}>
               <Controller
                 control={control}
-                name="maxSBP"
+                name="maxSbp"
                 render={({ field }) => (
                   <NumberField
                     field={field}

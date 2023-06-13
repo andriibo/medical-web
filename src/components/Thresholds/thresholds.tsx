@@ -80,7 +80,7 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
               max: threshold.maxSbp,
             },
           ],
-          setBy: getSetByUser(threshold.spo2SetBy),
+          setBy: getSetByUser(threshold.dbpSetBy),
           units: 'mmHg',
           onClick: () => setBloodPressurePopupOpen(true),
         },
@@ -178,10 +178,10 @@ export const Thresholds: FC<ThresholdsProps> = ({ patientUserId }) => {
             open={bloodPressurePopupOpen}
             patientUserId={patientUserId}
             thresholds={{
-              minSBP: threshold.minSbp,
-              maxSBP: threshold.maxSbp,
-              minDBP: threshold.minDbp,
-              maxDBP: threshold.maxDbp,
+              minSbp: threshold.minSbp,
+              maxSbp: threshold.maxSbp,
+              minDbp: threshold.minDbp,
+              maxDbp: threshold.maxDbp,
             }}
             validationRulesData={validationRulesData}
           />
