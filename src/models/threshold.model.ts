@@ -66,14 +66,6 @@ export interface IThresholdsSaturation {
 }
 
 export interface IThresholdsBloodPressure {
-  minDBP: number
-  maxDBP: number
-  minSBP: number
-  maxSBP: number
-}
-
-// @todo: will be removed
-export interface IThresholdsBloodPressureResponse {
   minDbp: number
   maxDbp: number
   minSbp: number
@@ -94,4 +86,3 @@ export type IThresholdsChartKeys = keyof IThresholdsChart
 export type ThresholdsCommonKeys = keyof IThresholdsCommon
 export type ThresholdsSaturationKeys = keyof IThresholdsSaturation
 export type ThresholdsBloodPressureKeys = keyof IThresholdsBloodPressure
-export type ThresholdsBloodPressureResponseKeys = keyof IThresholdsBloodPressureResponse
