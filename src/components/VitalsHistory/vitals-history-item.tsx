@@ -25,13 +25,15 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
   const isBp = useMemo(() => name === 'bp', [name])
 
   const abnormalClass = useMemo(() => {
-    if (isNormal) return null
+    if (!isNormal) {
+      if (name === filterType) {
+        return styles.vitalItemDangerActive
+      }
 
-    if (name === filterType) {
-      return styles.vitalItemDangerActive
+      return styles.vitalItemDanger
     }
 
-    return styles.vitalItemDanger
+    return ''
   }, [isNormal, filterType, name])
 
   const getValue = useMemo(() => {
