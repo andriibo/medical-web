@@ -60,13 +60,18 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const [filterType, setFilterType] = useState<VitalsTypeFilterKeys>('all')
   const [historyIsLoading, setHistoryIsLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isUninitialized, setIsUninitialized] = useState(false)
 
-  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetPatientVitalsQuery(
-    patientUserId ? skipToken : { startDate, endDate },
-  )
-  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
-    patientUserId ? { patientUserId, startDate, endDate } : skipToken,
-  )
+  const {
+    data: myVitalsData,
+    isLoading: myVitalsIsLoading,
+    isUninitialized: myVitalsIsUninitialized,
+  } = useGetPatientVitalsQuery(patientUserId ? skipToken : { startDate, endDate })
+  const {
+    data: patientVitalsData,
+    isLoading: patientVitalsIsLoading,
+    isUninitialized: patientVitalsIsUninitialized,
+  } = useGetPatientVitalsByDoctorQuery(patientUserId ? { patientUserId, startDate, endDate } : skipToken)
 
   useEffect(() => {
     if (myVitalsData) {
@@ -83,6 +88,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   useEffect(() => {
     setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
   }, [myVitalsIsLoading, patientVitalsIsLoading])
+
+  useEffect(() => {
+    setIsUninitialized(myVitalsIsUninitialized || patientVitalsIsUninitialized)
+  }, [myVitalsIsUninitialized, patientVitalsIsUninitialized])
 
   const abnormalHistory = useMemo(() => {
     if (!vitalsData?.length) {
@@ -164,7 +173,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     </div>
   )
 
-  if (isLoading || !vitalsData) {
+  if (isLoading || !isUninitialized) {
     return <Spinner />
   }
 
