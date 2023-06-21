@@ -261,7 +261,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                   <MobileDateTimePicker
                     disabled={activePeriod !== 'range'}
                     inputFormat="MM/DD hh:mm A"
-                    maxDateTime={dayjs().subtract(1, 'minutes')}
+                    maxDateTime={dayjs().subtract(1, 'minute')}
                     minDateTime={dayjs().startOf('d').subtract(30, 'days')}
                     onAccept={(newValue) => {
                       setRangeStartDate(newValue)
