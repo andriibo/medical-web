@@ -1,8 +1,13 @@
-export enum UserRole {
-  Patient = 'Patient',
+export enum GrantedUserRole {
   Doctor = 'Doctor',
   Caregiver = 'Caregiver',
 }
+
+export enum PatientRoleLabel {
+  Patient = 'Patient',
+}
+
+export const UserRole = { ...GrantedUserRole, ...PatientRoleLabel }
 
 export enum CaregiverRoleLabel {
   CaregiverProfessional = 'Caregiver Professional',
@@ -16,10 +21,6 @@ export enum DoctorRoleLabel {
 }
 
 export const GrantedUserLabel = { ...DoctorRoleLabel, ...CaregiverRoleLabel }
-
-export enum PatientRoleLabel {
-  Patient = 'Patient',
-}
 
 export type UserRoleKeys = keyof typeof UserRole
 export type CaregiverRoleLabelKeys = keyof typeof CaregiverRoleLabel
