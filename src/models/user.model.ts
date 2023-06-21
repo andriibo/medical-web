@@ -7,6 +7,7 @@ export interface IUserModel {
   lastName: string
   avatar: string | null
   role: UserRoleKeys
+  roleLabel: string
   phone: string
   deletedAt: number | null
 }

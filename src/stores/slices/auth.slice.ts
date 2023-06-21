@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 
-import { UserRole } from '~/enums/roles.enum'
 import { IAuthData } from '~models/auth.model'
 import { IUserModel } from '~models/user.model'
 import { useAppSelector } from '~stores/hooks'
@@ -20,7 +19,8 @@ const initialState: AuthState = {
     user: {
       userId: '',
       email: '',
-      role: UserRole.Caregiver,
+      role: 'Caregiver',
+      roleLabel: '',
       firstName: '',
       lastName: '',
       phone: '',

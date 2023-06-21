@@ -3,6 +3,7 @@ import { Button, Chip, Tooltip, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { FC, useState } from 'react'
 
+import { useUserRoles } from '~/hooks/use-user-roles'
 import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
@@ -20,6 +21,7 @@ interface GrantedUserPatientMedicationsProps {
 
 export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProps> = ({ patientUserId }) => {
   const { enqueueSnackbar } = useSnackbar()
+  const { isUserRoleDoctor } = useUserRoles()
 
   const [deletingMedicationsId, setDeletingMedicationsId] = useState<string[]>([])
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
@@ -56,9 +58,11 @@ export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProp
       <div className={styles.patientAsideHeading}>
         <img alt="Rx" className={styles.patientAsideIcon} src={iconRx} />
         <strong className={styles.patientAsideTitle}>Medication</strong>
-        <Button onClick={handleNewMedicationOpen} size="small" startIcon={<Add />} variant="outlined">
-          Add New
-        </Button>
+        {isUserRoleDoctor && (
+          <Button onClick={handleNewMedicationOpen} size="small" startIcon={<Add />} variant="outlined">
+            Add New
+          </Button>
+        )}
       </div>
       {patientMedicationsDataIsLoading ? (
         <Spinner />
@@ -72,7 +76,7 @@ export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProp
               <Chip
                 disabled={deletingMedicationsId.includes(medicationId)}
                 label={genericName}
-                onDelete={() => handleDeleteMedication(medicationId)}
+                onDelete={isUserRoleDoctor ? () => handleDeleteMedication(medicationId) : undefined}
               />
             </Tooltip>
           ))}
