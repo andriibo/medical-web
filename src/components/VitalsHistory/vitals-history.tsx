@@ -38,7 +38,7 @@ interface IDateRange {
 
 interface VitalsHistoryProps {
   patientUserId?: string
-  historySort?: VitalOrderKeys
+  historySort: VitalOrderKeys
 }
 
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySort }) => {
@@ -50,8 +50,6 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   })
 
   const [vitalsData, setVitalsData] = useState<IVital[]>()
-  const [filteredVitals, setFilteredVitals] = useState<IVitalsHistoryItem[]>()
-
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
 
   const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
@@ -91,35 +89,26 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
       return []
     }
 
-    return historyItemsMapper({ vitals: vitalsData, vitalType: filterType, thresholds })
-  }, [vitalsData, filterType, thresholds])
+    setHistoryIsLoading(true)
 
-  useEffect(() => {
-    if (abnormalHistory) {
-      setHistoryIsLoading(true)
+    const filteredVitalsByDate = vitalsData.filter(
+      ({ timestamp }) => timestamp >= dateRange.start && timestamp <= dateRange.end,
+    )
 
-      if (historySort) {
-        abnormalHistory.sort((a, b) => {
-          if (historySort === 'recent') {
-            return b.startTimestamp - a.startTimestamp
-          }
+    const abnormalVitals = historyItemsMapper({ vitals: filteredVitalsByDate, vitalType: filterType, thresholds })
 
-          return a.startTimestamp - b.startTimestamp
-        })
+    abnormalVitals.sort((a, b) => {
+      if (historySort === 'recent') {
+        return b.startTimestamp - a.startTimestamp
       }
 
-      const dateFilteredVitals = abnormalHistory.filter(
-        ({ startTimestamp, endTimestamp }) => startTimestamp >= dateRange.start && endTimestamp <= dateRange.end,
-      )
+      return a.startTimestamp - b.startTimestamp
+    })
 
-      setFilteredVitals(dateFilteredVitals)
-      setHistoryIsLoading(false)
-    }
-  }, [dateRange, historySort, abnormalHistory])
-
-  useEffect(() => {
     setHistoryIsLoading(false)
-  }, [filteredVitals])
+
+    return abnormalVitals
+  }, [vitalsData, filterType, thresholds, dateRange, historySort])
 
   const handleChartOpenPopup = (startTime: number, endTime: number, type: string) => {
     setInitialStartDate(dayjs(startTime * 1000))
@@ -144,14 +133,16 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const groupTime = useCallback((vital: IVitalsHistoryItem) => {
     const startTime = dayjs(vital.startTimestamp * 1000).format('MMM DD, YYYY hh:mm A')
     const period = (vital.endTimestamp - vital.startTimestamp) * 1000
-
     const duration = dayjs.duration(period)
+
+    const days = duration.days()
+    const daysText = days ? `${days}d ` : ''
     const hours = duration.hours()
     const hoursText = hours ? `${hours}h ` : ''
     const minutes = duration.minutes()
     const minutesText = minutes ? `${minutes} min` : ''
 
-    return `${startTime} (${hoursText}${minutesText})`
+    return `${startTime} (${(daysText + hoursText + minutesText).trim()})`
   }, [])
 
   const vitalGroup = (vital: IVitalsHistoryItem) => (
@@ -173,7 +164,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     </div>
   )
 
-  if (isLoading || !filteredVitals) {
+  if (isLoading || !vitalsData) {
     return <Spinner />
   }
 
@@ -186,10 +177,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
         onTypesChange={setFilterType}
       />
       <div className={`${historyIsLoading ? styles.blur : ''}`}>
-        {filteredVitals?.length ? (
+        {abnormalHistory.length ? (
           <Virtuoso
             className={`${styles.vitalHistoryList}`}
-            data={filteredVitals}
+            data={abnormalHistory}
             itemContent={(index, vital) => vitalGroup(vital)}
             style={{ height: '100vh' }}
           />
