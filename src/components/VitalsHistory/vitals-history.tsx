@@ -42,8 +42,8 @@ interface VitalsHistoryProps {
 }
 
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySort }) => {
-  const startDate = useMemo(() => dayjs().subtract(30, 'days').toISOString(), [])
-  const endDate = useMemo(() => dayjs().toISOString(), [])
+  const startDate = useMemo(() => dayjs().startOf('minute').subtract(30, 'days').toISOString(), [])
+  const endDate = useMemo(() => dayjs().startOf('minute').toISOString(), [])
   const [dateRange, setDateRange] = useState<IDateRange>({
     start: dayjs(startDate).unix(),
     end: dayjs(endDate).unix(),

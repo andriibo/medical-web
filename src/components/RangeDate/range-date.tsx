@@ -33,12 +33,15 @@ export const RangeDate: FC<RangeDateProps> = ({ initialStartDate, initialEndDate
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <MobileDateTimePicker
           inputFormat="MM/DD hh:mm A"
-          maxDateTime={dayjs().subtract(1, 'hour')}
+          maxDateTime={dayjs().subtract(1, 'minute')}
           minDateTime={dayjs().startOf('d').subtract(30, 'days')}
           onAccept={(newValue) => {
             setRangeStartDate(newValue)
             if (newValue && rangeTempEndDate && newValue > rangeTempEndDate) {
-              setRangeTempEndDate(dayjs(newValue).add(2, 'hours'))
+              const newEndDate = dayjs(newValue).add(2, 'hours')
+
+              setRangeTempEndDate(newEndDate)
+              setRangeEndDate(newEndDate)
               setEndDateOpen(true)
             }
           }}
@@ -71,12 +74,16 @@ export const RangeDate: FC<RangeDateProps> = ({ initialStartDate, initialEndDate
           disabled={!rangeStartDate}
           inputFormat="MM/DD hh:mm A"
           maxDate={dayjs()}
-          minDateTime={dayjs(rangeStartDate).add(1, 'hour')}
+          minDateTime={dayjs(rangeStartDate).add(1, 'minute')}
           onAccept={(newValue) => {
             setRangeEndDate(newValue)
           }}
           onChange={(newValue) => {
-            setRangeTempEndDate(newValue)
+            if (newValue && rangeStartDate && rangeStartDate > newValue) {
+              setRangeTempEndDate(dayjs(rangeStartDate).add(1, 'minute'))
+            } else {
+              setRangeTempEndDate(dayjs(newValue))
+            }
           }}
           onClose={() => setEndDateOpen(false)}
           onOpen={() => setEndDateOpen(true)}
