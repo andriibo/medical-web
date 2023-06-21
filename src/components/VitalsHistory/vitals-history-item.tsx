@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material'
 import React, { FC, useMemo } from 'react'
 
-import { VitalTypeKeys } from '~/enums/vital-type.enum'
+import { VitalsTypeFilterKeys, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { VITAL_SETTINGS } from '~constants/constants'
 import { IThresholds } from '~models/threshold.model'
 import { IHistoryItemMetadata } from '~models/vital.model'
@@ -11,11 +11,12 @@ import styles from './vitals-history.module.scss'
 interface VitalItemProps {
   vital: IHistoryItemMetadata
   threshold: IThresholds | null
+  filterType?: VitalsTypeFilterKeys
   disabled?: boolean
   onClick?: () => void
 }
 
-export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, disabled, onClick }) => {
+export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterType, disabled, onClick }) => {
   const {
     name,
     historyVitalMetadataDto: { isNormal, abnormalMinValue, abnormalMaxValue, totalMean },
@@ -23,7 +24,15 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, disable
 
   const isBp = useMemo(() => name === 'bp', [name])
 
-  const abnormalClass = useMemo(() => !isNormal && styles.vitalItemDanger, [isNormal])
+  const abnormalClass = useMemo(() => {
+    if (isNormal) return null
+
+    if (name === filterType) {
+      return styles.vitalItemDangerActive
+    }
+
+    return styles.vitalItemDanger
+  }, [isNormal, filterType, name])
 
   const getValue = useMemo(() => {
     if (abnormalMinValue && abnormalMaxValue) {
