@@ -261,11 +261,9 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                   <MobileDateTimePicker
                     disabled={activePeriod !== 'range'}
                     inputFormat="MM/DD hh:mm A"
-                    maxDateTime={dayjs().subtract(5, 'minutes')}
-                    minDateTime={dayjs().subtract(1, 'month')}
-                    onAccept={(value) => {
-                      const newValue = resetSeconds(value)
-
+                    maxDateTime={dayjs().subtract(1, 'minutes')}
+                    minDateTime={dayjs().subtract(30, 'days')}
+                    onAccept={(newValue) => {
                       setRangeStartDate(newValue)
                       if (newValue && rangeTempEndDate && newValue > rangeTempEndDate) {
                         const newEndDate = dayjs(newValue).add(2, 'hours')
@@ -276,7 +274,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                       }
                     }}
                     onChange={(newValue) => {
-                      setRangeTempStartDate(newValue)
+                      setRangeTempStartDate(resetSeconds(newValue))
                     }}
                     onClose={() => setStartDateOpen(false)}
                     onOpen={() => setStartDateOpen(true)}
@@ -304,12 +302,16 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                     disabled={!rangeStartDate}
                     inputFormat="MM/DD hh:mm A"
                     maxDate={dayjs()}
-                    minDateTime={dayjs(rangeStartDate)}
+                    minDateTime={dayjs(rangeStartDate).add(1, 'minute')}
                     onAccept={(newValue) => {
-                      setRangeEndDate(resetSeconds(newValue))
+                      setRangeEndDate(newValue)
                     }}
                     onChange={(newValue) => {
-                      setRangeTempEndDate(newValue)
+                      if (newValue && rangeStartDate && rangeStartDate > newValue) {
+                        setRangeTempEndDate(dayjs(rangeStartDate).add(1, 'minute'))
+                      } else {
+                        setRangeTempEndDate(resetSeconds(newValue))
+                      }
                     }}
                     onClose={() => setEndDateOpen(false)}
                     onOpen={() => setEndDateOpen(true)}
