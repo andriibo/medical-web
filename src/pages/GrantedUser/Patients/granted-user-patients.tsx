@@ -57,9 +57,16 @@ export const GrantedUserPatients = () => {
   return (
     <>
       <div className="white-box content-md">
-        <Grid container spacing={3} sx={{ mb: 1 }}>
+        <Typography sx={{ mb: 1 }} variant="h5">
+          Patients
+        </Typography>
+        <Grid container spacing={3}>
           <Grid xs>
-            <Typography variant="h5">Patients</Typography>
+            <Tabs onChange={handleChangeTab} value={activeTab}>
+              <Tab label="Abnormal" value={PatientCategory.Abnormal} />
+              <Tab label="Borderline" value={PatientCategory.Borderline} />
+              <Tab label="Normal" value={PatientCategory.Normal} />
+            </Tabs>
           </Grid>
           <Grid>
             <Button onClick={handleInvitePopupOpen} startIcon={<PersonAdd />} variant="outlined">
@@ -67,11 +74,6 @@ export const GrantedUserPatients = () => {
             </Button>
           </Grid>
         </Grid>
-        <Tabs className="tabs" onChange={handleChangeTab} sx={{ mb: 1 }} value={activeTab}>
-          <Tab label="Abnormal" value={PatientCategory.Abnormal} />
-          <Tab label="Borderline" value={PatientCategory.Borderline} />
-          <Tab label="Normal" value={PatientCategory.Normal} />
-        </Tabs>
         <List className="list-divided">
           {grantedUserPatientsIsLoading ? (
             <Spinner />
