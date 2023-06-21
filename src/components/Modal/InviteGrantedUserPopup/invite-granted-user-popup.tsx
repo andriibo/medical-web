@@ -17,7 +17,7 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
-import { DoctorRoleLabel, GrantedUserLabel } from '~/enums/roles.enum'
+import { DoctorRoleLabel, GrantedUserRole } from '~/enums/roles.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
@@ -113,9 +113,9 @@ export const InviteGrantedUserPopup: FC<InviteDoctorPopupProps> = ({ initialEmai
               <FormControl error={Boolean(errors[field.name])} fullWidth>
                 <InputLabel id="role-label-select">Invite as</InputLabel>
                 <Select {...field} label="Invite as" labelId="role-label-select">
-                  {getObjectKeys(GrantedUserLabel).map((key) => (
+                  {getObjectKeys(GrantedUserRole).map((key) => (
                     <MenuItem key={key} value={key}>
-                      {GrantedUserLabel[key]}
+                      {GrantedUserRole[key]}
                     </MenuItem>
                   ))}
                 </Select>

@@ -3,17 +3,17 @@ import { Button, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useState } from 'react'
 
-import { UserRole } from '~/enums/roles.enum'
+import { UserRole, UserRoleKeys } from '~/enums/roles.enum'
 import { InviteGrantedUserPopup } from '~components/Modal/InviteGrantedUserPopup/invite-granted-user-popup'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { PatientCaregivers } from '~pages/Patient/GrantedUsers/components/patient-caregivers'
 import { PatientDoctors } from '~pages/Patient/GrantedUsers/components/patient-doctors'
 
 export const PatientGrantedUsers = () => {
-  const [activeTab, setActiveTab] = useState<UserRole>(UserRole.Doctor)
+  const [activeTab, setActiveTab] = useState<UserRoleKeys>(UserRole.Doctor)
   const [inviteGrantedUserPopupOpen, setInviteGrantedUserPopupOpen] = useState(false)
 
-  const handleChangeTab = (event: React.SyntheticEvent, value: UserRole) => {
+  const handleChangeTab = (event: React.SyntheticEvent, value: UserRoleKeys) => {
     if (value !== null) {
       setActiveTab(value)
     }

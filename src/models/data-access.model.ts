@@ -1,4 +1,4 @@
-import { PatientRoleLabelKeys } from '~/enums/roles.enum'
+import { GrantedUserRole } from '~/enums/roles.enum'
 
 export interface IDataAccessModel {
   accessId: string
@@ -22,7 +22,7 @@ export interface IDataAccessEmail {
 }
 
 export interface IDataAccessInitiateForGrantedUser {
-  roleLabel: PatientRoleLabelKeys | ''
+  roleLabel: GrantedUserRole | ''
   email: string
 }
 
