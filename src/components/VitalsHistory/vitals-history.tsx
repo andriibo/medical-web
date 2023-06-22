@@ -162,6 +162,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
       <div className={styles.vitalContainer}>
         {vital.historyVitalsMetadata.map((vitalItem, index) => (
           <VitalHistoryItem
+            filterType={filterType}
             key={index}
             onClick={() => handleChartOpenPopup(vital.startTimestamp, vital.endTimestamp, vitalItem.name)}
             threshold={vital.thresholds}
