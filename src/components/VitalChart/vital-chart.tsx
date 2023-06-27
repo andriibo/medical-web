@@ -72,7 +72,7 @@ export const VitalChart: FC<VitalChartProps> = ({
 
   const isAbnormal = useCallback(
     (time: number, value: number) => {
-      const filteredThresholds = thresholds.filter((item) => item.createdAt < time)
+      const filteredThresholds = thresholds.filter((item) => item.createdAt <= time)
 
       if (filteredThresholds.length > 0) {
         const lastThreshold = filteredThresholds[filteredThresholds.length - 1]
