@@ -9,8 +9,8 @@ import {
   ListItemAvatar,
   ListItemText,
 } from '@mui/material'
-import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs from 'dayjs'
+import { useLiveQuery } from 'dexie-react-hooks'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -20,42 +20,26 @@ import { Spinner } from '~components/Spinner/spinner'
 import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import iconManFalling from '~images/icon-man-falling.svg'
 import { IVital } from '~models/vital.model'
-import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { db } from '~stores/helpers/db'
 
 interface FallsHistoryPopupProps {
-  patientUserId?: string
   open: boolean
   handleClose: () => void
 }
 
-export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ patientUserId, open, handleClose }) => {
-  const startDate = useMemo(() => dayjs().subtract(30, 'days').toISOString(), [])
-  const endDate = useMemo(() => dayjs().toISOString(), [])
+export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClose }) => {
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
+
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray())
 
   const [vitalsData, setVitalsData] = useState<IVital[]>()
   const [isLoading, setIsLoading] = useState(false)
 
-  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetPatientVitalsQuery(
-    patientUserId ? skipToken : { startDate, endDate },
-  )
-  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
-    patientUserId ? { patientUserId, startDate, endDate } : skipToken,
-  )
-
   useEffect(() => {
-    if (myVitalsData) {
-      setVitalsData([...myVitalsData.vitals.filter(({ fall }) => fall)])
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsFromDb.filter(({ fall }) => fall)])
     }
-
-    if (patientVitalsData) {
-      setVitalsData([...patientVitalsData.vitals.filter(({ fall }) => fall)])
-    }
-  }, [myVitalsData, patientVitalsData])
-
-  useEffect(() => {
-    setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
-  }, [myVitalsIsLoading, patientVitalsIsLoading])
+  }, [vitalsFromDb])
 
   const sortedVitals = useMemo(
     () =>

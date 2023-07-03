@@ -44,12 +44,17 @@ interface HistoryItemsMapperProps {
   thresholds: IThresholds[]
 }
 
+export const vitalsItemMapper = ({ vitals }: { vitals: IVital[] }) => vitals.map((vital) => mapper.map(vital))
+
 export const historyItemsMapper = ({
   vitals,
   vitalType,
   thresholds,
 }: HistoryItemsMapperProps): IVitalsHistoryItem[] => {
   const items = vitals.map((vital) => mapper.map(vital))
+
+  // console.log(vitals)
+  // console.log(items)
 
   const historyItems = vitalType === 'all' ? useAllCase.createHistory(items) : useCase.createHistory(items, vitalType)
 

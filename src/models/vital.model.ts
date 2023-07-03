@@ -9,6 +9,7 @@ export interface IVitalsData {
 }
 
 export interface IVital {
+  vitalId: string
   temp: number | null
   isTempNormal: boolean
   hr: number | null
