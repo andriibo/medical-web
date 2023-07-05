@@ -1,3 +1,4 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Close, Event } from '@mui/icons-material'
 import {
   CircularProgress,
@@ -17,19 +18,24 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { LocalizationProvider, MobileDateTimePicker } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs, { Dayjs } from 'dayjs'
+import { useLiveQuery } from 'dexie-react-hooks'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
 import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VitalChart } from '~components/VitalChart/vital-chart'
-import { TIME_PERIOD, VITAL_SETTINGS as VitalSettings } from '~constants/constants'
+import { HISTORY_REQUEST_DELAY, TIME_PERIOD, VITAL_SETTINGS as VitalSettings } from '~constants/constants'
 import { resetSeconds } from '~helpers/date-helper'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getVitalsByPeriod } from '~helpers/get-vitals-by-period'
+import { historyDbAdapter, vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChart, IVitalChartSettings, IVitalsData } from '~models/vital.model'
+import { db } from '~stores/helpers/db'
+import { useAppDispatch } from '~stores/hooks'
 import { useLazyGetPatientVitalsByDoctorQuery, useLazyGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { setVitalHistoryRequestTime, useVitalHistoryRequestTime } from '~stores/slices/vital-history.slice'
 
 import styles from './vital-chart.module.scss'
 
@@ -42,21 +48,38 @@ interface IVitalResponse {
 
 interface VitalChartPopupProps {
   patientUserId?: string
+  initialVitals?: VitalsItem[]
   vitalsType: VitalsChartTabKeys | null
-  initialStartDate: Dayjs | null
-  initialEndDate: Dayjs | null
+  initialStartDate: Dayjs
+  initialEndDate: Dayjs
   open: boolean
   handleClose: () => void
 }
 
 export const VitalChartPopup: FC<VitalChartPopupProps> = ({
+  patientUserId,
+  initialVitals,
   vitalsType = 'hr',
   initialStartDate,
   initialEndDate,
   open,
   handleClose,
-  patientUserId,
 }) => {
+  const dispatch = useAppDispatch()
+
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
+  const thresholds = useLiveQuery(() => db.thresholds.toArray())
+
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>(initialVitals || [])
+
+  useEffect(() => {
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsItemMapper(vitalsFromDb)])
+    }
+  }, [vitalsFromDb])
+
+  const requestTime = useVitalHistoryRequestTime()
+
   const [activePeriod, setActivePeriod] = useState<VitalPeriodKeys>('range')
   const [activeVitalsType, setActiveVitalsType] = useState<VitalsChartTabKeys>(vitalsType || 'hr')
 
@@ -71,8 +94,8 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
   const [rangeEndDate, setRangeEndDate] = useState<Dayjs | null>(initialEndDate)
   const [rangeTempEndDate, setRangeTempEndDate] = useState<Dayjs | null>(initialEndDate)
 
-  const [startDateOpen, setStartDateOpen] = useState(false)
-  const [endDateOpen, setEndDateOpen] = useState(false)
+  const [calendarStartDateOpen, setCalendarStartDateOpen] = useState(false)
+  const [calendarEndDateOpen, setCalendarEndDateOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChangeVitalType = (event: React.SyntheticEvent, value: VitalsChartTabKeys) => {
@@ -91,6 +114,8 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
   const [lazyPatientVitals, { isFetching: lazyPatientVitalsIsFetching }] = useLazyGetPatientVitalsQuery()
   const [lazyPatientVitalsByDoctor, { isFetching: lazyPatientVitalsByDoctorIsFetching }] =
     useLazyGetPatientVitalsByDoctorQuery()
+
+  const [dateRange, setDateRange] = useState({ start: dayjs(rangeStartDate).unix(), end: dayjs(rangeEndDate).unix() })
 
   useEffect(() => {
     if (lazyPatientVitalsIsFetching || lazyPatientVitalsByDoctorIsFetching) {
@@ -122,52 +147,79 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
   }, [])
 
   const handleSetVital = useCallback(async () => {
-    let startDate: Dayjs | null | undefined = null
-    let endDate: Dayjs | null | undefined = null
+    let startDate = rangeStartDate
+    let endDate = rangeEndDate
 
-    if (activePeriod === 'range') {
-      startDate = rangeStartDate
-      endDate = rangeEndDate
-    } else {
+    if (activePeriod !== 'range') {
       startDate = dayjs().subtract(TIME_PERIOD[activePeriod].value, TIME_PERIOD[activePeriod].unit)
       endDate = dayjs()
     }
 
+    setDateRange({
+      start: dayjs(startDate).unix(),
+      end: dayjs(endDate).unix(),
+    })
+
     if (!startDate || !endDate) return
 
     let response: IVitalsData | null = null
+    let startRequest = startDate.toISOString()
+    const endRequest = endDate.toISOString()
+
+    if (requestTime) {
+      const diff = dayjs(endRequest).diff(requestTime, 'seconds')
+
+      if (diff < HISTORY_REQUEST_DELAY) return
+
+      startRequest = dayjs(requestTime).toISOString()
+    }
 
     if (!patientUserId) {
       response = await lazyPatientVitals({
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: startRequest,
+        endDate: endRequest,
       }).unwrap()
     } else {
       response = await lazyPatientVitalsByDoctor({
         patientUserId,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: startRequest,
+        endDate: endRequest,
       }).unwrap()
     }
 
-    const [vitals] = getVitalsByPeriod([...response.vitals], startDate.unix(), endDate.unix())
-    const thresholds = prepareThresholds([...response.thresholds], startDate.unix(), endDate.unix())
-
-    setVitalResponse({
-      vitals,
-      thresholds,
-      startDate: startDate.unix(),
-      endDate: endDate.unix(),
+    await db.vitals.bulkPut(historyDbAdapter(response.vitals)).catch((e) => {
+      console.error(e)
     })
+
+    await db.thresholds.bulkPut(response.thresholds).catch((e) => {
+      console.error(e)
+    })
+
+    dispatch(setVitalHistoryRequestTime(endRequest))
   }, [
     activePeriod,
+    dispatch,
     lazyPatientVitals,
     lazyPatientVitalsByDoctor,
     patientUserId,
-    prepareThresholds,
     rangeEndDate,
     rangeStartDate,
+    requestTime,
   ])
+
+  useEffect(() => {
+    if (!vitalsData || !thresholds) return
+
+    const [vitals] = getVitalsByPeriod([...vitalsData], dateRange.start, dateRange.end)
+    const thresholdsPrep = prepareThresholds([...thresholds], dateRange.start, dateRange.end)
+
+    setVitalResponse({
+      vitals,
+      thresholds: thresholdsPrep,
+      startDate: dateRange.start,
+      endDate: dateRange.end,
+    })
+  }, [dateRange, dateRange.end, dateRange.start, prepareThresholds, thresholds, vitalsData])
 
   const handleChangePeriod = useCallback((event: React.SyntheticEvent, newPeriod: VitalPeriodKeys) => {
     if (newPeriod !== null) {
@@ -270,15 +322,15 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
 
                         setRangeTempEndDate(newEndDate)
                         setRangeEndDate(newEndDate)
-                        setEndDateOpen(true)
+                        setCalendarEndDateOpen(true)
                       }
                     }}
                     onChange={(newValue) => {
                       setRangeTempStartDate(resetSeconds(newValue))
                     }}
-                    onClose={() => setStartDateOpen(false)}
-                    onOpen={() => setStartDateOpen(true)}
-                    open={startDateOpen}
+                    onClose={() => setCalendarStartDateOpen(false)}
+                    onOpen={() => setCalendarStartDateOpen(true)}
+                    open={calendarStartDateOpen}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -313,9 +365,9 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
                         setRangeTempEndDate(resetSeconds(newValue))
                       }
                     }}
-                    onClose={() => setEndDateOpen(false)}
-                    onOpen={() => setEndDateOpen(true)}
-                    open={endDateOpen}
+                    onClose={() => setCalendarEndDateOpen(false)}
+                    onOpen={() => setCalendarEndDateOpen(true)}
+                    open={calendarEndDateOpen}
                     renderInput={(params) => (
                       <TextField
                         {...params}

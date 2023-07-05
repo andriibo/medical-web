@@ -1,3 +1,4 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Close } from '@mui/icons-material'
 import {
   Dialog,
@@ -9,8 +10,8 @@ import {
   ListItemAvatar,
   ListItemText,
 } from '@mui/material'
-import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs from 'dayjs'
+import { useLiveQuery } from 'dexie-react-hooks'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -18,63 +19,47 @@ import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { Spinner } from '~components/Spinner/spinner'
 import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
+import { vitalsItemMapper } from '~helpers/history-item-adapter'
 import iconManFalling from '~images/icon-man-falling.svg'
-import { IVital } from '~models/vital.model'
-import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { db } from '~stores/helpers/db'
 
 interface FallsHistoryPopupProps {
-  patientUserId?: string
   open: boolean
   handleClose: () => void
 }
 
-export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ patientUserId, open, handleClose }) => {
-  const startDate = useMemo(() => dayjs().subtract(30, 'days').toISOString(), [])
-  const endDate = useMemo(() => dayjs().toISOString(), [])
+export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClose }) => {
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
 
-  const [vitalsData, setVitalsData] = useState<IVital[]>()
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
+
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>()
   const [isLoading, setIsLoading] = useState(false)
 
-  const { data: myVitalsData, isLoading: myVitalsIsLoading } = useGetPatientVitalsQuery(
-    patientUserId ? skipToken : { startDate, endDate },
-  )
-  const { data: patientVitalsData, isLoading: patientVitalsIsLoading } = useGetPatientVitalsByDoctorQuery(
-    patientUserId ? { patientUserId, startDate, endDate } : skipToken,
-  )
-
   useEffect(() => {
-    if (myVitalsData) {
-      setVitalsData([...myVitalsData.vitals.filter(({ fall }) => fall)])
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsItemMapper(vitalsFromDb).filter(({ fall }) => fall)])
     }
-
-    if (patientVitalsData) {
-      setVitalsData([...patientVitalsData.vitals.filter(({ fall }) => fall)])
-    }
-  }, [myVitalsData, patientVitalsData])
-
-  useEffect(() => {
-    setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
-  }, [myVitalsIsLoading, patientVitalsIsLoading])
+  }, [vitalsFromDb])
 
   const sortedVitals = useMemo(
     () =>
       vitalsData?.sort((a, b) => {
         if (historySort === 'recent') {
-          return b.timestamp - a.timestamp
+          return b.endTimestamp - a.endTimestamp
         }
 
-        return a.timestamp - b.timestamp
+        return a.endTimestamp - b.endTimestamp
       }),
     [vitalsData, historySort],
   )
 
-  const fallItem = (vital: IVital) => (
-    <ListItem disableGutters key={vital.timestamp}>
+  const fallItem = (vital: VitalsItem) => (
+    <ListItem disableGutters key={vital.endTimestamp}>
       <ListItemAvatar sx={{ mr: 2, minWidth: '50px', height: '43px' }}>
         <img alt="Fall" src={iconManFalling} />
       </ListItemAvatar>
-      <ListItemText primary={dayjs(vital.timestamp * 1000).format('MMM DD, h:mm:ss A')} />
+      <ListItemText primary={dayjs(vital.endTimestamp * 1000).format('MMM DD, h:mm:ss A')} />
     </ListItem>
   )
 

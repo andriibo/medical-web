@@ -1,7 +1,8 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Typography } from '@mui/material'
-import { skipToken } from '@reduxjs/toolkit/query'
 import dayjs, { Dayjs } from 'dayjs'
 import duration from 'dayjs/plugin/duration'
+import { useLiveQuery } from 'dexie-react-hooks'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -12,11 +13,21 @@ import { Spinner } from '~components/Spinner/spinner'
 import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalsHistoryFilter } from '~components/VitalsHistory/vitals-history-filter'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
-import { HISTORY_START_TIME_OFFSET } from '~constants/constants'
-import { historyItemsMapper } from '~helpers/history-item-adapter'
+import { HISTORY_REQUEST_DELAY, HISTORY_START_TIME_OFFSET } from '~constants/constants'
+import { historyDbAdapter, historyItemsMapper, vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
-import { IHistoryItemMetadata, IVital, IVitalsHistoryItem } from '~models/vital.model'
-import { useGetPatientVitalsByDoctorQuery, useGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { IHistoryItemMetadata, IVitalsData, IVitalsHistoryItem } from '~models/vital.model'
+import { db } from '~stores/helpers/db'
+import { useAppDispatch } from '~stores/hooks'
+import { useLazyGetPatientVitalsByDoctorQuery, useLazyGetPatientVitalsQuery } from '~stores/services/vitals.api'
+import { useUserId } from '~stores/slices/auth.slice'
+import {
+  clearVitalHistory,
+  setVitalHistoryPatientId,
+  setVitalHistoryRequestTime,
+  useVitalHistoryPatientId,
+  useVitalHistoryRequestTime,
+} from '~stores/slices/vital-history.slice'
 
 import styles from './vitals-history.module.scss'
 
@@ -43,15 +54,37 @@ interface VitalsHistoryProps {
 }
 
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySort }) => {
+  const dispatch = useAppDispatch()
+
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
+  const thresholdsFormDb = useLiveQuery(() => db.thresholds.toArray())
+  const requestTime = useVitalHistoryRequestTime()
+  const userId = useUserId()
+  const vitalHistoryPatientId = useVitalHistoryPatientId()
+
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>([])
+  const [thresholds, setThresholds] = useState<IThresholds[]>([])
+
+  useEffect(() => {
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsItemMapper(vitalsFromDb)])
+    }
+  }, [vitalsFromDb])
+
+  useEffect(() => {
+    if (thresholdsFormDb) {
+      setThresholds([...thresholdsFormDb])
+    }
+  }, [thresholdsFormDb])
+
   const startDate = useMemo(() => dayjs().startOf('minute').subtract(30, 'days').toISOString(), [])
-  const endDate = useMemo(() => dayjs().startOf('minute').toISOString(), [])
+  const endDate = useMemo(() => dayjs().toISOString(), [])
   const [dateRange, setDateRange] = useState<IDateRange>({
     start: dayjs(startDate).unix(),
     end: dayjs(endDate).unix(),
   })
 
-  const [vitalsData, setVitalsData] = useState<IVital[]>()
-  const [thresholds, setThresholds] = useState<IThresholds[]>([])
+  const currentPatientId = useMemo(() => patientUserId || userId, [patientUserId, userId])
 
   const [initialStartDate, setInitialStartDate] = useState<Dayjs>()
   const [initialEndDate, setInitialEndDate] = useState<Dayjs>()
@@ -61,51 +94,119 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const [filterType, setFilterType] = useState<VitalsTypeFilterKeys>('all')
   const [historyIsLoading, setHistoryIsLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isReloading, setIsReloading] = useState(false)
   const [isUninitialized, setIsUninitialized] = useState(false)
 
-  const {
-    data: myVitalsData,
-    isLoading: myVitalsIsLoading,
-    isUninitialized: myVitalsIsUninitialized,
-  } = useGetPatientVitalsQuery(patientUserId ? skipToken : { startDate, endDate })
-  const {
-    data: patientVitalsData,
-    isLoading: patientVitalsIsLoading,
-    isUninitialized: patientVitalsIsUninitialized,
-  } = useGetPatientVitalsByDoctorQuery(patientUserId ? { patientUserId, startDate, endDate } : skipToken)
+  const [lazyPatientVitals, { isUninitialized: myVitalsIsUninitialized }] = useLazyGetPatientVitalsQuery()
+  const [lazyPatientVitalsByDoctor, { isUninitialized: patientVitalsIsUninitialized }] =
+    useLazyGetPatientVitalsByDoctorQuery()
+
+  const getHistory = useCallback(
+    async (refreshHistory?: boolean) => {
+      let response: IVitalsData = {
+        vitals: [],
+        thresholds: [],
+        users: [],
+      }
+      let start = startDate
+      const end = endDate
+
+      if (!requestTime || refreshHistory) {
+        setIsLoading(true)
+      }
+
+      if (requestTime && !refreshHistory) {
+        const diff = dayjs(endDate).diff(requestTime, 'seconds')
+
+        if (diff === 0 || diff < HISTORY_REQUEST_DELAY) return
+
+        setIsReloading(true)
+
+        start = dayjs(requestTime).toISOString()
+      }
+
+      if (refreshHistory) {
+        dispatch(clearVitalHistory())
+
+        await db.transaction('rw', db.tables, async () => {
+          await Promise.all(db.tables.map((table) => table.clear()))
+        })
+      }
+
+      try {
+        if (!patientUserId) {
+          response = await lazyPatientVitals({
+            startDate: start,
+            endDate: end,
+          }).unwrap()
+        } else {
+          response = await lazyPatientVitalsByDoctor({
+            patientUserId,
+            startDate: start,
+            endDate: end,
+          }).unwrap()
+        }
+
+        setVitalsData((prevState) => [...prevState, ...vitalsItemMapper(response.vitals)])
+        setThresholds((prevState) => [...prevState, ...response.thresholds])
+
+        db.vitals.bulkPut(historyDbAdapter(response.vitals)).catch((e) => {
+          console.error(e)
+        })
+
+        db.thresholds.bulkPut(response.thresholds).catch((e) => {
+          console.error(e)
+        })
+
+        dispatch(setVitalHistoryPatientId(currentPatientId))
+        dispatch(setVitalHistoryRequestTime(end))
+
+        setIsLoading(false)
+        setIsReloading(false)
+      } catch (e) {
+        console.error(e)
+      }
+
+      return [end]
+    },
+    [
+      dispatch,
+      endDate,
+      lazyPatientVitals,
+      lazyPatientVitalsByDoctor,
+      patientUserId,
+      requestTime,
+      startDate,
+      currentPatientId,
+    ],
+  )
 
   useEffect(() => {
-    if (myVitalsData) {
-      setVitalsData([...myVitalsData.vitals])
-      setThresholds([...myVitalsData.thresholds])
+    if (!vitalHistoryPatientId || vitalHistoryPatientId !== currentPatientId) {
+      getHistory(true).then()
+    } else {
+      getHistory().then()
     }
-
-    if (patientVitalsData) {
-      setVitalsData([...patientVitalsData.vitals])
-      setThresholds([...patientVitalsData.thresholds])
-    }
-  }, [myVitalsData, patientVitalsData])
-
-  useEffect(() => {
-    setIsLoading(myVitalsIsLoading || patientVitalsIsLoading)
-  }, [myVitalsIsLoading, patientVitalsIsLoading])
+  }, [vitalHistoryPatientId, currentPatientId, getHistory, dispatch])
 
   useEffect(() => {
     setIsUninitialized(myVitalsIsUninitialized || patientVitalsIsUninitialized)
   }, [myVitalsIsUninitialized, patientVitalsIsUninitialized])
 
   const abnormalHistory = useMemo(() => {
-    if (!vitalsData?.length) {
-      return []
-    }
+    if (!vitalsData?.length) return []
 
     setHistoryIsLoading(true)
 
     const filteredVitalsByDate = vitalsData.filter(
-      ({ timestamp }) => timestamp >= dateRange.start && timestamp <= dateRange.end,
+      ({ endTimestamp }) => endTimestamp >= dateRange.start && endTimestamp <= dateRange.end,
     )
 
-    const abnormalVitals = historyItemsMapper({ vitals: filteredVitalsByDate, vitalType: filterType, thresholds })
+    const abnormalVitals = historyItemsMapper({
+      vitals: filteredVitalsByDate,
+      vitalType: filterType,
+      thresholds: thresholds || [],
+    })
 
     abnormalVitals.sort((a, b) => {
       if (historySort === 'recent') {
@@ -189,7 +290,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
         initialStartDate={dayjs(startDate)}
         onTypesChange={setFilterType}
       />
-      <div className={`${historyIsLoading ? styles.blur : ''}`}>
+      <div className={`${isReloading || historyIsLoading ? styles.blur : ''}`}>
         {abnormalHistory.length ? (
           <Virtuoso
             className={`${styles.vitalHistoryList}`}
@@ -206,6 +307,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
           handleClose={() => setVitalChartPopupOpen(false)}
           initialEndDate={initialEndDate}
           initialStartDate={initialStartDate}
+          initialVitals={vitalsData}
           open={vitalChartPopupOpen}
           patientUserId={patientUserId}
           vitalsType={vitalsType}

@@ -1,6 +1,8 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { mean, std } from 'mathjs'
 
 import { filterNullable } from '~helpers/filter-nullable'
+import { vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IVital, IVitalChart } from '~models/vital.model'
 
 const INTERVALS_NUMBER = 60
@@ -29,7 +31,7 @@ const getIndications = <T extends number | null>(arr: T[], digits: number = 0) =
   }
 }
 
-export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number): [IVitalChart, number] => {
+export const getVitalsByPeriod = (vitals: VitalsItem[], start: number, end: number): [IVitalChart, number] => {
   let startOffset = 0
   const duration = end - start
   const isLongDuration = duration > INTERVALS_NUMBER * MIN_INTERVAL_DURATION
@@ -43,7 +45,7 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
 
   const startWithOffset = start - startOffset
 
-  const temporaryArray: IVital[][] = []
+  const temporaryArray: VitalsItem[][] = []
   const result: IVitalChart = {
     hr: [],
     spo2: [],
@@ -64,24 +66,38 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
       firstIteration = false
     }
 
-    const filteredByInterval = vitals.filter(({ timestamp }) => startPoint < timestamp && timestamp <= endPoint)
+    const filteredByInterval = vitals.filter(
+      ({ endTimestamp }) => startPoint < endTimestamp && endTimestamp <= endPoint,
+    )
 
     if (filteredByInterval.length) {
       temporaryArray.push(filteredByInterval)
     } else {
       temporaryArray.push([
         {
-          temp: null,
-          isTempNormal: false,
-          hr: null,
-          isHrNormal: false,
-          spo2: null,
-          isSpo2Normal: false,
-          rr: null,
-          isRrNormal: false,
-          fall: null,
-          timestamp: (endPoint + startPoint) / 2,
+          id: '',
+          startTimestamp: startPoint,
+          endTimestamp: (endPoint + startPoint) / 2,
           thresholdsId: '',
+          vitals: {
+            temp: {
+              value: null,
+              isNormal: false,
+            },
+            hr: {
+              value: null,
+              isNormal: false,
+            },
+            spo2: {
+              value: null,
+              isNormal: false,
+            },
+            rr: {
+              value: null,
+              isNormal: false,
+            },
+          },
+          fall: false,
         },
       ])
     }
@@ -96,11 +112,11 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
       const timestampArr: number[] = []
 
       periodVitals.forEach((vital) => {
-        hrArr.push(vital.hr)
-        rrArr.push(vital.rr)
-        tempArr.push(vital.temp)
-        spo2Arr.push(vital.spo2)
-        timestampArr.push(vital.timestamp)
+        hrArr.push(vital.vitals.hr.value)
+        rrArr.push(vital.vitals.rr.value)
+        tempArr.push(vital.vitals.temp.value)
+        spo2Arr.push(vital.vitals.spo2.value)
+        timestampArr.push(vital.endTimestamp)
       })
 
       const hrIndications = getIndications(hrArr)

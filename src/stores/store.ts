@@ -19,6 +19,7 @@ import { authReducer } from '~stores/slices/auth.slice'
 import { dataAccessReducer } from '~stores/slices/data-access.slice'
 import { editEmailReducer } from '~stores/slices/edit-email.slice'
 import { emergencyContactReducer } from '~stores/slices/emergency-contact.slice'
+import { vitalHistoryReducer } from '~stores/slices/vital-history.slice'
 
 const persistConfig = {
   key: 'root',
@@ -49,6 +50,7 @@ const reducer = combineReducers({
   editEmail: editEmailReducer,
   dataAccess: dataAccessReducer,
   emergencyContact: emergencyContactReducer,
+  vitalHistory: vitalHistoryReducer,
   ...apiReducers,
 })
 

@@ -8,18 +8,11 @@ export interface IVitalsData {
   users: IUserModel[]
 }
 
-export interface IVital {
-  temp: number | null
-  isTempNormal: boolean
-  hr: number | null
-  isHrNormal: boolean
-  spo2: number | null
-  isSpo2Normal: boolean
-  rr: number | null
-  isRrNormal: boolean
-  fall: boolean | null
-  timestamp: number
-  thresholdsId: string
+export type IVital = any[]
+
+export interface IVitalDb {
+  id: string
+  items: IVital
 }
 
 export interface IVitalsCard {
