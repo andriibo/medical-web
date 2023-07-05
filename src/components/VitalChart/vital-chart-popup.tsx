@@ -1,3 +1,4 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Close, Event } from '@mui/icons-material'
 import {
   CircularProgress,
@@ -28,6 +29,7 @@ import { HISTORY_REQUEST_DELAY, TIME_PERIOD, VITAL_SETTINGS as VitalSettings } f
 import { resetSeconds } from '~helpers/date-helper'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getVitalsByPeriod } from '~helpers/get-vitals-by-period'
+import { historyDbAdapter, vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChart, IVitalChartSettings, IVitalsData } from '~models/vital.model'
 import { db } from '~stores/helpers/db'
@@ -46,6 +48,7 @@ interface IVitalResponse {
 
 interface VitalChartPopupProps {
   patientUserId?: string
+  initialVitals?: VitalsItem[]
   vitalsType: VitalsChartTabKeys | null
   initialStartDate: Dayjs
   initialEndDate: Dayjs
@@ -55,6 +58,7 @@ interface VitalChartPopupProps {
 
 export const VitalChartPopup: FC<VitalChartPopupProps> = ({
   patientUserId,
+  initialVitals,
   vitalsType = 'hr',
   initialStartDate,
   initialEndDate,
@@ -63,8 +67,17 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
 }) => {
   const dispatch = useAppDispatch()
 
-  const vitalsData = useLiveQuery(() => db.vitals.toArray())
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
   const thresholds = useLiveQuery(() => db.thresholds.toArray())
+
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>(initialVitals || [])
+
+  useEffect(() => {
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsItemMapper(vitalsFromDb)])
+    }
+  }, [vitalsFromDb])
+
   const requestTime = useVitalHistoryRequestTime()
 
   const [activePeriod, setActivePeriod] = useState<VitalPeriodKeys>('range')
@@ -174,7 +187,7 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
       }).unwrap()
     }
 
-    await db.vitals.bulkPut(response.vitals).catch((e) => {
+    await db.vitals.bulkPut(historyDbAdapter(response.vitals)).catch((e) => {
       console.error(e)
     })
 
@@ -183,7 +196,6 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
     })
 
     dispatch(setVitalHistoryRequestTime(endRequest))
-    // dispatch(setVitalHistoryPatientId(patientUserId))
   }, [
     activePeriod,
     dispatch,

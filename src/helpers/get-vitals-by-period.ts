@@ -31,14 +31,10 @@ const getIndications = <T extends number | null>(arr: T[], digits: number = 0) =
   }
 }
 
-export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number): [IVitalChart, number] => {
+export const getVitalsByPeriod = (vitals: VitalsItem[], start: number, end: number): [IVitalChart, number] => {
   let startOffset = 0
   const duration = end - start
   const isLongDuration = duration > INTERVALS_NUMBER * MIN_INTERVAL_DURATION
-
-  const vitalsItems = vitalsItemMapper({ vitals })
-
-  console.log(vitalsItems)
 
   let interval = duration / INTERVALS_NUMBER
 
@@ -70,7 +66,7 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
       firstIteration = false
     }
 
-    const filteredByInterval = vitalsItems.filter(
+    const filteredByInterval = vitals.filter(
       ({ endTimestamp }) => startPoint < endTimestamp && endTimestamp <= endPoint,
     )
 
@@ -101,6 +97,7 @@ export const getVitalsByPeriod = (vitals: IVital[], start: number, end: number):
               isNormal: false,
             },
           },
+          fall: false,
         },
       ])
     }

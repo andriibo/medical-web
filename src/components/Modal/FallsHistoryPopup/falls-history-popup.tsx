@@ -1,3 +1,4 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Close } from '@mui/icons-material'
 import {
   Dialog,
@@ -18,8 +19,8 @@ import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
 import { Spinner } from '~components/Spinner/spinner'
 import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
+import { vitalsItemMapper } from '~helpers/history-item-adapter'
 import iconManFalling from '~images/icon-man-falling.svg'
-import { IVital } from '~models/vital.model'
 import { db } from '~stores/helpers/db'
 
 interface FallsHistoryPopupProps {
@@ -30,14 +31,14 @@ interface FallsHistoryPopupProps {
 export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClose }) => {
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
 
-  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray())
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
 
-  const [vitalsData, setVitalsData] = useState<IVital[]>()
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (vitalsFromDb) {
-      setVitalsData([...vitalsFromDb.filter(({ fall }) => fall)])
+      setVitalsData([...vitalsItemMapper(vitalsFromDb).filter(({ fall }) => fall)])
     }
   }, [vitalsFromDb])
 
@@ -45,20 +46,20 @@ export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClos
     () =>
       vitalsData?.sort((a, b) => {
         if (historySort === 'recent') {
-          return b.timestamp - a.timestamp
+          return b.endTimestamp - a.endTimestamp
         }
 
-        return a.timestamp - b.timestamp
+        return a.endTimestamp - b.endTimestamp
       }),
     [vitalsData, historySort],
   )
 
-  const fallItem = (vital: IVital) => (
-    <ListItem disableGutters key={vital.timestamp}>
+  const fallItem = (vital: VitalsItem) => (
+    <ListItem disableGutters key={vital.endTimestamp}>
       <ListItemAvatar sx={{ mr: 2, minWidth: '50px', height: '43px' }}>
         <img alt="Fall" src={iconManFalling} />
       </ListItemAvatar>
-      <ListItemText primary={dayjs(vital.timestamp * 1000).format('MMM DD, h:mm:ss A')} />
+      <ListItemText primary={dayjs(vital.endTimestamp * 1000).format('MMM DD, h:mm:ss A')} />
     </ListItem>
   )
 

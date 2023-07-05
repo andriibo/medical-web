@@ -4,6 +4,7 @@ import {
   SelectedVitalHistoryUseCaseFactory,
   VitalsItemMapper,
 } from '@abnk/medical-support/src/history-vitals'
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 
 import { VitalsTypeFilterKeys } from '~/enums/vital-type.enum'
 import { sortInSpecificOrder } from '~helpers/sort-in-specific-order'
@@ -39,24 +40,25 @@ const historyItemAdapter = (historyItem: HistoryItem, thresholds: IThresholds[])
 }
 
 interface HistoryItemsMapperProps {
-  vitals: IVital[]
+  vitals: VitalsItem[]
   vitalType: VitalsTypeFilterKeys
   thresholds: IThresholds[]
 }
 
-export const vitalsItemMapper = ({ vitals }: { vitals: IVital[] }) => vitals.map((vital) => mapper.map(vital))
+export const vitalsItemMapper = (vitals: IVital[]) => vitals.map((vital) => mapper.map(vital))
 
 export const historyItemsMapper = ({
   vitals,
   vitalType,
   thresholds,
 }: HistoryItemsMapperProps): IVitalsHistoryItem[] => {
-  const items = vitals.map((vital) => mapper.map(vital))
-
-  // console.log(vitals)
-  // console.log(items)
-
-  const historyItems = vitalType === 'all' ? useAllCase.createHistory(items) : useCase.createHistory(items, vitalType)
+  const historyItems = vitalType === 'all' ? useAllCase.createHistory(vitals) : useCase.createHistory(vitals, vitalType)
 
   return historyItems.map((historyItem) => historyItemAdapter(historyItem, thresholds))
 }
+
+export const historyDbAdapter = (vitals: IVital[]) =>
+  vitals.map((vital) => ({
+    id: vital[0],
+    items: vital,
+  }))

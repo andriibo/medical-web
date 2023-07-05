@@ -1,3 +1,4 @@
+import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vitals-item'
 import { Typography } from '@mui/material'
 import dayjs, { Dayjs } from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -13,9 +14,9 @@ import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalsHistoryFilter } from '~components/VitalsHistory/vitals-history-filter'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
 import { HISTORY_REQUEST_DELAY, HISTORY_START_TIME_OFFSET } from '~constants/constants'
-import { historyItemsMapper } from '~helpers/history-item-adapter'
+import { historyDbAdapter, historyItemsMapper, vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
-import { IHistoryItemMetadata, IVital, IVitalsData, IVitalsHistoryItem } from '~models/vital.model'
+import { IHistoryItemMetadata, IVitalsData, IVitalsHistoryItem } from '~models/vital.model'
 import { db } from '~stores/helpers/db'
 import { useAppDispatch } from '~stores/hooks'
 import { useLazyGetPatientVitalsByDoctorQuery, useLazyGetPatientVitalsQuery } from '~stores/services/vitals.api'
@@ -55,20 +56,20 @@ interface VitalsHistoryProps {
 export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySort }) => {
   const dispatch = useAppDispatch()
 
-  const vitalsFormDb = useLiveQuery(() => db.vitals.toArray())
+  const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
   const thresholdsFormDb = useLiveQuery(() => db.thresholds.toArray())
   const requestTime = useVitalHistoryRequestTime()
   const userId = useUserId()
   const vitalHistoryPatientId = useVitalHistoryPatientId()
 
-  const [vitalsData, setVitalsData] = useState<IVital[]>([])
+  const [vitalsData, setVitalsData] = useState<VitalsItem[]>([])
   const [thresholds, setThresholds] = useState<IThresholds[]>([])
 
   useEffect(() => {
-    if (vitalsFormDb) {
-      setVitalsData([...vitalsFormDb])
+    if (vitalsFromDb) {
+      setVitalsData([...vitalsItemMapper(vitalsFromDb)])
     }
-  }, [vitalsFormDb])
+  }, [vitalsFromDb])
 
   useEffect(() => {
     if (thresholdsFormDb) {
@@ -96,12 +97,9 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   const [isReloading, setIsReloading] = useState(false)
   const [isUninitialized, setIsUninitialized] = useState(false)
 
-  const [lazyPatientVitals, { isLoading: myVitalsIsLoading, isUninitialized: myVitalsIsUninitialized }] =
-    useLazyGetPatientVitalsQuery()
-  const [
-    lazyPatientVitalsByDoctor,
-    { isLoading: patientVitalsIsLoading, isUninitialized: patientVitalsIsUninitialized },
-  ] = useLazyGetPatientVitalsByDoctorQuery()
+  const [lazyPatientVitals, { isUninitialized: myVitalsIsUninitialized }] = useLazyGetPatientVitalsQuery()
+  const [lazyPatientVitalsByDoctor, { isUninitialized: patientVitalsIsUninitialized }] =
+    useLazyGetPatientVitalsByDoctorQuery()
 
   const getHistory = useCallback(
     async (refreshHistory?: boolean) => {
@@ -149,10 +147,10 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
           }).unwrap()
         }
 
-        setVitalsData((prevState) => [...prevState, ...response.vitals])
+        setVitalsData((prevState) => [...prevState, ...vitalsItemMapper(response.vitals)])
         setThresholds((prevState) => [...prevState, ...response.thresholds])
 
-        db.vitals.bulkPut(response.vitals).catch((e) => {
+        db.vitals.bulkPut(historyDbAdapter(response.vitals)).catch((e) => {
           console.error(e)
         })
 
@@ -201,7 +199,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
     setHistoryIsLoading(true)
 
     const filteredVitalsByDate = vitalsData.filter(
-      ({ timestamp }) => timestamp >= dateRange.start && timestamp <= dateRange.end,
+      ({ endTimestamp }) => endTimestamp >= dateRange.start && endTimestamp <= dateRange.end,
     )
 
     const abnormalVitals = historyItemsMapper({
@@ -309,6 +307,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
           handleClose={() => setVitalChartPopupOpen(false)}
           initialEndDate={initialEndDate}
           initialStartDate={initialStartDate}
+          initialVitals={vitalsData}
           open={vitalChartPopupOpen}
           patientUserId={patientUserId}
           vitalsType={vitalsType}
