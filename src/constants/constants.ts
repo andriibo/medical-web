@@ -17,7 +17,7 @@ export const DATE_FORMAT = 'YYYY/MM/DD'
 export const DATE_FORMAT_FOR_SENDING = DATE_FORMAT.replaceAll('/', '-')
 export const HISTORY_START_TIME_OFFSET = 30
 
-export const HISTORY_REQUEST_DELAY = 10
+export const HISTORY_REQUEST_DELAY = 60
 
 export const DEFAULT_AVATAR = 'default-avatar.png'
 

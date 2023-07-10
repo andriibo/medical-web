@@ -40,12 +40,12 @@ const vitalHistorySlice = createSlice({
       state.requestTime = initialState.requestTime
     },
   },
-  extraReducers: {
-    'Auth/clearPersist': (state) => {
+  extraReducers: (builder) => {
+    builder.addCase('Auth/clearPersist', (state) => {
       state.data = initialState.data
       state.requestTime = initialState.requestTime
       state.patientId = initialState.patientId
-    },
+    })
   },
 })
 
