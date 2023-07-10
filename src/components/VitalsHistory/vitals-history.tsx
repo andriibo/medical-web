@@ -182,7 +182,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   )
 
   useEffect(() => {
-    if (!vitalHistoryPatientId || vitalHistoryPatientId !== currentPatientId) {
+    if (vitalHistoryPatientId && vitalHistoryPatientId !== currentPatientId) {
       getHistory(true).then()
     } else {
       getHistory().then()

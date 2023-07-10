@@ -3,6 +3,7 @@ import storage from 'redux-persist/lib/storage'
 
 import { IAuthData } from '~models/auth.model'
 import { IUserModel } from '~models/user.model'
+import { db } from '~stores/helpers/db'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
 
@@ -64,6 +65,10 @@ const authSlice = createSlice({
 
       state.data = initialState.data
       state.hasEmergencyContacts = null
+
+      db.transaction('rw', db.tables, async () => {
+        await Promise.all(db.tables.map((table) => table.clear()))
+      })
 
       return state
     },
