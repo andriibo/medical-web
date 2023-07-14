@@ -26,7 +26,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactPersonModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { ISuggestedContactModel } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
@@ -93,7 +93,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactModelKeys) => ({
+  const fieldValidation = (name: IEmergencyContactPersonModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })

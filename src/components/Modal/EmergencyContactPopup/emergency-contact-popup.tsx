@@ -30,20 +30,21 @@ import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
 import {
   IEmergencyContact,
-  IEmergencyContactFormModel,
-  IEmergencyContactModelKeys,
+  IEmergencyContactPersonFormModel,
+  IEmergencyContactPersonFullModel,
+  IEmergencyContactPersonModelKeys,
 } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
   usePatchPatientEmergencyContactMutation,
-  usePostMyEmergencyContactMutation,
+  usePostPersonEmergencyContactMutation,
 } from '~stores/services/emergency-contact.api'
 import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 interface EmergencyContactPopupProps {
   open: boolean
-  contactData?: IEmergencyContact
+  contactData?: IEmergencyContactPersonFullModel
   handleClose: () => void
   handleInviteNewUser?: (email: string) => void
 }
@@ -62,7 +63,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
   const contactId = useMemo(() => contactData?.contactId, [contactData])
 
-  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
+  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostPersonEmergencyContactMutation()
   const [editEmergencyContact, { isLoading: editEmergencyContactIsLoading }] = usePatchPatientEmergencyContactMutation()
 
   const {
@@ -70,7 +71,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactFormModel>({
+  } = useForm<IEmergencyContactPersonFormModel>({
     mode: 'onBlur',
   })
 
@@ -93,7 +94,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
     }, 300)
   }
 
-  const onSubmit: SubmitHandler<IEmergencyContactFormModel> = async (data) => {
+  const onSubmit: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
     if (!isRelationshipValue(data.relationship)) return
 
     if (contactId) {
@@ -154,7 +155,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactModelKeys) => ({
+  const fieldValidation = (name: IEmergencyContactPersonModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })

@@ -1,11 +1,11 @@
-import { RelationshipValues } from '~/enums/relationship.enum'
+import { RelationshipKeys } from '~/enums/relationship.enum'
 
 export interface ISuggestedContactModel {
   firstName: string
   lastName: string
   email: string
   phone: string
-  relationship: RelationshipValues
+  relationship: RelationshipKeys
 }
 
 export interface ISuggestedContactRequest extends ISuggestedContactModel {

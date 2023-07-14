@@ -1,26 +1,41 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Relationship } from '~/enums/relationship.enum'
-import { getObjectKeys } from '~helpers/get-object-keys'
-import { IEmergencyContact } from '~models/emergency-contact.model'
+import {
+  IEmergencyContactOrganizationFullModel,
+  IEmergencyContactPersonFullModel,
+} from '~models/emergency-contact.model'
 import { useAppSelector } from '~stores/hooks'
 import { RootState } from '~stores/store'
 
 interface IEmergencyContactData {
-  data: IEmergencyContact
+  data: {
+    persons: IEmergencyContactPersonFullModel
+    organizations: IEmergencyContactOrganizationFullModel
+  }
   emergencyContactIsLoading: boolean
   emergencyContactHasChanges: boolean
 }
 
 const initialState: IEmergencyContactData = {
   data: {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    relationship: getObjectKeys(Relationship)[0],
-    contactId: '',
-    createdAt: 0,
+    persons: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      relationship: 'MedicalProfessional',
+      contactId: '',
+      createdAt: 0,
+    },
+    organizations: {
+      contactId: '',
+      name: '',
+      email: '',
+      phone: '',
+      fax: '',
+      type: 'Other',
+      createdAt: 0,
+    },
   },
   emergencyContactIsLoading: false,
   emergencyContactHasChanges: false,
@@ -30,8 +45,8 @@ const emergencyContactSlice = createSlice({
   name: 'emergencyContactSlice',
   initialState,
   reducers: {
-    setEmergencyContact: (state, { payload }: PayloadAction<IEmergencyContact>) => {
-      state.data = payload
+    setEmergencyContact: (state, { payload }: PayloadAction<IEmergencyContactPersonFullModel>) => {
+      state.data.persons = payload
     },
     clearEmergencyContact: (state) => {
       state.data = initialState.data
@@ -45,7 +60,7 @@ const emergencyContactSlice = createSlice({
   },
 })
 
-export const getEmergencyContact = (state: RootState) => state.emergencyContact.data
+export const getEmergencyContact = (state: RootState) => state.emergencyContact.data.persons
 export const getEmergencyContactHasChanges = (state: RootState) => state.emergencyContact.emergencyContactHasChanges
 export const getEmergencyContactIsLoading = (state: RootState) => state.emergencyContact.emergencyContactIsLoading
 

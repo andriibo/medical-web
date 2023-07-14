@@ -12,11 +12,11 @@ import { CardBox } from '~components/Card/card-box'
 import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { Spinner } from '~components/Spinner/spinner'
-import { IEmergencyContact } from '~models/emergency-contact.model'
+import { IEmergencyContact, IEmergencyContactPersonFullModel } from '~models/emergency-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
   useDeletePatientEmergencyContactMutation,
-  useGetMyEmergencyContactsQuery,
+  useGetEmergencyContactsQuery,
   useGetPatientEmergencyContactsQuery,
   usePatchMyEmergencyContactOrderMutation,
 } from '~stores/services/emergency-contact.api'
@@ -31,7 +31,7 @@ interface EmergencyContactsProps {
   handleInviteNewUser?: (email: string) => void
 }
 
-const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContact }) => (
+const ListItems = ({ emergencyContact }: { emergencyContact: IEmergencyContactPersonFullModel }) => (
   <>
     <ListItem disableGutters>
       <ListItemIcon>
@@ -62,18 +62,21 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
   const confirm = useConfirm()
   const emergencyContactHasChanges = useEmergencyContactHasChanges()
 
-  const [emergencyContacts, setEmergencyContacts] = useState<IEmergencyContact[]>()
+  const [emergencyContacts, setEmergencyContacts] = useState<IEmergencyContact>()
   const [isLoading, setIsLoading] = useState(false)
   const [dropClose, setDropClose] = useState(false)
   const [setDeletingContactId, setSetDeletingContactId] = useState<string | null>(null)
 
-  const contactIds = useMemo(() => emergencyContacts?.map(({ contactId }) => contactId) || null, [emergencyContacts])
+  const personalContactIds = useMemo(
+    () => emergencyContacts?.persons?.map(({ contactId }) => contactId) || null,
+    [emergencyContacts],
+  )
 
   const {
     data: myEmergencyContacts,
     isLoading: myEmergencyContactsIsLoading,
     refetch: refetchMyEmergencyContacts,
-  } = useGetMyEmergencyContactsQuery(patientUserId ? skipToken : undefined)
+  } = useGetEmergencyContactsQuery(patientUserId ? skipToken : undefined)
 
   const { data: patientEmergencyContacts, isLoading: patientEmergencyContactsIsLoading } =
     useGetPatientEmergencyContactsQuery(patientUserId ? { patientUserId } : skipToken)
@@ -83,13 +86,13 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
 
   useEffect(() => {
     if (myEmergencyContacts && !myEmergencyContactsIsLoading) {
-      setEmergencyContacts([...myEmergencyContacts])
+      setEmergencyContacts({ ...myEmergencyContacts })
 
       return
     }
 
     if (patientEmergencyContacts && !patientEmergencyContactsIsLoading) {
-      setEmergencyContacts([...patientEmergencyContacts])
+      setEmergencyContacts({ ...patientEmergencyContacts })
     }
   }, [myEmergencyContacts, myEmergencyContactsIsLoading, patientEmergencyContacts, patientEmergencyContactsIsLoading])
 
@@ -108,7 +111,7 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
   }, [])
 
   const handleEditEmergencyContact = useCallback(
-    (contact: IEmergencyContact) => {
+    (contact: IEmergencyContactPersonFullModel) => {
       handleDrop(true)
       dispatch(setEmergencyContact(contact))
     },
@@ -166,17 +169,20 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
   }, [emergencyContactHasChanges, dispatch, refetchMyEmergencyContacts])
 
   const onSortContacts = useCallback(
-    (newContacts: IEmergencyContact[]) => {
+    (newContacts: IEmergencyContactPersonFullModel[]) => {
       const newContactIds = newContacts.map(({ contactId }) => contactId)
 
-      if (JSON.stringify(contactIds) !== JSON.stringify(newContactIds)) {
+      if (JSON.stringify(personalContactIds) !== JSON.stringify(newContactIds)) {
         console.log(newContacts)
-        setEmergencyContacts([...newContacts])
+        setEmergencyContacts((prevState) => ({
+          organizations: prevState ? [...prevState.organizations] : [],
+          persons: [...newContacts],
+        }))
 
         orderEmergencyContact({ contactIds: newContactIds })
       }
     },
-    [contactIds, orderEmergencyContact],
+    [personalContactIds, orderEmergencyContact],
   )
 
   if (isLoading) {
@@ -195,13 +201,13 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
         delay={0}
         disabled={Boolean(patientUserId)}
         handle=".sort-handle"
-        list={emergencyContacts.map((emergencyContact, index) => ({
+        list={emergencyContacts.persons.map((emergencyContact, index) => ({
           ...emergencyContact,
           id: index,
         }))}
         setList={onSortContacts}
       >
-        {emergencyContacts?.map((emergencyContact) => {
+        {emergencyContacts.persons.map((emergencyContact) => {
           const { lastName, firstName, relationship, contactId } = emergencyContact
 
           return (
@@ -227,7 +233,7 @@ export const EmergencyContacts: FC<EmergencyContactsProps> = ({ patientUserId, h
                           </MenuItem>
                         )}
                         <MenuItem onClick={() => handleEditEmergencyContact(emergencyContact)}>Edit</MenuItem>
-                        {emergencyContacts?.length === 1 ? (
+                        {emergencyContacts.persons.length === 1 ? (
                           <MenuItem onClick={() => handleDeleteForbidden()}>Delete</MenuItem>
                         ) : (
                           <MenuItem onClick={() => handleDeleteEmergencyContact(contactId)}>Delete</MenuItem>

@@ -45,13 +45,13 @@ export const PatientEmergencyContacts = () => {
 
   return (
     <div className="white-box content-md">
-      <SuggestedContacts
-        heading={
-          <Typography sx={{ mb: 2 }} variant="h5">
-            Suggested
-          </Typography>
-        }
-      />
+      {/* <SuggestedContacts */}
+      {/*   heading={ */}
+      {/*     <Typography sx={{ mb: 2 }} variant="h5"> */}
+      {/*       Suggested */}
+      {/*     </Typography> */}
+      {/*   } */}
+      {/* /> */}
       <Grid container spacing={3} sx={{ mb: 1 }}>
         <Grid xs>
           <Typography variant="h5">Existing</Typography>

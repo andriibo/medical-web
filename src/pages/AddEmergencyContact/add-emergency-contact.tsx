@@ -28,10 +28,10 @@ import { getObjectKeys } from '~helpers/get-object-keys'
 import { isRelationshipValue } from '~helpers/is-relationship-value'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactFormModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactPersonFormModel, IEmergencyContactPersonModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
-import { usePostMyEmergencyContactMutation } from '~stores/services/emergency-contact.api'
+import { usePostPersonEmergencyContactMutation } from '~stores/services/emergency-contact.api'
 import { setHasEmergencyContacts, useHasEmergencyContacts } from '~stores/slices/auth.slice'
 
 import styles from './add-emergency-contact.module.scss'
@@ -47,7 +47,7 @@ export const AddEmergencyContact = () => {
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const [newUserEmail, setNewUserEmail] = useState<string | null>(null)
 
-  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
+  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostPersonEmergencyContactMutation()
 
   const handleInvitePopupClose = () => {
     setInvitePopupOpen(false)
@@ -59,11 +59,11 @@ export const AddEmergencyContact = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactFormModel>({
+  } = useForm<IEmergencyContactPersonFormModel>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IEmergencyContactFormModel> = async (data) => {
+  const onSubmit: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
     if (!isRelationshipValue(data.relationship)) return
 
     try {
@@ -97,7 +97,7 @@ export const AddEmergencyContact = () => {
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactModelKeys) => ({
+  const fieldValidation = (name: IEmergencyContactPersonModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })

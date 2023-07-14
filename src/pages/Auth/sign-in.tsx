@@ -17,7 +17,7 @@ import { IErrorRequest } from '~models/error-request.model'
 import styles from '~pages/Auth/auth.module.scss'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostAuthSignInMutation } from '~stores/services/auth.api'
-import { useLazyGetMyEmergencyContactsQuery } from '~stores/services/emergency-contact.api'
+import { useLazyGetEmergencyContactsQuery } from '~stores/services/emergency-contact.api'
 import { setHasEmergencyContacts, signInSuccess } from '~stores/slices/auth.slice'
 import { setEmergencyContactIsLoading, useEmergencyContactIsLoading } from '~stores/slices/emergency-contact.slice'
 
@@ -31,7 +31,7 @@ export const SignIn = () => {
   const [currentEmail, setCurrentEmail] = useState<string | null>(null)
 
   const [authSignIn, { isLoading: authSignInIsLoading }] = usePostAuthSignInMutation()
-  const [myEmergencyContacts] = useLazyGetMyEmergencyContactsQuery()
+  const [myEmergencyContacts] = useLazyGetEmergencyContactsQuery()
 
   const {
     handleSubmit,
@@ -52,7 +52,7 @@ export const SignIn = () => {
       if (response.user.role === UserRole.Patient) {
         const emergencyContact = await myEmergencyContacts().unwrap()
 
-        if (!emergencyContact.length) {
+        if (!emergencyContact.persons.length) {
           dispatch(setHasEmergencyContacts(false))
 
           navigate(PageUrls.AddEmergencyContact, { replace: true })

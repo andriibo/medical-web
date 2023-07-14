@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IEmergencyContact, IEmergencyContactModel } from '~models/emergency-contact.model'
+import {
+  IEmergencyContact,
+  IEmergencyContactOrganizationModel,
+  IEmergencyContactPersonModel,
+} from '~models/emergency-contact.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const emergencyContactApi = createApi({
@@ -8,23 +12,27 @@ export const emergencyContactApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['EmergencyContact', 'EmergencyContactOrder'],
   endpoints: (build) => ({
-    getPatientEmergencyContacts: build.query<IEmergencyContact[], { patientUserId: string }>({
+    getPatientEmergencyContacts: build.query<IEmergencyContact, { patientUserId: string }>({
       query: ({ patientUserId }) => ({
-        url: `patient-emergency-contacts/${patientUserId}`,
+        url: `emergency-contacts/${patientUserId}`,
       }),
       providesTags: ['EmergencyContact'],
     }),
-    getMyEmergencyContacts: build.query<IEmergencyContact[], void>({
+    getEmergencyContacts: build.query<IEmergencyContact, void>({
       query: () => ({
-        url: 'patient/my-emergency-contacts',
+        url: 'patient/emergency-contacts',
       }),
       providesTags: ['EmergencyContact'],
     }),
-    postMyEmergencyContact: build.mutation<null, IEmergencyContactModel>({
-      query: (queryArg) => ({ url: 'patient/my-emergency-contact', method: 'POST', body: { ...queryArg } }),
+    postPersonEmergencyContact: build.mutation<null, IEmergencyContactPersonModel>({
+      query: (queryArg) => ({ url: 'patient/person-emergency-contact', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['EmergencyContact'],
     }),
-    patchPatientEmergencyContact: build.mutation<null, { contactId: string; contact: IEmergencyContactModel }>({
+    postOrganizationEmergencyContact: build.mutation<null, IEmergencyContactOrganizationModel>({
+      query: (queryArg) => ({ url: 'patient/organization-emergency-contact', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['EmergencyContact'],
+    }),
+    patchPatientEmergencyContact: build.mutation<null, { contactId: string; contact: IEmergencyContactPersonModel }>({
       query: ({ contactId, contact }) => ({
         url: `patient/my-emergency-contact/${contactId}`,
         method: 'PATCH',
@@ -49,9 +57,10 @@ export const emergencyContactApi = createApi({
 
 export const {
   useGetPatientEmergencyContactsQuery,
-  useGetMyEmergencyContactsQuery,
-  useLazyGetMyEmergencyContactsQuery,
-  usePostMyEmergencyContactMutation,
+  useGetEmergencyContactsQuery,
+  useLazyGetEmergencyContactsQuery,
+  usePostPersonEmergencyContactMutation,
+  usePostOrganizationEmergencyContactMutation,
   usePatchPatientEmergencyContactMutation,
   useDeletePatientEmergencyContactMutation,
   usePatchMyEmergencyContactOrderMutation,

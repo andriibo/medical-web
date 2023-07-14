@@ -1,25 +1,44 @@
-import { RelationshipValues } from '~/enums/relationship.enum'
+import { OrganizationTypeKeys } from '~/enums/organization-type.enum'
+import { RelationshipKeys } from '~/enums/relationship.enum'
 import { Modify } from '~/types/modify.type'
 
-export interface IEmergencyContactModel {
+export interface IEmergencyContactPersonModel {
   firstName: string
   lastName: string
   email: string
   phone: string
-  relationship: RelationshipValues
+  relationship: RelationshipKeys
 }
 
-export interface IEmergencyContactFormModel
+export interface IEmergencyContactOrganizationModel {
+  name: string
+  email: string | null
+  phone: string
+  fax: string | null
+  type: OrganizationTypeKeys
+}
+
+export interface IEmergencyContactPersonFormModel
   extends Modify<
-    IEmergencyContactModel,
+    IEmergencyContactPersonModel,
     {
-      relationship: RelationshipValues | ''
+      relationship: RelationshipKeys | ''
     }
   > {}
 
-export interface IEmergencyContact extends IEmergencyContactModel {
+export interface IEmergencyContactPersonFullModel extends IEmergencyContactPersonModel {
   contactId: string
   createdAt: number
 }
 
-export type IEmergencyContactModelKeys = keyof IEmergencyContactModel
+export interface IEmergencyContactOrganizationFullModel extends IEmergencyContactOrganizationModel {
+  contactId: string
+  createdAt: number
+}
+
+export interface IEmergencyContact {
+  persons: IEmergencyContactPersonFullModel[]
+  organizations: IEmergencyContactOrganizationFullModel[]
+}
+
+export type IEmergencyContactPersonModelKeys = keyof IEmergencyContactPersonModel
