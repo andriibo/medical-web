@@ -123,12 +123,10 @@ export const GrantedUserPersonalInfo = () => {
               <span className={styles.infoListLabel}>Phone</span>
               {userData.phone}
             </li>
-            {isDoctor(userData) && (
-              <li>
-                <span className={styles.infoListLabel}>Institution</span>
-                {userData.institution ? userData.institution : '-'}
-              </li>
-            )}
+            <li>
+              <span className={styles.infoListLabel}>Institution</span>
+              {userData.institution ? userData.institution : '-'}
+            </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />
           <Typography sx={{ mb: 2 }} variant="h6">
