@@ -32,7 +32,9 @@ type ValidationKeyType =
   | 'text'
   | 'institution'
   | 'phone'
+  | 'fax'
   | 'email'
+  | 'emailNotRequired'
   | 'password'
   | 'signInPassword'
   | 'height'
@@ -151,10 +153,32 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
         },
       },
     },
+    fax: {
+      required: false,
+      validate: {
+        isPhone: async (value: string) => {
+          console.log(454)
+          const isValid = !value || (await phoneSchema.isValid(value))
+
+          return isValid || 'Enter valid fax number.'
+        },
+      },
+    },
     email: {
       required: true,
       validate: {
         isEmail: (value: string) => validator.isEmail(value.trim()) || 'Entered value does not match email format',
+      },
+      maxLength: {
+        value: 100,
+        message: 'Max length is 100',
+      },
+    },
+    emailNotRequired: {
+      required: false,
+      validate: {
+        isEmail: (value: string) =>
+          !value || validator.isEmail(value.trim()) || 'Entered value does not match email format',
       },
       maxLength: {
         value: 100,

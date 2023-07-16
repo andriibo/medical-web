@@ -1,4 +1,1 @@
-import { RelationshipKeys } from '~/enums/relationship.enum'
-
-export const isRelationshipValue = (value: RelationshipKeys | ''): value is RelationshipKeys =>
-  (value as RelationshipKeys) !== undefined
+export const isRelationshipValue = <T>(value: T | ''): value is T => (value as T) !== undefined

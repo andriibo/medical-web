@@ -20,6 +20,11 @@ export const EmailField: FC<EmailFieldProps> = ({ label = 'Email', fieldValidati
     fullWidth
     helperText={fieldValidation.helperText}
     label={label}
+    onChange={(email) => {
+      const { value } = email.target
+
+      field.onChange(value ? value : null)
+    }}
     placeholder="e.g. johndoe@example.com"
   />
 )

@@ -20,17 +20,16 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { Relationship } from '~/enums/relationship.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactPersonModelKeys } from '~models/emergency-contact.model'
+import { IPersonCommonContactModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
-import { ISuggestedContactModel } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
-import { usePostSuggestedContactMutation } from '~stores/services/suggested-contact.api'
+import { usePostPersonSuggestedContactMutation } from '~stores/services/suggested-contact.api'
 import { clearEmergencyContact } from '~stores/slices/emergency-contact.slice'
 
 interface SuggestedContactPopupProps {
@@ -46,14 +45,14 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
 
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
-  const [suggestedContact, { isLoading: suggestedContactIsLoading }] = usePostSuggestedContactMutation()
+  const [suggestedContact, { isLoading: suggestedContactIsLoading }] = usePostPersonSuggestedContactMutation()
 
   const {
     handleSubmit,
     control,
     reset,
     formState: { errors },
-  } = useForm<ISuggestedContactModel>({
+  } = useForm<IPersonCommonContactModel>({
     mode: 'onBlur',
   })
 
@@ -71,7 +70,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
     }, 300)
   }
 
-  const onSubmit: SubmitHandler<ISuggestedContactModel> = async (data) => {
+  const onSubmit: SubmitHandler<IPersonCommonContactModel> = async (data) => {
     try {
       await suggestedContact({
         ...trimValues(data),
@@ -93,7 +92,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactPersonModelKeys) => ({
+  const fieldValidation = (name: IPersonEmergencyContactModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })

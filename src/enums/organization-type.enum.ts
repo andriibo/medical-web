@@ -1,7 +1,6 @@
 export enum OrganizationType {
   Pharmacy = 'Pharmacy',
-  Nursing = 'Nursing',
-  Home = 'Home',
+  NursingHome = 'Nursing Home',
   Other = 'Other',
 }
 

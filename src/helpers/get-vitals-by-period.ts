@@ -2,8 +2,7 @@ import { VitalsItem } from '@abnk/medical-support/src/history-vitals/domain/vita
 import { mean, std } from 'mathjs'
 
 import { filterNullable } from '~helpers/filter-nullable'
-import { vitalsItemMapper } from '~helpers/history-item-adapter'
-import { IVital, IVitalChart } from '~models/vital.model'
+import { IVitalChart } from '~models/vital.model'
 
 const INTERVALS_NUMBER = 60
 const MIN_INTERVAL_DURATION = 30

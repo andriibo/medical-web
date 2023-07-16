@@ -17,7 +17,6 @@ import { Virtuoso } from 'react-virtuoso'
 
 import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalOrderKeys } from '~/enums/vital-order.enum'
-import { Spinner } from '~components/Spinner/spinner'
 import { VitalsHistorySorting } from '~components/VitalsHistory/vitals-history-sorting'
 import { vitalsItemMapper } from '~helpers/history-item-adapter'
 import iconManFalling from '~images/icon-man-falling.svg'
@@ -34,7 +33,6 @@ export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClos
   const vitalsFromDb = useLiveQuery(() => db.vitals.toArray().then((vitals) => vitals.map((vital) => vital.items)))
 
   const [vitalsData, setVitalsData] = useState<VitalsItem[]>()
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (vitalsFromDb) {
@@ -78,21 +76,17 @@ export const FallsHistoryPopup: FC<FallsHistoryPopupProps> = ({ open, handleClos
           ) : null}
         </DialogTitle>
         <DialogContent>
-          {isLoading ? (
-            <Spinner />
-          ) : (
-            <List className="list-divided">
-              {!sortedVitals?.length ? (
-                <ListItem className="empty-list-item">No falls detected</ListItem>
-              ) : (
-                <Virtuoso
-                  data={sortedVitals}
-                  itemContent={(index, vital) => fallItem(vital)}
-                  style={{ height: 60 * sortedVitals.length }}
-                />
-              )}
-            </List>
-          )}
+          <List className="list-divided">
+            {!sortedVitals?.length ? (
+              <ListItem className="empty-list-item">No falls detected</ListItem>
+            ) : (
+              <Virtuoso
+                data={sortedVitals}
+                itemContent={(index, vital) => fallItem(vital)}
+                style={{ height: 60 * sortedVitals.length }}
+              />
+            )}
+          </List>
         </DialogContent>
       </Dialog>
     </>

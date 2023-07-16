@@ -20,15 +20,14 @@ import { NavLink } from 'react-router-dom'
 
 import { Relationship } from '~/enums/relationship.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { InviteGrantedUserPopup } from '~components/Modal/InviteGrantedUserPopup/invite-granted-user-popup'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
-import { isRelationshipValue } from '~helpers/is-relationship-value'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactPersonFormModel, IEmergencyContactPersonModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactPersonFormModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostPersonEmergencyContactMutation } from '~stores/services/emergency-contact.api'
@@ -64,7 +63,7 @@ export const AddEmergencyContact = () => {
   })
 
   const onSubmit: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
-    if (!isRelationshipValue(data.relationship)) return
+    if (!data.relationship) return
 
     try {
       await addEmergencyContact({
@@ -97,7 +96,7 @@ export const AddEmergencyContact = () => {
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactPersonModelKeys) => ({
+  const fieldValidation = (name: IPersonEmergencyContactModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })
