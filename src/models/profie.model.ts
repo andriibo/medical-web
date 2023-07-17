@@ -61,7 +61,9 @@ export interface IDoctorProfile
     {
       roleLabel: DoctorRoleLabelKeys
     }
-  > {}
+  > {
+  specialty: string
+}
 
 export interface IPatientDoctors extends IDoctorProfile {
   accessId: string

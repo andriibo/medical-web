@@ -1,9 +1,10 @@
 import { Clear } from '@mui/icons-material'
-import { IconButton, Typography } from '@mui/material'
+import { Chip, IconButton, Typography } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback } from 'react'
 
+import { GrantedUserLabel, GrantedUserLabelKeys } from '~/enums/roles.enum'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 
@@ -12,6 +13,7 @@ interface PatientCardHeaderProps {
   avatar: string | null
   firstName: string
   lastName: string
+  roleLabel: GrantedUserLabelKeys
   handleDeletingId: (val: string | null) => void
   handleRefetch: () => void
 }
@@ -21,6 +23,7 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
   avatar,
   firstName,
   lastName,
+  roleLabel,
   handleDeletingId,
   handleRefetch,
 }) => {
@@ -68,6 +71,7 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
       <Typography variant="subtitle1">
         {firstName} {lastName}
       </Typography>
+      <Chip label={GrantedUserLabel[roleLabel]} size="small" />
       <IconButton edge="end" onClick={() => handleRemoveGrantedUser(accessId)}>
         <Clear fontSize="inherit" />
       </IconButton>

@@ -4,7 +4,7 @@ import React, { FC } from 'react'
 
 interface PatientGrantedUsersCardListItemProps {
   email: string
-  institution?: string
+  institution: string
   phone: string
 }
 
@@ -34,13 +34,11 @@ export const PatientGrantedUsersCardListItem: FC<PatientGrantedUsersCardListItem
         </a>
       </ListItemText>
     </ListItem>
-    {typeof institution !== 'undefined' && (
-      <ListItem disableGutters>
-        <ListItemIcon>
-          <LocationCity />
-        </ListItemIcon>
-        <ListItemText>{institution ? institution : '-'}</ListItemText>
-      </ListItem>
-    )}
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <LocationCity />
+      </ListItemIcon>
+      <ListItemText>{institution || '-'}</ListItemText>
+    </ListItem>
   </>
 )

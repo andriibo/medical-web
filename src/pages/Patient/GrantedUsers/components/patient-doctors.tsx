@@ -35,7 +35,7 @@ export const PatientDoctors = () => {
   return (
     <Grid container spacing={3} sx={{ mb: 1 }}>
       {patientDoctors?.length ? (
-        patientDoctors.map(({ lastName, firstName, phone, email, institution, accessId, avatar }) => (
+        patientDoctors.map(({ lastName, firstName, phone, email, roleLabel, institution, accessId, avatar }) => (
           <Grid key={lastName} xs={6}>
             <CardBox
               disable={deletingDoctorId === accessId}
@@ -47,6 +47,7 @@ export const PatientDoctors = () => {
                   handleDeletingId={setDeletingDoctorId}
                   handleRefetch={() => refetchPatientDoctors()}
                   lastName={lastName}
+                  roleLabel={roleLabel}
                 />
               }
               infoListItems={<PatientGrantedUsersCardListItem email={email} institution={institution} phone={phone} />}

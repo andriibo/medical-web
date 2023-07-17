@@ -38,7 +38,7 @@ export const GrantedUserPersonalInfo = () => {
   )
 
   const isDoctor = (data: IDoctorProfile | ICaregiverProfile): data is IDoctorProfile =>
-    (data as IDoctorProfile).institution !== undefined
+    (data as IDoctorProfile).specialty !== undefined
 
   useEffect(() => {
     if (doctorData && !doctorDataIsLoading) {
