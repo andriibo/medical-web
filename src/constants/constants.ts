@@ -15,9 +15,10 @@ export const ACCOUNT_DELETION_DELAY = 30
 
 export const DATE_FORMAT = 'YYYY/MM/DD'
 export const DATE_FORMAT_FOR_SENDING = DATE_FORMAT.replaceAll('/', '-')
-export const HISTORY_START_TIME_OFFSET = 30
 
-export const HISTORY_REQUEST_DELAY = 60
+export const HISTORY_START_TIME_OFFSET_SEC = 30
+export const HISTORY_START_REQUEST_TIME_OFFSET_SEC = 300
+export const HISTORY_REQUEST_DELAY_SEC = 60
 
 export const DEFAULT_AVATAR = 'default-avatar.png'
 

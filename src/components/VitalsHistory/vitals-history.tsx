@@ -13,7 +13,11 @@ import { Spinner } from '~components/Spinner/spinner'
 import { VitalChartPopup } from '~components/VitalChart/vital-chart-popup'
 import { VitalsHistoryFilter } from '~components/VitalsHistory/vitals-history-filter'
 import { VitalHistoryItem } from '~components/VitalsHistory/vitals-history-item'
-import { HISTORY_REQUEST_DELAY, HISTORY_START_TIME_OFFSET } from '~constants/constants'
+import {
+  HISTORY_REQUEST_DELAY_SEC,
+  HISTORY_START_REQUEST_TIME_OFFSET_SEC,
+  HISTORY_START_TIME_OFFSET_SEC,
+} from '~constants/constants'
 import { historyDbAdapter, historyItemsMapper, vitalsItemMapper } from '~helpers/history-item-adapter'
 import { IThresholds } from '~models/threshold.model'
 import { IHistoryItemMetadata, IVitalsData, IVitalsHistoryItem } from '~models/vital.model'
@@ -118,11 +122,11 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
       if (requestTime && !refreshHistory) {
         const diff = dayjs(endDate).diff(requestTime, 'seconds')
 
-        if (diff === 0 || diff < HISTORY_REQUEST_DELAY) return
+        if (diff === 0 || diff < HISTORY_REQUEST_DELAY_SEC) return
 
         setIsReloading(true)
 
-        start = dayjs(requestTime).toISOString()
+        start = dayjs(requestTime).subtract(HISTORY_START_REQUEST_TIME_OFFSET_SEC, 'seconds').toISOString()
       }
 
       if (refreshHistory) {
@@ -242,7 +246,9 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
   }, [])
 
   const groupTime = useCallback((vital: IVitalsHistoryItem) => {
-    const startTime = dayjs((vital.startTimestamp + HISTORY_START_TIME_OFFSET) * 1000).format('MMM DD, YYYY hh:mm A')
+    const startTime = dayjs((vital.startTimestamp + HISTORY_START_TIME_OFFSET_SEC) * 1000).format(
+      'MMM DD, YYYY hh:mm A',
+    )
     const period = (vital.endTimestamp - vital.startTimestamp) * 1000
     const duration = dayjs.duration(period)
 
@@ -267,7 +273,11 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
             filterType={filterType}
             key={index}
             onClick={() =>
-              handleChartOpenPopup(vital.startTimestamp + HISTORY_START_TIME_OFFSET, vital.endTimestamp, vitalItem.name)
+              handleChartOpenPopup(
+                vital.startTimestamp + HISTORY_START_TIME_OFFSET_SEC,
+                vital.endTimestamp,
+                vitalItem.name,
+              )
             }
             threshold={vital.thresholds}
             vital={vitalItem}
