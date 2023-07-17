@@ -62,6 +62,7 @@ export interface IDoctorProfile
     }
   > {
   institution: string
+  specialty: string
 }
 
 export interface IPatientDoctors extends IDoctorProfile {

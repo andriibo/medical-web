@@ -19,6 +19,8 @@ export const HISTORY_START_TIME_OFFSET = 30
 
 export const HISTORY_REQUEST_DELAY = 60
 
+export const NURSE_SPECIALITY_OPTIONS = ['Nurse', 'Nurse Practitioner']
+
 export const DEFAULT_AVATAR = 'default-avatar.png'
 
 type TimePeriod = {
