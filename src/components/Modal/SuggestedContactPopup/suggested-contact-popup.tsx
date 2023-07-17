@@ -26,7 +26,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IPersonCommonContactModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IEmergencyContactPersonFormModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostPersonSuggestedContactMutation } from '~stores/services/suggested-contact.api'
@@ -52,7 +52,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
     control,
     reset,
     formState: { errors },
-  } = useForm<IPersonCommonContactModel>({
+  } = useForm<IEmergencyContactPersonFormModel>({
     mode: 'onBlur',
   })
 
@@ -70,11 +70,14 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
     }, 300)
   }
 
-  const onSubmit: SubmitHandler<IPersonCommonContactModel> = async (data) => {
+  const onSubmit: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
+    if (!data.relationship) return
+
     try {
       await suggestedContact({
         ...trimValues(data),
         phone: preparePhoneForSending(data.phone),
+        relationship: data.relationship,
         patientUserId,
       }).unwrap()
 
@@ -152,7 +155,7 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
           />
           <Controller
             control={control}
-            defaultValue="Friends&Family"
+            defaultValue=""
             name="relationship"
             render={({ field }) => (
               <FormControl error={Boolean(errors[field.name])} fullWidth>

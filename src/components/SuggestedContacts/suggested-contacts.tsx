@@ -63,8 +63,11 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId })
 
   return (
     <>
-      <OrganizationSuggestedContactsList organizationSuggestedContacts={suggestedContacts.organizations} />
-      <PersonSuggestedContactsList personSuggestedContacts={suggestedContacts.persons} />
+      <OrganizationSuggestedContactsList
+        organizationSuggestedContacts={suggestedContacts.organizations}
+        patientUserId={patientUserId}
+      />
+      <PersonSuggestedContactsList patientUserId={patientUserId} personSuggestedContacts={suggestedContacts.persons} />
     </>
   )
 }
