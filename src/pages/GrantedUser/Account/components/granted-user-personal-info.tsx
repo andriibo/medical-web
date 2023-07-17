@@ -125,7 +125,7 @@ export const GrantedUserPersonalInfo = () => {
             </li>
             <li>
               <span className={styles.infoListLabel}>Institution</span>
-              {userData.institution ? userData.institution : '-'}
+              {userData.institution || '-'}
             </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />
