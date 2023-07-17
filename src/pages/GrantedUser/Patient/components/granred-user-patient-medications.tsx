@@ -87,6 +87,7 @@ export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProp
         </Typography>
       )}
       <NewMedicationPopup
+        editingMedication={null}
         handleClose={handleNewMedicationClose}
         open={isMedicationPopupOpen}
         patientUserId={patientUserId}

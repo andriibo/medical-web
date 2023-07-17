@@ -1,16 +1,27 @@
 import { Add, Close } from '@mui/icons-material'
-import { Button, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from '@mui/material'
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  MenuItem,
+  ToggleButton,
+  ToggleButtonGroup,
+} from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { FC, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 
 import { Treatment } from '~/enums/treatment.enum'
 import { useUserRoles } from '~/hooks/use-user-roles'
+import { DropdownMenu } from '~components/DropdownMenu/dropdown-menu'
 import { NewDiagnosisPopup } from '~components/Modal/NewDiagnosisPopup/new-diagnosis-popup'
 import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
+import { IMedication } from '~models/medications.model'
 import { useDeletePatientDiagnosisMutation, useGetPatientDiagnosesQuery } from '~stores/services/patient-diagnosis.api'
 import {
   useDeletePatientMedicationMutation,
@@ -30,6 +41,8 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
   const [deletingMedicationsId, setDeletingMedicationsId] = useState<string[]>([])
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Treatment>(Treatment.diagnoses)
+  const [dropClose, setDropClose] = useState(false)
+  const [editingMedication, setEditingMedication] = useState<IMedication | null>(null)
 
   const { data: patientDiagnosesData, isLoading: patientDiagnosesDataIsLoading } = useGetPatientDiagnosesQuery({
     patientUserId,
@@ -68,6 +81,13 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
 
   const handleNewMedicationClose = () => {
     setIsMedicationPopupOpen(false)
+    setEditingMedication(null)
+  }
+
+  const handleEditMedication = (medication: IMedication) => {
+    setDropClose(true)
+    setEditingMedication(medication)
+    setIsMedicationPopupOpen(true)
   }
 
   const handleDeleteMedication = async (medicationId: string) => {
@@ -89,6 +109,10 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
       setActiveTab(newValue)
     }
   }
+
+  const handleDrop = useCallback((val: boolean) => {
+    setDropClose(val)
+  }, [])
 
   return (
     <>
@@ -117,7 +141,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           {patientDiagnosesDataIsLoading ? (
             <Spinner />
           ) : patientDiagnosesData?.length ? (
-            patientDiagnosesData.map(({ diagnosisId, diagnosisName, createdByUser }) => (
+            patientDiagnosesData.map(({ diagnosisId, diagnosisName, createdBy }) => (
               <ListItem
                 className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
                 key={diagnosisId}
@@ -129,10 +153,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                   )
                 }
               >
-                <ListItemText
-                  primary={diagnosisName}
-                  secondary={`added by ${createdByUser.firstName} ${createdByUser.lastName}`}
-                />
+                <ListItemText primary={diagnosisName} secondary={`added by ${createdBy}`} />
               </ListItem>
             ))
           ) : (
@@ -145,24 +166,29 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           {patientMedicationsDataIsLoading ? (
             <Spinner />
           ) : patientMedicationsData?.length ? (
-            patientMedicationsData.map(({ medicationId, genericName, brandNames, createdByUser }) => (
-              <ListItem
-                className={deletingMedicationsId.includes(medicationId) ? 'disabled' : ''}
-                key={medicationId}
-                secondaryAction={
-                  !isUserRoleCaregiver && (
-                    <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteMedication(medicationId)}>
-                      <Close />
-                    </IconButton>
-                  )
-                }
-              >
-                <ListItemText
-                  primary={`${brandNames.join(', ')} (${genericName})`}
-                  secondary={`added by ${createdByUser.firstName} ${createdByUser.lastName}`}
-                />
-              </ListItem>
-            ))
+            patientMedicationsData.map((medication) => {
+              const { medicationId, genericName, dose, timesPerDay, createdBy } = medication
+
+              return (
+                <ListItem
+                  className={deletingMedicationsId.includes(medicationId) ? 'disabled' : ''}
+                  key={medicationId}
+                  secondaryAction={
+                    !isUserRoleCaregiver && (
+                      <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                        <MenuItem onClick={() => handleEditMedication(medication)}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleDeleteMedication(medicationId)}>Delete</MenuItem>
+                      </DropdownMenu>
+                    )
+                  }
+                >
+                  <ListItemText
+                    primary={genericName}
+                    secondary={`${dose ? `${dose} mg / ` : ''}${timesPerDay} - added by ${createdBy}`}
+                  />
+                </ListItem>
+              )
+            })
           ) : (
             <ListItem className="empty-list-item">No medications added</ListItem>
           )}
@@ -174,6 +200,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
         patientUserId={patientUserId}
       />
       <NewMedicationPopup
+        editingMedication={editingMedication}
         handleClose={handleNewMedicationClose}
         open={isMedicationPopupOpen}
         patientUserId={patientUserId}
