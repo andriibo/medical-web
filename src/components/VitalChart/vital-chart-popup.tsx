@@ -25,7 +25,12 @@ import { btnClosePopup } from '~/assets/styles/styles-scheme'
 import { VitalPeriod, VitalPeriodKeys } from '~/enums/vital-period.enum'
 import { VitalsChartTab, VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VitalChart } from '~components/VitalChart/vital-chart'
-import { HISTORY_REQUEST_DELAY, TIME_PERIOD, VITAL_SETTINGS as VitalSettings } from '~constants/constants'
+import {
+  HISTORY_REQUEST_DELAY_SEC,
+  HISTORY_START_REQUEST_TIME_OFFSET_SEC,
+  TIME_PERIOD,
+  VITAL_SETTINGS as VitalSettings,
+} from '~constants/constants'
 import { resetSeconds } from '~helpers/date-helper'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getVitalsByPeriod } from '~helpers/get-vitals-by-period'
@@ -169,9 +174,9 @@ export const VitalChartPopup: FC<VitalChartPopupProps> = ({
     if (requestTime) {
       const diff = dayjs(endRequest).diff(requestTime, 'seconds')
 
-      if (diff < HISTORY_REQUEST_DELAY) return
+      if (diff < HISTORY_REQUEST_DELAY_SEC) return
 
-      startRequest = dayjs(requestTime).toISOString()
+      startRequest = dayjs(requestTime).subtract(HISTORY_START_REQUEST_TIME_OFFSET_SEC, 'seconds').toISOString()
     }
 
     if (!patientUserId) {
