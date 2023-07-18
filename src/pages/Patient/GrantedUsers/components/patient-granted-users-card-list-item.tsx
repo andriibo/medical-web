@@ -1,17 +1,19 @@
-import { LocationCity, MailOutline, Phone } from '@mui/icons-material'
+import { BadgeOutlined, LocationCity, MailOutline, Phone } from '@mui/icons-material'
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import React, { FC } from 'react'
 
 interface PatientGrantedUsersCardListItemProps {
   email: string
-  institution?: string
+  institution: string
   phone: string
+  specialty?: string
 }
 
 export const PatientGrantedUsersCardListItem: FC<PatientGrantedUsersCardListItemProps> = ({
   email,
   institution,
   phone,
+  specialty,
 }) => (
   <>
     <ListItem disableGutters>
@@ -34,13 +36,19 @@ export const PatientGrantedUsersCardListItem: FC<PatientGrantedUsersCardListItem
         </a>
       </ListItemText>
     </ListItem>
-    {typeof institution !== 'undefined' && (
+    {specialty && (
       <ListItem disableGutters>
         <ListItemIcon>
-          <LocationCity />
+          <BadgeOutlined />
         </ListItemIcon>
-        <ListItemText>{institution ? institution : '-'}</ListItemText>
+        <ListItemText>{specialty}</ListItemText>
       </ListItem>
     )}
+    <ListItem disableGutters>
+      <ListItemIcon>
+        <LocationCity />
+      </ListItemIcon>
+      <ListItemText>{institution || '-'}</ListItemText>
+    </ListItem>
   </>
 )

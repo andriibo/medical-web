@@ -52,6 +52,7 @@ export interface ICaregiverProfile {
   roleLabel: CaregiverRoleLabelKeys
   deletedAt: number | null
   passwordUpdatedAt: number
+  institution: string
 }
 
 export interface IDoctorProfile
@@ -61,7 +62,7 @@ export interface IDoctorProfile
       roleLabel: DoctorRoleLabelKeys
     }
   > {
-  institution: string
+  specialty: string
 }
 
 export interface IPatientDoctors extends IDoctorProfile {

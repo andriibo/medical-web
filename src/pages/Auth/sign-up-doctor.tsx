@@ -3,6 +3,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import {
   Alert,
   AlertTitle,
+  Autocomplete,
   Button,
   FormControl,
   FormHelperText,
@@ -15,17 +16,19 @@ import {
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
-import { DoctorRoleLabel } from '~/enums/roles.enum'
+import { DoctorRoleLabel, DoctorRoleLabelKeys } from '~/enums/roles.enum'
 import { useEmailParam } from '~/hooks/use-email-param'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { EmailField } from '~components/EmailField/email-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
+import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-list-box'
+import { NURSE_SPECIALITY_OPTIONS } from '~constants/constants'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
@@ -34,6 +37,7 @@ import { AuthSignUpDoctorKeys, IAuthSignUpDoctor } from '~models/auth.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { SignUpLegal } from '~pages/Auth/sign-up-legal'
 import { usePostAuthSignUpDoctorMutation } from '~stores/services/auth.api'
+import { useGetSpecialtyQuery } from '~stores/services/specialty.api'
 
 import styles from './auth.module.scss'
 
@@ -43,17 +47,35 @@ export const SignUpDoctor = () => {
   const emailParam = useEmailParam()
   const { validationRules } = useValidationRules()
 
+  const [role, setRole] = useState<DoctorRoleLabelKeys | null>(null)
+  const [specialityOptions, setSpecialityOptions] = useState<string[]>([])
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
+  const { data: specialtyData, isLoading: specialtyIsLoading } = useGetSpecialtyQuery()
   const [authSignUpDoctor, { isLoading: authSignUpDoctorIsLoading }] = usePostAuthSignUpDoctorMutation()
 
   const {
     handleSubmit,
     control,
     formState: { errors },
+    resetField,
   } = useForm<IAuthSignUpDoctor>({
     mode: 'onBlur',
   })
+
+  useEffect(() => {
+    if (role === 'Doctor') {
+      if (specialtyData && !specialtyIsLoading) {
+        setSpecialityOptions([...specialtyData.specialtyNames])
+      }
+
+      return
+    }
+
+    if (role === 'Nurse') {
+      setSpecialityOptions(NURSE_SPECIALITY_OPTIONS)
+    }
+  }, [role, specialtyData, specialtyIsLoading])
 
   const onSubmit: SubmitHandler<IAuthSignUpDoctor> = async (data) => {
     try {
@@ -104,7 +126,20 @@ export const SignUpDoctor = () => {
           render={({ field }) => (
             <FormControl error={Boolean(errors[field.name])} fullWidth>
               <InputLabel id="role-label-select">Role</InputLabel>
-              <Select {...field} label="Role" labelId="role-label-select">
+              <Select
+                {...field}
+                label="Role"
+                labelId="role-label-select"
+                onChange={(event) => {
+                  const roleLabelValue = event.target.value as DoctorRoleLabelKeys | ''
+
+                  if (roleLabelValue) {
+                    resetField('specialty')
+                    field.onChange(roleLabelValue)
+                    setRole(roleLabelValue)
+                  }
+                }}
+              >
                 {getObjectKeys(DoctorRoleLabel).map((key) => (
                   <MenuItem key={key} value={key}>
                     {DoctorRoleLabel[key]}
@@ -147,6 +182,29 @@ export const SignUpDoctor = () => {
           render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.phone}
         />
+        {role && (
+          <Controller
+            control={control}
+            defaultValue=""
+            name="specialty"
+            render={({ field }) => (
+              <Autocomplete
+                ListboxComponent={VirtualizedListBox}
+                disableClearable
+                disablePortal
+                fullWidth
+                getOptionLabel={(option) => option}
+                onChange={(event, data): void => {
+                  field.onChange(data)
+                }}
+                options={specialityOptions}
+                renderInput={(params) => <TextField {...params} {...fieldValidation(field.name)} label="Specialty" />}
+                value={field.value}
+              />
+            )}
+            rules={validationRules.medicationName}
+          />
+        )}
         <Controller
           control={control}
           defaultValue=""
