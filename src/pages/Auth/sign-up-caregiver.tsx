@@ -149,6 +149,15 @@ export const SignUpCaregiver = () => {
         />
         <Controller
           control={control}
+          defaultValue=""
+          name="institution"
+          render={({ field }) => (
+            <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Institution (optional)" />
+          )}
+          rules={validationRules.institution}
+        />
+        <Controller
+          control={control}
           defaultValue={emailParam}
           name="email"
           render={({ field }) => (

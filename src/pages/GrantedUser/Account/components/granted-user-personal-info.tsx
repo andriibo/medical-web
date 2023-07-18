@@ -37,7 +37,7 @@ export const GrantedUserPersonalInfo = () => {
   )
 
   const isDoctor = (data: IDoctorProfile | ICaregiverProfile): data is IDoctorProfile =>
-    (data as IDoctorProfile).institution !== undefined
+    (data as IDoctorProfile).specialty !== undefined
 
   useEffect(() => {
     if (doctorData && !doctorDataIsLoading) {
@@ -128,12 +128,10 @@ export const GrantedUserPersonalInfo = () => {
                 {userData.specialty}
               </li>
             )}
-            {isDoctor(userData) && (
-              <li>
-                <span className={styles.infoListLabel}>Institution</span>
-                {userData.institution ? userData.institution : '-'}
-              </li>
-            )}
+            <li>
+              <span className={styles.infoListLabel}>Institution</span>
+              {userData.institution || '-'}
+            </li>
           </ul>
           <Divider sx={{ mt: '2rem', mb: '1.5rem' }} />
           <Typography sx={{ mb: 2 }} variant="h6">

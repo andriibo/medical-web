@@ -4,7 +4,7 @@ import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback } from 'react'
 
-import { GrantedUserLabelKeys } from '~/enums/roles.enum'
+import { GrantedUserLabel, GrantedUserLabelKeys } from '~/enums/roles.enum'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { useDeletePatientDataAccessMutation } from '~stores/services/patient-data-access.api'
 
@@ -68,12 +68,10 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
   return (
     <>
       <UserAvatar avatar={avatar} firstName={firstName} lastName={lastName} sx={{ mr: '0.75rem' }} />
-      <div>
-        <Typography variant="subtitle1">
-          {firstName} {lastName}
-        </Typography>
-        <Chip label={roleLabel} size="small" />
-      </div>
+      <Typography variant="subtitle1">
+        {firstName} {lastName}
+      </Typography>
+      <Chip label={GrantedUserLabel[roleLabel]} size="small" />
       <IconButton edge="end" onClick={() => handleRemoveGrantedUser(accessId)}>
         <Clear fontSize="inherit" />
       </IconButton>
