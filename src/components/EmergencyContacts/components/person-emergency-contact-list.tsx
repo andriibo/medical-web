@@ -177,10 +177,12 @@ export const PersonEmergencyContactList: FC<PersonEmergencyContactListProps> = (
                             <DragIndicator />
                           </IconButton>
                         )}
-                        <Typography variant="subtitle1">
+                        {/* <div className="card-header-holder"> */}
+                        <Typography title={`${firstName} ${lastName}`} variant="subtitle1">
                           {firstName} {lastName}
                         </Typography>
                         <Chip label={Relationship[relationship]} size="small" />
+                        {/* </div> */}
                         {!patientUserId && (
                           <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
                             {handleInviteNewUser && (
