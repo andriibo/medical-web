@@ -27,7 +27,7 @@ import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactPersonFormModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IPersonEmergencyContactFormModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
 import { usePostPersonEmergencyContactMutation } from '~stores/services/emergency-contact.api'
@@ -58,11 +58,11 @@ export const AddEmergencyContact = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactPersonFormModel>({
+  } = useForm<IPersonEmergencyContactFormModel>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
+  const onSubmit: SubmitHandler<IPersonEmergencyContactFormModel> = async (data) => {
     if (!data.relationship) return
 
     try {

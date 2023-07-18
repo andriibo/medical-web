@@ -1,5 +1,5 @@
 import { Check, Close, HomeWork, Phone } from '@mui/icons-material'
-import { Box, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Box, Button, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useConfirm } from 'material-ui-confirm'
 import { useSnackbar } from 'notistack'
@@ -11,9 +11,9 @@ import { EmptyBox } from '~components/EmptyBox/empty-box'
 import { IOrganizationSuggestedContact } from '~models/suggested-contact.model'
 import { useAppDispatch } from '~stores/hooks'
 import {
-  useDeletePatientPersonSuggestedContactMutation,
-  useDeletePersonSuggestedContactMutation,
-  usePostPersonSuggestedContactApproveMutation,
+  useDeleteOrganizationSuggestedContactMutation,
+  useDeletePatientOrganizationSuggestedContactMutation,
+  usePostOrganizationSuggestedContactApproveMutation,
 } from '~stores/services/suggested-contact.api'
 import { setEmergencyContactHasChanges } from '~stores/slices/emergency-contact.slice'
 
@@ -30,11 +30,12 @@ export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListPr
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
 
+  const [viewMoreContacts, setViewMoreContacts] = useState(false)
   const [setDisableContactId, setSetDisableContactId] = useState<string | null>(null)
 
-  const [deleteSuggestedContact] = useDeletePersonSuggestedContactMutation()
-  const [approveSuggestedContact] = usePostPersonSuggestedContactApproveMutation()
-  const [rejectSuggestedContact] = useDeletePatientPersonSuggestedContactMutation()
+  const [deleteSuggestedContact] = useDeleteOrganizationSuggestedContactMutation()
+  const [approveSuggestedContact] = usePostOrganizationSuggestedContactApproveMutation()
+  const [rejectSuggestedContact] = useDeletePatientOrganizationSuggestedContactMutation()
 
   const handleDeleteSuggestedContact = useCallback(
     async (contactId: string) => {
@@ -92,79 +93,92 @@ export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListPr
     [enqueueSnackbar, rejectSuggestedContact],
   )
 
+  const handleViewMoreContacts = () => {
+    setViewMoreContacts((prevState) => !prevState)
+  }
+
   return (
     <Box sx={{ mb: 3 }}>
       <Typography sx={{ mb: 2 }} variant="h6">
         Organization ({organizationSuggestedContacts.length})
       </Typography>
       {organizationSuggestedContacts.length ? (
-        <Grid container spacing={3}>
-          {organizationSuggestedContacts.map((suggestedContact) => {
-            const { name, phone, type, contactId } = suggestedContact
+        <>
+          <Grid container spacing={3}>
+            {organizationSuggestedContacts.map((suggestedContact, index) => {
+              const { name, phone, type, contactId } = suggestedContact
 
-            return (
-              <Grid key={contactId} xs={6}>
-                <CardBox
-                  disable={setDisableContactId === contactId}
-                  header={
-                    <>
-                      <Typography variant="subtitle1">{name}</Typography>
-                      {patientUserId && (
-                        <IconButton edge="end" onClick={() => handleDeleteSuggestedContact(contactId)}>
-                          <Close />
-                        </IconButton>
-                      )}
-                    </>
-                  }
-                  infoListItems={
-                    <>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <HomeWork />
-                        </ListItemIcon>
-                        <ListItemText>{type}</ListItemText>
-                      </ListItem>
-                      <ListItem disableGutters>
-                        <ListItemIcon>
-                          <Phone />
-                        </ListItemIcon>
-                        <ListItemText>
-                          <a className="simple-link" href={`tel:${phone}`}>
-                            {phone}
-                          </a>
-                        </ListItemText>
-                        {!patientUserId && (
-                          <Box sx={{ my: '-0.5rem', whiteSpace: 'nowrap' }}>
-                            <IconButton
-                              color="error"
-                              onClick={() => handleRejectContact(contactId)}
-                              sx={{
-                                ml: 1,
-                                ...btnIconError,
-                              }}
-                            >
-                              <Close />
-                            </IconButton>
-                            <IconButton
-                              color="success"
-                              onClick={() => handleApproveContact(contactId)}
-                              sx={{
-                                ml: 1,
-                                ...btnIconSuccess,
-                              }}
-                            >
-                              <Check />
-                            </IconButton>
-                          </Box>
+              return (
+                <Grid className={!viewMoreContacts && index > 1 ? 'hidden' : ''} key={contactId} xs={6}>
+                  <CardBox
+                    disable={setDisableContactId === contactId}
+                    header={
+                      <>
+                        <Typography variant="subtitle1">{name}</Typography>
+                        {patientUserId && (
+                          <IconButton edge="end" onClick={() => handleDeleteSuggestedContact(contactId)}>
+                            <Close />
+                          </IconButton>
                         )}
-                      </ListItem>
-                    </>
-                  }
-                />
-              </Grid>
-            )
-          })}
-        </Grid>
+                      </>
+                    }
+                    infoListItems={
+                      <>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <HomeWork />
+                          </ListItemIcon>
+                          <ListItemText>{type}</ListItemText>
+                        </ListItem>
+                        <ListItem disableGutters>
+                          <ListItemIcon>
+                            <Phone />
+                          </ListItemIcon>
+                          <ListItemText>
+                            <a className="simple-link" href={`tel:${phone}`}>
+                              {phone}
+                            </a>
+                          </ListItemText>
+                          {!patientUserId && (
+                            <Box sx={{ my: '-0.5rem', whiteSpace: 'nowrap' }}>
+                              <IconButton
+                                color="error"
+                                onClick={() => handleRejectContact(contactId)}
+                                sx={{
+                                  ml: 1,
+                                  ...btnIconError,
+                                }}
+                              >
+                                <Close />
+                              </IconButton>
+                              <IconButton
+                                color="success"
+                                onClick={() => handleApproveContact(contactId)}
+                                sx={{
+                                  ml: 1,
+                                  ...btnIconSuccess,
+                                }}
+                              >
+                                <Check />
+                              </IconButton>
+                            </Box>
+                          )}
+                        </ListItem>
+                      </>
+                    }
+                  />
+                </Grid>
+              )
+            })}
+          </Grid>
+          {organizationSuggestedContacts.length > 2 && (
+            <Box sx={{ mt: 2, textAlign: 'right' }}>
+              <Button onClick={() => handleViewMoreContacts()} variant="text">
+                {viewMoreContacts ? 'View less' : 'View more'}
+              </Button>
+            </Box>
+          )}
+        </>
       ) : (
         <EmptyBox message="No suggested contacts yet" />
       )}

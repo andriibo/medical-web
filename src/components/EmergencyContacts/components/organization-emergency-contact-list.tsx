@@ -51,6 +51,7 @@ export const OrganizationEmergencyContactList: FC<OrganizationEmergencyContactLi
   const { enqueueSnackbar } = useSnackbar()
   const confirm = useConfirm()
 
+  const [viewMoreContacts, setViewMoreContacts] = useState(false)
   const [emergencyContactsData, setEmergencyContactsData] =
     useState<IOrganizationEmergencyContactFullModel[]>(emergencyContacts)
   const [dropClose, setDropClose] = useState(false)
@@ -116,8 +117,6 @@ export const OrganizationEmergencyContactList: FC<OrganizationEmergencyContactLi
   useEffect(() => {
     setEmergencyContactsData(emergencyContacts)
   }, [emergencyContacts])
-
-  const [viewMoreContacts, setViewMoreContacts] = useState(false)
 
   const handleViewMoreContacts = () => {
     setViewMoreContacts((prevState) => !prevState)

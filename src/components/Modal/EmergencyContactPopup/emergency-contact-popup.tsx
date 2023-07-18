@@ -33,9 +33,9 @@ import { getObjectKeys } from '~helpers/get-object-keys'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
 import {
-  IEmergencyContactPersonFormModel,
   IOrganizationEmergencyContactFormModel,
   IOrganizationEmergencyContactModelKeys,
+  IPersonEmergencyContactFormModel,
   IPersonEmergencyContactModelKeys,
 } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
@@ -74,8 +74,10 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     [personEmergencyContact, organizationEmergencyContact],
   )
 
-  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostPersonEmergencyContactMutation()
-  const [editEmergencyContact, { isLoading: editEmergencyContactIsLoading }] = usePatchPersonEmergencyContactMutation()
+  const [addPersonEmergencyContact, { isLoading: addPersonEmergencyContactIsLoading }] =
+    usePostPersonEmergencyContactMutation()
+  const [editPersonEmergencyContact, { isLoading: editPersonEmergencyContactIsLoading }] =
+    usePatchPersonEmergencyContactMutation()
 
   const [addOrganizationEmergencyContact, { isLoading: addOrganizationEmergencyContactIsLoading }] =
     usePostOrganizationEmergencyContactMutation()
@@ -83,11 +85,11 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     usePatchOrganizationEmergencyContactMutation()
 
   const {
-    handleSubmit,
-    control,
-    reset,
-    formState: { errors },
-  } = useForm<IEmergencyContactPersonFormModel>({
+    handleSubmit: personHandleSubmit,
+    control: personControl,
+    reset: personReset,
+    formState: { errors: personErrors },
+  } = useForm<IPersonEmergencyContactFormModel>({
     mode: 'onBlur',
   })
 
@@ -108,14 +110,14 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
         setContactType('Person')
       }
 
-      reset(personEmergencyContact)
+      personReset(personEmergencyContact)
       organizationReset(organizationEmergencyContact)
     }
-  }, [personEmergencyContact, organizationEmergencyContact, open, reset, organizationReset])
+  }, [personEmergencyContact, organizationEmergencyContact, open, personReset, organizationReset])
 
   const handleContactType = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormErrors(null)
-    reset(personEmergencyContact)
+    personReset(personEmergencyContact)
     organizationReset(organizationEmergencyContact)
 
     setContactType(event.target.value as EmergencyContactTypeKeys)
@@ -130,17 +132,17 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     }, 300)
   }
 
-  const onSubmitPerson: SubmitHandler<IEmergencyContactPersonFormModel> = async (data) => {
+  const onSubmitPerson: SubmitHandler<IPersonEmergencyContactFormModel> = async (data) => {
     if (!data.relationship) return
 
     if (contactId) {
       try {
-        await editEmergencyContact({
+        await editPersonEmergencyContact({
           contactId,
           contact: {
             ...trimValues(data),
-            relationship: data.relationship,
             phone: preparePhoneForSending(data.phone),
+            relationship: data.relationship,
           },
         }).unwrap()
 
@@ -160,7 +162,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
     }
 
     try {
-      await addEmergencyContact({
+      await addPersonEmergencyContact({
         ...data,
         relationship: data.relationship,
         phone: preparePhoneForSending(data.phone),
@@ -242,8 +244,8 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
   }
 
   const personFieldValidation = (name: IPersonEmergencyContactModelKeys) => ({
-    error: Boolean(errors[name]),
-    helperText: getErrorMessage(errors, name),
+    error: Boolean(personErrors[name]),
+    helperText: getErrorMessage(personErrors, name),
   })
 
   const organizationFieldValidation = (name: IOrganizationEmergencyContactModelKeys) => ({
@@ -279,11 +281,11 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
           </RadioGroup>
         </FormControl>
         {contactType === 'Person' ? (
-          <form key="person" onSubmit={handleSubmit(onSubmitPerson)}>
+          <form key="person" onSubmit={personHandleSubmit(onSubmitPerson)}>
             <Grid container spacing={3}>
               <Grid xs={6}>
                 <Controller
-                  control={control}
+                  control={personControl}
                   defaultValue=""
                   name="firstName"
                   render={({ field }) => (
@@ -294,7 +296,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
               </Grid>
               <Grid xs={6}>
                 <Controller
-                  control={control}
+                  control={personControl}
                   defaultValue=""
                   name="lastName"
                   render={({ field }) => (
@@ -305,25 +307,25 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
               </Grid>
             </Grid>
             <Controller
-              control={control}
+              control={personControl}
               defaultValue=""
               name="phone"
               render={({ field }) => <PhoneField field={field} fieldValidation={personFieldValidation(field.name)} />}
               rules={validationRules.phone}
             />
             <Controller
-              control={control}
+              control={personControl}
               defaultValue=""
               name="email"
               render={({ field }) => <EmailField field={field} fieldValidation={personFieldValidation(field.name)} />}
               rules={validationRules.email}
             />
             <Controller
-              control={control}
+              control={personControl}
               defaultValue=""
               name="relationship"
               render={({ field }) => (
-                <FormControl error={Boolean(errors[field.name])} fullWidth>
+                <FormControl error={Boolean(personErrors[field.name])} fullWidth>
                   <InputLabel id="relationship-select">Relationship</InputLabel>
                   <Select {...field} label="Relationship" labelId="relationship-select">
                     {getObjectKeys(Relationship).map((key) => (
@@ -332,7 +334,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
                       </MenuItem>
                     ))}
                   </Select>
-                  <FormHelperText>{getErrorMessage(errors, field.name)}</FormHelperText>
+                  <FormHelperText>{getErrorMessage(personErrors, field.name)}</FormHelperText>
                 </FormControl>
               )}
               rules={validationRules.relationship}
@@ -346,7 +348,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
               <Grid xs={6}>
                 <LoadingButton
                   fullWidth
-                  loading={addEmergencyContactIsLoading || editEmergencyContactIsLoading}
+                  loading={addPersonEmergencyContactIsLoading || editPersonEmergencyContactIsLoading}
                   size="large"
                   type="submit"
                   variant="contained"
@@ -375,7 +377,7 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
                   <FormHelperText>{getErrorMessage(organizationErrors, field.name)}</FormHelperText>
                 </FormControl>
               )}
-              rules={validationRules.relationship}
+              rules={validationRules.type}
             />
             <Controller
               control={organizationControl}

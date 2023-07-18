@@ -52,6 +52,7 @@ type ValidationKeyType =
   | 'sbp'
   | 'dbp'
   | 'relationship'
+  | 'type'
   | 'role'
   | 'roleLabel'
 
@@ -201,6 +202,9 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: true,
     },
     relationship: {
+      required: true,
+    },
+    type: {
       required: true,
     },
     role: {

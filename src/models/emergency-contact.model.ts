@@ -18,7 +18,7 @@ export interface IOrganizationCommonContactModel {
   type: OrganizationType
 }
 
-export interface IEmergencyContactPersonFormModel
+export interface IPersonEmergencyContactFormModel
   extends Modify<
     IPersonCommonContactModel,
     {
