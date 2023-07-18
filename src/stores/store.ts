@@ -13,6 +13,7 @@ import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
 import { patientVitalThresholdApi } from '~stores/services/patient-vital-threshold.api'
 import { profileApi } from '~stores/services/profile.api'
+import { specialtyApi } from '~stores/services/specialty.api'
 import { suggestedContactApi } from '~stores/services/suggested-contact.api'
 import { vitalsApi } from '~stores/services/vitals.api'
 import { authReducer } from '~stores/slices/auth.slice'
@@ -39,6 +40,7 @@ export const combineApi = [
   emergencyContactApi,
   suggestedContactApi,
   vitalsApi,
+  specialtyApi,
 ]
 
 const apiReducers: { [key: string]: Reducer } = {}

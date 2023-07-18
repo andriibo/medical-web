@@ -16,13 +16,12 @@ import { UserAvatarEdit } from '~components/UserAvatar/user-avatar-edit'
 import { ICaregiverProfile, IDoctorProfile } from '~models/profie.model'
 import { useAppDispatch } from '~stores/hooks'
 import { useGetMyCaregiverProfileQuery, useGetMyDoctorProfileQuery } from '~stores/services/profile.api'
-import { setUserAvatar, setUserName, useUserRole } from '~stores/slices/auth.slice'
+import { setUserAvatar, setUserName } from '~stores/slices/auth.slice'
 import { openEditEmailPopup } from '~stores/slices/edit-email.slice'
 
 import styles from '../granted-user-account.module.scss'
 
 export const GrantedUserPersonalInfo = () => {
-  const userRole = useUserRole()
   const { isUserRoleDoctor, isUserRoleCaregiver } = useUserRoles()
   const dispatch = useAppDispatch()
   const [profilePopupOpen, setProfilePopupOpen] = useState(false)
@@ -113,7 +112,7 @@ export const GrantedUserPersonalInfo = () => {
             <strong className={styles.userName}>
               {userData.firstName} {userData.lastName}
             </strong>
-            <Chip label={userRole} size="small" />
+            <Chip label={userData.roleLabel} size="small" />
             <Button onClick={handleProfilePopupOpen} sx={{ ml: 'auto' }}>
               Edit
             </Button>
@@ -123,6 +122,12 @@ export const GrantedUserPersonalInfo = () => {
               <span className={styles.infoListLabel}>Phone</span>
               {userData.phone}
             </li>
+            {isDoctor(userData) && (
+              <li>
+                <span className={styles.infoListLabel}>Specialty</span>
+                {userData.specialty}
+              </li>
+            )}
             <li>
               <span className={styles.infoListLabel}>Institution</span>
               {userData.institution || '-'}

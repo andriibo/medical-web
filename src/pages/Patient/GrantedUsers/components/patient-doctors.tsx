@@ -35,25 +35,34 @@ export const PatientDoctors = () => {
   return (
     <Grid container spacing={3} sx={{ mb: 1 }}>
       {patientDoctors?.length ? (
-        patientDoctors.map(({ lastName, firstName, phone, email, roleLabel, institution, accessId, avatar }) => (
-          <Grid key={lastName} xs={6}>
-            <CardBox
-              disable={deletingDoctorId === accessId}
-              header={
-                <PatientGrantedUsersCardHeader
-                  accessId={accessId}
-                  avatar={avatar}
-                  firstName={firstName}
-                  handleDeletingId={setDeletingDoctorId}
-                  handleRefetch={() => refetchPatientDoctors()}
-                  lastName={lastName}
-                  roleLabel={roleLabel}
-                />
-              }
-              infoListItems={<PatientGrantedUsersCardListItem email={email} institution={institution} phone={phone} />}
-            />
-          </Grid>
-        ))
+        patientDoctors.map(
+          ({ lastName, firstName, phone, email, roleLabel, specialty, institution, accessId, avatar }) => (
+            <Grid key={lastName} xs={6}>
+              <CardBox
+                disable={deletingDoctorId === accessId}
+                header={
+                  <PatientGrantedUsersCardHeader
+                    accessId={accessId}
+                    avatar={avatar}
+                    firstName={firstName}
+                    handleDeletingId={setDeletingDoctorId}
+                    handleRefetch={() => refetchPatientDoctors()}
+                    lastName={lastName}
+                    roleLabel={roleLabel}
+                  />
+                }
+                infoListItems={
+                  <PatientGrantedUsersCardListItem
+                    email={email}
+                    institution={institution}
+                    phone={phone}
+                    specialty={specialty}
+                  />
+                }
+              />
+            </Grid>
+          ),
+        )
       ) : (
         <Grid textAlign="center" xs>
           No doctors added
