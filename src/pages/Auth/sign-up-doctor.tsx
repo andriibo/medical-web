@@ -4,7 +4,6 @@ import {
   Alert,
   AlertTitle,
   Autocomplete,
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -183,28 +182,29 @@ export const SignUpDoctor = () => {
           render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
           rules={validationRules.phone}
         />
-        <Controller
-          control={control}
-          defaultValue=""
-          name="specialty"
-          render={({ field }) => (
-            <Autocomplete
-              ListboxComponent={VirtualizedListBox}
-              disableClearable
-              disablePortal
-              disabled={!role}
-              fullWidth
-              getOptionLabel={(option) => option}
-              onChange={(event, data): void => {
-                field.onChange(data)
-              }}
-              options={specialityOptions}
-              renderInput={(params) => <TextField {...params} {...fieldValidation(field.name)} label="Specialty" />}
-              value={field.value}
-            />
-          )}
-          rules={validationRules.medicationName}
-        />
+        {role && (
+          <Controller
+            control={control}
+            defaultValue=""
+            name="specialty"
+            render={({ field }) => (
+              <Autocomplete
+                ListboxComponent={VirtualizedListBox}
+                disableClearable
+                disablePortal
+                fullWidth
+                getOptionLabel={(option) => option}
+                onChange={(event, data): void => {
+                  field.onChange(data)
+                }}
+                options={specialityOptions}
+                renderInput={(params) => <TextField {...params} {...fieldValidation(field.name)} label="Specialty" />}
+                value={field.value}
+              />
+            )}
+            rules={validationRules.medicationName}
+          />
+        )}
         <Controller
           control={control}
           defaultValue=""
