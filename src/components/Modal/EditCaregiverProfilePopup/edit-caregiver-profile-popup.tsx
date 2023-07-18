@@ -118,6 +118,15 @@ export const EditCaregiverProfilePopup: FC<EditCaregiverProfilePopupProps> = ({ 
               render={({ field }) => <PhoneField field={field} fieldValidation={fieldValidation(field.name)} />}
               rules={validationRules.phone}
             />
+            <Controller
+              control={control}
+              defaultValue=""
+              name="institution"
+              render={({ field }) => (
+                <TextField {...field} {...fieldValidation(field.name)} fullWidth label="Institution (optional)" />
+              )}
+              rules={validationRules.institution}
+            />
             <Grid container spacing={2}>
               <Grid xs={6}>
                 <Button fullWidth onClick={handleClose} size="large" variant="outlined">
