@@ -16,7 +16,7 @@
 .patientAsideHeading {
   display: flex;
   align-items: center;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
 
   .patientAsideIcon {
     width: 28px;
@@ -41,6 +41,7 @@
 
 .patientAsideTreatmentHolder {
   margin: 0 -0.5rem -0.75rem 0;
+  padding-top: 0.5rem;
 
   :global(.MuiChip-root) {
     margin: 0 0.5rem 0.75rem 0;

@@ -7,6 +7,7 @@ import validator from 'validator'
 import * as yup from 'yup'
 
 import { DATE_FORMAT } from '~constants/constants'
+import { IMedicationItem } from '~models/medications.model'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
 
 declare module 'yup' {
@@ -27,6 +28,7 @@ type ValidationPropsKeyType =
   | 'saturation'
   | 'dbp'
   | 'sbp'
+  | 'dose'
 
 type ValidationKeyType =
   | 'text'
@@ -55,6 +57,8 @@ type ValidationKeyType =
   | 'type'
   | 'role'
   | 'roleLabel'
+  | 'timesPerDay'
+  | 'dose'
 
 type ValidationRulesType = Record<ValidationKeyType, RegisterOptions>
 
@@ -126,9 +130,14 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       max: data?.maxSbp || 220,
       unit: 'mmHg',
     },
+    dose: {
+      min: 0,
+      max: 10000,
+      unit: 'mg',
+    },
   }
 
-  const { height, weight, heartRate, respirationRate, arterialPressure, temperature, saturation, dbp, sbp } =
+  const { height, weight, heartRate, respirationRate, arterialPressure, temperature, saturation, dbp, sbp, dose } =
     validationProps
 
   const validationRules: ValidationRulesType = {
@@ -213,6 +222,9 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     roleLabel: {
       required: true,
     },
+    timesPerDay: {
+      required: true,
+    },
     dob: {
       required: true,
       validate: {
@@ -237,6 +249,20 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
     medicationName: {
       required: true,
+      validate: {
+        isEmpty: (value: IMedicationItem) => Boolean(value.genericName),
+      },
+    },
+    dose: {
+      required: true,
+      min: {
+        value: dose.min,
+        message: `Min dose is ${dose.min} ${dose.unit}`,
+      },
+      max: {
+        value: dose.max,
+        message: `Max dose is ${dose.max} ${dose.unit}`,
+      },
     },
     height: {
       required: true,
