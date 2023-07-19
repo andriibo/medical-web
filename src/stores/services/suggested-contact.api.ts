@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { ISuggestedContact, ISuggestedContactRequest } from '~models/suggested-contact.model'
+import {
+  IOrganizationSuggestedContactRequest,
+  IPersonSuggestedContactRequest,
+  ISuggestedContacts,
+} from '~models/suggested-contact.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const suggestedContactApi = createApi({
@@ -8,47 +12,74 @@ export const suggestedContactApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['Suggested'],
   endpoints: (build) => ({
-    getPatientSuggestedContacts: build.query<ISuggestedContact[], { patientUserId: string }>({
-      query: ({ patientUserId }) => ({
-        url: `my-suggested-contacts/${patientUserId}`,
-      }),
-      providesTags: ['Suggested'],
-    }),
-    getMySuggestedContacts: build.query<ISuggestedContact[], void>({
+    getPatientSuggestedContacts: build.query<ISuggestedContacts, void>({
       query: () => ({
         url: 'patient/suggested-contacts',
       }),
       providesTags: ['Suggested'],
     }),
+    getSuggestedContacts: build.query<ISuggestedContacts, { patientUserId: string }>({
+      query: ({ patientUserId }) => ({
+        url: `suggested-contacts/${patientUserId}`,
+      }),
+      providesTags: ['Suggested'],
+    }),
 
-    postSuggestedContact: build.mutation<null, ISuggestedContactRequest>({
-      query: (queryArg) => ({ url: 'suggested-contact', method: 'POST', body: { ...queryArg } }),
+    // person
+    postPersonSuggestedContact: build.mutation<null, IPersonSuggestedContactRequest>({
+      query: (queryArg) => ({ url: 'person-suggested-contact', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['Suggested'],
     }),
-    postSuggestedContactApprove: build.mutation<null, { contactId: string }>({
+    postPersonSuggestedContactApprove: build.mutation<null, { contactId: string }>({
       query: ({ contactId }) => ({
-        url: `patient/suggested-contact/approve/${contactId}`,
+        url: `patient/person-suggested-contact/approve/${contactId}`,
         method: 'POST',
       }),
       invalidatesTags: ['Suggested'],
     }),
-
-    deletePatientSuggestedContact: build.mutation<null, { contactId: string }>({
-      query: ({ contactId }) => ({ url: `patient/suggested-contact/${contactId}`, method: 'DELETE' }),
+    deletePatientPersonSuggestedContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `patient/person-suggested-contact/${contactId}`, method: 'DELETE' }),
       invalidatesTags: ['Suggested'],
     }),
-    deleteSuggestedContact: build.mutation<null, { contactId: string }>({
-      query: ({ contactId }) => ({ url: `suggested-contact/${contactId}`, method: 'DELETE' }),
+    deletePersonSuggestedContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `person-suggested-contact/${contactId}`, method: 'DELETE' }),
+      invalidatesTags: ['Suggested'],
+    }),
+
+    // organization
+    postOrganizationSuggestedContact: build.mutation<null, IOrganizationSuggestedContactRequest>({
+      query: (queryArg) => ({ url: 'organization-suggested-contact', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['Suggested'],
+    }),
+    postOrganizationSuggestedContactApprove: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({
+        url: `patient/organization-suggested-contact/approve/${contactId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Suggested'],
+    }),
+    deletePatientOrganizationSuggestedContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `patient/organization-suggested-contact/${contactId}`, method: 'DELETE' }),
+      invalidatesTags: ['Suggested'],
+    }),
+    deleteOrganizationSuggestedContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `organization-suggested-contact/${contactId}`, method: 'DELETE' }),
       invalidatesTags: ['Suggested'],
     }),
   }),
 })
 
 export const {
-  useGetMySuggestedContactsQuery,
   useGetPatientSuggestedContactsQuery,
-  usePostSuggestedContactApproveMutation,
-  usePostSuggestedContactMutation,
-  useDeletePatientSuggestedContactMutation,
-  useDeleteSuggestedContactMutation,
+  useGetSuggestedContactsQuery,
+
+  usePostPersonSuggestedContactMutation,
+  usePostPersonSuggestedContactApproveMutation,
+  useDeletePatientPersonSuggestedContactMutation,
+  useDeletePersonSuggestedContactMutation,
+
+  usePostOrganizationSuggestedContactMutation,
+  usePostOrganizationSuggestedContactApproveMutation,
+  useDeletePatientOrganizationSuggestedContactMutation,
+  useDeleteOrganizationSuggestedContactMutation,
 } = suggestedContactApi

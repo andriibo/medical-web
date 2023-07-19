@@ -1,25 +1,69 @@
-import { RelationshipValues } from '~/enums/relationship.enum'
+import { OrganizationType } from '~/enums/organization-type.enum'
+import { RelationshipKeys } from '~/enums/relationship.enum'
 import { Modify } from '~/types/modify.type'
 
-export interface IEmergencyContactModel {
+export interface IPersonCommonContactModel {
   firstName: string
   lastName: string
   email: string
   phone: string
-  relationship: RelationshipValues
+  relationship: RelationshipKeys
 }
 
-export interface IEmergencyContactFormModel
+export interface IOrganizationCommonContactModel {
+  name: string
+  email: string | null
+  phone: string
+  fax: string | null
+  type: OrganizationType
+}
+
+export interface IPersonEmergencyContactFormModel
   extends Modify<
-    IEmergencyContactModel,
+    IPersonCommonContactModel,
     {
-      relationship: RelationshipValues | ''
+      relationship: RelationshipKeys | ''
     }
   > {}
 
-export interface IEmergencyContact extends IEmergencyContactModel {
+export interface IOrganizationEmergencyContactFormModel
+  extends Modify<
+    IOrganizationCommonContactModel,
+    {
+      type: OrganizationType | ''
+    }
+  > {}
+
+export interface IPersonEmergencyContactFullModel extends IPersonCommonContactModel {
   contactId: string
   createdAt: number
 }
 
-export type IEmergencyContactModelKeys = keyof IEmergencyContactModel
+export interface IOrganizationEmergencyContactFullModel extends IOrganizationCommonContactModel {
+  contactId: string
+  createdAt: number
+}
+
+export interface IPersonEmergencyContactFullSliceModel
+  extends Modify<
+    IPersonEmergencyContactFullModel,
+    {
+      relationship: RelationshipKeys | ''
+    }
+  > {}
+
+export interface IOrganizationEmergencyContactFullSliceModel
+  extends Modify<
+    IOrganizationEmergencyContactFullModel,
+    {
+      type: OrganizationType | ''
+    }
+  > {}
+
+export interface IEmergencyContacts {
+  persons: IPersonEmergencyContactFullModel[]
+  organizations: IOrganizationEmergencyContactFullModel[]
+}
+
+export type IPersonEmergencyContactModelKeys = keyof IPersonCommonContactModel
+export type IOrganizationEmergencyContactModelKeys = keyof IOrganizationCommonContactModel

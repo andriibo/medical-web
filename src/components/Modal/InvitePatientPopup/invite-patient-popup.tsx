@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys } from '~models/auth.model'

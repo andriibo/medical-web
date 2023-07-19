@@ -19,7 +19,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { DoctorRoleLabel, GrantedUserRole } from '~/enums/roles.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { trimValues } from '~helpers/trim-values'

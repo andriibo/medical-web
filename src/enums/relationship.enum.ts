@@ -4,4 +4,4 @@ export enum Relationship {
   'Friends&Family' = 'Friends & Family',
 }
 
-export type RelationshipValues = keyof typeof Relationship
+export type RelationshipKeys = keyof typeof Relationship

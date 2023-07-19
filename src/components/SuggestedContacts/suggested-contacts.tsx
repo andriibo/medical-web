@@ -1,62 +1,51 @@
-import { Check, Close, MailOutline, Phone } from '@mui/icons-material'
-import { Box, Chip, IconButton, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { useConfirm } from 'material-ui-confirm'
-import { useSnackbar } from 'notistack'
-import React, { FC, ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
-import { btnIconError, btnIconSuccess } from '~/assets/styles/styles-scheme'
-import { Relationship } from '~/enums/relationship.enum'
-import { CardBox } from '~components/Card/card-box'
 import { Spinner } from '~components/Spinner/spinner'
-import { sortByName } from '~helpers/sort-by-name'
-import { ISuggestedContact } from '~models/suggested-contact.model'
-import { useAppDispatch } from '~stores/hooks'
+import { OrganizationSuggestedContactsList } from '~components/SuggestedContacts/components/organization-suggested-contacts-list'
+import { PersonSuggestedContactsList } from '~components/SuggestedContacts/components/person-suggested-contacts-list'
+import { sortByFields } from '~helpers/sort-by-fields'
+import { ISuggestedContacts } from '~models/suggested-contact.model'
 import {
-  useDeletePatientSuggestedContactMutation,
-  useDeleteSuggestedContactMutation,
-  useGetMySuggestedContactsQuery,
   useGetPatientSuggestedContactsQuery,
-  usePostSuggestedContactApproveMutation,
+  useGetSuggestedContactsQuery,
 } from '~stores/services/suggested-contact.api'
-import { setEmergencyContactHasChanges } from '~stores/slices/emergency-contact.slice'
 
 interface SuggestedContactsProps {
   patientUserId?: string
-  heading?: ReactNode
-  mounted?: (val: boolean) => void
 }
-export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, heading, mounted }) => {
-  const dispatch = useAppDispatch()
-  const { enqueueSnackbar } = useSnackbar()
-  const confirm = useConfirm()
-  const [suggestedContacts, setSuggestedContacts] = useState<ISuggestedContact[]>()
+export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId }) => {
+  const [suggestedContacts, setSuggestedContacts] = useState<ISuggestedContacts>({
+    persons: [],
+    organizations: [],
+  })
   const [isLoading, setIsLoading] = useState(false)
-  const [setDisableContactId, setSetDisableContactId] = useState<string | null>(null)
 
-  const { data: mySuggestedContacts, isLoading: mySuggestedContactsIsLoading } = useGetMySuggestedContactsQuery(
+  const { data: mySuggestedContacts, isLoading: mySuggestedContactsIsLoading } = useGetPatientSuggestedContactsQuery(
     patientUserId ? skipToken : undefined,
   )
 
-  const { data: patientSuggestedContacts, isLoading: patientSuggestedContactsIsLoading } =
-    useGetPatientSuggestedContactsQuery(patientUserId ? { patientUserId } : skipToken)
-
-  const [deleteSuggestedContact] = useDeleteSuggestedContactMutation()
-  const [suggestedContactApprove] = usePostSuggestedContactApproveMutation()
-  const [suggestedContactReject] = useDeletePatientSuggestedContactMutation()
+  const { data: patientSuggestedContacts, isLoading: patientSuggestedContactsIsLoading } = useGetSuggestedContactsQuery(
+    patientUserId ? { patientUserId } : skipToken,
+  )
 
   useEffect(() => {
-    if (patientSuggestedContacts && !mySuggestedContactsIsLoading) {
-      setSuggestedContacts(sortByName([...patientSuggestedContacts]))
+    if (patientSuggestedContacts && !patientSuggestedContactsIsLoading) {
+      setSuggestedContacts({
+        persons: sortByFields([...patientSuggestedContacts.persons], 'firstName', 'lastName'),
+        organizations: sortByFields([...patientSuggestedContacts.organizations], 'name'),
+      })
 
       return
     }
 
-    if (mySuggestedContacts && !patientSuggestedContactsIsLoading) {
-      setSuggestedContacts(sortByName([...mySuggestedContacts]))
+    if (mySuggestedContacts && !mySuggestedContactsIsLoading) {
+      setSuggestedContacts({
+        persons: sortByFields([...mySuggestedContacts.persons], 'firstName', 'lastName'),
+        organizations: sortByFields([...mySuggestedContacts.organizations], 'name'),
+      })
     }
-  }, [patientSuggestedContacts, mySuggestedContactsIsLoading, mySuggestedContacts, patientSuggestedContactsIsLoading])
+  }, [mySuggestedContactsIsLoading, mySuggestedContacts, patientSuggestedContactsIsLoading, patientSuggestedContacts])
 
   useEffect(() => {
     if (mySuggestedContactsIsLoading || patientSuggestedContactsIsLoading) {
@@ -68,159 +57,17 @@ export const SuggestedContacts: FC<SuggestedContactsProps> = ({ patientUserId, h
     setIsLoading(false)
   }, [mySuggestedContactsIsLoading, patientSuggestedContactsIsLoading])
 
-  const handleDeleteSuggestedContact = useCallback(
-    async (contactId: string) => {
-      try {
-        await confirm({
-          title: 'Remove suggested contact?',
-          description: 'The suggested contact will be removed.',
-          confirmationText: 'Remove',
-        })
-
-        setSetDisableContactId(contactId)
-
-        await deleteSuggestedContact({ contactId }).unwrap()
-        enqueueSnackbar('Contact removed')
-      } catch (err) {
-        console.error(err)
-        setSetDisableContactId(null)
-        enqueueSnackbar('Contact not removed', { variant: 'warning' })
-      }
-    },
-    [confirm, deleteSuggestedContact, enqueueSnackbar],
-  )
-
-  const handleApproveContact = useCallback(
-    async (contactId: string) => {
-      try {
-        setSetDisableContactId(contactId)
-
-        await suggestedContactApprove({ contactId }).unwrap()
-        dispatch(setEmergencyContactHasChanges(true))
-        enqueueSnackbar('Contact accepted')
-      } catch (err) {
-        console.error(err)
-        setSetDisableContactId(null)
-        enqueueSnackbar('Contact not accepted', { variant: 'warning' })
-      }
-    },
-    [dispatch, enqueueSnackbar, suggestedContactApprove],
-  )
-
-  const handleRejectContact = useCallback(
-    async (contactId: string) => {
-      try {
-        setSetDisableContactId(contactId)
-
-        await suggestedContactReject({ contactId }).unwrap()
-        enqueueSnackbar('Contact rejected')
-      } catch (err) {
-        console.error(err)
-
-        setSetDisableContactId(null)
-        enqueueSnackbar('Contact not rejected', { variant: 'warning' })
-      }
-    },
-    [enqueueSnackbar, suggestedContactReject],
-  )
-
-  useEffect(() => {
-    if (mounted) {
-      if (suggestedContacts && !suggestedContacts?.length) {
-        mounted(false)
-
-        return
-      }
-
-      mounted(true)
-    }
-  }, [mounted, suggestedContacts])
-
   if (isLoading) {
     return <Spinner />
   }
 
-  if (!suggestedContacts?.length) {
-    return null
-  }
-
   return (
     <>
-      {heading && heading}
-      <Grid container spacing={3} sx={{ mb: 1 }}>
-        {suggestedContacts.map((suggestedContact) => {
-          const { lastName, firstName, phone, email, relationship, contactId } = suggestedContact
-
-          return (
-            <Grid key={contactId} xs={6}>
-              <CardBox
-                disable={setDisableContactId === contactId}
-                header={
-                  <>
-                    <Typography variant="subtitle1">
-                      {firstName} {lastName}
-                    </Typography>
-                    <Chip label={Relationship[relationship]} size="small" />
-                    {patientUserId && (
-                      <IconButton edge="end" onClick={() => handleDeleteSuggestedContact(contactId)}>
-                        <Close />
-                      </IconButton>
-                    )}
-                  </>
-                }
-                infoListItems={
-                  <>
-                    <ListItem disableGutters>
-                      <ListItemIcon>
-                        <Phone />
-                      </ListItemIcon>
-                      <ListItemText>
-                        <a className="simple-link" href={`tel:${phone}`}>
-                          {phone}
-                        </a>
-                      </ListItemText>
-                    </ListItem>
-                    <ListItem disableGutters>
-                      <ListItemIcon>
-                        <MailOutline />
-                      </ListItemIcon>
-                      <ListItemText>
-                        <a className="simple-link" href={`mailto:${email}`}>
-                          {email}
-                        </a>
-                      </ListItemText>
-                      {!patientUserId && (
-                        <Box sx={{ my: '-0.5rem', whiteSpace: 'nowrap' }}>
-                          <IconButton
-                            color="error"
-                            onClick={() => handleRejectContact(contactId)}
-                            sx={{
-                              ml: 1,
-                              ...btnIconError,
-                            }}
-                          >
-                            <Close />
-                          </IconButton>
-                          <IconButton
-                            color="success"
-                            onClick={() => handleApproveContact(contactId)}
-                            sx={{
-                              ml: 1,
-                              ...btnIconSuccess,
-                            }}
-                          >
-                            <Check />
-                          </IconButton>
-                        </Box>
-                      )}
-                    </ListItem>
-                  </>
-                }
-              />
-            </Grid>
-          )
-        })}
-      </Grid>
+      <OrganizationSuggestedContactsList
+        organizationSuggestedContacts={suggestedContacts.organizations}
+        patientUserId={patientUserId}
+      />
+      <PersonSuggestedContactsList patientUserId={patientUserId} personSuggestedContacts={suggestedContacts.persons} />
     </>
   )
 }

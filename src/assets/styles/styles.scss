@@ -24,6 +24,10 @@ button {
   font-size: 100%;
 }
 
+.hidden {
+  display: none !important;
+}
+
 div.form-alert {
   display: block;
   margin: 0 0 2rem;
