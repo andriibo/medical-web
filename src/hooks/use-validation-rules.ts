@@ -250,11 +250,7 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     medicationName: {
       required: true,
       validate: {
-        isEmpty: (value: IMedicationItem) => {
-          console.log(value)
-
-          return Boolean(value.genericName)
-        },
+        isEmpty: (value: IMedicationItem) => Boolean(value.genericName),
       },
     },
     dose: {
