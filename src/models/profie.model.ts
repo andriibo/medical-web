@@ -1,5 +1,5 @@
 import { GenderKeys } from '~/enums/gender.enum'
-import { PatientCategory } from '~/enums/patient-category.enum'
+import { PatientStatus } from '~/enums/patient-status.enum'
 import { CaregiverRoleLabelKeys, DoctorRoleLabelKeys, PatientRoleLabelKeys, UserRoleKeys } from '~/enums/roles.enum'
 import { Modify } from '~/types/modify.type'
 
@@ -76,7 +76,7 @@ export interface IPatientCaregivers extends ICaregiverProfile {
 export interface IDoctorPatients extends IPatientProfile {
   accessId: string
   lastConnected: number | null
-  category: PatientCategory
+  status: PatientStatus
 }
 
 export interface IUpdateDoctorProfile extends Omit<IDoctorProfile, 'email' | 'avatar'> {}

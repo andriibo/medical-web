@@ -1,15 +1,15 @@
-import { PatientCategory } from '~/enums/patient-category.enum'
+import { PatientStatus } from '~/enums/patient-status.enum'
 
 type Statuses = 'success' | 'error' | 'warning'
 
-export const getUserStatusColor = (category: PatientCategory): Statuses => {
+export const getUserStatusColor = (category: PatientStatus): Statuses => {
   let status: Statuses = 'success'
 
-  if (category === PatientCategory.Abnormal) {
+  if (category === PatientStatus.Abnormal) {
     status = 'error'
   }
 
-  if (category === PatientCategory.Borderline) {
+  if (category === PatientStatus.Borderline) {
     status = 'warning'
   }
 

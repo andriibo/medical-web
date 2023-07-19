@@ -7,10 +7,10 @@ import { authApi } from '~stores/services/auth.api'
 import { diagnosesApi } from '~stores/services/diagnoses.api'
 import { emergencyContactApi } from '~stores/services/emergency-contact.api'
 import { medicationsApi } from '~stores/services/medications.api'
-import { patientCategoryApi } from '~stores/services/patient-category.api'
 import { patientDataAccessApi } from '~stores/services/patient-data-access.api'
 import { patientDiagnosisApi } from '~stores/services/patient-diagnosis.api'
 import { patientMedicationApi } from '~stores/services/patient-medication.api'
+import { patientStatusApi } from '~stores/services/patient-status.api'
 import { patientVitalThresholdApi } from '~stores/services/patient-vital-threshold.api'
 import { profileApi } from '~stores/services/profile.api'
 import { specialtyApi } from '~stores/services/specialty.api'
@@ -31,7 +31,7 @@ export const combineApi = [
   authApi,
   profileApi,
   diagnosesApi,
-  patientCategoryApi,
+  patientStatusApi,
   patientDiagnosisApi,
   patientMedicationApi,
   patientDataAccessApi,
