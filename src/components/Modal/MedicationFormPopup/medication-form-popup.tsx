@@ -45,7 +45,7 @@ interface NewMedicationPopupProps {
   handleClose: () => void
 }
 
-export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({
+export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
   patientUserId,
   editingMedication,
   open,
@@ -63,7 +63,6 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({
     handleSubmit,
     control,
     reset,
-    getValues,
     formState: { errors },
   } = useForm<ICreateMedicationForm>({
     mode: 'onBlur',
@@ -71,9 +70,7 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({
 
   useEffect(() => {
     if (open) {
-      reset({})
-
-      console.log(editingMedication)
+      reset({ dose: '' })
 
       if (editingMedication) {
         const { brandNames, genericName, dose, timesPerDay } = editingMedication
@@ -89,10 +86,6 @@ export const NewMedicationPopup: FC<NewMedicationPopupProps> = ({
       }
     }
   }, [editingMedication, open, reset])
-
-  useEffect(() => {
-    console.log(getValues())
-  }, [getValues])
 
   const onSubmit: SubmitHandler<ICreateMedicationForm> = async ({ medicationName, dose, timesPerDay }) => {
     if (!medicationName) return

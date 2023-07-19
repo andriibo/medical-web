@@ -4,7 +4,7 @@ import { useSnackbar } from 'notistack'
 import React, { FC, useState } from 'react'
 
 import { useUserRoles } from '~/hooks/use-user-roles'
-import { NewMedicationPopup } from '~components/Modal/NewMedicationPopup/new-medication-popup'
+import { MedicationFormPopup } from '~components/Modal/MedicationFormPopup/medication-form-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
 import iconRx from '~images/icon-rx.png'
@@ -86,7 +86,7 @@ export const GrantedUserPatientMedications: FC<GrantedUserPatientMedicationsProp
           No medications
         </Typography>
       )}
-      <NewMedicationPopup
+      <MedicationFormPopup
         editingMedication={null}
         handleClose={handleNewMedicationClose}
         open={isMedicationPopupOpen}

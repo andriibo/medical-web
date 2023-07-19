@@ -1,17 +1,19 @@
-import { InfoOutlined, MailOutline, PersonRemove, PhoneInTalk } from '@mui/icons-material'
+import { Add, InfoOutlined, MailOutline, PersonRemove, PhoneInTalk } from '@mui/icons-material'
 import { Box, Button, Divider, Typography } from '@mui/material'
 import dayjs from 'dayjs'
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useDeletePatient } from '~/hooks/use-delete-patient'
+import { useUserRoles } from '~/hooks/use-user-roles'
+import { PatientMedications } from '~components/PatientMedications/patient-medications'
 import { UserAvatar } from '~components/UserAvatar/user-avatar'
 import { getAge } from '~helpers/get-age'
 import iconHeight from '~images/icon-height.png'
+import iconRx from '~images/icon-rx.png'
 import iconWeigher from '~images/icon-weigher.png'
 import { IDoctorPatients } from '~models/profie.model'
 import { GrantedUserPatientDiagnoses } from '~pages/GrantedUser/Patient/components/granred-user-patient-diagnoses'
-import { GrantedUserPatientMedications } from '~pages/GrantedUser/Patient/components/granred-user-patient-medications'
 
 import styles from '../granted-user-patient.module.scss'
 
@@ -22,7 +24,19 @@ interface GrantedUserPatientInfoProps {
 export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
   patientData: { firstName, lastName, email, avatar, gender, dob, weight, height, phone, accessId, userId },
 }) => {
+  const { isUserRoleDoctor } = useUserRoles()
+
+  const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
+
   const [deletePatient] = useDeletePatient()
+
+  const handleNewMedicationOpen = () => {
+    setIsMedicationPopupOpen(true)
+  }
+
+  const handleNewMedicationClose = () => {
+    setIsMedicationPopupOpen(false)
+  }
 
   return (
     <div className={styles.patientAside}>
@@ -55,8 +69,22 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
       <Divider sx={{ my: 2 }} />
       <GrantedUserPatientDiagnoses patientUserId={userId} />
       <Divider sx={{ my: 2 }} />
-      <GrantedUserPatientMedications patientUserId={userId} />
-      <Divider sx={{ my: 2 }} />
+      <Box sx={{ mb: 2 }}>
+        <div className={styles.patientAsideHeading}>
+          <img alt="Rx" className={styles.patientAsideIcon} src={iconRx} />
+          <strong className={styles.patientAsideTitle}>Medication</strong>
+          {isUserRoleDoctor && (
+            <Button onClick={handleNewMedicationOpen} size="small" startIcon={<Add />} variant="outlined">
+              Add New
+            </Button>
+          )}
+        </div>
+        <PatientMedications
+          handlePopupClose={handleNewMedicationClose}
+          patientUserId={userId}
+          popupOpen={isMedicationPopupOpen}
+        />
+      </Box>
       <div className={styles.patientAsideHeading}>
         <InfoOutlined className={styles.patientAsideIcon} />
         <strong className={styles.patientAsideTitle}>Contact info</strong>
