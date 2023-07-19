@@ -7,7 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 
 import { UpdateEmailStep } from '~/enums/update-email-step.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
 import { AuthEmailKeys, IAuthEmail } from '~models/auth.model'

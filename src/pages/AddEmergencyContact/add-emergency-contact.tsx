@@ -20,18 +20,17 @@ import { NavLink } from 'react-router-dom'
 
 import { Relationship } from '~/enums/relationship.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { InviteGrantedUserPopup } from '~components/Modal/InviteGrantedUserPopup/invite-granted-user-popup'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
-import { isRelationshipValue } from '~helpers/is-relationship-value'
 import { preparePhoneForSending } from '~helpers/prepare-phone-for-sending'
 import { trimValues } from '~helpers/trim-values'
-import { IEmergencyContactFormModel, IEmergencyContactModelKeys } from '~models/emergency-contact.model'
+import { IPersonEmergencyContactFormModel, IPersonEmergencyContactModelKeys } from '~models/emergency-contact.model'
 import { IErrorRequest } from '~models/error-request.model'
 import { useAppDispatch } from '~stores/hooks'
-import { usePostMyEmergencyContactMutation } from '~stores/services/emergency-contact.api'
+import { usePostPersonEmergencyContactMutation } from '~stores/services/emergency-contact.api'
 import { setHasEmergencyContacts, useHasEmergencyContacts } from '~stores/slices/auth.slice'
 
 import styles from './add-emergency-contact.module.scss'
@@ -47,7 +46,7 @@ export const AddEmergencyContact = () => {
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const [newUserEmail, setNewUserEmail] = useState<string | null>(null)
 
-  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostMyEmergencyContactMutation()
+  const [addEmergencyContact, { isLoading: addEmergencyContactIsLoading }] = usePostPersonEmergencyContactMutation()
 
   const handleInvitePopupClose = () => {
     setInvitePopupOpen(false)
@@ -59,12 +58,12 @@ export const AddEmergencyContact = () => {
     control,
     reset,
     formState: { errors },
-  } = useForm<IEmergencyContactFormModel>({
+  } = useForm<IPersonEmergencyContactFormModel>({
     mode: 'onBlur',
   })
 
-  const onSubmit: SubmitHandler<IEmergencyContactFormModel> = async (data) => {
-    if (!isRelationshipValue(data.relationship)) return
+  const onSubmit: SubmitHandler<IPersonEmergencyContactFormModel> = async (data) => {
+    if (!data.relationship) return
 
     try {
       await addEmergencyContact({
@@ -97,7 +96,7 @@ export const AddEmergencyContact = () => {
     }
   }
 
-  const fieldValidation = (name: IEmergencyContactModelKeys) => ({
+  const fieldValidation = (name: IPersonEmergencyContactModelKeys) => ({
     error: Boolean(errors[name]),
     helperText: getErrorMessage(errors, name),
   })

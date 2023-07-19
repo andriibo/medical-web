@@ -1,28 +1,39 @@
-import { RelationshipValues } from '~/enums/relationship.enum'
+import { IOrganizationCommonContactModel, IPersonCommonContactModel } from '~models/emergency-contact.model'
 
-export interface ISuggestedContactModel {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  relationship: RelationshipValues
-}
-
-export interface ISuggestedContactRequest extends ISuggestedContactModel {
+export interface IPersonSuggestedContactRequest extends IPersonCommonContactModel {
   patientUserId: string
 }
 
-export interface ISuggestedContact extends ISuggestedContactModel {
-  contactId: string
-  suggestedAt: number
-  suggestedByUser: {
-    userId: string
-    email: string
-    firstName: string
-    lastName: string
-    phone: string
-    avatar: string
-  }
+export interface IOrganizationSuggestedContactRequest extends IOrganizationCommonContactModel {
+  patientUserId: string
 }
 
-export type ISuggestedContactModelKeys = keyof ISuggestedContactModel
+interface ISuggestedByUser {
+  userId: string
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+  avatar: string | null
+  role: string
+  roleLabel: string
+  deleteAt: number | null
+  passwordUpdatedAt: number
+}
+
+export interface IPersonSuggestedContact extends IPersonCommonContactModel {
+  contactId: string
+  suggestedAt: number
+  suggestedByUser: ISuggestedByUser
+}
+
+export interface IOrganizationSuggestedContact extends IOrganizationCommonContactModel {
+  contactId: string
+  suggestedAt: number
+  suggestedByUser: ISuggestedByUser
+}
+
+export interface ISuggestedContacts {
+  persons: IPersonSuggestedContact[]
+  organizations: IOrganizationSuggestedContact[]
+}

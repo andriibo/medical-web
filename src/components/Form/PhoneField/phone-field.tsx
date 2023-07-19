@@ -6,6 +6,7 @@ import { ControllerRenderProps } from 'react-hook-form/dist/types/controller'
 import PhoneInput from 'react-phone-input-2'
 
 interface PhoneFieldProps {
+  label?: string
   field: ControllerRenderProps<any, any>
   fieldValidation: {
     error: boolean
@@ -13,7 +14,11 @@ interface PhoneFieldProps {
   }
 }
 
-export const PhoneField: FC<PhoneFieldProps> = ({ field, fieldValidation: { error, helperText } }) => (
+export const PhoneField: FC<PhoneFieldProps> = ({
+  label = 'Phone number',
+  field,
+  fieldValidation: { error, helperText },
+}) => (
   <FormControl error={error} fullWidth>
     <PhoneInput
       country="ca"
@@ -22,8 +27,8 @@ export const PhoneField: FC<PhoneFieldProps> = ({ field, fieldValidation: { erro
         name: field.name,
       }}
       isValid={!error}
-      onChange={(phone) => field.onChange(`+${phone}`)}
-      specialLabel="Phone number"
+      onChange={(phone) => field.onChange(phone ? `+${phone}` : null)}
+      specialLabel={label}
       value={field.value}
     />
     {error && <FormHelperText>{helperText}</FormHelperText>}

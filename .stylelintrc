@@ -33,6 +33,12 @@
         "ignoreProperties": ["text-size-adjust"]
       }
     ],
+    "value-no-vendor-prefix": [
+      true,
+      {
+        "ignoreValues": ["box"]
+      }
+    ],
     "selector-class-pattern": null
   }
 }

@@ -1,6 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
 
-import { IEmergencyContact, IEmergencyContactModel } from '~models/emergency-contact.model'
+import {
+  IEmergencyContacts,
+  IOrganizationCommonContactModel,
+  IPersonCommonContactModel,
+} from '~models/emergency-contact.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const emergencyContactApi = createApi({
@@ -8,37 +12,68 @@ export const emergencyContactApi = createApi({
   baseQuery: staggeredBaseQueryWithBailOut(''),
   tagTypes: ['EmergencyContact', 'EmergencyContactOrder'],
   endpoints: (build) => ({
-    getPatientEmergencyContacts: build.query<IEmergencyContact[], { patientUserId: string }>({
+    getPatientEmergencyContacts: build.query<IEmergencyContacts, { patientUserId: string }>({
       query: ({ patientUserId }) => ({
-        url: `patient-emergency-contacts/${patientUserId}`,
+        url: `emergency-contacts/${patientUserId}`,
       }),
       providesTags: ['EmergencyContact'],
     }),
-    getMyEmergencyContacts: build.query<IEmergencyContact[], void>({
+    getEmergencyContacts: build.query<IEmergencyContacts, void>({
       query: () => ({
-        url: 'patient/my-emergency-contacts',
+        url: 'patient/emergency-contacts',
       }),
       providesTags: ['EmergencyContact'],
     }),
-    postMyEmergencyContact: build.mutation<null, IEmergencyContactModel>({
-      query: (queryArg) => ({ url: 'patient/my-emergency-contact', method: 'POST', body: { ...queryArg } }),
+
+    // Person
+    postPersonEmergencyContact: build.mutation<null, IPersonCommonContactModel>({
+      query: (queryArg) => ({ url: 'patient/person-emergency-contact', method: 'POST', body: { ...queryArg } }),
       invalidatesTags: ['EmergencyContact'],
     }),
-    patchPatientEmergencyContact: build.mutation<null, { contactId: string; contact: IEmergencyContactModel }>({
+    patchPersonEmergencyContact: build.mutation<null, { contactId: string; contact: IPersonCommonContactModel }>({
       query: ({ contactId, contact }) => ({
-        url: `patient/my-emergency-contact/${contactId}`,
+        url: `patient/person-emergency-contact/${contactId}`,
         method: 'PATCH',
         body: { ...contact },
       }),
       invalidatesTags: ['EmergencyContact'],
     }),
-    deletePatientEmergencyContact: build.mutation<null, { contactId: string }>({
-      query: ({ contactId }) => ({ url: `patient/my-emergency-contact/${contactId}`, method: 'DELETE' }),
+    deletePersonEmergencyContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `patient/person-emergency-contact/${contactId}`, method: 'DELETE' }),
       invalidatesTags: ['EmergencyContact'],
     }),
-    patchMyEmergencyContactOrder: build.mutation<null, { contactIds: string[] }>({
+    patchPersonEmergencyContactOrder: build.mutation<null, { contactIds: string[] }>({
       query: ({ contactIds }) => ({
-        url: 'patient/my-emergency-contacts/order',
+        url: 'patient/person-emergency-contacts/order',
+        method: 'PATCH',
+        body: { contactIds },
+      }),
+      invalidatesTags: ['EmergencyContactOrder'],
+    }),
+
+    // Organization
+    postOrganizationEmergencyContact: build.mutation<null, IOrganizationCommonContactModel>({
+      query: (queryArg) => ({ url: 'patient/organization-emergency-contact', method: 'POST', body: { ...queryArg } }),
+      invalidatesTags: ['EmergencyContact'],
+    }),
+    patchOrganizationEmergencyContact: build.mutation<
+      null,
+      { contactId: string; contact: IOrganizationCommonContactModel }
+    >({
+      query: ({ contactId, contact }) => ({
+        url: `patient/organization-emergency-contact/${contactId}`,
+        method: 'PATCH',
+        body: { ...contact },
+      }),
+      invalidatesTags: ['EmergencyContact'],
+    }),
+    deleteOrganizationEmergencyContact: build.mutation<null, { contactId: string }>({
+      query: ({ contactId }) => ({ url: `patient/organization-emergency-contact/${contactId}`, method: 'DELETE' }),
+      invalidatesTags: ['EmergencyContact'],
+    }),
+    patchOrganizationEmergencyContactOrder: build.mutation<null, { contactIds: string[] }>({
+      query: ({ contactIds }) => ({
+        url: 'patient/organization-emergency-contacts/order',
         method: 'PATCH',
         body: { contactIds },
       }),
@@ -49,10 +84,16 @@ export const emergencyContactApi = createApi({
 
 export const {
   useGetPatientEmergencyContactsQuery,
-  useGetMyEmergencyContactsQuery,
-  useLazyGetMyEmergencyContactsQuery,
-  usePostMyEmergencyContactMutation,
-  usePatchPatientEmergencyContactMutation,
-  useDeletePatientEmergencyContactMutation,
-  usePatchMyEmergencyContactOrderMutation,
+  useGetEmergencyContactsQuery,
+  useLazyGetEmergencyContactsQuery,
+
+  usePatchPersonEmergencyContactMutation,
+  usePostPersonEmergencyContactMutation,
+  useDeletePersonEmergencyContactMutation,
+  usePatchPersonEmergencyContactOrderMutation,
+
+  usePostOrganizationEmergencyContactMutation,
+  usePatchOrganizationEmergencyContactMutation,
+  useDeleteOrganizationEmergencyContactMutation,
+  usePatchOrganizationEmergencyContactOrderMutation,
 } = emergencyContactApi

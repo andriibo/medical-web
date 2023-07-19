@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 
 import { PageUrls } from '~/enums/page-urls.enum'
 import { useValidationRules } from '~/hooks/use-validation-rules'
-import { EmailField } from '~components/EmailField/email-field'
+import { EmailField } from '~components/Form/EmailField/email-field'
 import { NotificationPopup } from '~components/Modal/NotificationPopup/notification-popup'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'

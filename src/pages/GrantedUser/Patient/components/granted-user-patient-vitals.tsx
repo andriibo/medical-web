@@ -14,7 +14,7 @@ interface GrantedUserVitalsProps {
   patientUserId: string
 }
 
-export const GrantedUserVitals: FC<GrantedUserVitalsProps> = ({ patientUserId }) => {
+export const GrantedUserPatientVitals: FC<GrantedUserVitalsProps> = ({ patientUserId }) => {
   const [activeTab, setActiveTab] = useState<VitalsTab>(VitalsTab.history)
   const [historySort, setHistorySort] = useState<VitalOrderKeys>('recent')
 
