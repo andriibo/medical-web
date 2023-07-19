@@ -3,7 +3,7 @@ import { Button, List, ListItem, Tab, Tabs, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import React, { useEffect, useState } from 'react'
 
-import { PatientCategory } from '~/enums/patient-category.enum'
+import { PatientStatus } from '~/enums/patient-status.enum'
 import { InvitePatientPopup } from '~components/Modal/InvitePatientPopup/invite-patient-popup'
 import { Spinner } from '~components/Spinner/spinner'
 import { sortByName } from '~helpers/sort-by-name'
@@ -17,7 +17,7 @@ export const GrantedUserPatients = () => {
   const dispatch = useAppDispatch()
   const dataAccessHasChanges = useDataAccessHasChanges()
 
-  const [activeTab, setActiveTab] = useState<PatientCategory>(PatientCategory.Abnormal)
+  const [activeTab, setActiveTab] = useState<PatientStatus>(PatientStatus.Abnormal)
   const [invitePopupOpen, setInvitePopupOpen] = useState(false)
   const [filteredPatients, setFilteredPatients] = useState<IDoctorPatients[] | null>(null)
 
@@ -42,13 +42,13 @@ export const GrantedUserPatients = () => {
     setInvitePopupOpen(false)
   }
 
-  const handleChangeTab = (event: React.SyntheticEvent, value: PatientCategory) => {
+  const handleChangeTab = (event: React.SyntheticEvent, value: PatientStatus) => {
     setActiveTab(value)
   }
 
   useEffect(() => {
     if (grantedUserPatients) {
-      const filtered = grantedUserPatients.filter((data) => data.category === activeTab)
+      const filtered = grantedUserPatients.filter((data) => data.status === activeTab)
 
       setFilteredPatients(sortByName(filtered))
     }
@@ -63,9 +63,9 @@ export const GrantedUserPatients = () => {
         <Grid container spacing={3}>
           <Grid xs>
             <Tabs onChange={handleChangeTab} value={activeTab}>
-              <Tab label="Abnormal" value={PatientCategory.Abnormal} />
-              <Tab label="Borderline" value={PatientCategory.Borderline} />
-              <Tab label="Normal" value={PatientCategory.Normal} />
+              <Tab label="Abnormal" value={PatientStatus.Abnormal} />
+              <Tab label="Borderline" value={PatientStatus.Borderline} />
+              <Tab label="Normal" value={PatientStatus.Normal} />
             </Tabs>
           </Grid>
           <Grid>

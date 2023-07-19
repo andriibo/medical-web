@@ -1,4 +1,4 @@
-export enum PatientCategory {
+export enum PatientStatus {
   Abnormal = 'Abnormal',
   Borderline = 'Borderline',
   Normal = 'Normal',
