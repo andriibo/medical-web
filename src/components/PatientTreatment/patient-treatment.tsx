@@ -98,7 +98,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           {patientDiagnosesDataIsLoading ? (
             <Spinner />
           ) : patientDiagnosesData?.length ? (
-            patientDiagnosesData.map(({ diagnosisId, diagnosisName, createdBy }) => (
+            patientDiagnosesData.map(({ diagnosisId, diagnosisName }) => (
               <ListItem
                 className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
                 key={diagnosisId}
@@ -110,7 +110,7 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
                   )
                 }
               >
-                <ListItemText primary={diagnosisName} secondary={`added by ${createdBy}`} />
+                <ListItemText primary={diagnosisName} />
               </ListItem>
             ))
           ) : (
