@@ -46,7 +46,7 @@ export const GrantedUserPatientVitals: FC<GrantedUserVitalsProps> = ({ patientUs
           </ToggleButtonGroup>
         </Grid>
       </Grid>
-      <TabPanel activeTab={activeTab} value={VitalsTab.history}>
+      <TabPanel activeTab={activeTab} className="vital-history-tab" value={VitalsTab.history}>
         <VitalsHistory historySort={historySort} patientUserId={patientUserId} />
       </TabPanel>
       <TabPanel activeTab={activeTab} value={VitalsTab.now}>

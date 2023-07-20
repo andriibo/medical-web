@@ -69,7 +69,7 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
       <Divider sx={{ my: 2 }} />
       <GrantedUserPatientDiagnoses patientUserId={userId} />
       <Divider sx={{ my: 2 }} />
-      <Box sx={{ mb: 2 }}>
+      <Box sx={{ mb: 0 }}>
         <div className={styles.patientAsideHeading}>
           <img alt="Rx" className={styles.patientAsideIcon} src={iconRx} />
           <strong className={styles.patientAsideTitle}>Medication</strong>
@@ -85,6 +85,7 @@ export const GrantedUserPatientInfo: FC<GrantedUserPatientInfoProps> = ({
           popupOpen={isMedicationPopupOpen}
         />
       </Box>
+      <Divider sx={{ my: 2 }} />
       <div className={styles.patientAsideHeading}>
         <InfoOutlined className={styles.patientAsideIcon} />
         <strong className={styles.patientAsideTitle}>Contact info</strong>

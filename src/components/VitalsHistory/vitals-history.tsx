@@ -300,7 +300,7 @@ export const VitalsHistory: FC<VitalsHistoryProps> = ({ patientUserId, historySo
         initialStartDate={dayjs(startDate)}
         onTypesChange={setFilterType}
       />
-      <div className={`${isReloading || historyIsLoading ? styles.blur : ''}`}>
+      <div className={`${styles.vitalHistoryListContainer} ${isReloading || historyIsLoading ? styles.blur : ''}`}>
         {abnormalHistory.length ? (
           <Virtuoso
             className={`${styles.vitalHistoryList}`}

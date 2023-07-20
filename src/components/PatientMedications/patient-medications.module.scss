@@ -1,0 +1,12 @@
+.medicationList {
+  padding: 0;
+
+  :global {
+    li {
+      &:last-child,
+      &:has(+ .hidden) {
+        border-bottom-color: transparent;
+      }
+    }
+  }
+}
