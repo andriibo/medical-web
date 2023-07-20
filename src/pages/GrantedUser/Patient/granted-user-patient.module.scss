@@ -2,7 +2,8 @@
 
 .patientContainer {
   display: flex;
-  align-items: flex-start;
+
+  // align-items: flex-start;
 }
 
 .patientAside {
@@ -49,6 +50,16 @@
 }
 
 .patientContent {
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-width: 0;
+
+  :global {
+    .tab-panel {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+  }
 }

@@ -1,5 +1,5 @@
-import { Add } from '@mui/icons-material'
-import { Button, Chip, Tooltip, Typography } from '@mui/material'
+import { Add, KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
+import { Box, Button, Chip, Tooltip, Typography } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { FC, useState } from 'react'
 
@@ -16,10 +16,13 @@ interface GrantedUserPatientDiagnosesProps {
   patientUserId: string
 }
 
+const itemsToShow = 3
+
 export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> = ({ patientUserId }) => {
   const { enqueueSnackbar } = useSnackbar()
   const { isUserRoleDoctor } = useUserRoles()
 
+  const [viewMoreDiagnoses, setViewMoreDiagnoses] = useState(false)
   const [diagnosisPopupOpen, setDiagnosisPopupOpen] = useState(false)
   const [deletingDiagnosesId, setDeletingDiagnosesId] = useState<string[]>([])
 
@@ -34,6 +37,10 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
 
   const handleNewDiagnosisClose = () => {
     setDiagnosisPopupOpen(false)
+  }
+
+  const handleViewMoreDiagnoses = () => {
+    setViewMoreDiagnoses((prevState) => !prevState)
   }
 
   const handleDeleteDiagnosis = async (diagnosisId: string) => {
@@ -71,9 +78,10 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
         <Spinner />
       ) : patientDiagnosesData?.length ? (
         <div className={styles.patientAsideTreatmentHolder}>
-          {patientDiagnosesData.map(({ diagnosisId, diagnosisName }) => (
+          {patientDiagnosesData.map(({ diagnosisId, diagnosisName }, index) => (
             <Tooltip key={diagnosisId} title={diagnosisName}>
               <Chip
+                className={!viewMoreDiagnoses && index + 1 > itemsToShow ? 'hidden' : ''}
                 disabled={deletingDiagnosesId.includes(diagnosisId)}
                 label={removeTextInBrackets(diagnosisName)}
                 onDelete={isUserRoleDoctor ? () => handleDeleteDiagnosis(diagnosisId) : undefined}
@@ -85,6 +93,22 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
         <Typography align="center" variant="body1">
           No diagnoses
         </Typography>
+      )}
+      {patientDiagnosesData && patientDiagnosesData.length > itemsToShow && (
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Button onClick={() => handleViewMoreDiagnoses()} variant="text">
+            {viewMoreDiagnoses ? (
+              <>
+                View less <KeyboardArrowUp />
+              </>
+            ) : (
+              <>
+                View more
+                <KeyboardArrowDown />
+              </>
+            )}
+          </Button>
+        </Box>
       )}
       <NewDiagnosisPopup
         handleClose={handleNewDiagnosisClose}

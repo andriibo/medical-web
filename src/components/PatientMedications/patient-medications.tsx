@@ -1,4 +1,5 @@
-import { List, ListItem, ListItemText, MenuItem } from '@mui/material'
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
+import { Box, Button, List, ListItem, ListItemText, MenuItem } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -14,11 +15,15 @@ import {
 } from '~stores/services/patient-medication.api'
 import { useUserId } from '~stores/slices/auth.slice'
 
+import styles from './patient-medications.module.scss'
+
 interface PatientMedicationsProps {
   patientUserId?: string
   popupOpen: boolean
   handlePopupClose: () => void
 }
+
+const itemsToShow = 2
 
 export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId, popupOpen, handlePopupClose }) => {
   const userId = useUserId()
@@ -29,6 +34,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
   const [dropClose, setDropClose] = useState(false)
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [editingMedication, setEditingMedication] = useState<IMedication | null>(null)
+  const [viewMoreMedications, setViewMoreMedications] = useState(false)
 
   const currentPatientUserId = useMemo(() => patientUserId || userId, [patientUserId, userId])
 
@@ -69,44 +75,70 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
     }
   }
 
+  const handleShowMoreMedications = () => {
+    setViewMoreMedications((prevState) => !prevState)
+  }
+
   const handleDrop = useCallback((value: boolean) => {
     setDropClose(value)
   }, [])
 
+  if (patientMedicationsDataIsLoading) {
+    return <Spinner />
+  }
+
   return (
     <>
-      <List className="list-divided">
-        {patientMedicationsDataIsLoading ? (
-          <Spinner />
-        ) : patientMedicationsData?.length ? (
-          patientMedicationsData.map((medication) => {
-            const { medicationId, genericName, dose, timesPerDay } = medication
+      <List className={`list-divided ${styles.medicationList}`}>
+        {patientMedicationsData?.length ? (
+          <>
+            {patientMedicationsData.map((medication, index) => {
+              const { medicationId, genericName, dose, timesPerDay } = medication
 
-            return (
-              <ListItem
-                className={deletingMedicationsId.includes(medicationId) ? 'disabled' : ''}
-                disableGutters={Boolean(patientUserId)}
-                key={medicationId}
-                secondaryAction={
-                  !isUserRoleCaregiver && (
-                    <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
-                      <MenuItem onClick={() => handleEditMedication(medication)}>Edit</MenuItem>
-                      <MenuItem onClick={() => handleDeleteMedication(medicationId)}>Delete</MenuItem>
-                    </DropdownMenu>
-                  )
-                }
-              >
-                <ListItemText
-                  primary={genericName}
-                  secondary={`${dose ? `${dose} mg / ` : ''}${timesPerDay ? timesPerDay : ''}`}
-                />
-              </ListItem>
-            )
-          })
+              return (
+                <ListItem
+                  className={`${!viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
+                    deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
+                  }`}
+                  disableGutters={Boolean(patientUserId)}
+                  key={medicationId}
+                  secondaryAction={
+                    !isUserRoleCaregiver && (
+                      <DropdownMenu buttonEdge="end" dropClose={dropClose} handleDrop={handleDrop}>
+                        <MenuItem onClick={() => handleEditMedication(medication)}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleDeleteMedication(medicationId)}>Delete</MenuItem>
+                      </DropdownMenu>
+                    )
+                  }
+                >
+                  <ListItemText
+                    primary={genericName}
+                    secondary={`${dose ? `${dose} mg / ` : ''}${timesPerDay ? timesPerDay : ''}`}
+                  />
+                </ListItem>
+              )
+            })}
+          </>
         ) : (
           <ListItem className="empty-list-item">No medications added</ListItem>
         )}
       </List>
+      {patientMedicationsData && patientMedicationsData.length > itemsToShow && (
+        <Box sx={{ textAlign: 'center' }}>
+          <Button onClick={() => handleShowMoreMedications()} variant="text">
+            {viewMoreMedications ? (
+              <>
+                View less <KeyboardArrowUp />
+              </>
+            ) : (
+              <>
+                View more
+                <KeyboardArrowDown />
+              </>
+            )}
+          </Button>
+        </Box>
+      )}
       <MedicationFormPopup
         editingMedication={editingMedication}
         handleClose={handleMedicationPopupClose}

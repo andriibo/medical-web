@@ -1,11 +1,20 @@
 @import 'src/components/Vitals/vitals.module';
 
+.vitalHistoryListContainer {
+  height: 100%;
+}
+
 .vitalHistoryList {
   min-height: 300px;
   max-height: calc(100vh - 276px);
   margin: 0 -0.5rem;
   overflow-x: hidden;
   overflow-y: auto;
+
+  :global(.content-lg) & {
+    height: 100% !important;
+    max-height: unset;
+  }
 
   /* width */
   &::-webkit-scrollbar {
