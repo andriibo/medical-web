@@ -23,6 +23,8 @@ interface PatientMedicationsProps {
   handlePopupClose: () => void
 }
 
+const itemsToShow = 2
+
 export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId, popupOpen, handlePopupClose }) => {
   const userId = useUserId()
   const { enqueueSnackbar } = useSnackbar()
@@ -95,7 +97,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
 
               return (
                 <ListItem
-                  className={`${!viewMoreMedications && index > 1 ? 'hidden' : ''} ${
+                  className={`${!viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
                     deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
                   }`}
                   disableGutters={Boolean(patientUserId)}
@@ -121,7 +123,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
           <ListItem className="empty-list-item">No medications added</ListItem>
         )}
       </List>
-      {patientMedicationsData && patientMedicationsData.length > 2 && (
+      {patientMedicationsData && patientMedicationsData.length > itemsToShow && (
         <Box sx={{ textAlign: 'center' }}>
           <Button onClick={() => handleShowMoreMedications()} variant="text">
             {viewMoreMedications ? (

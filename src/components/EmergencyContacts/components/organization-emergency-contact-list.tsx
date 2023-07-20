@@ -43,6 +43,8 @@ interface OrganizationEmergencyContactListProps {
   patientUserId?: string
 }
 
+const itemsToShow = 2
+
 export const OrganizationEmergencyContactList: FC<OrganizationEmergencyContactListProps> = ({
   emergencyContacts,
   patientUserId,
@@ -146,7 +148,7 @@ export const OrganizationEmergencyContactList: FC<OrganizationEmergencyContactLi
                 const { name, contactId } = emergencyContact
 
                 return (
-                  <Grid className={!viewMoreContacts && index > 1 ? 'hidden' : ''} key={contactId} xs={6}>
+                  <Grid className={!viewMoreContacts && index + 1 > itemsToShow ? 'hidden' : ''} key={contactId} xs={6}>
                     <CardBox
                       disable={setDeletingContactId === contactId}
                       header={
@@ -176,7 +178,7 @@ export const OrganizationEmergencyContactList: FC<OrganizationEmergencyContactLi
               })}
             </ReactSortable>
           </Grid>
-          {emergencyContactsData.length > 2 && (
+          {emergencyContactsData.length > itemsToShow && (
             <Box sx={{ mt: 2, textAlign: 'right' }}>
               <Button onClick={() => handleViewMoreContacts()} variant="text">
                 {viewMoreContacts ? 'View less' : 'View more'}

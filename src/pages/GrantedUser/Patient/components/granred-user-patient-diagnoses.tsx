@@ -16,7 +16,7 @@ interface GrantedUserPatientDiagnosesProps {
   patientUserId: string
 }
 
-const showItems = 3
+const itemsToShow = 3
 
 export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> = ({ patientUserId }) => {
   const { enqueueSnackbar } = useSnackbar()
@@ -81,7 +81,7 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
           {patientDiagnosesData.map(({ diagnosisId, diagnosisName }, index) => (
             <Tooltip key={diagnosisId} title={diagnosisName}>
               <Chip
-                className={!viewMoreDiagnoses && index + 1 > showItems ? 'hidden' : ''}
+                className={!viewMoreDiagnoses && index + 1 > itemsToShow ? 'hidden' : ''}
                 disabled={deletingDiagnosesId.includes(diagnosisId)}
                 label={removeTextInBrackets(diagnosisName)}
                 onDelete={isUserRoleDoctor ? () => handleDeleteDiagnosis(diagnosisId) : undefined}
@@ -94,7 +94,7 @@ export const GrantedUserPatientDiagnoses: FC<GrantedUserPatientDiagnosesProps> =
           No diagnoses
         </Typography>
       )}
-      {patientDiagnosesData && patientDiagnosesData.length > showItems && (
+      {patientDiagnosesData && patientDiagnosesData.length > itemsToShow && (
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Button onClick={() => handleViewMoreDiagnoses()} variant="text">
             {viewMoreDiagnoses ? (

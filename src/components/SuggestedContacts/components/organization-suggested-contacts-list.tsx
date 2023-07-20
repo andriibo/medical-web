@@ -22,6 +22,8 @@ interface PersonSuggestedContactsListProps {
   patientUserId?: string
 }
 
+const itemsToShow = 2
+
 export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListProps> = ({
   organizationSuggestedContacts,
   patientUserId,
@@ -109,7 +111,7 @@ export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListPr
               const { name, phone, type, contactId } = suggestedContact
 
               return (
-                <Grid className={!viewMoreContacts && index > 1 ? 'hidden' : ''} key={contactId} xs={6}>
+                <Grid className={!viewMoreContacts && index + 1 > itemsToShow ? 'hidden' : ''} key={contactId} xs={6}>
                   <CardBox
                     disable={setDisableContactId === contactId}
                     header={
@@ -171,7 +173,7 @@ export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListPr
               )
             })}
           </Grid>
-          {organizationSuggestedContacts.length > 2 && (
+          {organizationSuggestedContacts.length > itemsToShow && (
             <Box sx={{ mt: 2, textAlign: 'right' }}>
               <Button onClick={() => handleViewMoreContacts()} variant="text">
                 {viewMoreContacts ? 'View less' : 'View more'}
