@@ -28,7 +28,7 @@ import { EmailField } from '~components/Form/EmailField/email-field'
 import { PasswordField } from '~components/Form/PasswordField/password-field'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-list-box'
-import { NURSE_SPECIALITY_OPTIONS } from '~constants/constants'
+import { NURSE_SPECIALTY_OPTIONS } from '~constants/constants'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { getObjectKeys } from '~helpers/get-object-keys'
 import { getUrlWithParams } from '~helpers/get-url-with-params'
@@ -48,7 +48,7 @@ export const SignUpDoctor = () => {
   const { validationRules } = useValidationRules()
 
   const [role, setRole] = useState<DoctorRoleLabelKeys | null>(null)
-  const [specialityOptions, setSpecialityOptions] = useState<string[]>([])
+  const [specialtyOptions, setSpecialtyOptions] = useState<string[]>([])
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const { data: specialtyData, isLoading: specialtyIsLoading } = useGetSpecialtyQuery()
@@ -66,14 +66,14 @@ export const SignUpDoctor = () => {
   useEffect(() => {
     if (role === 'Doctor') {
       if (specialtyData && !specialtyIsLoading) {
-        setSpecialityOptions([...specialtyData.specialtyNames])
+        setSpecialtyOptions([...specialtyData.specialtyNames])
       }
 
       return
     }
 
     if (role === 'Nurse') {
-      setSpecialityOptions(NURSE_SPECIALITY_OPTIONS)
+      setSpecialtyOptions(NURSE_SPECIALTY_OPTIONS)
     }
   }, [role, specialtyData, specialtyIsLoading])
 
@@ -197,12 +197,12 @@ export const SignUpDoctor = () => {
                 onChange={(event, data): void => {
                   field.onChange(data)
                 }}
-                options={specialityOptions}
+                options={specialtyOptions}
                 renderInput={(params) => <TextField {...params} {...fieldValidation(field.name)} label="Specialty" />}
                 value={field.value}
               />
             )}
-            rules={validationRules.medicationName}
+            rules={validationRules.specialty}
           />
         )}
         <Controller

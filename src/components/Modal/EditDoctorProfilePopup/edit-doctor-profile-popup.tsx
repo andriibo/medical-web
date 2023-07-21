@@ -9,7 +9,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form'
 import { useValidationRules } from '~/hooks/use-validation-rules'
 import { PhoneField } from '~components/Form/PhoneField/phone-field'
 import { VirtualizedListBox } from '~components/VirtualizedListBox/virtualized-list-box'
-import { NURSE_SPECIALITY_OPTIONS } from '~constants/constants'
+import { NURSE_SPECIALTY_OPTIONS } from '~constants/constants'
 import { deleteKeysFormObject } from '~helpers/delete-keys-form-object'
 import { getErrorMessage } from '~helpers/get-error-message'
 import { trimValues } from '~helpers/trim-values'
@@ -28,7 +28,7 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
   const { enqueueSnackbar } = useSnackbar()
   const { validationRules } = useValidationRules()
 
-  const [specialityOptions, setSpecialityOptions] = useState<string[]>([])
+  const [specialtyOptions, setSpecialtyOptions] = useState<string[]>([])
   const [formErrors, setFormErrors] = useState<string[] | null>(null)
 
   const { data: specialtyData, isLoading: specialtyIsLoading } = useGetSpecialtyQuery(
@@ -41,14 +41,14 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
   useEffect(() => {
     if (doctorData.roleLabel === 'Doctor') {
       if (specialtyData && !specialtyIsLoading) {
-        setSpecialityOptions([...specialtyData.specialtyNames])
+        setSpecialtyOptions([...specialtyData.specialtyNames])
       }
 
       return
     }
 
     if (doctorData.roleLabel === 'Nurse') {
-      setSpecialityOptions(NURSE_SPECIALITY_OPTIONS)
+      setSpecialtyOptions(NURSE_SPECIALTY_OPTIONS)
     }
   }, [doctorData.roleLabel, specialtyData, specialtyIsLoading])
 
@@ -151,12 +151,12 @@ export const EditDoctorProfilePopup: FC<EditDoctorProfilePopupProps> = ({ doctor
                   onChange={(event, data): void => {
                     field.onChange(data)
                   }}
-                  options={specialityOptions}
+                  options={specialtyOptions}
                   renderInput={(params) => <TextField {...params} {...fieldValidation(field.name)} label="Specialty" />}
                   value={field.value}
                 />
               )}
-              rules={validationRules.medicationName}
+              rules={validationRules.specialty}
             />
             <Controller
               control={control}

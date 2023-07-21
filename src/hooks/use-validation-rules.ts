@@ -45,6 +45,7 @@ type ValidationKeyType =
   | 'gender'
   | 'code'
   | 'diagnosisName'
+  | 'specialty'
   | 'medicationName'
   | 'heartRate'
   | 'respirationRate'
@@ -245,6 +246,9 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       },
     },
     diagnosisName: {
+      required: true,
+    },
+    specialty: {
       required: true,
     },
     medicationName: {
