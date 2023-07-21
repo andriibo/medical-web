@@ -202,7 +202,7 @@ export const SignUpDoctor = () => {
                 value={field.value}
               />
             )}
-            rules={validationRules.medicationName}
+            rules={validationRules.specialty}
           />
         )}
         <Controller
