@@ -2,7 +2,6 @@ import { createApi } from '@reduxjs/toolkit/dist/query/react'
 import dayjs from 'dayjs'
 
 import { ICreateDiagnosis, IDiagnosis } from '~models/diagnoses.model'
-import { IMedication } from '~models/medications.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
 
 export const patientDiagnosisApi = createApi({
