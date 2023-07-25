@@ -1,5 +1,6 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Box, Button, List, ListItem, ListItemText, MenuItem } from '@mui/material'
+import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -35,6 +36,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [editingMedication, setEditingMedication] = useState<IMedication | null>(null)
   const [viewMoreMedications, setViewMoreMedications] = useState(false)
+  const [patientMedications, setPatientMedications] = useState<IMedication[]>()
 
   const currentPatientUserId = useMemo(() => patientUserId || userId, [patientUserId, userId])
 
@@ -42,6 +44,14 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
     patientUserId: currentPatientUserId,
   })
   const [deletePatientMedication] = useDeletePatientMedicationMutation()
+
+  useEffect(() => {
+    if (patientMedicationsData && !patientMedicationsDataIsLoading) {
+      setPatientMedications(
+        [...patientMedicationsData].sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
+      )
+    }
+  }, [patientMedicationsData, patientMedicationsDataIsLoading])
 
   useEffect(() => {
     if (popupOpen) {
@@ -90,14 +100,14 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
   return (
     <>
       <List className={`list-divided ${styles.medicationList}`}>
-        {patientMedicationsData?.length ? (
+        {patientMedications?.length ? (
           <>
-            {patientMedicationsData.map((medication, index) => {
+            {patientMedications.map((medication, index) => {
               const { medicationId, genericName, dose, timesPerDay } = medication
 
               return (
                 <ListItem
-                  className={`${!viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
+                  className={`${patientUserId && !viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
                     deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
                   }`}
                   disableGutters={Boolean(patientUserId)}
@@ -113,7 +123,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
                 >
                   <ListItemText
                     primary={genericName}
-                    secondary={`${dose ? `${dose} mg / ` : ''}${timesPerDay ? timesPerDay : ''}`}
+                    secondary={`${dose || 0} mg / ${timesPerDay ? timesPerDay : ''}`}
                   />
                 </ListItem>
               )
@@ -123,7 +133,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
           <ListItem className="empty-list-item">No medications added</ListItem>
         )}
       </List>
-      {patientMedicationsData && patientMedicationsData.length > itemsToShow && (
+      {patientUserId && patientMedicationsData && patientMedicationsData.length > itemsToShow && (
         <Box sx={{ textAlign: 'center' }}>
           <Button onClick={() => handleShowMoreMedications()} variant="text">
             {viewMoreMedications ? (

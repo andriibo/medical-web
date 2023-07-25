@@ -1,8 +1,9 @@
 import { Add, Close } from '@mui/icons-material'
 import { Button, IconButton, List, ListItem, ListItemText, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { Treatment } from '~/enums/treatment.enum'
 import { useUserRoles } from '~/hooks/use-user-roles'
@@ -11,6 +12,7 @@ import { PatientMedications } from '~components/PatientMedications/patient-medic
 import { Spinner } from '~components/Spinner/spinner'
 import { TabPanel } from '~components/TabPanel/tab-panel'
 import { pushValueToArrayState, removeValueFromArrayState } from '~helpers/state-helper'
+import { IDiagnosis } from '~models/diagnoses.model'
 import { useDeletePatientDiagnosisMutation, useGetPatientDiagnosesQuery } from '~stores/services/patient-diagnosis.api'
 
 interface PatientTreatmentProps {
@@ -25,11 +27,20 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
   const [deletingDiagnosesId, setDeletingDiagnosesId] = useState<string[]>([])
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<Treatment>(Treatment.diagnoses)
+  const [patientDiagnoses, setPatientDiagnoses] = useState<IDiagnosis[]>()
 
   const { data: patientDiagnosesData, isLoading: patientDiagnosesDataIsLoading } = useGetPatientDiagnosesQuery({
     patientUserId,
   })
   const [deletePatientDiagnosis] = useDeletePatientDiagnosisMutation()
+
+  useEffect(() => {
+    if (patientDiagnosesData && !patientDiagnosesDataIsLoading) {
+      setPatientDiagnoses(
+        [...patientDiagnosesData].sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
+      )
+    }
+  }, [patientDiagnosesData, patientDiagnosesDataIsLoading])
 
   const handleNewDiagnosisOpen = () => {
     setDiagnosisPopupOpen(true)
@@ -97,8 +108,8 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
         <List className="list-divided">
           {patientDiagnosesDataIsLoading ? (
             <Spinner />
-          ) : patientDiagnosesData?.length ? (
-            patientDiagnosesData.map(({ diagnosisId, diagnosisName }) => (
+          ) : patientDiagnoses?.length ? (
+            patientDiagnoses.map(({ diagnosisId, diagnosisName }) => (
               <ListItem
                 className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
                 key={diagnosisId}
