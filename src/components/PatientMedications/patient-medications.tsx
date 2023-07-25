@@ -1,6 +1,5 @@
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material'
 import { Box, Button, List, ListItem, ListItemText, MenuItem } from '@mui/material'
-import dayjs from 'dayjs'
 import { useSnackbar } from 'notistack'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -36,7 +35,6 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
   const [isMedicationPopupOpen, setIsMedicationPopupOpen] = useState(false)
   const [editingMedication, setEditingMedication] = useState<IMedication | null>(null)
   const [viewMoreMedications, setViewMoreMedications] = useState(false)
-  const [patientMedications, setPatientMedications] = useState<IMedication[]>()
 
   const currentPatientUserId = useMemo(() => patientUserId || userId, [patientUserId, userId])
 
@@ -44,14 +42,6 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
     patientUserId: currentPatientUserId,
   })
   const [deletePatientMedication] = useDeletePatientMedicationMutation()
-
-  useEffect(() => {
-    if (patientMedicationsData && !patientMedicationsDataIsLoading) {
-      setPatientMedications(
-        [...patientMedicationsData].sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
-      )
-    }
-  }, [patientMedicationsData, patientMedicationsDataIsLoading])
 
   useEffect(() => {
     if (popupOpen) {
@@ -100,9 +90,9 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
   return (
     <>
       <List className={`list-divided ${styles.medicationList}`}>
-        {patientMedications?.length ? (
+        {patientMedicationsData?.length ? (
           <>
-            {patientMedications.map((medication, index) => {
+            {patientMedicationsData.map((medication, index) => {
               const { medicationId, genericName, dose, timesPerDay } = medication
 
               return (

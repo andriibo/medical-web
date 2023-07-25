@@ -1,4 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
+import dayjs from 'dayjs'
 
 import { ICreateMedication, IMedication, IUpdateMedication } from '~models/medications.model'
 import { staggeredBaseQueryWithBailOut } from '~stores/helpers/staggered-base-query-with-bail-out'
@@ -24,6 +25,8 @@ export const patientMedicationApi = createApi({
       query: ({ patientUserId }) => ({
         url: `patient-medications/${patientUserId}`,
       }),
+      transformResponse: (response: IMedication[]) =>
+        response.sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
       providesTags: ['PatientMedication'],
     }),
     deletePatientMedication: build.mutation<null, { medicationId: string }>({
