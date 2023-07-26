@@ -113,7 +113,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
                 >
                   <ListItemText
                     primary={genericName}
-                    secondary={`${dose || 0} mg / ${timesPerDay ? timesPerDay : ''}`}
+                    secondary={`${dose || 0} mg ${timesPerDay ? `/ ${timesPerDay}` : ''}`}
                   />
                 </ListItem>
               )

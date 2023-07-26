@@ -58,7 +58,7 @@ export const NumberField: FC<NumberFieldProps> = ({
 
     const regex = digitsAfterDecimal ? new RegExp(`^\\d+(?<decimal>\\.\\d{0,${digitsAfterDecimal}})?$`) : /^\d+$/
 
-    if (!validity.badInput && (regex.test(value) || !value.length)) {
+    if (!validity.badInput && !validity.rangeOverflow && (regex.test(value) || !value.length)) {
       field.onChange(e)
     }
   }
@@ -90,7 +90,7 @@ export const NumberField: FC<NumberFieldProps> = ({
       InputProps={inputPropsSettings}
       error={fieldValidation.error}
       fullWidth
-      helperText={helperText || fieldValidation.helperText}
+      helperText={fieldValidation.helperText || helperText}
       onBlur={onBlur}
       onChange={onChange}
       onKeyDown={onKeyDown}
