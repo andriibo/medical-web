@@ -102,7 +102,7 @@ export const SignUpPatient = () => {
           </ul>
         </Alert>
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid xs={6}>
             <Controller

@@ -203,8 +203,11 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
                 <NumberField
                   field={field}
                   fieldValidation={fieldValidation(field.name)}
+                  helperText={`
+                    from ${validationProps.dose.min} to ${validationProps.dose.max} ${validationProps.dose.unit}
+                  `}
                   label="Dose"
-                  step={0.01}
+                  step={0.001}
                   validationProps={validationProps.dose}
                 />
               )}
