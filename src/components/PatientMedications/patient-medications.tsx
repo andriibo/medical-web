@@ -97,7 +97,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
 
               return (
                 <ListItem
-                  className={`${!viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
+                  className={`${patientUserId && !viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
                     deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
                   }`}
                   disableGutters={Boolean(patientUserId)}
@@ -113,7 +113,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
                 >
                   <ListItemText
                     primary={genericName}
-                    secondary={`${dose ? `${dose} mg / ` : ''}${timesPerDay ? timesPerDay : ''}`}
+                    secondary={`${dose || 0} mg / ${timesPerDay ? timesPerDay : ''}`}
                   />
                 </ListItem>
               )
@@ -123,7 +123,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
           <ListItem className="empty-list-item">No medications added</ListItem>
         )}
       </List>
-      {patientMedicationsData && patientMedicationsData.length > itemsToShow && (
+      {patientUserId && patientMedicationsData && patientMedicationsData.length > itemsToShow && (
         <Box sx={{ textAlign: 'center' }}>
           <Button onClick={() => handleShowMoreMedications()} variant="text">
             {viewMoreMedications ? (
