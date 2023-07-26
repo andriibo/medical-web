@@ -18,7 +18,7 @@ export const patientDiagnosisApi = createApi({
         url: `patient-diagnoses/${patientUserId}`,
       }),
       transformResponse: (response: IDiagnosis[]) =>
-        response.sort((a, b) => dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix()),
+        response.sort((a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix()),
       providesTags: ['PatientDiagnoses'],
     }),
     deletePatientDiagnosis: build.mutation<null, { diagnosisId: string }>({
