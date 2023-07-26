@@ -227,6 +227,8 @@ export const EmergencyContactPopup: FC<EmergencyContactPopupProps> = ({ open, ha
       await addOrganizationEmergencyContact({
         ...trimValues(data),
         type: data.type,
+        email: data.email || null,
+        fax: data.fax || null,
       }).unwrap()
 
       initiateClosePopup()
