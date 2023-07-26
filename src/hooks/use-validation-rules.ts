@@ -168,7 +168,6 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       required: false,
       validate: {
         isPhone: async (value: string) => {
-          console.log(454)
           const isValid = !value || (await phoneSchema.isValid(value))
 
           return isValid || 'Enter valid fax number.'

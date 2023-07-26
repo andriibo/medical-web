@@ -138,6 +138,8 @@ export const SuggestedContactPopup: FC<SuggestedContactPopupProps> = ({ open, ha
       await addOrganizationSuggestedContact({
         ...trimValues(data),
         type: data.type,
+        email: data.email || null,
+        fax: data.fax || null,
         patientUserId,
       }).unwrap()
 
