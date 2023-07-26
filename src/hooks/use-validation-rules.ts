@@ -132,7 +132,7 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       unit: 'mmHg',
     },
     dose: {
-      min: 0,
+      min: 0.001,
       max: 10000,
       unit: 'mg',
     },

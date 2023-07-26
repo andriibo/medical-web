@@ -204,7 +204,7 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
                   field={field}
                   fieldValidation={fieldValidation(field.name)}
                   label="Dose"
-                  step={0.01}
+                  step={0.001}
                   validationProps={validationProps.dose}
                 />
               )}
