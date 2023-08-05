@@ -75,7 +75,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ avatar, open, handleClose })
 
     closeAndClear()
 
-    enqueueSnackbar('Avatar removed')
+    enqueueSnackbar('Avatar deleted')
   }
 
   const handleChangeAvatar = useCallback(async () => {
@@ -213,7 +213,7 @@ export const AvatarPopup: FC<AvatarPopupProps> = ({ avatar, open, handleClose })
             sx={{ mr: 'auto' }}
             type="button"
           >
-            Remove avatar
+            Delete avatar
           </LoadingButton>
         )}
         <Button onClick={closeAndClear}>Cancel</Button>
