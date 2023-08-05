@@ -94,12 +94,14 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
           <>
             {patientMedicationsData.map((medication, index) => {
               const { medicationId, genericName, dose, timesPerDay } = medication
+              const hiddenClass = patientUserId && !viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''
+              const borderTransparentClass =
+                patientUserId && !viewMoreMedications && index + 1 === itemsToShow ? 'border-transparent' : ''
+              const disabledClass = deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
 
               return (
                 <ListItem
-                  className={`${patientUserId && !viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''} ${
-                    deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
-                  }`}
+                  className={`${hiddenClass} ${borderTransparentClass} ${disabledClass}`}
                   disableGutters={Boolean(patientUserId)}
                   key={medicationId}
                   secondaryAction={
