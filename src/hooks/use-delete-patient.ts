@@ -18,13 +18,13 @@ export const useDeletePatient = () => {
     async ({ accessId, navigateTo }: { accessId: string; navigateTo?: string }) => {
       try {
         await confirm({
-          title: 'Remove a patient?',
+          title: 'Delete a patient?',
           description: 'You will lose access to patient data.',
-          confirmationText: 'Remove',
+          confirmationText: 'Delete',
         })
 
         await deletePatient({ accessId }).unwrap()
-        enqueueSnackbar('Patient removed')
+        enqueueSnackbar('Patient deleted')
         dispatch(setDataAccessHasChanges(true))
         if (navigateTo) {
           navigate(navigateTo, { replace: true })
@@ -32,7 +32,7 @@ export const useDeletePatient = () => {
       } catch (err) {
         console.error(err)
         if (err) {
-          enqueueSnackbar('Patient not removed', { variant: 'warning' })
+          enqueueSnackbar('Patient not deleted', { variant: 'warning' })
         }
       }
     },

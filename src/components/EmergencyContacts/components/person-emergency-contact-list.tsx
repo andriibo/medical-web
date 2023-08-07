@@ -88,9 +88,9 @@ export const PersonEmergencyContactList: FC<PersonEmergencyContactListProps> = (
       try {
         handleDrop(true)
         await confirm({
-          title: 'Remove emergency contact?',
-          description: 'The emergency contact will be removed.',
-          confirmationText: 'Remove',
+          title: 'Delete emergency contact?',
+          description: 'The emergency contact will be deleted.',
+          confirmationText: 'Delete',
         })
 
         setSetDeletingContactId(contactId)

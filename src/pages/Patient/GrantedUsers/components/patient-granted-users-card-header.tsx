@@ -39,26 +39,26 @@ export const PatientGrantedUsersCardHeader: FC<PatientCardHeaderProps> = ({
           title: false,
           description: (
             <>
-              Are you sure you would like to remove{' '}
+              Are you sure you would like to delete{' '}
               <strong>
                 {firstName} {lastName}
               </strong>{' '}
               from your Trusted Care Network?
             </>
           ),
-          confirmationText: 'Yes, Remove',
+          confirmationText: 'Yes, Delete',
         })
 
         handleDeletingId(accessId)
 
         await deleteGrantedUser({ accessId }).unwrap()
         handleRefetch()
-        enqueueSnackbar(`${firstName} ${lastName} removed`)
+        enqueueSnackbar(`${firstName} ${lastName} deleted`)
       } catch (err) {
         console.error(err)
         handleDeletingId(null)
         if (err) {
-          enqueueSnackbar(`${firstName} ${lastName} not removed`, { variant: 'warning' })
+          enqueueSnackbar(`${firstName} ${lastName} not deleted`, { variant: 'warning' })
         }
       }
     },

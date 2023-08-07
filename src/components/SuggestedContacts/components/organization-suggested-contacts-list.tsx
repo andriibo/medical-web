@@ -43,19 +43,19 @@ export const OrganizationSuggestedContactsList: FC<PersonSuggestedContactsListPr
     async (contactId: string) => {
       try {
         await confirm({
-          title: 'Remove suggested contact?',
-          description: 'The suggested contact will be removed.',
-          confirmationText: 'Remove',
+          title: 'Delete suggested contact?',
+          description: 'The suggested contact will be deleted.',
+          confirmationText: 'Delete',
         })
 
         setSetDisableContactId(contactId)
 
         await deleteSuggestedContact({ contactId }).unwrap()
-        enqueueSnackbar('Contact removed')
+        enqueueSnackbar('Contact deleted')
       } catch (err) {
         console.error(err)
         setSetDisableContactId(null)
-        enqueueSnackbar('Contact not removed', { variant: 'warning' })
+        enqueueSnackbar('Contact not deleted', { variant: 'warning' })
       }
     },
     [confirm, deleteSuggestedContact, enqueueSnackbar],
