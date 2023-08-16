@@ -133,6 +133,21 @@ export const VitalChart: FC<VitalChartProps> = ({
     return [min, max]
   }, [maxThreshold, minMaxValue, minThreshold, settings.abnormalValues, settings.variance, thresholds, vitals])
 
+  const tickValues = useMemo(() => {
+    const [minDomain, maxDomain] = minMaxDomain
+
+    const arr: number[] = []
+    const start = minDomain
+    const end = maxDomain
+    const step = activeVitalsType === 'temp' ? 0.1 : 1
+
+    for (let i = start; i <= end; i = Number((i + step).toFixed(1))) {
+      arr.push(i)
+    }
+
+    return arr
+  }, [activeVitalsType, minMaxDomain])
+
   return (
     <>
       <VictoryChart
@@ -177,7 +192,9 @@ export const VitalChart: FC<VitalChartProps> = ({
         <VictoryAxis
           dependentAxis
           style={{ tickLabels: { padding: 5, fontSize: 12 } }}
+          tickCount={8}
           tickFormat={(t) => `${t} ${VITAL_SETTINGS[activeVitalsType].units}`}
+          tickValues={tickValues}
         />
         {settings.abnormalValues && (
           <VictoryLine

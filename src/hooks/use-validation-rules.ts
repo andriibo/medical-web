@@ -6,6 +6,7 @@ import { RegisterOptions } from 'react-hook-form/dist/types/validator'
 import validator from 'validator'
 import * as yup from 'yup'
 
+import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { DATE_FORMAT } from '~constants/constants'
 import { IMedicationItem } from '~models/medications.model'
 import { useGetVitalsAbsoluteQuery } from '~stores/services/vitals.api'
@@ -18,17 +19,7 @@ declare module 'yup' {
 
 const phoneSchema = yup.string().phone().required()
 
-type ValidationPropsKeyType =
-  | 'height'
-  | 'weight'
-  | 'heartRate'
-  | 'respirationRate'
-  | 'arterialPressure'
-  | 'temperature'
-  | 'saturation'
-  | 'dbp'
-  | 'sbp'
-  | 'dose'
+type ValidationPropsKeyType = VitalsChartTabKeys | 'height' | 'weight' | 'arterialPressure' | 'dbp' | 'sbp' | 'dose'
 
 type ValidationKeyType =
   | 'text'
@@ -101,22 +92,22 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
       max: 100,
       unit: 'mmHg',
     },
-    heartRate: {
+    hr: {
       min: data?.minHr || 40,
       max: data?.maxHr || 220,
       unit: 'bpm',
     },
-    respirationRate: {
+    rr: {
       min: data?.minRr || 4,
       max: data?.maxRr || 60,
       unit: 'rmp',
     },
-    temperature: {
+    temp: {
       min: data?.minTemp || 32,
       max: data?.maxTemp || 42,
       unit: '°C',
     },
-    saturation: {
+    spo2: {
       min: data?.minSpo2 || 40,
       max: data?.maxSpo2 || 100,
       unit: '%',
@@ -138,8 +129,7 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     },
   }
 
-  const { height, weight, heartRate, respirationRate, arterialPressure, temperature, saturation, dbp, sbp, dose } =
-    validationProps
+  const { height, weight, hr, rr, arterialPressure, temp, spo2, dbp, sbp, dose } = validationProps
 
   const validationRules: ValidationRulesType = {
     text: {
@@ -292,23 +282,23 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     heartRate: {
       required: true,
       min: {
-        value: heartRate.min,
-        message: `Min heart rate is ${heartRate.min} ${heartRate.unit}`,
+        value: hr.min,
+        message: `Min heart rate is ${hr.min} ${hr.unit}`,
       },
       max: {
-        value: heartRate.max,
-        message: `Max heart rate is ${heartRate.max} ${heartRate.unit}`,
+        value: hr.max,
+        message: `Max heart rate is ${hr.max} ${hr.unit}`,
       },
     },
     respirationRate: {
       required: true,
       min: {
-        value: respirationRate.min,
-        message: `Min respiration rate is ${respirationRate.min} ${respirationRate.unit}`,
+        value: rr.min,
+        message: `Min respiration rate is ${rr.min} ${rr.unit}`,
       },
       max: {
-        value: respirationRate.max,
-        message: `Max respiration rate is ${respirationRate.max} ${respirationRate.unit}`,
+        value: rr.max,
+        message: `Max respiration rate is ${rr.max} ${rr.unit}`,
       },
     },
     arterialPressure: {
@@ -325,23 +315,23 @@ export const useValidationRules = (props: ValidationRulesProps | void): IValidat
     temperature: {
       required: true,
       min: {
-        value: temperature.min,
-        message: `Min temperature is ${temperature.min} ${temperature.unit}`,
+        value: temp.min,
+        message: `Min temperature is ${temp.min} ${temp.unit}`,
       },
       max: {
-        value: temperature.max,
-        message: `Max temperature is ${temperature.max} ${temperature.unit}`,
+        value: temp.max,
+        message: `Max temperature is ${temp.max} ${temp.unit}`,
       },
     },
     saturation: {
       required: true,
       min: {
-        value: saturation.min,
-        message: `Min O2 saturation is ${saturation.min} ${saturation.unit}`,
+        value: spo2.min,
+        message: `Min O2 saturation is ${spo2.min} ${spo2.unit}`,
       },
       max: {
-        value: saturation.max,
-        message: `Max O2 saturation is ${saturation.max} ${saturation.unit}`,
+        value: spo2.max,
+        message: `Max O2 saturation is ${spo2.max} ${spo2.unit}`,
       },
     },
     dbp: {
