@@ -9,6 +9,7 @@ import { VictoryScatter } from 'victory-scatter'
 import { VictoryTooltip } from 'victory-tooltip'
 
 import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
+import { useValidationRules } from '~/hooks/use-validation-rules'
 import { VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { filterNullable } from '~helpers/filter-nullable'
 import { IThresholds } from '~models/threshold.model'
@@ -53,10 +54,25 @@ export const VitalChart: FC<VitalChartProps> = ({
   endDate,
   settings,
 }) => {
+  const { validationProps } = useValidationRules({ getAbsoluteVitals: true })
+
   const { min: minThreshold, max: maxThreshold } = useMemo(
     () => VITAL_THRESHOLDS_TYPE[activeVitalsType],
     [activeVitalsType],
   )
+
+  const tickValues = useMemo(() => {
+    const arr: number[] = []
+    const start = validationProps[activeVitalsType].min
+    const end = validationProps[activeVitalsType].max
+    const step = activeVitalsType === 'temp' ? 0.1 : 1
+
+    for (let i = start; i <= end; i = Number((i + step).toFixed(1))) {
+      arr.push(i)
+    }
+
+    return arr
+  }, [validationProps, activeVitalsType])
 
   const getTimeFormat = useMemo(() => {
     if (endDate - startDate <= 86400) {
@@ -177,7 +193,9 @@ export const VitalChart: FC<VitalChartProps> = ({
         <VictoryAxis
           dependentAxis
           style={{ tickLabels: { padding: 5, fontSize: 12 } }}
+          tickCount={8}
           tickFormat={(t) => `${t} ${VITAL_SETTINGS[activeVitalsType].units}`}
+          tickValues={tickValues}
         />
         {settings.abnormalValues && (
           <VictoryLine

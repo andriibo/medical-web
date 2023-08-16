@@ -108,7 +108,7 @@ export const EditPatientSaturationPopup: FC<EditPatientSaturationPopupProps> = (
                 field={field}
                 fieldValidation={fieldValidation(field.name)}
                 label="Min"
-                validationProps={validationProps.saturation}
+                validationProps={validationProps.spo2}
               />
             )}
             rules={validationRules.saturation}

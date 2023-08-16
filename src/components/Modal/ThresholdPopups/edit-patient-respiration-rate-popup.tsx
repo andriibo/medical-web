@@ -111,7 +111,7 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Min"
-                    validationProps={validationProps.respirationRate}
+                    validationProps={validationProps.rr}
                   />
                 )}
                 rules={validationRules.respirationRate}
@@ -126,7 +126,7 @@ export const EditPatientRespirationRatePopup: FC<EditRespirationHeartRatePopupPr
                     field={field}
                     fieldValidation={fieldValidation(field.name)}
                     label="Max"
-                    validationProps={validationProps.respirationRate}
+                    validationProps={validationProps.rr}
                   />
                 )}
                 rules={validationRules.respirationRate}
