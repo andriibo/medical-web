@@ -1,4 +1,5 @@
 import { TimesPreDayKeys } from '~/enums/times-pre-day.enum'
+import { IUserModel } from '~models/user.model'
 
 export interface IMedicationItem {
   genericName: string
@@ -16,6 +17,12 @@ export interface IMedication extends IMedicationModel {
   medicationId: string
   createdBy: string
   createdAt: string
+  createdByUser?: IUserModel
+}
+
+export interface IMedicationResponse {
+  medications: IMedication[]
+  users: IUserModel[]
 }
 
 export interface ICreateMedicationForm extends IMedicationDosage {
