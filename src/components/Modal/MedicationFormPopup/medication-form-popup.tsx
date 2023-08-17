@@ -233,7 +233,7 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
               )}
               rules={validationRules.timesPerDay}
             />
-            {editingMedication && editingMedication.createdByUser && (
+            {editingMedication?.createdByUser && (
               <Typography sx={{ mb: 3 }}>
                 Added by {editingMedication.createdByUser.firstName} {editingMedication.createdByUser.lastName} (
                 {editingMedication.createdByUser.role})
