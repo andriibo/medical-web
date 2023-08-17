@@ -93,12 +93,14 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
         {patientMedicationsData?.length ? (
           <>
             {patientMedicationsData.map((medication, index) => {
-              const { medicationId, genericName, dose, timesPerDay } = medication
+              const { medicationId, genericName, dose, timesPerDay, createdByUser } = medication
               const hiddenClass = patientUserId && !viewMoreMedications && index + 1 > itemsToShow ? 'hidden' : ''
               const borderTransparentClass =
                 patientUserId && !viewMoreMedications && index + 1 === itemsToShow ? 'border-transparent' : ''
               const disabledClass = deletingMedicationsId.includes(medicationId) ? 'disabled' : ''
-              const secondaryText = dose && `${dose} mg ${timesPerDay ? `/ ${timesPerDay}` : ''}`
+              const doseText = dose ? `(${dose} mg ${timesPerDay ? `/ ${timesPerDay})` : ''}` : ''
+              const authorText =
+                createdByUser && `added by ${createdByUser.firstName} ${createdByUser.lastName} (${createdByUser.role})`
 
               return (
                 <ListItem
@@ -114,7 +116,7 @@ export const PatientMedications: FC<PatientMedicationsProps> = ({ patientUserId,
                     )
                   }
                 >
-                  <ListItemText primary={genericName} secondary={secondaryText} />
+                  <ListItemText primary={`${genericName} ${doseText}`} secondary={authorText} />
                 </ListItem>
               )
             })}

@@ -14,6 +14,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Typography,
 } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { useSnackbar } from 'notistack'
@@ -146,7 +147,7 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
 
   return (
     <Dialog fullWidth maxWidth="xs" onClose={handleClose} open={open} scroll="body">
-      <DialogTitle>New medication</DialogTitle>
+      <DialogTitle>{editingMedication ? 'Edit' : 'New'} medication</DialogTitle>
       <DialogContent>
         {formErrors && (
           <Alert className="form-alert" severity="error">
@@ -232,6 +233,12 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
               )}
               rules={validationRules.timesPerDay}
             />
+            {editingMedication?.createdByUser && (
+              <Typography sx={{ mb: 3 }}>
+                Added by {editingMedication.createdByUser.firstName} {editingMedication.createdByUser.lastName} (
+                {editingMedication.createdByUser.role})
+              </Typography>
+            )}
             <Grid container spacing={2}>
               <Grid xs={6}>
                 <Button fullWidth onClick={handleClose} size="large" variant="outlined">
@@ -246,7 +253,7 @@ export const MedicationFormPopup: FC<NewMedicationPopupProps> = ({
                   type="submit"
                   variant="contained"
                 >
-                  Add
+                  {editingMedication ? 'Update' : 'Add'}
                 </LoadingButton>
               </Grid>
             </Grid>

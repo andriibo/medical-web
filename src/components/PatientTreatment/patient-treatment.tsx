@@ -98,21 +98,26 @@ export const PatientTreatment: FC<PatientTreatmentProps> = ({ patientUserId }) =
           {patientDiagnosesDataIsLoading ? (
             <Spinner />
           ) : patientDiagnosesData?.length ? (
-            patientDiagnosesData.map(({ diagnosisId, diagnosisName }) => (
-              <ListItem
-                className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
-                key={diagnosisId}
-                secondaryAction={
-                  !isUserRoleCaregiver && (
-                    <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteDiagnosis(diagnosisId)}>
-                      <Close />
-                    </IconButton>
-                  )
-                }
-              >
-                <ListItemText primary={diagnosisName} />
-              </ListItem>
-            ))
+            patientDiagnosesData.map(({ diagnosisId, diagnosisName, createdByUser }) => {
+              const authorText =
+                createdByUser && `added by ${createdByUser.firstName} ${createdByUser.lastName} (${createdByUser.role})`
+
+              return (
+                <ListItem
+                  className={deletingDiagnosesId.includes(diagnosisId) ? 'disabled' : ''}
+                  key={diagnosisId}
+                  secondaryAction={
+                    !isUserRoleCaregiver && (
+                      <IconButton aria-label="delete" edge="end" onClick={() => handleDeleteDiagnosis(diagnosisId)}>
+                        <Close />
+                      </IconButton>
+                    )
+                  }
+                >
+                  <ListItemText primary={diagnosisName} secondary={authorText} />
+                </ListItem>
+              )
+            })
           ) : (
             <ListItem className="empty-list-item">No diagnoses added</ListItem>
           )}
