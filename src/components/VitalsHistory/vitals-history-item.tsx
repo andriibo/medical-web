@@ -34,11 +34,22 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
 
   const getValue = useMemo(() => {
     if (abnormalMinValue && abnormalMaxValue) {
-      return abnormalMinValue === abnormalMaxValue ? abnormalMinValue : `${abnormalMinValue}-${abnormalMaxValue}`
+      if (name === 'temp') {
+        return abnormalMinValue === abnormalMaxValue ? abnormalMinValue : `${abnormalMinValue}-${abnormalMaxValue}`
+      }
+
+      const roundedMinValue = Math.round(abnormalMinValue)
+      const roundedMaxValue = Math.round(abnormalMaxValue)
+
+      return roundedMinValue === roundedMaxValue ? roundedMinValue : `${roundedMinValue}-${roundedMaxValue}`
     }
 
-    return totalMean || '-'
-  }, [abnormalMaxValue, abnormalMinValue, totalMean])
+    if (name === 'temp') {
+      return totalMean || '-'
+    }
+
+    return Math.round(totalMean) || '-'
+  }, [abnormalMaxValue, abnormalMinValue, name, totalMean])
 
   const { icon, title, units, min, max, bpMinMax } = VITAL_SETTINGS[name as VitalTypeKeys]
 
