@@ -11,6 +11,7 @@ import { VictoryTooltip } from 'victory-tooltip'
 import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { filterNullable } from '~helpers/filter-nullable'
+import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
@@ -137,7 +138,7 @@ export const VitalChart: FC<VitalChartProps> = ({
     const [minDomain, maxDomain] = minMaxDomain
 
     const arr: number[] = []
-    const start = minDomain
+    const start = Number(minDomain.toFixed(1))
     const end = maxDomain
     const step = activeVitalsType === 'temp' ? 0.1 : 1
 
@@ -193,7 +194,9 @@ export const VitalChart: FC<VitalChartProps> = ({
           dependentAxis
           style={{ tickLabels: { padding: 5, fontSize: 12 } }}
           tickCount={8}
-          tickFormat={(t) => `${t} ${VITAL_SETTINGS[activeVitalsType].units}`}
+          tickFormat={(t) =>
+            `${getVitalValueWithDigits(t, activeVitalsType)} ${VITAL_SETTINGS[activeVitalsType].units}`
+          }
           tickValues={tickValues}
         />
         {settings.abnormalValues && (

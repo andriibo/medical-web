@@ -33,9 +33,13 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
   }, [isNormal, filterType, name])
 
   const getValue = useMemo(() => {
+    const tempDigits = 1
+
     if (abnormalMinValue && abnormalMaxValue) {
       if (name === 'temp') {
-        return abnormalMinValue === abnormalMaxValue ? abnormalMinValue : `${abnormalMinValue}-${abnormalMaxValue}`
+        return abnormalMinValue === abnormalMaxValue
+          ? abnormalMinValue.toFixed(tempDigits)
+          : `${abnormalMinValue.toFixed(tempDigits)}-${abnormalMaxValue.toFixed(tempDigits)}`
       }
 
       const roundedMinValue = Math.round(abnormalMinValue)
@@ -45,7 +49,7 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
     }
 
     if (name === 'temp') {
-      return totalMean || '-'
+      return totalMean.toFixed(tempDigits) || '-'
     }
 
     return Math.round(totalMean) || '-'
