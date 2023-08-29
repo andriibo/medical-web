@@ -3,6 +3,7 @@ import React, { FC, useMemo } from 'react'
 
 import { VitalsTypeFilterKeys, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { VITAL_SETTINGS } from '~constants/constants'
+import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
 import { IThresholds } from '~models/threshold.model'
 import { IHistoryItemMetadata } from '~models/vital.model'
 
@@ -34,21 +35,13 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
 
   const getValue = useMemo(() => {
     if (abnormalMinValue && abnormalMaxValue) {
-      if (name === 'temp') {
-        return abnormalMinValue === abnormalMaxValue ? abnormalMinValue : `${abnormalMinValue}-${abnormalMaxValue}`
-      }
+      const minValue = getVitalValueWithDigits(abnormalMinValue, name)
+      const maxValue = getVitalValueWithDigits(abnormalMaxValue, name)
 
-      const roundedMinValue = Math.round(abnormalMinValue)
-      const roundedMaxValue = Math.round(abnormalMaxValue)
-
-      return roundedMinValue === roundedMaxValue ? roundedMinValue : `${roundedMinValue}-${roundedMaxValue}`
+      return minValue === maxValue ? minValue : `${minValue}-${maxValue}`
     }
 
-    if (name === 'temp') {
-      return totalMean || '-'
-    }
-
-    return Math.round(totalMean) || '-'
+    return getVitalValueWithDigits(totalMean, name)
   }, [abnormalMaxValue, abnormalMinValue, name, totalMean])
 
   const { icon, title, units, min, max, bpMinMax } = VITAL_SETTINGS[name as VitalTypeKeys]
@@ -81,13 +74,13 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
               {min && (
                 <li>
                   <span className={styles.thresholdInfoLabel}>Min</span>
-                  {threshold[min]}
+                  {getVitalValueWithDigits(threshold[min], name)}
                 </li>
               )}
               {max && (
                 <li>
                   <span className={styles.thresholdInfoLabel}>Max</span>
-                  {threshold[max]}
+                  {getVitalValueWithDigits(threshold[max], name)}
                 </li>
               )}
             </>

@@ -2,6 +2,7 @@ import { Typography } from '@mui/material'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
+import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
 import iconManFalling from '~images/icon-man-falling.svg'
 import iconManWalking from '~images/icon-man-walking.svg'
 import { IVitalsCard } from '~models/vital.model'
@@ -16,7 +17,7 @@ interface VitalItemProps {
 }
 
 export const VitalItem: FC<VitalItemProps> = ({
-  vital: { title, value, units, icon, thresholds, limits },
+  vital: { title, value, units, icon, thresholds, limits, type },
   toggleVitals,
   onClick,
   disabled,
@@ -46,7 +47,7 @@ export const VitalItem: FC<VitalItemProps> = ({
       return (
         <>
           <span className={styles.vitalLimitText}>below</span>
-          {limits.floor}
+          {getVitalValueWithDigits(limits.floor, type)}
         </>
       )
     }
@@ -55,13 +56,13 @@ export const VitalItem: FC<VitalItemProps> = ({
       return (
         <>
           <span className={styles.vitalLimitText}>above</span>
-          {limits.ceiling}
+          {getVitalValueWithDigits(limits.ceiling, type)}
         </>
       )
     }
 
-    return value
-  }, [isFall, limits?.ceiling, limits?.floor, title, value])
+    return getVitalValueWithDigits(value, type)
+  }, [isFall, limits?.ceiling, limits?.floor, title, value, type])
 
   const exceedingLimit = useMemo(
     () => value && ((limits?.ceiling && value > limits.ceiling) || (limits?.floor && value < limits.floor)),
