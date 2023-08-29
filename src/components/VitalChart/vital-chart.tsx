@@ -9,7 +9,7 @@ import { VictoryScatter } from 'victory-scatter'
 import { VictoryTooltip } from 'victory-tooltip'
 
 import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
-import { VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
+import { TEMP_DIGITS as tempDigits, VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { filterNullable } from '~helpers/filter-nullable'
 import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
 import { IThresholds } from '~models/threshold.model'
@@ -138,11 +138,11 @@ export const VitalChart: FC<VitalChartProps> = ({
     const [minDomain, maxDomain] = minMaxDomain
 
     const arr: number[] = []
-    const start = Number(minDomain.toFixed(1))
+    const start = Number(minDomain.toFixed(tempDigits))
     const end = maxDomain
     const step = activeVitalsType === 'temp' ? 0.1 : 1
 
-    for (let i = start; i <= end; i = Number((i + step).toFixed(1))) {
+    for (let i = start; i <= end; i = Number((i + step).toFixed(tempDigits))) {
       arr.push(i)
     }
 
@@ -194,8 +194,8 @@ export const VitalChart: FC<VitalChartProps> = ({
           dependentAxis
           style={{ tickLabels: { padding: 5, fontSize: 12 } }}
           tickCount={8}
-          tickFormat={(t) =>
-            `${getVitalValueWithDigits(t, activeVitalsType)} ${VITAL_SETTINGS[activeVitalsType].units}`
+          tickFormat={(tick) =>
+            `${getVitalValueWithDigits(tick, activeVitalsType)} ${VITAL_SETTINGS[activeVitalsType].units}`
           }
           tickValues={tickValues}
         />

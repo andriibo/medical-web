@@ -41,9 +41,7 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
       return minValue === maxValue ? minValue : `${minValue}-${maxValue}`
     }
 
-    const totalMeanValue = getVitalValueWithDigits(totalMean, name)
-
-    return totalMeanValue || '-'
+    return getVitalValueWithDigits(totalMean, name)
   }, [abnormalMaxValue, abnormalMinValue, name, totalMean])
 
   const { icon, title, units, min, max, bpMinMax } = VITAL_SETTINGS[name as VitalTypeKeys]
