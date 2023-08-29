@@ -154,7 +154,7 @@ export const VitalChart: FC<VitalChartProps> = ({
       <VictoryChart
         containerComponent={<VictoryContainer responsive={false} />}
         domain={{ x: [startDate, endDate], y: minMaxDomain }}
-        domainPadding={{ y: [30, 30], x: [0, 0] }}
+        domainPadding={{ y: [30, 30] }}
         height={500}
         padding={{
           left: 60,
