@@ -2,7 +2,7 @@ import { Typography } from '@mui/material'
 import React, { FC, useEffect, useMemo, useState } from 'react'
 
 import { VitalType } from '~/enums/vital-type.enum'
-import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
+import { getRoundedVitalValue } from '~helpers/get-rounded-vital-value'
 import iconManFalling from '~images/icon-man-falling.svg'
 import iconManWalking from '~images/icon-man-walking.svg'
 import { IVitalsCard } from '~models/vital.model'
@@ -33,9 +33,9 @@ export const VitalItem: FC<VitalItemProps> = ({
   )
 
   const getValue = useMemo(() => {
-    if (value === null || value === undefined) return '-'
+    if (value === null) return '-'
 
-    if (isFall) {
+    if (isFall || typeof value === 'boolean') {
       return (
         <div className={styles.vitalFallIcon}>
           <img alt={title} src={value ? iconManFalling : iconManWalking} />
@@ -47,7 +47,7 @@ export const VitalItem: FC<VitalItemProps> = ({
       return (
         <>
           <span className={styles.vitalLimitText}>below</span>
-          {getVitalValueWithDigits(limits.floor, type)}
+          {getRoundedVitalValue(limits.floor, type)}
         </>
       )
     }
@@ -56,12 +56,12 @@ export const VitalItem: FC<VitalItemProps> = ({
       return (
         <>
           <span className={styles.vitalLimitText}>above</span>
-          {getVitalValueWithDigits(limits.ceiling, type)}
+          {getRoundedVitalValue(limits.ceiling, type)}
         </>
       )
     }
 
-    return getVitalValueWithDigits(value, type)
+    return getRoundedVitalValue(value, type)
   }, [isFall, limits?.ceiling, limits?.floor, title, value, type])
 
   const exceedingLimit = useMemo(
