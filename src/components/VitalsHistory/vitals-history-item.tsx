@@ -3,7 +3,7 @@ import React, { FC, useMemo } from 'react'
 
 import { VitalsTypeFilterKeys, VitalTypeKeys } from '~/enums/vital-type.enum'
 import { VITAL_SETTINGS } from '~constants/constants'
-import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
+import { getRoundedVitalValue } from '~helpers/get-rounded-vital-value'
 import { IThresholds } from '~models/threshold.model'
 import { IHistoryItemMetadata } from '~models/vital.model'
 
@@ -34,14 +34,14 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
   }, [isNormal, filterType, name])
 
   const getValue = useMemo(() => {
-    if (abnormalMinValue && abnormalMaxValue) {
-      const minValue = getVitalValueWithDigits(abnormalMinValue, name)
-      const maxValue = getVitalValueWithDigits(abnormalMaxValue, name)
+    if (abnormalMinValue !== null && abnormalMaxValue !== null) {
+      const minValue = getRoundedVitalValue(abnormalMinValue, name)
+      const maxValue = getRoundedVitalValue(abnormalMaxValue, name)
 
       return minValue === maxValue ? minValue : `${minValue}-${maxValue}`
     }
 
-    return getVitalValueWithDigits(totalMean, name)
+    return getRoundedVitalValue(totalMean, name)
   }, [abnormalMaxValue, abnormalMinValue, name, totalMean])
 
   const { icon, title, units, min, max, bpMinMax } = VITAL_SETTINGS[name as VitalTypeKeys]
@@ -74,13 +74,13 @@ export const VitalHistoryItem: FC<VitalItemProps> = ({ vital, threshold, filterT
               {min && (
                 <li>
                   <span className={styles.thresholdInfoLabel}>Min</span>
-                  {getVitalValueWithDigits(threshold[min], name)}
+                  {getRoundedVitalValue(threshold[min], name)}
                 </li>
               )}
               {max && (
                 <li>
                   <span className={styles.thresholdInfoLabel}>Max</span>
-                  {getVitalValueWithDigits(threshold[max], name)}
+                  {getRoundedVitalValue(threshold[max], name)}
                 </li>
               )}
             </>

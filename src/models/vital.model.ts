@@ -18,7 +18,7 @@ export interface IVitalDb {
 export interface IVitalsCard {
   timestamp: number
   title: VitalType
-  value?: number | boolean | null
+  value: number | boolean | null
   thresholds?: {
     min?: number
     max?: number
@@ -53,10 +53,10 @@ export type IHistoryItemMetadata = {
 }
 
 type IHistoryVitalMetadataDto = {
-  abnormalMaxValue: number
-  abnormalMinValue: number
+  abnormalMaxValue: number | null
+  abnormalMinValue: number | null
   isNormal: boolean
-  totalMean: number
+  totalMean: number | null
 }
 
 export interface IVitalsHistoryCard {

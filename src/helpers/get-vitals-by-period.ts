@@ -103,7 +103,7 @@ export const getVitalsByPeriod = (vitals: VitalsItem[], start: number, end: numb
   }
 
   if (temporaryArray) {
-    temporaryArray.forEach((periodVitals, index, array) => {
+    temporaryArray.forEach((periodVitals) => {
       const hrArr: (number | null)[] = []
       const rrArr: (number | null)[] = []
       const tempArr: (number | null)[] = []
@@ -122,15 +122,7 @@ export const getVitalsByPeriod = (vitals: VitalsItem[], start: number, end: numb
       const rrIndications = getIndications(rrArr)
       const tempIndications = getIndications(tempArr, 1)
       const spo2Indications = getIndications(spo2Arr)
-      const meanTimestamp = mean(timestampArr)
-
-      let averageTime: number = meanTimestamp
-
-      if (index === 0) {
-        averageTime = start
-      } else if (array.length - 1 === index && meanTimestamp > end) {
-        averageTime = end
-      }
+      const averageTime: number = mean(timestampArr)
 
       result.hr.push({ ...hrIndications, timestamp: averageTime })
       result.rr.push({ ...rrIndications, timestamp: averageTime })

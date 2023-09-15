@@ -11,7 +11,7 @@ import { VictoryTooltip } from 'victory-tooltip'
 import { VitalsChartTabKeys } from '~/enums/vital-type.enum'
 import { TEMP_DIGITS as tempDigits, VITAL_SETTINGS, VITAL_THRESHOLDS_TYPE } from '~constants/constants'
 import { filterNullable } from '~helpers/filter-nullable'
-import { getVitalValueWithDigits } from '~helpers/get-vital-value-with-digits'
+import { getRoundedVitalValue } from '~helpers/get-rounded-vital-value'
 import { IThresholds } from '~models/threshold.model'
 import { IVitalChartModel, IVitalChartSettings } from '~models/vital.model'
 
@@ -195,7 +195,7 @@ export const VitalChart: FC<VitalChartProps> = ({
           style={{ tickLabels: { padding: 5, fontSize: 12 } }}
           tickCount={8}
           tickFormat={(tick) =>
-            `${getVitalValueWithDigits(tick, activeVitalsType)} ${VITAL_SETTINGS[activeVitalsType].units}`
+            `${getRoundedVitalValue(tick, activeVitalsType)} ${VITAL_SETTINGS[activeVitalsType].units}`
           }
           tickValues={tickValues}
         />
